@@ -1,4 +1,4 @@
-import parse from 'html-react-parser';
+import { RawHTML } from '@wordpress/element';
 import { twMerge } from 'tailwind-merge';
 import Tooltip from './Tooltip';
 import type { FieldLabelProps } from '../types';
@@ -7,6 +7,17 @@ import type { FieldLabelProps } from '../types';
  * FieldLabel Component
  *
  * A label with optional description, tooltip, and suffix.
+ * @param root0
+ * @param root0.title
+ * @param root0.description
+ * @param root0.tooltip
+ * @param root0.suffix
+ * @param root0.imageUrl
+ * @param root0.htmlFor
+ * @param root0.isBold
+ * @param root0.titleFontWeight
+ * @param root0.className
+ * @param root0.labelClassName
  */
 const FieldLabel = ( {
     title,
@@ -40,17 +51,27 @@ const FieldLabel = ( {
         return isBold ? 'font-semibold' : 'font-normal';
     };
 
-    const renderText = ( contentText: string | React.ReactNode, wrapperClass: string ) => {
-        if ( ! contentText ) return null;
-            return (
-                <div className={ wrapperClass }>
-                    { parse(  contentText.toString() ) }
-                </div>
-            );
+    const renderText = (
+        contentText: string | React.ReactNode,
+        wrapperClass: string
+    ) => {
+        if ( ! contentText ) {
+            return null;
+        }
+        return (
+            <div className={ wrapperClass }>
+                <RawHTML>{ contentText.toString() }</RawHTML>
+            </div>
+        );
     };
 
     return (
-        <div className={ twMerge( 'flex items-start gap-4 max-w-xl', className ) }>
+        <div
+            className={ twMerge(
+                'flex items-start gap-4 max-w-xl',
+                className
+            ) }
+        >
             { imageUrl && (
                 <img
                     src={ imageUrl }
@@ -70,7 +91,7 @@ const FieldLabel = ( {
                             ) }
                         >
                             { typeof title === 'string' ? (
-                                parse( title )
+                                <RawHTML>{ title }</RawHTML>
                             ) : (
                                 title
                             ) }
@@ -78,14 +99,18 @@ const FieldLabel = ( {
                     ) }
                     { tooltip && <Tooltip content={ tooltip } /> }
                     { suffix && (
-                        <span className="text-sm text-gray-500">{ suffix }</span>
+                        <span className="text-sm text-gray-500">
+                            { suffix }
+                        </span>
                     ) }
                 </div>
-                { renderText( (description || '').toString(), 'text-xs text-gray-500 font-light' ) }
+                { renderText(
+                    ( description || '' ).toString(),
+                    'text-xs text-gray-500 font-light'
+                ) }
             </div>
         </div>
     );
 };
 
 export default FieldLabel;
-

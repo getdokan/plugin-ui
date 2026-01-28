@@ -116,15 +116,6 @@ const RadioBoxOption = ( {
                     option.title
                 ) }
             </span>
-            <input
-                type="radio"
-                name={ name }
-                value={ option.value }
-                checked={ isSelected }
-                onChange={ onSelect }
-                className="sr-only"
-                disabled={ disabled }
-            />
         </button>
     );
 };
