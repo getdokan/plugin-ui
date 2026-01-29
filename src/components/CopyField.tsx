@@ -2,6 +2,7 @@ import { useCallback, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { twMerge } from 'tailwind-merge';
 import TextField from './TextField';
+import { Button } from './ui/button';
 import { CopyIcon } from './Icons'; // Assuming we have a CopyIcon or similar
 import type { CopyFieldProps } from '../types';
 
@@ -47,16 +48,13 @@ const CopyField = ( {
 
     const renderCopyButton = () => {
         return (
-            <button
+            <Button
                 type="button"
                 onClick={ handleCopy }
                 disabled={ disabled || ! value }
+                variant="tertiary"
                 className={ twMerge(
-                    'flex items-center justify-center bg-white gap-2 px-4 py-2 border rounded-md font-medium text-sm transition-all duration-200',
-                    copied
-                        ? 'bg-green-50 text-green-600 border-green-300'
-                        : 'text-gray-700 hover:bg-gray-50 border-gray-300',
-                    disabled ? 'opacity-50 cursor-not-allowed' : ''
+                    copied && 'bg-green-50 text-green-600 border-green-300'
                 ) }
             >
                 <span className="w-4 h-4 flex items-center justify-center">
@@ -95,7 +93,7 @@ const CopyField = ( {
                         ? successMessage || __( 'Copied', 'wedevs-plugin-ui' )
                         : buttonText || __( 'Copy', 'wedevs-plugin-ui' ) }
                 </span>
-            </button>
+            </Button>
         );
     };
 

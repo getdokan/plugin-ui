@@ -3,7 +3,7 @@ import { twMerge } from 'tailwind-merge';
 // @ts-ignore
 // eslint-disable-next-line import/no-unresolved
 import { snakeCase, kebabCase } from 'lodash';
-import DokanButton from './Button';
+import { Button } from './ui/button';
 
 interface FilterProps {
     /** Namespace for the filter, used to generate unique IDs */
@@ -61,15 +61,15 @@ const Filter = ( {
             } ) }
 
             { showFilter && (
-                <DokanButton onClick={ onFilter }>
+                <Button onClick={ onFilter } variant="primary">
                     { __( 'Filter', 'dokan-lite' ) }
-                </DokanButton>
+                </Button>
             ) }
 
             { showReset && (
-                <DokanButton onClick={ onReset }>
+                <Button onClick={ onReset } variant="secondary">
                     { __( 'Reset', 'dokan-lite' ) }
-                </DokanButton>
+                </Button>
             ) }
         </div>
     );

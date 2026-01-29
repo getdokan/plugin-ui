@@ -47,7 +47,7 @@ const RadioCapsule = ( {
                         disabled={ isDisabled }
                         className={ twMerge(
                             sizeClasses[ size ],
-                            'font-medium rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dokan-btn ring-offset-1',
+                            'font-medium rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-plugin-ui-primary ring-offset-1',
                             isSelected
                                 ? 'bg-white text-gray-900 shadow-sm'
                                 : 'text-gray-600 hover:text-gray-900',

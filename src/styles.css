@@ -1,3 +1,4 @@
+@import "@getdokan/dokan-ui/dist/dokan-ui.css";
 @import 'tailwindcss';
 @plugin 'tailwindcss-animate';
 
@@ -193,6 +194,5 @@
     transition-duration: 150ms;
 }
 
-@import "@getdokan/dokan-ui/dist/dokan-ui.css";
 @import 'quill/dist/quill.snow.css';
 @import './styles/richtext.css';

@@ -1,5 +1,6 @@
 import { useCallback, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { Button } from './ui/button';
 import type { RepeaterItem, RepeaterProps } from '../types';
 
 /**
@@ -254,16 +255,17 @@ const Repeater = ( {
             ) }
 
             { canAdd && (
-                <button
+                <Button
                     type="button"
                     onClick={ handleAdd }
-                    className="inline-flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700"
+                    variant="link"
+                    className="p-0 h-auto"
                 >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={ 2 } d="M12 4v16m8-8H4" />
                     </svg>
                     { addButtonText || __( 'Add Item', 'wedevs-plugin-ui' ) }
-                </button>
+                </Button>
             ) }
         </div>
     );

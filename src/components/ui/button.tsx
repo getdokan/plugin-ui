@@ -9,25 +9,32 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "bg-plugin-ui-primary text-plugin-ui-primary-foreground hover:bg-plugin-ui-primary-hover",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
           "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        secondary: "bg-plugin-ui-gray-100 text-plugin-ui-gray-700 hover:bg-plugin-ui-gray-200 border border-plugin-ui-gray-200",
         ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+        link: "text-plugin-ui-primary underline-offset-4 hover:underline",
+        primary: "bg-plugin-ui-primary text-plugin-ui-primary-foreground hover:bg-plugin-ui-primary-hover",
+        tertiary: "bg-white border border-plugin-ui-gray-300 text-plugin-ui-gray-700 hover:bg-plugin-ui-gray-50",
+        info: "bg-plugin-ui-info text-white hover:bg-plugin-ui-info/90",
+        success: "bg-plugin-ui-success text-white hover:bg-plugin-ui-success/90",
+        warning: "bg-plugin-ui-warning text-white hover:bg-plugin-ui-warning/90",
+        danger: "bg-plugin-ui-error text-white hover:bg-plugin-ui-error/90",
       },
       size: {
         default: "h-10 px-4 py-2",
+        xs: "h-7 rounded px-2 text-xs",
         sm: "h-9 rounded-md px-3",
+        md: "h-10 px-4 py-2",
         lg: "h-11 rounded-md px-8",
         icon: "h-10 w-10",
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "primary",
       size: "default",
     },
   }
@@ -38,6 +45,8 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
 }
+
+export type ButtonVariant = VariantProps<typeof buttonVariants>["variant"]
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {

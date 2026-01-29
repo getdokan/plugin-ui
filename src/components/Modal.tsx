@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { Button } from './ui/button';
 import type { ModalProps } from '../types';
 
 /**
@@ -116,21 +117,21 @@ const Modal = ( {
                     { /* Footer */ }
                     { showFooter && (
                         <div className="border-t border-gray-200 px-6 py-4 flex justify-end gap-3">
-                            <button
+                            <Button
                                 type="button"
                                 onClick={ onClose }
-                                className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                variant="tertiary"
                             >
                                 { cancelText || __( 'Cancel', 'wedevs-plugin-ui' ) }
-                            </button>
+                            </Button>
                             { onConfirm && (
-                                <button
+                                <Button
                                     type="button"
                                     onClick={ onConfirm }
-                                    className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                    variant="primary"
                                 >
                                     { confirmText || __( 'Confirm', 'wedevs-plugin-ui' ) }
-                                </button>
+                                </Button>
                             ) }
                         </div>
                     ) }

@@ -1,6 +1,7 @@
 import { useState } from '@wordpress/element';
 import { twMerge } from 'tailwind-merge';
 import { LucideIcon, GoogleIcon } from './Icons';
+import { Button } from './ui/button';
 import type { SocialButtonProps } from '../types';
 
 /**
@@ -57,40 +58,42 @@ const SocialButton = ( {
     const config = getNetworkConfig( network, hovered );
 
     return (
-        <button
+        <Button
             type="button"
             onClick={ onClick }
             disabled={ disabled }
             className={ twMerge(
                 'flex flex-row min-w-[180px] max-w-full items-center p-0 rounded-[5px] overflow-hidden font-medium text-[14px] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
                 config.bg,
-                disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer',
                 className
             ) }
             onMouseEnter={ () => setHovered( true ) }
             onMouseLeave={ () => setHovered( false ) }
+            asChild
         >
-            { /* Left icon section */ }
-            <div
-                className={ twMerge(
-                    'h-10 w-[49px] flex items-center justify-center border bg-white rounded-l-[5px]',
-                    config.border
-                ) }
-            >
-                { config.icon }
+            <div>
+                { /* Left icon section */ }
+                <div
+                    className={ twMerge(
+                        'h-10 w-[49px] flex items-center justify-center border bg-white rounded-l-[5px]',
+                        config.border
+                    ) }
+                >
+                    { config.icon }
+                </div>
+                { /* Right label section */ }
+                <div
+                    className={ twMerge(
+                        'h-10 flex-1 flex items-center justify-center px-4 border border-l-0 bg-white rounded-r-[5px]',
+                        config.border
+                    ) }
+                >
+                    <span className={ twMerge( 'whitespace-nowrap transition-colors duration-200', config.textColor ) }>
+                        { label || config.text }
+                    </span>
+                </div>
             </div>
-            { /* Right label section */ }
-            <div
-                className={ twMerge(
-                    'h-10 flex-1 flex items-center justify-center px-4 border border-l-0 bg-white rounded-r-[5px]',
-                    config.border
-                ) }
-            >
-                <span className={ twMerge( 'whitespace-nowrap transition-colors duration-200', config.textColor ) }>
-                    { label || config.text }
-                </span>
-            </div>
-        </button>
+        </Button>
     );
 };
 
