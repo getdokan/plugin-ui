@@ -11,6 +11,8 @@ Reusable UI components for WordPress plugins. Built with React and designed to w
 - [Importing Styles](#importing-styles)
 - [Usage Examples](#usage-examples)
 - [Components](#components)
+- [Theme & Variables Mapping](#theme--variables-mapping)
+- [Theme Presets](#theme-presets)
 - [Project Structure](#project-structure)
 - [Available Scripts](#available-scripts)
 - [Peer Dependencies](#peer-dependencies)
@@ -334,6 +336,32 @@ const DataView = () => {
 
 ### Utilities
 - **`VisitStore`** - Store visit link component
+
+## Theme & Variables Mapping
+
+Design tokens (ThemeTokens) are converted to CSS variables and wired into Tailwind’s theme. For a full description of how tokens map to base CSS variables and to Tailwind theme variables, see **[docs/VARIABLES-MAPPING.md](docs/VARIABLES-MAPPING.md)**.
+
+Summary:
+
+- **ThemeTokens** (camelCase in JS) → **Base CSS variables** (e.g. `--primary-foreground`) via `tokensToCssVariables()` in `ThemeProvider`.
+- **Base variables** → **Tailwind theme** via `@theme inline` in `styles.css` (e.g. `--color-primary: var(--primary)`).
+- Custom token keys are converted the same way (`camelCase` → `--kebab-case`).
+
+## Theme Presets
+
+The package includes **theme presets** — ready-made light/dark token sets you can pass to `ThemeProvider`. For the full list, usage with `ThemeProvider`, and how to extend them with `createTheme` / `createDarkTheme`, see **[docs/THEME-PRESETS.md](docs/THEME-PRESETS.md)**.
+
+Quick example:
+
+```tsx
+import { ThemeProvider, dokanTheme, dokanDarkTheme } from "@wedevs/plugin-ui";
+
+<ThemeProvider pluginId="dokan" tokens={dokanTheme} darkTokens={dokanDarkTheme}>
+  <App />
+</ThemeProvider>
+```
+
+Available presets: `defaultTheme`, `dokanTheme`, `blueTheme`, `greenTheme`, `amberTheme`, `slateTheme` (and their `*DarkTheme` variants). Use `createTheme(tokens)` or `createDarkTheme(tokens)` to build a custom theme from a base.
 
 ## Project Structure
 
