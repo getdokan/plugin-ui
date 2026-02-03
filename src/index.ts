@@ -24,6 +24,8 @@ export {
     AvatarGroup,
     AvatarGroupCount,
     AvatarBadge,
+    // Thumbnail
+    Thumbnail, type ThumbnailProps, type ThumbnailSize, type ThumbnailAspect,
     // Badge
     Badge,
     // Button

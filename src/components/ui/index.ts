@@ -8,6 +8,7 @@ export { Avatar,
   AvatarGroup,
   AvatarGroupCount,
   AvatarBadge } from "./avatar";
+export { Thumbnail, type ThumbnailProps, type ThumbnailSize, type ThumbnailAspect } from "./thumbnail";
 export { Badge, type BadgeProps, type BadgeVariant } from "./badge";
 export { Button, type ButtonProps, type ButtonSize, type ButtonVariant } from "./button";
 export {
