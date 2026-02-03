@@ -1,6 +1,7 @@
 import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip"
 
 import { cn } from "@/lib/utils"
+import { useTheme } from "@/providers";
 
 function TooltipProvider({
   delay = 0,
@@ -40,8 +41,9 @@ function TooltipContent({
     TooltipPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset"
   >) {
+  const {mode} = useTheme();
   return (
-    <TooltipPrimitive.Portal>
+    <TooltipPrimitive.Portal className={ `pui-root ${mode}` }>
       <TooltipPrimitive.Positioner
         align={align}
         alignOffset={alignOffset}

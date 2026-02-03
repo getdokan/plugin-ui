@@ -50,6 +50,7 @@ export {
     Toggle,
     ToggleGroup,
     ToggleGroupItem,
+    MatricsCard,
     // Types
     type AlertProps,
     type AlertVariant,
@@ -72,7 +73,8 @@ export {
     type InputProps,
     type LabelProps, type ModalProps, type SeparatorProps,
     type SwitchProps,
-    type TextareaProps
+    type TextareaProps,
+    type MatricsCardProps
 } from "./components/ui";
 
 // ============================================
