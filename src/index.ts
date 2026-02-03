@@ -17,6 +17,13 @@ export {
 export {
     // Alert
     Alert, AlertDescription, AlertTitle,
+    // Avatar
+    Avatar,
+    AvatarImage,
+    AvatarFallback,
+    AvatarGroup,
+    AvatarGroupCount,
+    AvatarBadge,
     // Badge
     Badge,
     // Button

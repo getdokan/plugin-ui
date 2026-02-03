@@ -2,6 +2,12 @@
 // All components are pure React - no WordPress dependencies
 
 export { Alert, AlertDescription, AlertTitle, type AlertProps, type AlertVariant } from "./alert";
+export { Avatar,
+  AvatarImage,
+  AvatarFallback,
+  AvatarGroup,
+  AvatarGroupCount,
+  AvatarBadge } from "./avatar";
 export { Badge, type BadgeProps, type BadgeVariant } from "./badge";
 export { Button, type ButtonProps, type ButtonSize, type ButtonVariant } from "./button";
 export {
