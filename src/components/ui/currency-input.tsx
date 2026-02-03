@@ -4,7 +4,7 @@ import {
   type InputHTMLAttributes,
   type ReactNode,
 } from "react";
-import { cn } from "../../utils/classnames";
+import { cn } from "@/lib/utils";
 import { InputGroup } from "./input-group";
 
 /** Chevron-down icon for dropdowns */

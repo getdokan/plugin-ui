@@ -66,6 +66,9 @@ module.exports = {
     ],
     resolve: {
         ...defaultConfig.resolve,
+        alias: {
+            '@': path.resolve( __dirname, 'src' ),
+        },
         extensions: [ '.ts', '.tsx', '.js', '.jsx', '.json' ],
         modules: [
             path.resolve( __dirname, 'node_modules' ),

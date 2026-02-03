@@ -42,6 +42,14 @@ export {
     Switch,
     // Textarea
     Textarea,
+    // Tooltip
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+    Toggle,
+    ToggleGroup,
+    ToggleGroupItem,
     // Types
     type AlertProps,
     type AlertVariant,
@@ -77,4 +85,5 @@ export {
 // ============================================
 // Utilities
 // ============================================
-export { cn, twMerge } from "./utils/classnames";
+export { cn } from "@/lib/utils";
+export { twMerge } from "tailwind-merge";

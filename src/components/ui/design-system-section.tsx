@@ -3,7 +3,7 @@ import {
   type HTMLAttributes,
   type ReactNode,
 } from "react";
-import { cn } from "../../utils/classnames";
+import { cn } from "@/lib/utils";
 
 /* ============================================
    DesignSystemSection

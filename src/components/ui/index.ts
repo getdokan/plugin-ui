@@ -29,4 +29,8 @@ export {
 export { Separator, type SeparatorProps } from "./separator";
 export { Switch, type SwitchProps } from "./switch";
 export { Textarea, type TextareaProps } from "./textarea";
+export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
+export { Toggle } from './toggle'
+export { ToggleGroup, ToggleGroupItem } from './toggle-group'
+
 
