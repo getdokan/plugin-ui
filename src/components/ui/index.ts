@@ -34,35 +34,4 @@ export { Toggle } from './toggle';
 export { ToggleGroup, ToggleGroupItem } from './toggle-group';
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 
-
-export {
-    ActionMenu,
-    DropdownContent,
-    DropdownRoot,
-    DropdownTrigger,
-    MenuContent,
-    MenuItem,
-    MenuRoot,
-    MenuSeparator,
-    MenuTrigger,
-    MultiSelectDropdown,
-    SearchableDropdown
-} from './dropdown';
-
-export type {
-    ActionMenuItem,
-    ActionMenuProps,
-    DropdownContentProps,
-    DropdownRootProps,
-    DropdownTriggerProps,
-    MenuContentProps,
-    MenuItemProps,
-    MenuRootProps,
-    MenuSeparatorProps,
-    MenuTriggerProps,
-    MultiSelectDropdownProps,
-    MultiSelectOption,
-    SearchableDropdownOption,
-    SearchableDropdownProps
-} from './dropdown';
-
+export { ActionMenu } from './dropdown-menu';

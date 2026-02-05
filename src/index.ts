@@ -73,7 +73,7 @@ export {
     type TextareaProps
 } from "./components/ui";
 
-export * from "./components/ui/dropdown";
+export * from './components/ui/dropdown-menu';
 
 // ============================================
 // Theme Presets
