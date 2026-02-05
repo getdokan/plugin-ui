@@ -15,13 +15,7 @@ function DropdownMenuPortal({ ...props }: MenuPrimitive.Portal.Props) {
 }
 
 function DropdownMenuTrigger({ className, ...props }: MenuPrimitive.Trigger.Props) {
-    return (
-        <MenuPrimitive.Trigger
-            data-slot="dropdown-menu-trigger"
-            className={cn('w-max', className)}
-            {...props}
-        />
-    );
+    return <MenuPrimitive.Trigger data-slot="dropdown-menu-trigger" className={cn('w-max', className)} {...props} />;
 }
 
 function DropdownMenuContent({
@@ -89,7 +83,7 @@ function DropdownMenuItem({
             data-inset={inset}
             data-variant={variant}
             className={cn(
-                "focus:bg-accent focus:text-accent-foreground data-[variant=primary]:focus:bg-accent data-[variant=primary]:focus:text-primary data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive gap-2 rounded-sm px-4 py-2 text-sm data-inset:pl-8 [&_svg:not([class*='size-'])]:size-4 group/dropdown-menu-item relative flex cursor-pointer items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+                "hover:bg-accent focus:bg-accent hover:text-accent-foreground focus:text-accent-foreground data-[variant=primary]:hover:bg-primary data-[variant=primary]:hover:text-primary-foreground data-[variant=primary]:focus:bg-primary data-[variant=primary]:focus:text-primary-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:hover:bg-destructive/10 data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:hover:bg-destructive/20 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:hover:text-destructive data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive gap-2 rounded-sm px-4 py-2 text-sm data-inset:pl-8 [&_svg:not([class*='size-'])]:size-4 group/dropdown-menu-item relative flex cursor-pointer items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
                 className
             )}
             {...props}
@@ -227,7 +221,7 @@ function DropdownMenuShortcut({ className, ...props }: React.ComponentProps<'spa
         <span
             data-slot="dropdown-menu-shortcut"
             className={cn(
-                'text-muted-foreground group-focus/dropdown-menu-item:text-accent-foreground ml-auto text-xs tracking-widest',
+                'text-muted-foreground group-hover/dropdown-menu-item:text-inherit group-focus/dropdown-menu-item:text-inherit ml-auto text-xs tracking-widest',
                 className
             )}
             {...props}
@@ -251,12 +245,7 @@ export type ActionMenuDropdownProps = {
     trigger?: React.ReactNode;
 };
 
-function ActionMenuDropdown({
-    items,
-    align = 'end',
-    side = 'bottom',
-    trigger
-}: ActionMenuDropdownProps) {
+function ActionMenuDropdown({ items, align = 'end', side = 'bottom', trigger }: ActionMenuDropdownProps) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger
@@ -324,9 +313,7 @@ function CheckboxListDropdown({
     selectedValue,
     onChange
 }: CheckboxListDropdownProps) {
-    const [internalSelectedValues, setInternalSelectedValues] = React.useState<string[]>(
-        () => selectedValue ?? []
-    );
+    const [internalSelectedValues, setInternalSelectedValues] = React.useState<string[]>(() => selectedValue ?? []);
 
     const isControlled = selectedValues !== undefined;
     const currentValues = isControlled ? selectedValues : internalSelectedValues;
@@ -385,12 +372,7 @@ export type IconListDropdownProps = {
     trigger?: React.ReactNode;
 };
 
-function IconListDropdown({
-    items,
-    align = 'start',
-    side = 'bottom',
-    trigger
-}: IconListDropdownProps) {
+function IconListDropdown({ items, align = 'start', side = 'bottom', trigger }: IconListDropdownProps) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger
@@ -424,6 +406,110 @@ function IconListDropdown({
     );
 }
 
+// ========= Simple menu variants (icon + shortcut) =========
+
+export type MenuDropdownItem = {
+    value: string;
+    label: string;
+    icon?: React.ReactNode;
+    shortcut?: React.ReactNode;
+    onSelect?: () => void;
+};
+
+export type SimpleMenuDropdownProps = {
+    items: MenuDropdownItem[];
+    align?: 'start' | 'center' | 'end';
+    side?: 'top' | 'right' | 'bottom' | 'left';
+    trigger?: React.ReactNode;
+};
+
+function SimpleMenuDropdown({ items, align = 'start', side = 'bottom', trigger }: SimpleMenuDropdownProps) {
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger
+                className={
+                    trigger
+                        ? 'outline-none'
+                        : 'flex items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground outline-none transition-colors'
+                }>
+                {trigger ? (
+                    trigger
+                ) : (
+                    <>
+                        <MoreHorizontal className="h-4 w-4" />
+                        <span className="sr-only">Open menu</span>
+                    </>
+                )}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align={align} side={side} className="min-w-[260px] p-1">
+                {items?.map((item) => (
+                    <DropdownMenuItem key={item.value} className="gap-3">
+                        {item.icon && (
+                            <span className="mr-1 flex h-4 w-4 items-center justify-center [&>svg]:size-4">
+                                {item.icon}
+                            </span>
+                        )}
+                        <span className="flex-1 text-sm">{item.label}</span>
+                        {item.shortcut && <DropdownMenuShortcut>{item.shortcut}</DropdownMenuShortcut>}
+                    </DropdownMenuItem>
+                ))}
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
+}
+
+export type SectionedMenuSection = {
+    id?: string;
+    items: MenuDropdownItem[];
+};
+
+export type SectionedMenuDropdownProps = {
+    sections: SectionedMenuSection[];
+    align?: 'start' | 'center' | 'end';
+    side?: 'top' | 'right' | 'bottom' | 'left';
+    trigger?: React.ReactNode;
+};
+
+function SectionedMenuDropdown({ sections, align = 'start', side = 'bottom', trigger }: SectionedMenuDropdownProps) {
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger
+                className={
+                    trigger
+                        ? 'outline-none'
+                        : 'flex items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground outline-none transition-colors'
+                }>
+                {trigger ? (
+                    trigger
+                ) : (
+                    <>
+                        <MoreHorizontal className="h-4 w-4" />
+                        <span className="sr-only">Open menu</span>
+                    </>
+                )}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align={align} side={side} className="min-w-[260px] p-1">
+                {sections.map((section, sectionIndex) => (
+                    <React.Fragment key={section.id ?? sectionIndex}>
+                        {sectionIndex > 0 && <DropdownMenuSeparator className="my-1" />}
+                        {section.items.map((item) => (
+                            <DropdownMenuItem key={item.value} className="gap-3">
+                                {item.icon && (
+                                    <span className="mr-1 flex h-4 w-4 items-center justify-center [&>svg]:size-4">
+                                        {item.icon}
+                                    </span>
+                                )}
+                                <span className="flex-1 text-sm">{item.label}</span>
+                                {item.shortcut && <DropdownMenuShortcut>{item.shortcut}</DropdownMenuShortcut>}
+                            </DropdownMenuItem>
+                        ))}
+                    </React.Fragment>
+                ))}
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
+}
+
 // Base + high-level components
 export {
     ActionMenuDropdown,
@@ -443,6 +529,7 @@ export {
     DropdownMenuSubContent,
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
-    IconListDropdown
+    IconListDropdown,
+    SectionedMenuDropdown,
+    SimpleMenuDropdown
 };
-

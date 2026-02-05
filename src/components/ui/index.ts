@@ -38,11 +38,12 @@ export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tool
 export {
     ActionMenuDropdown,
     CheckboxListDropdown,
-    IconListDropdown
+    IconListDropdown, SectionedMenuDropdown, SimpleMenuDropdown
 } from './dropdown-menu';
 export type {
     CheckboxListDropdownProps,
-    IconDropdownItem,
-    SimpleDropdownItem
+    IconDropdownItem, IconListDropdownProps,
+    MenuDropdownItem,
+    SectionedMenuDropdownProps, SimpleDropdownItem, SimpleMenuDropdownProps
 } from './dropdown-menu';
 
