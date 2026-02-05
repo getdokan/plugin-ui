@@ -1,18 +1,29 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { CircleCheckBig } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-function MatricsPill( { className } ) {
+type MatricsPillProps = {
+  className?: string;
+  iconWrapperClassName?: string;
+  iconClassName?: string;
+  textClassName?: string;
+  countClassName?: string;
+  Icon: LucideIcon
+  text: string,
+  count: number
+}
+
+function MatricsPill( { className = '', Icon, text, countClassName, count, textClassName, iconClassName, iconWrapperClassName }: MatricsPillProps ) {
   return (
     <Badge variant="outline" className={ cn( 'p-2.5 border! h-auto flex flex-row justify-between gap-2.5', className ) }>
-      <span className="flex items-center gap-2">
-        <span className="w-5! h-5! ml-2.5 text-muted-foreground">
-          <CircleCheckBig size={20} />
+      <span className={ cn( 'flex items-center gap-2' ) }>
+        <span className={cn( 'w-5! h-5! ml-2.5 text-muted-foreground', iconWrapperClassName )}>
+          <Icon size={20} className={iconClassName} />
         </span>
-        <span className="font-semibold text-[14px]">Vendor Approvals</span>
+        <span className={cn( 'font-semibold text-[14px]', textClassName )}>{text}</span>
       </span>
-      <span className="text-destructive-foreground bg-destructive w-9 h-9 rounded-full flex justify-center items-center">15</span>
+      <span className={ cn( 'text-destructive-foreground bg-destructive w-9 h-9 rounded-full flex justify-center items-center', countClassName ) }>{ count }</span>
     </Badge>
   );
 }
