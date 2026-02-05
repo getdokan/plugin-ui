@@ -1,10 +1,12 @@
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
-import * as React from 'react';
+import React, { useState } from 'react';
 
 import { MoreHorizontal } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { CheckIcon, ChevronRightIcon } from 'lucide-react';
+import { useTheme } from '@/providers';
+import { CheckIcon, ChevronDown, ChevronRightIcon, Search } from 'lucide-react';
+import { Input } from './input';
 
 function DropdownMenu({ ...props }: MenuPrimitive.Root.Props) {
     return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
@@ -26,10 +28,11 @@ function DropdownMenuContent({
     className,
     ...props
 }: MenuPrimitive.Popup.Props & Pick<MenuPrimitive.Positioner.Props, 'align' | 'alignOffset' | 'side' | 'sideOffset'>) {
+    const { mode } = useTheme();
     return (
         <MenuPrimitive.Portal>
             <MenuPrimitive.Positioner
-                className="isolate z-9999 outline-none pui-root"
+                className={cn('isolate z-9999 outline-none pui-root', mode)}
                 align={align}
                 alignOffset={alignOffset}
                 side={side}
@@ -313,7 +316,7 @@ function CheckboxListDropdown({
     selectedValue,
     onChange
 }: CheckboxListDropdownProps) {
-    const [internalSelectedValues, setInternalSelectedValues] = React.useState<string[]>(() => selectedValue ?? []);
+    const [internalSelectedValues, setInternalSelectedValues] = useState<string[]>(() => selectedValue ?? []);
 
     const isControlled = selectedValues !== undefined;
     const currentValues = isControlled ? selectedValues : internalSelectedValues;
@@ -510,6 +513,122 @@ function SectionedMenuDropdown({ sections, align = 'start', side = 'bottom', tri
     );
 }
 
+// ========= Tag multi-select dropdown with optional search =========
+
+export type TagMultiSelectDropdownProps = {
+    items: SimpleDropdownItem[];
+    align?: 'start' | 'center' | 'end';
+    side?: 'top' | 'right' | 'bottom' | 'left';
+    selectedValues?: string[];
+    selectedValue?: string[];
+    onChange?: (values: string[]) => void;
+    placeholder?: string;
+    showSearch?: boolean;
+    maxTagCount?: number;
+};
+
+function TagMultiSelectDropdown({
+    items,
+    align = 'start',
+    side = 'bottom',
+    selectedValues,
+    selectedValue,
+    onChange,
+    placeholder = 'Find an item',
+    showSearch = true,
+    maxTagCount
+}: TagMultiSelectDropdownProps) {
+    const [internalSelectedValues, setInternalSelectedValues] = React.useState<string[]>(() => selectedValue ?? []);
+    const [search, setSearch] = useState('');
+
+    const isControlled = selectedValues !== undefined;
+    const currentValues = isControlled ? selectedValues : internalSelectedValues;
+
+    const setValues = (values: string[]) => {
+        if (!isControlled) {
+            setInternalSelectedValues(values);
+        }
+        onChange?.(values);
+    };
+
+    const toggleValue = (value: string) => {
+        setValues(currentValues.includes(value) ? currentValues.filter((v) => v !== value) : [...currentValues, value]);
+    };
+
+    const selectedItems = items.filter((item) => currentValues.includes(item.value));
+    const visibleTagCount = maxTagCount ?? selectedItems.length;
+    const visibleTags = selectedItems.slice(0, visibleTagCount);
+    const remainingCount = Math.max(selectedItems.length - visibleTagCount, 0);
+
+    const searchLower = search.toLowerCase();
+    const filteredItems = searchLower
+        ? items.filter(
+              (item) => item.label.toLowerCase().includes(searchLower) || item.value.toLowerCase().includes(searchLower)
+          )
+        : items;
+
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger className="w-auto">
+                <div className="inline-flex min-w-[260px] max-w-full items-center justify-between gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=open]:bg-muted">
+                    <div className="flex flex-1 flex-wrap items-center gap-1 text-left">
+                        {visibleTags.map((item) => (
+                            <span
+                                key={item.value}
+                                className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                                {item.label}
+                            </span>
+                        ))}
+                        {remainingCount > 0 && (
+                            <span className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                                +{remainingCount}
+                            </span>
+                        )}
+                        {selectedItems.length === 0 && <span className="text-muted-foreground">{placeholder}</span>}
+                    </div>
+                    <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+                </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align={align} side={side} className="min-w-[280px] p-2 space-y-2">
+                {showSearch && (
+                    <div
+                        className="px-1"
+                        onPointerDown={(e) => e.stopPropagation()}
+                        onClick={(e) => e.stopPropagation()}>
+                        <div className="flex min-w-0 items-center gap-2 rounded-md border border-input bg-background px-3 py-1.5">
+                            <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
+                            <Input
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                placeholder={placeholder}
+                                className="h-8 min-w-0 flex-1 border-border! bg-transparent px-0 py-0 text-sm text-foreground shadow-none placeholder:text-muted-foreground focus-visible:ring-0"
+                            />
+                        </div>
+                    </div>
+                )}
+                <div className="max-h-60 overflow-y-auto">
+                    {filteredItems.map((item) => {
+                        const checked = currentValues.includes(item.value);
+                        return (
+                            <DropdownMenuItem
+                                key={item.value}
+                                onClick={() => toggleValue(item.value)}
+                                className="gap-2"
+                                role="menuitemcheckbox"
+                                aria-checked={checked}>
+                                <span className="flex h-4 w-4 items-center justify-center rounded-[3px] border border-border bg-background">
+                                    {checked && <CheckIcon className="h-3 w-3" />}
+                                </span>
+                                <span>{item.label}</span>
+                            </DropdownMenuItem>
+                        );
+                    })}
+                </div>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
+}
+
 // Base + high-level components
 export {
     ActionMenuDropdown,
@@ -531,5 +650,6 @@ export {
     DropdownMenuTrigger,
     IconListDropdown,
     SectionedMenuDropdown,
-    SimpleMenuDropdown
+    SimpleMenuDropdown,
+    TagMultiSelectDropdown
 };
