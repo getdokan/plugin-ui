@@ -51,6 +51,7 @@ export {
     ToggleGroup,
     ToggleGroupItem,
     MatricsCard,
+    MatricsGroup, MatricsGroupItem, MatricsGroupProps, MatricsGroupItemProps,
     // Types
     type AlertProps,
     type AlertVariant,

@@ -34,5 +34,6 @@ export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tool
 export { Toggle } from './toggle'
 export { ToggleGroup, ToggleGroupItem } from './toggle-group'
 export { MatricsCard, type MatricsCardProps } from './MatricsCard'
+export { MatricsGroup, MatricsGroupItem, MatricsGroupProps, MatricsGroupItemProps } from './MatricsGroup';
 
 
