@@ -1,7 +1,7 @@
 /**
  * Dropdown system: base primitives + variants.
  * - Primitives: DropdownRoot, DropdownTrigger, DropdownContent (Popover-based); MenuRoot, MenuTrigger, MenuContent, MenuItem, MenuSeparator (Menu-based).
- * - Variants: ActionMenu, SearchableDropdown, AvatarWorkspaceSelector, MultiSelectDropdown.
+ * - Variants: ActionMenu, SearchableDropdown, MultiSelectDropdown.
  */
 
 export { DropdownRoot } from './dropdown-root';
@@ -18,14 +18,14 @@ export {
   MenuItem,
   MenuRoot,
   MenuSeparator,
-  MenuTrigger,
+  MenuTrigger
 } from './menu-primitives';
 export type {
   MenuContentProps,
   MenuItemProps,
   MenuRootProps,
   MenuSeparatorProps,
-  MenuTriggerProps,
+  MenuTriggerProps
 } from './menu-primitives';
 
 export { ActionMenu } from './action-menu';
@@ -34,17 +34,12 @@ export type { ActionMenuItem, ActionMenuProps } from './action-menu';
 export { SearchableDropdown } from './searchable-dropdown';
 export type {
   SearchableDropdownOption,
-  SearchableDropdownProps,
+  SearchableDropdownProps
 } from './searchable-dropdown';
-
-export { AvatarWorkspaceSelector } from './avatar-workspace-selector';
-export type {
-  AvatarWorkspaceOption,
-  AvatarWorkspaceSelectorProps,
-} from './avatar-workspace-selector';
 
 export { MultiSelectDropdown } from './multi-select-dropdown';
 export type {
   MultiSelectDropdownProps,
-  MultiSelectOption,
+  MultiSelectOption
 } from './multi-select-dropdown';
+

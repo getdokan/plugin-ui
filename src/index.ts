@@ -25,9 +25,9 @@ export {
     Card, CardContent, CardDescription, CardFooter, CardHeader,
     CardTitle,
     // Design system (Figma Design-System-for-Plugin)
-    ComponentPreview, DesignSystemSection,
+    ComponentPreview,
     // Currency input (uses InputGroup)
-    CurrencyInput,
+    CurrencyInput, DesignSystemSection,
     // Input
     Input,
     InputGroup,
@@ -43,15 +43,14 @@ export {
     // Switch
     Switch,
     // Textarea
-    Textarea,
+    Textarea, Toggle,
+    ToggleGroup,
+    ToggleGroupItem,
     // Tooltip
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
-    Toggle,
-    ToggleGroup,
-    ToggleGroupItem,
     // Types
     type AlertProps,
     type AlertVariant,
@@ -74,6 +73,8 @@ export {
     type TextareaProps
 } from "./components/ui";
 
+export * from "./components/ui/dropdown";
+
 // ============================================
 // Theme Presets
 // ============================================
@@ -86,3 +87,4 @@ export {
 // ============================================
 export { cn } from "@/lib/utils";
 export { twMerge } from "tailwind-merge";
+

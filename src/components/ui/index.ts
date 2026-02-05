@@ -37,7 +37,6 @@ export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tool
 
 export {
     ActionMenu,
-    AvatarWorkspaceSelector,
     DropdownContent,
     DropdownRoot,
     DropdownTrigger,
@@ -49,11 +48,10 @@ export {
     MultiSelectDropdown,
     SearchableDropdown
 } from './dropdown';
+
 export type {
     ActionMenuItem,
     ActionMenuProps,
-    AvatarWorkspaceOption,
-    AvatarWorkspaceSelectorProps,
     DropdownContentProps,
     DropdownRootProps,
     DropdownTriggerProps,
