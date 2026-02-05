@@ -34,4 +34,4 @@ export { Toggle } from './toggle';
 export { ToggleGroup, ToggleGroupItem } from './toggle-group';
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 
-export { ActionMenu } from './dropdown-menu';
+export { ActionMenuDropdown } from './dropdown-menu';
