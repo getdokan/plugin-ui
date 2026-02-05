@@ -34,4 +34,15 @@ export { Toggle } from './toggle';
 export { ToggleGroup, ToggleGroupItem } from './toggle-group';
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 
-export { ActionMenuDropdown } from './dropdown-menu';
+// Dropdown menu high-level components and types
+export {
+    ActionMenuDropdown,
+    CheckboxListDropdown,
+    IconListDropdown
+} from './dropdown-menu';
+export type {
+    CheckboxListDropdownProps,
+    IconDropdownItem,
+    SimpleDropdownItem
+} from './dropdown-menu';
+
