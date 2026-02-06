@@ -7,7 +7,6 @@ import {
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
-import { useThemeOptional } from "../../providers/theme-provider";
 import { cn } from "@/lib/utils";
 
 /* ============================================
@@ -51,7 +50,7 @@ const ModalContent = forwardRef<HTMLDivElement, ModalContentProps>(
       className={cn(
         "fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2",
         "w-full max-w-lg max-h-[85vh] overflow-auto",
-        "rounded-lg border border-border bg-background p-6 shadow-lg",
+        "rounded-lg border border-border bg-background p-0 shadow-lg",
         "data-[state=open]:animate-in data-[state=closed]:animate-out",
         "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
         "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
@@ -82,7 +81,7 @@ const ModalHeader = forwardRef<HTMLDivElement, ModalHeaderProps>(
     <div
       ref={ref}
       className={cn(
-        "flex flex-col space-y-1.5 text-center sm:text-left",
+        "flex flex-col space-y-1.5 text-center sm:text-left border-b border-[#E9E9E9] py-4 px-8",
         className,
       )}
       {...props}
@@ -129,7 +128,7 @@ const ModalDescription = forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("p-8", className)}
     {...props}
   />
 ));
@@ -149,7 +148,7 @@ const ModalFooter = forwardRef<HTMLDivElement, ModalFooterProps>(
     <div
       ref={ref}
       className={cn(
-        "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-4",
+        "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 border-t border-[#E9E9E9] py-5 px-8",
         className,
       )}
       {...props}
@@ -219,24 +218,9 @@ export interface ModalProps {
   onClose: () => void;
 
   /**
-   * Modal title
-   */
-  title?: ReactNode;
-
-  /**
-   * Modal description
-   */
-  description?: ReactNode;
-
-  /**
    * Modal content
    */
   children?: ReactNode;
-
-  /**
-   * Footer content (typically buttons)
-   */
-  footer?: ReactNode;
 
   /**
    * Whether to show close button
@@ -277,11 +261,7 @@ const sizeClasses = {
 };
 
 /**
- * Modal component with proper theme scoping
- *
- * The modal portals into a container that inherits the theme context,
- * ensuring CSS variables work correctly even though it renders outside
- * the normal React tree.
+ * Modal component that portals content to document.body.
  *
  * @example
  * ```tsx
@@ -289,30 +269,26 @@ const sizeClasses = {
  *
  * <Button onClick={() => setOpen(true)}>Open Modal</Button>
  *
- * <Modal
- *   open={open}
- *   onClose={() => setOpen(false)}
- *   title="Edit Profile"
- *   description="Make changes to your profile here."
- *   footer={
- *     <>
- *       <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
- *       <Button onClick={handleSave}>Save</Button>
- *     </>
- *   }
- * >
- *   <Input placeholder="Name" />
- *   <Input placeholder="Email" />
+ * <Modal open={open} onClose={() => setOpen(false)}>
+ *   <ModalHeader>
+ *     <ModalTitle>Edit Profile</ModalTitle>
+ *     <ModalDescription>Make changes to your profile here.</ModalDescription>
+ *   </ModalHeader>
+ *   <div className="p-8">
+ *     <Input placeholder="Name" />
+ *     <Input placeholder="Email" />
+ *   </div>
+ *   <ModalFooter>
+ *     <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+ *     <Button onClick={handleSave}>Save</Button>
+ *   </ModalFooter>
  * </Modal>
  * ```
  */
 export function Modal({
   open,
   onClose,
-  title,
-  description,
   children,
-  footer,
   showCloseButton = true,
   closeOnOverlayClick = true,
   closeOnEscape = true,
@@ -322,48 +298,23 @@ export function Modal({
   const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(
     null,
   );
-  const themeContext = useThemeOptional();
   const previousActiveElement = useRef<Element | null>(null);
 
-  // Create/find portal container that inherits theme
   useEffect(() => {
     if (!open) {
       setPortalContainer(null);
       return;
     }
 
-    // Store currently focused element
     previousActiveElement.current = document.activeElement;
 
-    // Create portal container
     const container = document.createElement("div");
     container.setAttribute("data-pui-modal-root", "true");
-
-    // Copy theme attributes from ThemeProvider
-    if (themeContext) {
-      container.setAttribute("data-pui-plugin", themeContext.pluginId);
-      container.setAttribute("data-pui-mode", themeContext.resolvedMode);
-      container.className = `pui-root ${
-        themeContext.resolvedMode === "dark" ? "dark" : ""
-      }`;
-
-      // Copy CSS variables
-      const cssVars: Record<string, string> = {};
-      Object.entries(themeContext.tokens).forEach(([key, value]) => {
-        if (value) {
-          const cssKey = `--${key.replace(/([A-Z])/g, "-$1").toLowerCase()}`;
-          cssVars[cssKey] = value;
-        }
-      });
-      Object.assign(container.style, cssVars);
-    } else {
-      container.className = "pui-root";
-    }
+    container.className = "pui-root";
 
     document.body.appendChild(container);
     setPortalContainer(container);
 
-    // Prevent body scroll
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
@@ -371,12 +322,11 @@ export function Modal({
       document.body.style.overflow = originalOverflow;
       document.body.removeChild(container);
 
-      // Restore focus
       if (previousActiveElement.current instanceof HTMLElement) {
         previousActiveElement.current.focus();
       }
     };
-  }, [open, themeContext]);
+  }, [open]);
 
   // Handle escape key
   useEffect(() => {
@@ -401,17 +351,7 @@ export function Modal({
       <ModalOverlay onClose={closeOnOverlayClick ? onClose : undefined} />
       <ModalContent className={cn(sizeClasses[size], className)}>
         {showCloseButton && <ModalClose onClose={onClose} />}
-
-        {(title || description) && (
-          <ModalHeader>
-            {title && <ModalTitle>{title}</ModalTitle>}
-            {description && <ModalDescription>{description}</ModalDescription>}
-          </ModalHeader>
-        )}
-
-        {children && <div className="py-4">{children}</div>}
-
-        {footer && <ModalFooter>{footer}</ModalFooter>}
+        {children}
       </ModalContent>
     </>,
     portalContainer,

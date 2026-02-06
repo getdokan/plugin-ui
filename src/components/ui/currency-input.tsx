@@ -5,7 +5,11 @@ import {
   type ReactNode,
 } from "react";
 import { cn } from "@/lib/utils";
-import { InputGroup } from "./input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "./input-group";
 
 /** Chevron-down icon for dropdowns */
 function ChevronDownIcon({ className }: { className?: string }) {
@@ -57,11 +61,6 @@ export interface CurrencyInputProps
   placeholder?: string;
 
   /**
-   * Error state for the whole component.
-   */
-  error?: boolean;
-
-  /**
    * Additional CSS classes for the root wrapper.
    */
   className?: string;
@@ -99,7 +98,6 @@ export const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
       onCurrencyChange,
       currencyOptions = DEFAULT_CURRENCIES,
       placeholder = "Type something",
-      error = false,
       className,
       currencySelector,
       disabled,
@@ -112,7 +110,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
     const inputId = idProp ?? id;
     const selectId = `${id}-currency`;
 
-    const rightAddon =
+    const currencySelectorContent =
       currencySelector != null ? (
         currencySelector
       ) : (
@@ -126,7 +124,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
             onChange={(e) => onCurrencyChange?.(e.target.value)}
             disabled={disabled}
             className={cn(
-              "h-full min-w-18 cursor-pointer appearance-none bg-transparent pl-3 pr-8 py-2 text-sm font-medium text-foreground outline-none",
+              "h-full min-w-18 cursor-pointer appearance-none bg-transparent pl-3 pr-8 py-2 text-sm font-medium text-foreground outline-none border-0",
               "disabled:cursor-not-allowed disabled:opacity-50",
             )}
             aria-label="Currency"
@@ -147,19 +145,21 @@ export const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
       );
 
     return (
-      <InputGroup
-        ref={ref}
-        id={inputId}
-        type="text"
-        inputMode="decimal"
-        placeholder={placeholder}
-        disabled={disabled}
-        error={error}
-        className={className}
-        rightAddon={rightAddon}
-        aria-describedby={selectId}
-        {...inputProps}
-      />
+      <InputGroup className={className} data-disabled={disabled || undefined}>
+        <InputGroupInput
+          ref={ref}
+          id={inputId}
+          type="text"
+          inputMode="decimal"
+          placeholder={placeholder}
+          disabled={disabled}
+          aria-describedby={selectId}
+          {...inputProps}
+        />
+        <InputGroupAddon align="inline-end">
+          {currencySelectorContent}
+        </InputGroupAddon>
+      </InputGroup>
     );
   },
 );

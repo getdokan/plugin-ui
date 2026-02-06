@@ -16,14 +16,22 @@ export {
 // ============================================
 export {
     // Alert
-    Alert, AlertDescription, AlertTitle,
+    Alert, AlertAction, AlertDescription, AlertTitle,
+    // Avatar
+    Avatar, AvatarBadge, AvatarFallback,
+    AvatarGroup,
+    AvatarGroupCount, AvatarImage,
     // Badge
     Badge,
+    // Breadcrumb
+    Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem,
+    BreadcrumbLink, BreadcrumbList, BreadcrumbPage,
+    BreadcrumbSeparator,
     // Button
     Button,
     // Card
     Card, CardContent, CardDescription, CardFooter, CardHeader,
-    CardTitle,
+    CardTitle, CircularProgress,
     // Design system (Figma Design-System-for-Plugin)
     ComponentPreview,
     // Currency input (uses InputGroup)
@@ -31,19 +39,43 @@ export {
     // Input
     Input,
     InputGroup,
+    InputGroupAddon,
+    InputGroupButton,
+    InputGroupInput,
+    InputGroupText,
+    InputGroupTextarea,
+    // Input OTP
+    InputOTP,
+    InputOTPGroup,
+    InputOTPSeparator,
+    InputOTPSlot,
     // Label
     Label,
     // Modal
     Modal, ModalClose, ModalContent, ModalDescription,
     ModalFooter, ModalHeader, ModalOverlay, ModalTitle,
+    // Notice
+    Notice, NoticeAction, NoticeTitle,
+    // Progress
+    Progress, ProgressIndicator,
+    ProgressLabel, ProgressTrack, ProgressValue, SelectionItem,
+    // Selection Type
+    SelectionType,
     // Separator
     Separator,
+    // Slider
+    Slider,
     // Spinner
     Spinner,
     // Switch
     Switch,
+    // Tabs
+    Tabs, TabsContent, TabsList,
+    TabsTrigger,
     // Textarea
-    Textarea, Toggle,
+    Textarea,
+    // Thumbnail
+    Thumbnail, Toggle,
     ToggleGroup,
     ToggleGroupItem,
     // Tooltip
@@ -52,8 +84,6 @@ export {
     TooltipProvider,
     TooltipTrigger,
     // Types
-    type AlertProps,
-    type AlertVariant,
     type BadgeProps,
     type BadgeVariant,
     type CardContentProps,
@@ -62,15 +92,20 @@ export {
     type CardHeaderProps,
     type CardProps,
     type CardTitleProps,
+    type CircularProgressProps,
     type ComponentPreviewProps,
     type CurrencyInputProps,
     type CurrencyOption,
     type DesignSystemSectionProps,
-    type InputGroupProps,
-    type InputProps,
-    type LabelProps, type ModalProps, type SeparatorProps,
+    type LabelProps,
+    type ModalProps,
+    type ProgressProps,
+    type SeparatorProps,
+    type SliderProps,
     type SwitchProps,
-    type TextareaProps
+    type ThumbnailAspect,
+    type ThumbnailProps,
+    type ThumbnailSize
 } from "./components/ui";
 
 export * from './components/ui/dropdown-menu';

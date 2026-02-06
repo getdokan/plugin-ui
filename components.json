@@ -3,6 +3,7 @@
   "style": "base-vega",
   "rsc": false,
   "tsx": true,
+  "rtl": true,
   "tailwind": {
     "config": "",
     "css": "@/styles.css",

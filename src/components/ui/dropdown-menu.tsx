@@ -574,8 +574,7 @@ export {
     DropdownMenuSubContent,
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
-    IconListDropdown,
-    SectionedMenuDropdown,
-    SimpleMenuDropdown,
-    MultiSelectDropdown
+    IconListDropdown, MultiSelectDropdown, SectionedMenuDropdown,
+    SimpleMenuDropdown
 };
+

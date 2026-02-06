@@ -1,60 +1,18 @@
-import { forwardRef, type TextareaHTMLAttributes } from "react";
-import { cn } from "@/lib/utils";
+import * as React from "react"
 
-export interface TextareaProps
-  extends TextareaHTMLAttributes<HTMLTextAreaElement> {
-  /**
-   * Error state
-   */
-  error?: boolean;
+import { cn } from "@/lib/utils"
 
-  /**
-   * Additional CSS classes
-   */
-  className?: string;
+function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
+  return (
+    <textarea
+      data-slot="textarea"
+      className={cn(
+        "border-input dark:bg-input/30 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-md border bg-transparent px-2.5 py-2 text-base shadow-xs transition-[color,box-shadow] focus-visible:ring-3 aria-invalid:ring-3 md:text-sm placeholder:text-muted-foreground flex field-sizing-content min-h-16 w-full outline-none disabled:cursor-not-allowed disabled:opacity-50",
+        className
+      )}
+      {...props}
+    />
+  )
 }
 
-/**
- * Textarea component following ShadCN pattern
- *
- * @example
- * ```tsx
- * // Basic usage
- * <Textarea placeholder="Type your message here." />
- *
- * // With rows
- * <Textarea rows={6} placeholder="Write a detailed description..." />
- *
- * // Error state
- * <Textarea error placeholder="Invalid content" />
- *
- * // Disabled
- * <Textarea disabled placeholder="Cannot edit" />
- * ```
- */
-export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, error, ...props }, ref) => {
-    return (
-      <textarea
-        ref={ref}
-        className={cn(
-          "flex min-h-[60px] w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-sm",
-          "transition-colors duration-150",
-          "placeholder:text-muted-foreground",
-          "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
-          "disabled:cursor-not-allowed disabled:opacity-50",
-          "md:text-sm",
-          error
-            ? "border-destructive focus-visible:ring-destructive"
-            : "border-input",
-          className,
-        )}
-        {...props}
-      />
-    );
-  },
-);
-
-Textarea.displayName = "Textarea";
-
-export default Textarea;
+export { Textarea }

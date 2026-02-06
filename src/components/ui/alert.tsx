@@ -1,118 +1,109 @@
-import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import type { ComponentProps, CSSProperties } from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+
 import { cn } from "@/lib/utils";
 
-/**
- * Alert variant styles following ShadCN pattern
- */
-const alertVariants = {
-  default: "bg-background text-foreground border-border",
-  destructive:
-    "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
-  success:
-    "border-success/50 bg-success/10 text-success dark:border-success [&>svg]:text-success",
-  warning:
-    "border-warning/50 bg-warning/10 text-warning dark:border-warning [&>svg]:text-warning",
-  info: "border-info/50 bg-info/10 text-info dark:border-info [&>svg]:text-info",
-} as const;
+const alertVariants = cva(
+  "grid gap-2.5 rounded-lg border px-5 py-3 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2.5 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4 w-full relative group/alert",
+  {
+    variants: {
+      variant: {
+        default: "[&]:bg-[#F8F9F8] [&]:border-[#E9E9E9] *:data-[slot=alert-title]:text-[#25252D] *:data-[slot=alert-description]:text-[#575757]",
+        destructive: "[&]:bg-red-50 [&]:border-transparent *:data-[slot=alert-title]:text-red-700 *:data-[slot=alert-description]:text-red-500",
+        success: "[&]:bg-green-50 [&]:border-none *:data-[slot=alert-title]:text-green-700 *:data-[slot=alert-description]:text-green-700",
+        warning: "[&]:bg-yellow-50 [&]:border-none *:data-[slot=alert-title]:text-yellow-900 *:data-[slot=alert-description]:text-yellow-900",
+        info: "[&]:bg-blue-600 [&]:border-none *:data-[slot=alert-title]:text-white *:data-[slot=alert-description]:text-white/80",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+)
 
-export type AlertVariant = keyof typeof alertVariants;
-
-export interface AlertProps extends HTMLAttributes<HTMLDivElement> {
-  /**
-   * Alert style variant
-   * @default 'default'
-   */
-  variant?: AlertVariant;
-
-  /**
-   * Additional CSS classes
-   */
-  className?: string;
-
-  /**
-   * Alert content
-   */
-  children?: ReactNode;
+export interface AlertProps extends ComponentProps<"div">, VariantProps<typeof alertVariants> {
+  /** Custom background color */
+  bgColor?: string
+  /** Custom border color */
+  borderColor?: string
+  /** Custom title text color */
+  titleColor?: string
+  /** Custom description text color */
+  descriptionColor?: string
 }
 
-/**
- * Alert component following ShadCN pattern
- *
- * @example
- * ```tsx
- * <Alert>
- *   <AlertTitle>Heads up!</AlertTitle>
- *   <AlertDescription>
- *     You can add components to your app using the cli.
- *   </AlertDescription>
- * </Alert>
- *
- * <Alert variant="destructive">
- *   <AlertTitle>Error</AlertTitle>
- *   <AlertDescription>Something went wrong.</AlertDescription>
- * </Alert>
- * ```
- */
-export const Alert = forwardRef<HTMLDivElement, AlertProps>(
-  ({ className, variant = "default", ...props }, ref) => (
+function Alert({
+  className,
+  variant,
+  bgColor,
+  borderColor,
+  titleColor,
+  descriptionColor,
+  style,
+  ...props
+}: AlertProps) {
+  const alertClassName = alertVariants({ variant })
+
+  // Build custom styles for per-instance color overrides
+  const customStyle: CSSProperties = {
+    ...(bgColor && { backgroundColor: bgColor }),
+    ...(borderColor && { borderColor: borderColor }),
+    ...(titleColor && { '--alert-title-color': titleColor } as CSSProperties),
+    ...(descriptionColor && { '--alert-desc-color': descriptionColor } as CSSProperties),
+    ...style,
+  }
+
+  return (
     <div
-      ref={ref}
+      data-slot="alert"
       role="alert"
+      className={cn(alertClassName, className)}
+      style={customStyle}
+      {...props}
+    >
+    </div>
+  )
+}
+
+function AlertTitle({ className, ...props }: ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="alert-title"
       className={cn(
-        "relative w-full rounded-lg border px-4 py-3 text-sm",
-        "[&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground [&>svg~*]:pl-7",
-        alertVariants[variant],
-        className,
+        "text-sm font-semibold group-has-[>svg]/alert:col-start-2 [&_a]:hover:text-foreground [&_a]:underline [&_a]:underline-offset-3",
+        className
       )}
+      style={{ color: 'var(--alert-title-color)' }}
       {...props}
     />
-  ),
-);
-
-Alert.displayName = "Alert";
-
-/* ============================================
-   Alert Title
-   ============================================ */
-
-export interface AlertTitleProps extends HTMLAttributes<HTMLHeadingElement> {
-  children?: ReactNode;
-  className?: string;
+  )
 }
 
-export const AlertTitle = forwardRef<HTMLHeadingElement, AlertTitleProps>(
-  ({ className, ...props }, ref) => (
-    <h5
-      ref={ref}
-      className={cn("mb-1 font-medium leading-none tracking-tight", className)}
+function AlertDescription({
+  className,
+  ...props
+}: ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="alert-description"
+      className={cn(
+        "text-sm text-balance md:text-pretty [&_p:not(:last-child)]:mb-4 [&_a]:hover:text-foreground [&_a]:underline [&_a]:underline-offset-3",
+        className
+      )}
+      style={{ color: 'var(--alert-desc-color)' }}
       {...props}
     />
-  ),
-);
-
-AlertTitle.displayName = "AlertTitle";
-
-/* ============================================
-   Alert Description
-   ============================================ */
-
-export interface AlertDescriptionProps
-  extends HTMLAttributes<HTMLParagraphElement> {
-  children?: ReactNode;
-  className?: string;
+  )
 }
 
-export const AlertDescription = forwardRef<
-  HTMLParagraphElement,
-  AlertDescriptionProps
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("text-sm [&_p]:leading-relaxed", className)}
-    {...props}
-  />
-));
+function AlertAction({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="alert-action"
+      className={cn("absolute top-2.5 right-3", className)}
+      {...props}
+    />
+  )
+}
 
-AlertDescription.displayName = "AlertDescription";
-
-export default Alert;
+export { Alert, AlertTitle, AlertDescription, AlertAction }
