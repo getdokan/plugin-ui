@@ -33,5 +33,7 @@ export { Textarea, type TextareaProps } from "./textarea";
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 export { Toggle } from './toggle'
 export { ToggleGroup, ToggleGroupItem } from './toggle-group'
+export { Progress, ProgressTrack, ProgressIndicator, ProgressLabel, ProgressValue, CircularProgress, type ProgressProps, type CircularProgressProps } from "./progress";
+export { Slider, type SliderProps } from "./slider";
 
 

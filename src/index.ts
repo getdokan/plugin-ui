@@ -52,6 +52,15 @@ export {
     Toggle,
     ToggleGroup,
     ToggleGroupItem,
+    // Progress
+    Progress,
+    ProgressTrack,
+    ProgressIndicator,
+    ProgressLabel,
+    ProgressValue,
+    CircularProgress,
+    // Slider
+    Slider,
     // Types
     type AlertProps,
     type AlertVariant,
@@ -69,7 +78,12 @@ export {
     type DesignSystemSectionProps,
     type InputGroupProps,
     type InputProps,
-    type LabelProps, type ModalProps, type SeparatorProps,
+    type LabelProps,
+    type ModalProps,
+    type ProgressProps,
+    type CircularProgressProps,
+    type SeparatorProps,
+    type SliderProps,
     type SwitchProps,
     type TextareaProps
 } from "./components/ui";
