@@ -32,10 +32,8 @@ export {
     // Card
     Card, CardContent, CardDescription, CardFooter, CardHeader,
     CardTitle, CircularProgress,
-    // Design system (Figma Design-System-for-Plugin)
-    ComponentPreview,
     // Currency input (uses InputGroup)
-    CurrencyInput, DesignSystemSection,
+    CurrencyInput,
     // Input
     Input,
     InputGroup,
@@ -93,10 +91,8 @@ export {
     type CardProps,
     type CardTitleProps,
     type CircularProgressProps,
-    type ComponentPreviewProps,
     type CurrencyInputProps,
     type CurrencyOption,
-    type DesignSystemSectionProps,
     type LabelProps,
     type ModalProps,
     type ProgressProps,
@@ -107,8 +103,6 @@ export {
     type ThumbnailProps,
     type ThumbnailSize
 } from "./components/ui";
-
-export * from './components/ui/dropdown-menu';
 
 // ============================================
 // Theme Presets
