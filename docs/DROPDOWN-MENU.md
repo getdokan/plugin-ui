@@ -11,7 +11,7 @@ import {
   IconListDropdown,
   SimpleMenuDropdown,
   SectionedMenuDropdown,
-  TagMultiSelectDropdown,
+  MultiSelectDropdown,
 } from '@wedevs/plugin-ui';
 ```
 
@@ -171,9 +171,9 @@ const sections = [
 
 ---
 
-### `TagMultiSelectDropdown`
+### `MultiSelectDropdown`
 
-Tag‑based multi‑select dropdown, optionally with an inline search input inside the menu.
+Multi‑select dropdown with tag pills in the trigger; optionally with an inline search input inside the menu.
 
 **Props**
 
@@ -195,7 +195,7 @@ Tag‑based multi‑select dropdown, optionally with an inline search input insi
 **Floating tags (no search in menu)**
 
 ```tsx
-<TagMultiSelectDropdown
+<MultiSelectDropdown
   items={items}
   selectedValue={['glaempipe', 'item-01']}
   showSearch={false}
@@ -205,7 +205,7 @@ Tag‑based multi‑select dropdown, optionally with an inline search input insi
 **Attached search in menu**
 
 ```tsx
-<TagMultiSelectDropdown
+<MultiSelectDropdown
   items={items}
   selectedValue={['glaempipe', 'item-01']}
   showSearch
