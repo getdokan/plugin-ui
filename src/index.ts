@@ -56,6 +56,7 @@ export {
     MatricsPill,
     FileUpload,
     FileUploadProps,
+    FileView, FileViewProps,
     // Types
     type AlertProps,
     type AlertVariant,

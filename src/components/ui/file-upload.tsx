@@ -10,12 +10,8 @@ type FileUploadProps = {
   description?: string,
   onUpload: (file: IWpMediaData | any | null) => void,
   className?: string,
-  variant?: 'text' | 'button' | 'button-text',
+  variant?: 'button' | 'button-text',
   handlerType?: 'default' | 'custom',
-  id?: string,
-  isDroppable?: boolean,
-  accept?: string,
-  multiple?: boolean
 }
 
 function FileUpload( {
@@ -25,11 +21,7 @@ function FileUpload( {
   onUpload, 
   className, 
   handlerType = 'default', 
-  variant = 'button', 
-  id = React.useId(),
-  isDroppable = false,
-  accept,
-  multiple = false
+  variant = 'button',
 }: FileUploadProps ) {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = React.useState(false);
@@ -44,39 +36,9 @@ function FileUpload( {
     }
   };
 
-  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      onUpload(multiple ? Array.from(files) : files[0]);
-    }
-  };
-
-  const onDragOver = (e: React.DragEvent) => {
-    if (!isDroppable) return;
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const onDragLeave = (e: React.DragEvent) => {
-    if (!isDroppable) return;
-    e.preventDefault();
-    setIsDragging(false);
-  };
-
-  const onDrop = (e: React.DragEvent) => {
-    if (!isDroppable) return;
-    e.preventDefault();
-    setIsDragging(false);
-    
-    const files = e.dataTransfer.files;
-    if (files && files.length > 0) {
-      onUpload(multiple ? Array.from(files) : files[0]);
-    }
-  };
-
   const Wrapper = (props) => {
     const wrapperClasses = cn( 
-      variant === 'button-text' ? 'flex flex-col px-0 py-4 gap-2.5 justify-start ring-0! border-none! shadow-none' : 'flex flex-col p-4 gap-2.5 justify-center items-center rounded-[5px] bg-muted! text-center ring-0! border! border-border! border-dashed! shadow-none',
+      variant === 'button-text' ? 'flex flex-col px-0 py-4 gap-2.5 justify-start rounded-[5px] ring-0! border-none! shadow-none' : 'flex flex-col p-4 gap-2.5 justify-center items-center rounded-[5px] bg-muted! text-center ring-0! border! border-border! border-dashed! shadow-none',
       isDragging && 'border-primary bg-primary/10',
       className 
     );
@@ -84,15 +46,8 @@ function FileUpload( {
     return (
       <Card 
         className={ wrapperClasses }
-        onDragOver={ onDragOver }
-        onDragLeave={ onDragLeave }
-        onDrop={ onDrop }
       >
-        { variant === 'text' ? (
-          <label htmlFor={ id } className="cursor-pointer w-full h-full flex flex-col items-center justify-center gap-2.5">
-            { props.children }
-          </label>
-        ) : props.children }
+        { props.children }
       </Card>
     );
   }
@@ -121,29 +76,6 @@ function FileUpload( {
             </>
           )
         }
-        {
-          variant === 'text' && (
-            <>
-              <span className="font-medium! text-[14px]! leading-5! text-primary hover:underline cursor-pointer">
-                { text }
-              </span>
-
-              <input
-                type="file"
-                id={ id }
-                ref={ fileInputRef }
-                onChange={ onFileChange }
-                className="hidden"
-                accept={ accept }
-                multiple={ multiple }
-              />
-
-              <p className="text-muted-foreground p-0! m-0! font-normal text-[12px]">
-                { description }
-              </p>
-            </>
-          )
-        }
 
         {
           variant === 'button-text' && (
@@ -157,7 +89,7 @@ function FileUpload( {
                   </span>
               </Button>
 
-              <div className="flex flex-col items-start" style={{ minWidth: 100 }}>
+              <div className="flex flex-col items-start min-w-25">
                 <span className="font-medium! text-[14px]! leading-5! text-primary hover:underline cursor-pointer" onClick={ handle }>
                   { text }
                 </span>
