@@ -1,0 +1,12 @@
+# Build output
+dist/
+node_modules/
+
+# Generated / vendored
+*.min.js
+*.min.css
+
+# Lock files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
