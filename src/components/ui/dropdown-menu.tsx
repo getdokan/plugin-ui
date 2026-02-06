@@ -6,7 +6,7 @@ import { MoreHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/providers';
 import { CheckIcon, ChevronRightIcon } from 'lucide-react';
-import { TagMultiSelectCombobox } from './combobox';
+import { MultiSelectCombobox } from './combobox';
 
 function DropdownMenu({ ...props }: MenuPrimitive.Root.Props) {
     return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
@@ -49,7 +49,7 @@ function DropdownMenuContent({
                 <MenuPrimitive.Popup
                     data-slot="dropdown-menu-content"
                     className={cn(
-                        'data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 bg-white dark:bg-popover text-popover-foreground min-w-[240px] rounded-[3px] py-[10px] px-0 shadow-[0px_6px_20px_0px_#00000014] dark:shadow-none border border-border duration-100 data-[side=inline-start]:slide-in-from-right-2 data-[side=inline-end]:slide-in-from-left-2 z-9999 max-h-(--available-height) w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto outline-none data-closed:overflow-hidden',
+                        'data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 bg-white dark:bg-popover text-popover-foreground min-w-[240px] rounded-[3px] py-[10px] px-0 shadow-md border border-border duration-100 data-[side=inline-start]:slide-in-from-right-2 data-[side=inline-end]:slide-in-from-left-2 z-9999 max-h-(--available-height) w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto outline-none data-closed:overflow-hidden',
                         className
                     )}
                     {...props}
@@ -533,9 +533,9 @@ function SectionedMenuDropdown({ sections, align = 'start', side = 'bottom', tri
     );
 }
 
-// ========= Tag multi-select dropdown (uses Combobox component) =========
+// ========= Multi-select dropdown (uses Combobox component) =========
 
-export type TagMultiSelectDropdownProps = {
+export type MultiSelectDropdownProps = {
     items: SimpleDropdownItem[];
     align?: 'start' | 'center' | 'end';
     side?: 'top' | 'right' | 'bottom' | 'left';
@@ -547,9 +547,12 @@ export type TagMultiSelectDropdownProps = {
     maxTagCount?: number;
 };
 
-// Tag multi-select implemented with Base UI Combobox (see combobox.tsx)
-function TagMultiSelectDropdown(props: TagMultiSelectDropdownProps) {
-    return <TagMultiSelectCombobox {...props} />;
+/** Multi-select dropdown with tag pills; uses MultiSelectCombobox under the hood. */
+function MultiSelectDropdown({
+    showSearch,
+    ...props
+}: MultiSelectDropdownProps) {
+    return <MultiSelectCombobox {...props} searchable={showSearch} />;
 }
 
 // Base + high-level components
@@ -574,5 +577,5 @@ export {
     IconListDropdown,
     SectionedMenuDropdown,
     SimpleMenuDropdown,
-    TagMultiSelectDropdown
+    MultiSelectDropdown
 };

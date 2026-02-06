@@ -241,12 +241,12 @@ function useComboboxAnchor() {
     return React.useRef<HTMLDivElement | null>(null);
 }
 
-// ========= Tag multi-select (combobox-based, same API as TagMultiSelectDropdown) =========
+// ========= Multi-select combobox (dropdown with tags + optional search) =========
 
-export type TagMultiSelectComboboxItem = { value: string; label: string };
+export type MultiSelectComboboxItem = { value: string; label: string };
 
-export type TagMultiSelectComboboxProps = {
-    items: TagMultiSelectComboboxItem[];
+export type MultiSelectComboboxProps = {
+    items: MultiSelectComboboxItem[];
     align?: 'start' | 'center' | 'end';
     side?: 'top' | 'right' | 'bottom' | 'left';
     selectedValues?: string[];
@@ -257,7 +257,7 @@ export type TagMultiSelectComboboxProps = {
     maxTagCount?: number;
 };
 
-function TagMultiSelectCombobox({
+function MultiSelectCombobox({
     items,
     align = 'start',
     side = 'bottom',
@@ -267,20 +267,20 @@ function TagMultiSelectCombobox({
     placeholder = 'Find an item',
     searchable = true,
     maxTagCount
-}: TagMultiSelectComboboxProps) {
+}: MultiSelectComboboxProps) {
     const { mode, cssVariables } = useTheme();
-    const [internalValue, setInternalValue] = React.useState<TagMultiSelectComboboxItem[]>(() =>
+    const [internalValue, setInternalValue] = React.useState<MultiSelectComboboxItem[]>(() =>
         items.filter((i) => (selectedValue ?? []).includes(i.value))
     );
     const isControlled = selectedValues !== undefined;
     const selectedItems = isControlled ? items.filter((i) => selectedValues.includes(i.value)) : internalValue;
 
-    const setSelected = (next: TagMultiSelectComboboxItem[]) => {
+    const setSelected = (next: MultiSelectComboboxItem[]) => {
         if (!isControlled) setInternalValue(next);
         onChange?.(next.map((i) => i.value));
     };
 
-    const handleValueChange = (value: TagMultiSelectComboboxItem[] | TagMultiSelectComboboxItem | null) => {
+    const handleValueChange = (value: MultiSelectComboboxItem[] | MultiSelectComboboxItem | null) => {
         const next = Array.isArray(value) ? value : value ? [value] : [];
         setSelected(next);
     };
@@ -349,7 +349,7 @@ function TagMultiSelectCombobox({
                         </ComboboxPrimitive.Empty>
                         <ComboboxPrimitive.List
                             className="max-h-60 overflow-y-auto data-empty:p-0"
-                            children={(item: TagMultiSelectComboboxItem) => (
+                            children={(item: MultiSelectComboboxItem) => (
                                 <ComboboxPrimitive.Item key={item.value} value={item} className={comboboxItemStyles}>
                                     <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] border border-border bg-background data-selected:border-primary data-selected:bg-primary data-selected:[&_svg]:text-primary-foreground">
                                         <ComboboxPrimitive.ItemIndicator
@@ -385,7 +385,7 @@ export {
   ComboboxSeparator,
   ComboboxTrigger,
   ComboboxValue,
-  TagMultiSelectCombobox,
+  MultiSelectCombobox,
   useComboboxAnchor
 };
 

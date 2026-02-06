@@ -41,16 +41,16 @@ export {
     IconListDropdown,
     SectionedMenuDropdown,
     SimpleMenuDropdown,
-    TagMultiSelectDropdown
+    MultiSelectDropdown
 } from './dropdown-menu';
 export type {
     CheckboxListDropdownProps,
     IconDropdownItem,
     IconListDropdownProps,
     MenuDropdownItem,
+    MultiSelectDropdownProps,
     SectionedMenuDropdownProps,
     SimpleDropdownItem,
-    SimpleMenuDropdownProps,
-    TagMultiSelectDropdownProps
+    SimpleMenuDropdownProps
 } from './dropdown-menu';
 
