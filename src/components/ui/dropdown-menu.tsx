@@ -5,8 +5,8 @@ import { MoreHorizontal } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/providers';
-import { CheckIcon, ChevronDown, ChevronRightIcon, Search } from 'lucide-react';
-import { Input } from './input';
+import { CheckIcon, ChevronRightIcon } from 'lucide-react';
+import { TagMultiSelectCombobox } from './combobox';
 
 function DropdownMenu({ ...props }: MenuPrimitive.Root.Props) {
     return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
@@ -16,8 +16,16 @@ function DropdownMenuPortal({ ...props }: MenuPrimitive.Portal.Props) {
     return <MenuPrimitive.Portal data-slot="dropdown-menu-portal" {...props} />;
 }
 
-function DropdownMenuTrigger({ className, ...props }: MenuPrimitive.Trigger.Props) {
-    return <MenuPrimitive.Trigger data-slot="dropdown-menu-trigger" className={cn('w-max', className)} {...props} />;
+function DropdownMenuTrigger({ className, render, nativeButton, ...props }: MenuPrimitive.Trigger.Props) {
+    return (
+        <MenuPrimitive.Trigger
+            data-slot="dropdown-menu-trigger"
+            className={cn('w-max', className)}
+            render={render}
+            nativeButton={nativeButton}
+            {...props}
+        />
+    );
 }
 
 function DropdownMenuContent({
@@ -28,11 +36,12 @@ function DropdownMenuContent({
     className,
     ...props
 }: MenuPrimitive.Popup.Props & Pick<MenuPrimitive.Positioner.Props, 'align' | 'alignOffset' | 'side' | 'sideOffset'>) {
-    const { mode } = useTheme();
+    const { mode, cssVariables } = useTheme();
     return (
         <MenuPrimitive.Portal>
             <MenuPrimitive.Positioner
                 className={cn('isolate z-9999 outline-none pui-root', mode)}
+                style={cssVariables}
                 align={align}
                 alignOffset={alignOffset}
                 side={side}
@@ -40,7 +49,7 @@ function DropdownMenuContent({
                 <MenuPrimitive.Popup
                     data-slot="dropdown-menu-content"
                     className={cn(
-                        'data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 bg-white dark:bg-popover text-popover-foreground min-w-[240px] rounded-[3px] p-[10px] shadow-[0px_6px_20px_0px_#00000014] dark:shadow-none border border-border duration-100 data-[side=inline-start]:slide-in-from-right-2 data-[side=inline-end]:slide-in-from-left-2 z-9999 max-h-(--available-height) w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto outline-none data-closed:overflow-hidden',
+                        'data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 bg-white dark:bg-popover text-popover-foreground min-w-[240px] rounded-[3px] py-[10px] px-0 shadow-[0px_6px_20px_0px_#00000014] dark:shadow-none border border-border duration-100 data-[side=inline-start]:slide-in-from-right-2 data-[side=inline-end]:slide-in-from-left-2 z-9999 max-h-(--available-height) w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto outline-none data-closed:overflow-hidden',
                         className
                     )}
                     {...props}
@@ -86,7 +95,7 @@ function DropdownMenuItem({
             data-inset={inset}
             data-variant={variant}
             className={cn(
-                "hover:bg-accent focus:bg-accent hover:text-accent-foreground focus:text-accent-foreground data-[variant=primary]:hover:bg-primary data-[variant=primary]:hover:text-primary-foreground data-[variant=primary]:focus:bg-primary data-[variant=primary]:focus:text-primary-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:hover:bg-destructive/10 data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:hover:bg-destructive/20 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:hover:text-destructive data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive gap-2 rounded-sm px-4 py-2 text-sm data-inset:pl-8 [&_svg:not([class*='size-'])]:size-4 group/dropdown-menu-item relative flex cursor-pointer items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+                "hover:bg-accent focus:bg-accent hover:text-accent-foreground focus:text-accent-foreground data-[variant=primary]:hover:bg-primary data-[variant=primary]:hover:text-primary-foreground data-[variant=primary]:focus:bg-primary data-[variant=primary]:focus:text-primary-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:hover:bg-destructive/10 data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:hover:bg-destructive/20 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:hover:text-destructive data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive gap-2 rounded-none px-4 py-2 text-sm data-inset:pl-8 [&_svg:not([class*='size-'])]:size-4 group/dropdown-menu-item relative flex cursor-pointer items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
                 className
             )}
             {...props}
@@ -168,7 +177,7 @@ function DropdownMenuCheckboxItem({
                 className="absolute right-2 flex items-center justify-center pointer-events-none"
                 data-slot="dropdown-menu-checkbox-item-indicator">
                 <MenuPrimitive.CheckboxItemIndicator>
-                    <CheckIcon />
+                    <CheckIcon className="h-3 w-3 text-primary-foreground" />
                 </MenuPrimitive.CheckboxItemIndicator>
             </span>
             {children}
@@ -252,6 +261,7 @@ function ActionMenuDropdown({ items, align = 'end', side = 'bottom', trigger }: 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger
+                {...(trigger && { render: <div />, nativeButton: false as const })}
                 className={
                     trigger
                         ? 'outline-none'
@@ -266,7 +276,7 @@ function ActionMenuDropdown({ items, align = 'end', side = 'bottom', trigger }: 
                     </>
                 )}
             </DropdownMenuTrigger>
-            <DropdownMenuContent align={align} side={side} className="w-56 p-1">
+            <DropdownMenuContent align={align} side={side} className="w-56">
                 {items?.map((item) => (
                     <React.Fragment key={item.value}>
                         {item.separatorBefore && <DropdownMenuSeparator />}
@@ -335,6 +345,7 @@ function CheckboxListDropdown({
     return (
         <DropdownMenu>
             <DropdownMenuTrigger
+                {...(trigger && { render: <div />, nativeButton: false as const })}
                 className={
                     trigger
                         ? 'outline-none'
@@ -349,7 +360,7 @@ function CheckboxListDropdown({
                     </>
                 )}
             </DropdownMenuTrigger>
-            <DropdownMenuContent align={align} side={side} className="min-w-[240px] p-1">
+            <DropdownMenuContent align={align} side={side} className="min-w-[240px]">
                 {items?.map((item) => (
                     <DropdownMenuItem
                         key={item.value}
@@ -357,7 +368,13 @@ function CheckboxListDropdown({
                         className="gap-2"
                         role="menuitemcheckbox"
                         aria-checked={currentValues.includes(item.value)}>
-                        <span className="flex h-4 w-4 items-center justify-center rounded-[3px] border border-border bg-background">
+                        <span
+                            className={cn(
+                                'flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] border',
+                                currentValues.includes(item.value)
+                                    ? 'border-primary bg-primary [&_svg]:text-primary-foreground'
+                                    : 'border-border bg-background'
+                            )}>
                             {currentValues.includes(item.value) && <CheckIcon className="h-3 w-3" />}
                         </span>
                         <span>{item.label}</span>
@@ -379,6 +396,7 @@ function IconListDropdown({ items, align = 'start', side = 'bottom', trigger }: 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger
+                {...(trigger && { render: <div />, nativeButton: false as const })}
                 className={
                     trigger
                         ? 'outline-none'
@@ -393,7 +411,7 @@ function IconListDropdown({ items, align = 'start', side = 'bottom', trigger }: 
                     </>
                 )}
             </DropdownMenuTrigger>
-            <DropdownMenuContent align={align} side={side} className="min-w-[260px] p-1">
+            <DropdownMenuContent align={align} side={side} className="min-w-[260px]">
                 {items?.map((item) => (
                     <DropdownMenuItem key={item.value}>
                         {item.icon && (
@@ -430,6 +448,7 @@ function SimpleMenuDropdown({ items, align = 'start', side = 'bottom', trigger }
     return (
         <DropdownMenu>
             <DropdownMenuTrigger
+                {...(trigger && { render: <div />, nativeButton: false as const })}
                 className={
                     trigger
                         ? 'outline-none'
@@ -444,7 +463,7 @@ function SimpleMenuDropdown({ items, align = 'start', side = 'bottom', trigger }
                     </>
                 )}
             </DropdownMenuTrigger>
-            <DropdownMenuContent align={align} side={side} className="min-w-[260px] p-1">
+            <DropdownMenuContent align={align} side={side} className="min-w-[260px]">
                 {items?.map((item) => (
                     <DropdownMenuItem key={item.value} className="gap-3">
                         {item.icon && (
@@ -477,6 +496,7 @@ function SectionedMenuDropdown({ sections, align = 'start', side = 'bottom', tri
     return (
         <DropdownMenu>
             <DropdownMenuTrigger
+                {...(trigger && { render: <div />, nativeButton: false as const })}
                 className={
                     trigger
                         ? 'outline-none'
@@ -491,7 +511,7 @@ function SectionedMenuDropdown({ sections, align = 'start', side = 'bottom', tri
                     </>
                 )}
             </DropdownMenuTrigger>
-            <DropdownMenuContent align={align} side={side} className="min-w-[260px] p-1">
+            <DropdownMenuContent align={align} side={side} className="min-w-[260px]">
                 {sections.map((section, sectionIndex) => (
                     <React.Fragment key={section.id ?? sectionIndex}>
                         {sectionIndex > 0 && <DropdownMenuSeparator className="my-1" />}
@@ -513,7 +533,7 @@ function SectionedMenuDropdown({ sections, align = 'start', side = 'bottom', tri
     );
 }
 
-// ========= Tag multi-select dropdown with optional search =========
+// ========= Tag multi-select dropdown (uses Combobox component) =========
 
 export type TagMultiSelectDropdownProps = {
     items: SimpleDropdownItem[];
@@ -527,106 +547,9 @@ export type TagMultiSelectDropdownProps = {
     maxTagCount?: number;
 };
 
-function TagMultiSelectDropdown({
-    items,
-    align = 'start',
-    side = 'bottom',
-    selectedValues,
-    selectedValue,
-    onChange,
-    placeholder = 'Find an item',
-    showSearch = true,
-    maxTagCount
-}: TagMultiSelectDropdownProps) {
-    const [internalSelectedValues, setInternalSelectedValues] = React.useState<string[]>(() => selectedValue ?? []);
-    const [search, setSearch] = useState('');
-
-    const isControlled = selectedValues !== undefined;
-    const currentValues = isControlled ? selectedValues : internalSelectedValues;
-
-    const setValues = (values: string[]) => {
-        if (!isControlled) {
-            setInternalSelectedValues(values);
-        }
-        onChange?.(values);
-    };
-
-    const toggleValue = (value: string) => {
-        setValues(currentValues.includes(value) ? currentValues.filter((v) => v !== value) : [...currentValues, value]);
-    };
-
-    const selectedItems = items.filter((item) => currentValues.includes(item.value));
-    const visibleTagCount = maxTagCount ?? selectedItems.length;
-    const visibleTags = selectedItems.slice(0, visibleTagCount);
-    const remainingCount = Math.max(selectedItems.length - visibleTagCount, 0);
-
-    const searchLower = search.toLowerCase();
-    const filteredItems = searchLower
-        ? items.filter(
-              (item) => item.label.toLowerCase().includes(searchLower) || item.value.toLowerCase().includes(searchLower)
-          )
-        : items;
-
-    return (
-        <DropdownMenu>
-            <DropdownMenuTrigger className="w-auto">
-                <div className="inline-flex min-w-[260px] max-w-full items-center justify-between gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=open]:bg-muted">
-                    <div className="flex flex-1 flex-wrap items-center gap-1 text-left">
-                        {visibleTags.map((item) => (
-                            <span
-                                key={item.value}
-                                className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                                {item.label}
-                            </span>
-                        ))}
-                        {remainingCount > 0 && (
-                            <span className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                                +{remainingCount}
-                            </span>
-                        )}
-                        {selectedItems.length === 0 && <span className="text-muted-foreground">{placeholder}</span>}
-                    </div>
-                    <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
-                </div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align={align} side={side} className="min-w-[280px] p-2 space-y-2">
-                {showSearch && (
-                    <div
-                        className="px-1"
-                        onPointerDown={(e) => e.stopPropagation()}
-                        onClick={(e) => e.stopPropagation()}>
-                        <div className="flex min-w-0 items-center gap-2 rounded-md border border-input bg-background px-3 py-1.5">
-                            <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
-                            <Input
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                placeholder={placeholder}
-                                className="h-8 min-w-0 flex-1 border-border! bg-transparent px-0 py-0 text-sm text-foreground shadow-none placeholder:text-muted-foreground focus-visible:ring-0"
-                            />
-                        </div>
-                    </div>
-                )}
-                <div className="max-h-60 overflow-y-auto">
-                    {filteredItems.map((item) => {
-                        const checked = currentValues.includes(item.value);
-                        return (
-                            <DropdownMenuItem
-                                key={item.value}
-                                onClick={() => toggleValue(item.value)}
-                                className="gap-2"
-                                role="menuitemcheckbox"
-                                aria-checked={checked}>
-                                <span className="flex h-4 w-4 items-center justify-center rounded-[3px] border border-border bg-background">
-                                    {checked && <CheckIcon className="h-3 w-3" />}
-                                </span>
-                                <span>{item.label}</span>
-                            </DropdownMenuItem>
-                        );
-                    })}
-                </div>
-            </DropdownMenuContent>
-        </DropdownMenu>
-    );
+// Tag multi-select implemented with Base UI Combobox (see combobox.tsx)
+function TagMultiSelectDropdown(props: TagMultiSelectDropdownProps) {
+    return <TagMultiSelectCombobox {...props} />;
 }
 
 // Base + high-level components
