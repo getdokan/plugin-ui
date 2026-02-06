@@ -1,3 +1,4 @@
+import { DataViewsProps } from './components/ui/dataviews';
 // Styles - Import this in your plugin's entry point
 import "./styles.css";
 
@@ -83,6 +84,8 @@ export {
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
+    // DataViews
+    DataViews,
     // Types
     type BadgeProps,
     type BadgeVariant,
@@ -96,6 +99,13 @@ export {
     type ComponentPreviewProps,
     type CurrencyInputProps,
     type CurrencyOption,
+    type DataViewAction,
+    type DataViewField,
+    type DataViewFilterField,
+    type DataViewFilterProps,
+    type DataViewLayouts,
+    type DataViewsProps,
+    type DataViewState,
     type DesignSystemSectionProps,
     type LabelProps,
     type ModalProps,

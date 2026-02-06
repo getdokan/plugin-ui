@@ -67,5 +67,6 @@ export { Progress, ProgressTrack, ProgressIndicator, ProgressLabel, ProgressValu
 export { Slider, type SliderProps } from "./slider";
 export { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants } from './tabs'
 export { SelectionType, SelectionItem, selectionItemVariants } from './selection-type'
+export { DataViewTable as DataViews, type DataViewsProps, type DataViewAction, type DataViewField, type DataViewLayouts, type DataViewState, type DataViewFilterField, type DataViewFilterProps } from './dataviews'
 
 

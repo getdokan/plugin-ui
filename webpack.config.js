@@ -19,11 +19,14 @@ module.exports = {
     externals: {
         react: 'react',
         'react-dom': 'react-dom',
+        'react/jsx-runtime': 'react/jsx-runtime',
         '@wordpress/element': '@wordpress/element',
         '@wordpress/components': '@wordpress/components',
         '@wordpress/block-editor': '@wordpress/block-editor',
         '@wordpress/hooks': '@wordpress/hooks',
         '@wordpress/i18n': '@wordpress/i18n',
+        '@wordpress/dataviews': '@wordpress/dataviews',
+        '@wordpress/dataviews/wp': '@wordpress/dataviews/wp',
         quill: 'quill',
     },
     module: {
