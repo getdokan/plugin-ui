@@ -312,46 +312,98 @@
   animation: pui-spin 1s linear infinite;
 }
 
-.pui-root-datatable .dataviews-wrapper {
+.pui-root-dataviews .dataviews-wrapper {
   border-radius: 6px;
   border: 1px solid var(--border);
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1019607843);
+  background-color: var(--background);
+  color: var(--foreground);
 }
-.pui-root-datatable .dataviews-wrapper table.dataviews-view-table {
+.pui-root-dataviews .dataviews-wrapper .dataviews-view-table {
   border-left: none;
   border-right: none;
+  background-color: var(--background);
 }
-.pui-root-datatable .dataviews-wrapper table.dataviews-view-table thead {
+.pui-root-dataviews .dataviews-wrapper .dataviews-view-table thead {
   z-index: 0;
+  background-color: var(--muted);
 }
-.pui-root-datatable .dataviews-wrapper table.dataviews-view-table tr td:first-child,
-.pui-root-datatable .dataviews-wrapper table.dataviews-view-table tr th:first-child {
+.pui-root-dataviews .dataviews-wrapper .dataviews-view-table thead th {
+  color: var(--foreground);
+  background-color: var(--background);
+}
+
+.pui-root-dataviews .dataviews-view-table .dataviews-view-table-header-button:not(:hover) {
+  color: var(--foreground);
+}
+.pui-root-dataviews .dataviews-wrapper .dataviews-view-table tbody tr {
+  background-color: var(--background);
+}
+.pui-root-dataviews .dataviews-wrapper .dataviews-view-table tbody tr.is-selected td,
+.pui-root-dataviews .dataviews-wrapper .dataviews-view-table tbody tr:hover td {
+  background-color: var(--accent);
+}
+.pui-root-dataviews .dataviews-wrapper .dataviews-view-table tbody td {
+  color: var(--foreground);
+  border-bottom-color: var(--border);
+  background-color: var(--background);
+}
+.pui-root-dataviews .dataviews-wrapper .dataviews-view-table tr {
+  border-color: var(--border);
+}
+.pui-root-dataviews .dataviews-wrapper .dataviews-pagination .components-input-control__container {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+.pui-root-dataviews .dataviews-wrapper .dataviews-view-table tr td:first-child,
+.pui-root-dataviews .dataviews-wrapper .dataviews-view-table tr th:first-child {
   padding-left: 20px;
 }
-.pui-root-datatable .dataviews-wrapper table.dataviews-view-table tr td:last-child,
-.pui-root-datatable .dataviews-wrapper table.dataviews-view-table tr th:last-child {
+.pui-root-dataviews .dataviews-wrapper .dataviews-view-table.has-bulk-actions .components-checkbox-control__input.components-checkbox-control__input {
+  opacity: 1;
+}
+.pui-root-dataviews .dataviews-wrapper .dataviews-view-table tr td:last-child,
+.pui-root-dataviews .dataviews-wrapper .dataviews-view-table tr th:last-child {
   padding-right: 20px;
 }
-.pui-root-datatable .dataviews-wrapper .components-button.is-compact.has-icon:not(.has-text) {
+.pui-root-dataviews .dataviews-wrapper .components-button.is-compact.has-icon:not(.has-text) {
   width: auto;
   padding: 6px;
 }
-.pui-root-datatable .dataviews-wrapper .components-button.is-compact.has-icon:not(.has-text):hover,
-.pui-root-datatable .dataviews-wrapper .components-button.is-compact.has-icon:not(.has-text):focus {
+.pui-root-dataviews .dataviews-wrapper .components-button.is-compact.has-icon:not(.has-text):hover,
+.pui-root-dataviews .dataviews-wrapper .components-button.is-compact.has-icon:not(.has-text):focus {
   background-color: transparent;
   box-shadow: none;
   border: none;
 }
-.pui-root-datatable .dataviews-wrapper .components-flex.components-h-stack.dataviews-pagination {
+.pui-root-dataviews .dataviews-wrapper .components-flex.components-h-stack.dataviews-pagination {
   width: 100%;
   justify-content: space-between;
   padding: 15px 20px;
+  background-color: var(--background);
+  color: var(--foreground);
 }
-.pui-root-datatable .dataviews-wrapper .dataviews-bulk-actions-footer__action-buttons {
+.pui-root-dataviews .dataviews-wrapper .dataviews-bulk-actions-footer__action-buttons {
   gap: 10px;
 }
-.pui-root-datatable .dataviews-wrapper .dataviews-bulk-actions-footer__action-buttons .components-button.is-compact:not(:last-child) {
+.pui-root-dataviews .dataviews-wrapper .dataviews-bulk-actions-footer__action-buttons .components-button.is-compact:not(:last-child) {
   border: 1px solid var(--border);
   border-radius: 6px;
   line-height: 1;
+}
+/* DataViews list view theming */
+.pui-root-dataviews .dataviews-view-list {
+  background-color: var(--background);
+}
+.pui-root-dataviews .dataviews-view-list__item {
+  background-color: var(--background);
+  border-color: var(--border);
+}
+.pui-root-dataviews .dataviews-view-table.has-bulk-actions tr.is-selected td.dataviews-view-table__actions-column,
+.pui-root-dataviews .dataviews-view-table.has-bulk-actions tr:hover td.dataviews-view-table__actions-column {
+  background-color: var(--accent);
+}
+.pui-root-dataviews .dataviews-wrapper .dataviews-pagination .components-button svg, 
+.pui-root-dataviews .dataviews-view-table__actions-column .components-button svg {
+  fill: var(--foreground);
 }

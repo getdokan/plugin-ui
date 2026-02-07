@@ -9,7 +9,12 @@ import { Tabs, TabsList, TabsTrigger } from './tabs';
 import { cn } from '@/lib/utils';
 
 // Re-export types from @wordpress/dataviews with prefixed names to avoid conflicts
-export type { Action as DataViewAction, Field as DataViewField, SupportedLayouts as DataViewLayouts, View as DataViewState };
+export type {
+    Action as DataViewAction,
+    Field as DataViewField,
+    SupportedLayouts as DataViewLayouts,
+    View as DataViewState
+};
 
 // Filter types
 export interface DataViewFilterField {
@@ -124,17 +129,15 @@ const FilterItems = ({
                             return null;
                         }
                         return (
-                            <div className="relative inline-block" key={id}>
-                                <div className="relative inline-block">
-                                    {field.field}
-                                    <button
-                                        type="button"
-                                        aria-label={removeFilter}
-                                        className="absolute right-1 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-6 h-6 rounded-full bg-white text-[#828282] hover:text-[#7047EB] z-10"
-                                        onClick={() => handleRemoveFilter(id)}>
-                                        <X size="14" />
-                                    </button>
-                                </div>
+                            <div className="relative inline-flex items-center" key={id}>
+                                <div className="[&>input]:pr-8 [&>select]:pr-8">{field.field}</div>
+                                <span
+                                    role="button"
+                                    aria-label={removeFilter}
+                                    className="absolute right-2 inline-flex items-center justify-center w-5 h-5 text-muted-foreground hover:text-primary z-10"
+                                    onClick={() => handleRemoveFilter(id)}>
+                                    <X size="12" />
+                                </span>
                             </div>
                         );
                     })}
@@ -160,13 +163,13 @@ const FilterItems = ({
                     anchor={popoverAnchor}
                     offset={15}
                     position="bottom right"
-                    className="dokan-layout"
+                    className="pui-root"
                     onClose={() => setIsPopoverOpen(false)}>
-                    <div className="py-1 min-w-40 bg-white border-[#E9E9E9] rounded-md">
+                    <div className="py-1 min-w-40 bg-popover border-border rounded-md">
                         {availableFilters.map((f) => (
                             <button
                                 key={f.id}
-                                className="w-full flex items-center gap-3 px-4 py-2 text-sm text-[#828282] hover:bg-[#EFEAFF] hover:text-[#7047EB] transition-all duration-200 border-none bg-transparent group"
+                                className="w-full flex items-center gap-3 px-4 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-primary transition-all duration-200 border-none bg-transparent group"
                                 onClick={() => handleAddFilter(f.id)}>
                                 {f.label}
                             </button>
@@ -179,8 +182,8 @@ const FilterItems = ({
 };
 
 interface Tab {
-    name: string;
-    title: string;
+    label: string;
+    value: string;
     className?: string;
     icon?: React.ComponentType<{ className?: string }>;
     disabled?: boolean;
@@ -188,9 +191,9 @@ interface Tab {
 
 interface TabsProps {
     tabs: Tab[];
-    onSelect?: (tabName: string) => void;
-    initialTabName?: string;
-    additionalComponents?: React.ReactNode[];
+    onSelect?: (tabValue: string) => void;
+    initialTab?: string;
+    headerSlot?: React.ReactNode[];
     className?: string;
 }
 
@@ -237,11 +240,11 @@ const ListEmpty = ({ icon, description, title }: ListEmptyProps) => {
     return (
         <div className="w-full flex items-center justify-center py-40">
             <div className="text-center">
-                <div className="mx-auto mb-4 flex h-32 w-32 items-center justify-center text-[#7047EB] rounded-full bg-[#EFEAFF]">
+                <div className="mx-auto mb-4 flex h-32 w-32 items-center justify-center text-primary rounded-full bg-accent">
                     {icon || <FileSearch size={52} />}
                 </div>
-                <div className="text-[#111827] text-lg font-semibold">{heading}</div>
-                {desc && <div className="mt-1 text-sm text-[#6B7280]">{desc}</div>}
+                <div className="text-foreground text-lg font-semibold">{heading}</div>
+                {desc && <div className="mt-1 text-sm text-muted-foreground">{desc}</div>}
             </div>
         </div>
     );
@@ -252,7 +255,7 @@ export function DataViewTable<Item>(props: DataViewsProps<Item>) {
     const [showFilters, setShowFilters] = useState(false);
     const [openSelectorSignal, setOpenSelectorSignal] = useState(0);
     const [buttonRef, setButtonRef] = useState<HTMLButtonElement | null>();
-    const [hasActiveFilters, setHasActiveFilters] = useState(false);
+    const [activeFilterCount, setActiveFilterCount] = useState(0);
     const { responsive = true, onChangeView, fields, view, empty, emptyIcon, emptyTitle, emptyDescription } = props;
     /**
      * Disable sorting & column hiding globally
@@ -297,55 +300,61 @@ export function DataViewTable<Item>(props: DataViewsProps<Item>) {
 
     // Auto-hide filter area when there are no active filters
     useEffect(() => {
-        if (!hasActiveFilters) {
+        if (activeFilterCount === 0) {
             setShowFilters(false);
         }
-    }, [hasActiveFilters]);
+    }, [activeFilterCount]);
 
     const tabsWithFilterButton =
         filteredProps.filter?.fields && filteredProps.tabs && filteredProps.filter.fields.length > 0
             ? (() => {
-                  const existing = filteredProps.tabs?.additionalComponents || [];
+                  const existing = filteredProps.tabs?.headerSlot || [];
                   const newButton = (
                       <button
                           type="button"
                           ref={setButtonRef}
                           title="Filter"
                           className={cn(
-                              'inline-flex items-center gap-2 rounded-md bg-white px-3 py-1.5 text-sm hover:text-[#7047EB]',
-                              showFilters ? 'text-[#7047EB]' : 'text-[#828282]'
+                              'relative inline-flex items-center gap-2 rounded-md bg-background px-3 py-1.5 text-sm hover:text-primary',
+                              showFilters ? 'text-primary' : 'text-muted-foreground'
                           )}
                           onClick={() => {
-                              if (hasActiveFilters) {
+                              if (activeFilterCount > 0) {
                                   setShowFilters((prev) => !prev);
                               } else {
                                   setOpenSelectorSignal((s) => s + 1);
                               }
                           }}>
                           <Funnel size={20} />
+                          {activeFilterCount > 0 && (
+                              <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">
+                                  {activeFilterCount}
+                              </span>
+                          )}
                       </button>
                   );
 
                   return {
                       ...filteredProps.tabs,
-                      additionalComponents: [...existing, newButton]
+                      headerSlot: [...existing, newButton]
                   };
               })()
             : filteredProps.tabs;
 
     return (
-        <div className="pui-root-datatable">
+        <div className="pui-root-dataviews">
             <DataViews {...filteredProps}>
-                <div className="w-full flex items-center flex-col justify-between rounded-tr-md rounded-tl-md">
+                <div className="w-full flex items-center flex-col justify-between gap-4 rounded-tr-md rounded-tl-md">
                     {filteredProps.header && (
-                        <div className="font-semibold text-sm text-[#25252D]">{filteredProps.header}</div>
+                        <div className="font-semibold text-sm text-foreground">{filteredProps.header}</div>
                     )}
+
                     {filteredProps.tabs && filteredProps.tabs.tabs && filteredProps.tabs.tabs.length > 0 && (
-                        <div className="flex justify-between w-full items-center px-4 border-b border-border">
+                        <div className="md:flex justify-between w-full items-center px-4 border-b border-border">
                             <Tabs
                                 defaultValue={
-                                    (tabsWithFilterButton || filteredProps.tabs)?.initialTabName ||
-                                    (tabsWithFilterButton || filteredProps.tabs)?.tabs[0]?.name
+                                    (tabsWithFilterButton || filteredProps.tabs)?.initialTab ||
+                                    (tabsWithFilterButton || filteredProps.tabs)?.tabs[0]?.value
                                 }
                                 onValueChange={(value) => {
                                     filteredProps.tabs?.onSelect?.(value);
@@ -355,28 +364,27 @@ export function DataViewTable<Item>(props: DataViewsProps<Item>) {
                                 <TabsList variant="line" className="p-0">
                                     {(tabsWithFilterButton || filteredProps.tabs)?.tabs.map((tab) => (
                                         <TabsTrigger
-                                            key={tab.name}
-                                            value={tab.name}
+                                            key={tab.value}
+                                            value={tab.value}
                                             disabled={tab.disabled}
-                                            className={cn('py-6 border-0 px-4',tab.className)}>
+                                            className={cn('py-4 px-3 md:py-6 border-0 md:px-4', tab.className)}>
                                             {tab.icon && <tab.icon className="size-4" />}
-                                            {tab.title}
+                                            {tab.label}
                                         </TabsTrigger>
                                     ))}
                                 </TabsList>
                             </Tabs>
                             <div className="flex items-center gap-2">
-                                {(tabsWithFilterButton || filteredProps.tabs)?.additionalComponents?.map(
-                                    (node, index) => (
-                                        <Fragment key={index}>{node}</Fragment>
-                                    )
-                                )}
+                                {(tabsWithFilterButton || filteredProps.tabs)?.headerSlot?.map((node, index) => (
+                                    <Fragment key={index}>{node}</Fragment>
+                                ))}
                             </div>
                         </div>
                     )}
+
                     {filteredProps.filter && filteredProps.filter.fields && filteredProps.filter.fields.length > 0 && (
                         <div
-                            className={`transition-all flex w-full justify-between p-4 bg-white ${
+                            className={`transition-all flex w-full justify-between p-4 bg-background ${
                                 showFilters ? '' : 'hidden!'
                             }`}>
                             <FilterItems
@@ -389,7 +397,7 @@ export function DataViewTable<Item>(props: DataViewsProps<Item>) {
                                     }
                                     setShowFilters(false);
                                 }}
-                                onActiveFiltersChange={(count) => setHasActiveFilters(count > 0)}
+                                onActiveFiltersChange={(count) => setActiveFilterCount(count)}
                                 buttonPopOverAnchor={buttonRef}
                             />
                         </div>
@@ -397,10 +405,10 @@ export function DataViewTable<Item>(props: DataViewsProps<Item>) {
 
                     <div
                         className={cn(
-                            'transition-opacity -mb-16.25 flex items-center bg-white z-1 border-t px-5 py-4 justify-between border-gray-200 w-full',
+                            'transition-all duration-300 ease-in-out -mb-13 flex items-center bg-background z-1 border-b px-5 h-13 justify-between border-border w-full',
                             filteredProps.selection && filteredProps.selection.length > 0
-                                ? 'opacity-100 visible'
-                                : 'opacity-0 invisible '
+                                ? 'opacity-100 visible translate-y-0'
+                                : 'opacity-0 invisible -translate-y-2'
                         )}>
                         <DataViews.BulkActionToolbar />
                     </div>
