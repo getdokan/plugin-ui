@@ -1,7 +1,7 @@
 import useWindowDimensions from '@/hooks/useWindowDimensions';
 import { Popover } from '@wordpress/components';
 // @ts-ignore
-import { DataViews, type Action, type Field, type SupportedLayouts, type View } from '@wordpress/dataviews/wp';
+import { DataViews as DataViewsTable, type Action, type Field, type SupportedLayouts, type View } from '@wordpress/dataviews/wp';
 import { Fragment, useEffect, useState } from 'react';
 import { FileSearch, Funnel, Plus, X } from 'lucide-react';
 import { Button } from './button';
@@ -250,7 +250,7 @@ const ListEmpty = ({ icon, description, title }: ListEmptyProps) => {
     );
 };
 
-export function DataViewTable<Item>(props: DataViewsProps<Item>) {
+export function DataViews<Item>(props: DataViewsProps<Item>) {
     const { width: windowWidth } = useWindowDimensions();
     const [showFilters, setShowFilters] = useState(false);
     const [openSelectorSignal, setOpenSelectorSignal] = useState(0);
@@ -343,7 +343,7 @@ export function DataViewTable<Item>(props: DataViewsProps<Item>) {
 
     return (
         <div className="pui-root-dataviews">
-            <DataViews {...filteredProps}>
+            <DataViewsTable {...filteredProps}>
                 <div className="w-full flex items-center flex-col justify-between gap-4 rounded-tr-md rounded-tl-md">
                     {filteredProps.header && (
                         <div className="font-semibold text-sm text-foreground">{filteredProps.header}</div>
@@ -410,14 +410,14 @@ export function DataViewTable<Item>(props: DataViewsProps<Item>) {
                                 ? 'opacity-100 visible translate-y-0'
                                 : 'opacity-0 invisible -translate-y-2'
                         )}>
-                        <DataViews.BulkActionToolbar />
+                        <DataViewsTable.BulkActionToolbar />
                     </div>
                 </div>
-                <DataViews.Layout />
+                <DataViewsTable.Layout />
                 <div className="flex items-center justify-between [&>div]:w-full [&>div]:flex [&>div]:justify-between! [&>div]:p-4">
-                    <DataViews.Pagination />
+                    <DataViewsTable.Pagination />
                 </div>
-            </DataViews>
+            </DataViewsTable>
         </div>
     );
 }
