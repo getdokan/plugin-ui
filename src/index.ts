@@ -1,4 +1,3 @@
-import { DataViewsProps } from './components/ui/dataviews';
 // Styles - Import this in your plugin's entry point
 import "./styles.css";
 
