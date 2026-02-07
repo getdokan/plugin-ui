@@ -256,7 +256,20 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     const [openSelectorSignal, setOpenSelectorSignal] = useState(0);
     const [buttonRef, setButtonRef] = useState<HTMLButtonElement | null>();
     const [activeFilterCount, setActiveFilterCount] = useState(0);
-    const { responsive = true, onChangeView, fields, view, empty, emptyIcon, emptyTitle, emptyDescription } = props;
+    const {
+        responsive = true,
+        onChangeView,
+        fields,
+        view,
+        empty,
+        emptyIcon,
+        emptyTitle,
+        emptyDescription,
+        header,
+        filter,
+        tabs,
+        ...dataViewsTableProps
+    } = props;
     /**
      * Disable sorting & column hiding globally
      */
@@ -279,7 +292,8 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     };
 
     const filteredProps = {
-        ...props,
+        ...dataViewsTableProps,
+        onChangeView,
         view: normalizedView,
         fields: normalizedFields,
         defaultLayouts,
@@ -306,9 +320,9 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     }, [activeFilterCount]);
 
     const tabsWithFilterButton =
-        filteredProps.filter?.fields && filteredProps.tabs && filteredProps.filter.fields.length > 0
+        filter?.fields && tabs && filter.fields.length > 0
             ? (() => {
-                  const existing = filteredProps.tabs?.headerSlot || [];
+                  const existing = tabs?.headerSlot || [];
                   const newButton = (
                       <button
                           type="button"
@@ -335,34 +349,34 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                   );
 
                   return {
-                      ...filteredProps.tabs,
+                      ...tabs,
                       headerSlot: [...existing, newButton]
                   };
               })()
-            : filteredProps.tabs;
+            : tabs;
 
     return (
         <div className="pui-root-dataviews">
+            {/* @ts-expect-error - Complex conditional types from wrapper don't perfectly align with @wordpress/dataviews types */}
             <DataViewsTable {...filteredProps}>
                 <div className="w-full flex items-center flex-col justify-between gap-4 rounded-tr-md rounded-tl-md">
-                    {filteredProps.header && (
-                        <div className="font-semibold text-sm text-foreground">{filteredProps.header}</div>
+                    {header && (
+                        <div className="font-semibold text-sm text-foreground">{header}</div>
                     )}
 
-                    {filteredProps.tabs && filteredProps.tabs.tabs && filteredProps.tabs.tabs.length > 0 && (
+                    {tabs && tabs.tabs && tabs.tabs.length > 0 && (
                         <div className="md:flex justify-between w-full items-center px-4 border-b border-border">
                             <Tabs
                                 defaultValue={
-                                    (tabsWithFilterButton || filteredProps.tabs)?.initialTab ||
-                                    (tabsWithFilterButton || filteredProps.tabs)?.tabs[0]?.value
+                                    (tabsWithFilterButton || tabs)?.initialTab ||
+                                    (tabsWithFilterButton || tabs)?.tabs[0]?.value
                                 }
                                 onValueChange={(value) => {
-                                    filteredProps.tabs?.onSelect?.(value);
-                                    filteredProps.selection = [];
+                                    tabs?.onSelect?.(value);
                                     filteredProps.onChangeSelection?.([]);
                                 }}>
                                 <TabsList variant="line" className="p-0">
-                                    {(tabsWithFilterButton || filteredProps.tabs)?.tabs.map((tab) => (
+                                    {(tabsWithFilterButton || tabs)?.tabs.map((tab) => (
                                         <TabsTrigger
                                             key={tab.value}
                                             value={tab.value}
@@ -375,25 +389,25 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                                 </TabsList>
                             </Tabs>
                             <div className="flex items-center gap-2">
-                                {(tabsWithFilterButton || filteredProps.tabs)?.headerSlot?.map((node, index) => (
+                                {(tabsWithFilterButton || tabs)?.headerSlot?.map((node, index) => (
                                     <Fragment key={index}>{node}</Fragment>
                                 ))}
                             </div>
                         </div>
                     )}
 
-                    {filteredProps.filter && filteredProps.filter.fields && filteredProps.filter.fields.length > 0 && (
+                    {filter && filter.fields && filter.fields.length > 0 && (
                         <div
                             className={`transition-all flex w-full justify-between p-4 bg-background ${
                                 showFilters ? '' : 'hidden!'
                             }`}>
                             <FilterItems
-                                {...filteredProps.filter}
+                                {...filter}
                                 openSelectorSignal={openSelectorSignal}
                                 onFirstFilterAdded={() => setShowFilters(true)}
                                 onReset={() => {
-                                    if (filteredProps.filter?.onReset) {
-                                        filteredProps.filter.onReset();
+                                    if (filter?.onReset) {
+                                        filter.onReset();
                                     }
                                     setShowFilters(false);
                                 }}
