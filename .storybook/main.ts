@@ -12,7 +12,11 @@ const basePath = process.env.STORYBOOK_BASE_PATH || "/";
 const config: StorybookConfig = {
   stories: ["../src/**/*.stories.@(ts|tsx|js|jsx)"],
 
-  addons: ["@storybook/addon-a11y", "@chromatic-com/storybook"],
+  addons: [
+    "@storybook/addon-a11y",
+    "@chromatic-com/storybook",
+    "@storybook/addon-docs"
+  ],
 
   framework: {
     name: "@storybook/react-webpack5",
