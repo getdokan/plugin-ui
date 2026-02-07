@@ -407,3 +407,7 @@
 .pui-root-dataviews .dataviews-view-table__actions-column .components-button svg {
   fill: var(--foreground);
 }
+.pui-root-dataviews .dataviews-wrapper .dataviews-bulk-actions-footer__container .components-button,
+.pui-root-dataviews .dataviews-wrapper .dataviews-bulk-actions-footer__item-count {
+  color: var(--foreground);
+}

@@ -315,7 +315,7 @@ export function DataViewTable<Item>(props: DataViewsProps<Item>) {
                           ref={setButtonRef}
                           title="Filter"
                           className={cn(
-                              'relative inline-flex items-center gap-2 rounded-md bg-background px-3 py-1.5 text-sm hover:text-primary',
+                              'relative inline-flex items-center gap-2 rounded-md bg-transparent hover:bg-transparent px-3 py-1.5 text-sm hover:text-primary',
                               showFilters ? 'text-primary' : 'text-muted-foreground'
                           )}
                           onClick={() => {
@@ -367,7 +367,7 @@ export function DataViewTable<Item>(props: DataViewsProps<Item>) {
                                             key={tab.value}
                                             value={tab.value}
                                             disabled={tab.disabled}
-                                            className={cn('py-4 px-3 md:py-6 border-0 md:px-4', tab.className)}>
+                                            className={cn('py-4 px-3 md:py-6 border-0 md:px-4 bg-transparent rounded-none hover:bg-transparent', tab.className)}>
                                             {tab.icon && <tab.icon className="size-4" />}
                                             {tab.label}
                                         </TabsTrigger>
