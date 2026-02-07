@@ -2,6 +2,11 @@ import React from "react";
 import { ThemeProvider } from "../src/providers";
 import "../src/styles.css";
 
+// Ensure React is available in the story iframe (fixes "React is not defined" when story bundles load)
+if (typeof window !== "undefined") {
+  window.React = React;
+}
+
 export const parameters = {
   controls: {
     matchers: { color: /(background|color)$/i, date: /Date$/i },

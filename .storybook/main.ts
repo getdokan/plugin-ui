@@ -20,9 +20,19 @@ const config: StorybookConfig = {
   },
 
   webpackFinal: async (config) => {
+    // Use relative publicPath when deployed to a subpath (e.g. GitHub Pages) so chunk URLs
+    // resolve as ./3285....js under the current path instead of /plugin-ui//plugin-ui/...
     if (basePath !== "/" && config.output) {
-      config.output.publicPath = basePath.startsWith("/") ? basePath : `/${basePath}`;
+      config.output.publicPath = "./";
     }
+    // Provide React globally so story/component bundles that reference React (e.g. React.createElement) don't throw
+    const { ProvidePlugin } = require("webpack");
+    config.plugins = config.plugins ?? [];
+    config.plugins.push(
+      new ProvidePlugin({
+        React: [require.resolve("react"), "default"],
+      })
+    );
     config.resolve = config.resolve ?? {};
 
     const projectRoot = path.resolve(__dirname, "..");
