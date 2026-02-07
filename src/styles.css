@@ -330,7 +330,7 @@
 }
 .pui-root-dataviews .dataviews-wrapper .dataviews-view-table thead th {
   color: var(--foreground);
-  background-color: var(--background);
+  background-color: var(--background) !important;
 }
 
 .pui-root-dataviews .dataviews-view-table .dataviews-view-table-header-button:not(:hover) {
