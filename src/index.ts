@@ -81,6 +81,26 @@ export {
     DropdownMenuSubContent,
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
+    // Checkbox
+    Checkbox,
+    LabeledCheckbox,
+    CheckboxCard,
+    // Radio
+    RadioGroup,
+    RadioGroupItem,
+    LabeledRadio,
+    RadioCard,
+    // Field
+    Field,
+    FieldLabel,
+    FieldDescription,
+    FieldError,
+    FieldGroup,
+    FieldLegend,
+    FieldSeparator,
+    FieldSet,
+    FieldContent,
+    FieldTitle,
     // Input
     Input,
     InputGroup,
@@ -125,7 +145,9 @@ export {
     // Spinner
     Spinner,
     // Switch
-    Switch,
+    Switch, 
+    LabeledSwitch, 
+    SwitchCard,
     // Tabs
     Tabs, TabsContent, TabsList,
     TabsTrigger,
@@ -155,6 +177,12 @@ export {
     type ComponentPreviewProps,
     type CurrencyInputProps,
     type CurrencyOption,
+    type CheckboxProps,
+    type LabeledCheckboxProps,
+    type CheckboxCardProps,
+    type RadioGroupItemProps,
+    type LabeledRadioProps,
+    type RadioCardProps,
     type DesignSystemSectionProps,
     type LabelProps,
     type ModalProps,
@@ -162,6 +190,8 @@ export {
     type SeparatorProps,
     type SliderProps,
     type SwitchProps,
+    type LabeledSwitchProps,
+    type SwitchCardProps,
     type ThumbnailAspect,
     type ThumbnailProps,
     type ThumbnailSize

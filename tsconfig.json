@@ -7,7 +7,7 @@
         "rootDir": "src",
         "module": "ESNext",
         "moduleResolution": "bundler",
-        "target": "es5",
+        "target": "es2015",
         "jsx": "react-jsx",
         "esModuleInterop": true,
         "skipLibCheck": true,
