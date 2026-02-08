@@ -1,0 +1,24 @@
+name: UI Tests
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      # Using the Playwright image to ensure browsers are available for the test runner
+      image: mcr.microsoft.com/playwright:v1.52.0-noble
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.12.0
+      
+      - name: Install dependencies
+        run: npm install
+      
+      # Using test-storybook:ci to build Storybook and run tests against it
+      - name: Run tests
+        run: npm run test-storybook:ci
