@@ -1,78 +1,120 @@
-import React from "react";
+import * as React from "react";
+import { Slider as SliderPrimitive } from "@base-ui/react/slider";
+import { cva, type VariantProps } from "class-variance-authority";
+
 import { cn } from "@/lib/utils";
-import { Slider as SliderParts } from "@base-ui/react/slider";
 
-const { Root: SliderRoot, Track: SliderTrack, Indicator: SliderIndicator, Thumb: SliderThumb } = SliderParts;
-
-export interface SliderProps extends React.ComponentProps<typeof SliderRoot> {
-  variant?: "default" | "green" | "purple" | "brown" | "danger";
-  size?: "sm" | "md" | "lg";
-}
-
-function variantClass(variant?: SliderProps["variant"]) {
-  switch (variant) {
-    case "green":
-      return "bg-green-600";
-    case "purple":
-      return "bg-purple-600";
-    case "brown":
-      return "bg-amber-800";
-    case "danger":
-      return "bg-red-600";
-    default:
-      return "bg-primary";
+const sliderVariants = cva(
+  "relative flex w-full touch-none select-none items-center",
+  {
+    variants: {
+      size: {
+        sm: "h-2",
+        md: "h-3",
+        lg: "h-4",
+      },
+    },
+    defaultVariants: {
+      size: "md",
+    },
   }
-}
+);
 
-// function trackClass(variant?: SliderProps["variant"]) {
-//   switch (variant) {
-//     case "green":
-//       return "bg-green-600/20 dark:bg-green-600/10"
-//     case "danger":
-//       return "bg-red-600/20 dark:bg-red-600/10"
-//     case "purple":
-//       return "bg-purple-600/20 dark:bg-purple-600/10"
-//     case "brown":
-//       return "bg-amber-800/20 dark:bg-amber-800/10"
-//     default:
-//       return "bg-primary/20"
-  
-//     }
-// }
-
-function variantBorderClass(variant?: SliderProps["variant"]) {
-  switch (variant) {
-    case "green":
-      return "border-green-600";
-    case "purple":
-      return "border-purple-600";
-    case "brown":
-      return "border-amber-800";
-    case "danger":
-      return "border-red-600";
-    default:
-      return "border-primary";
+const sliderTrackVariants = cva(
+  "relative w-full overflow-hidden rounded-full",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary/20",
+        success: "bg-success/20",
+        warning: "bg-warning/20",
+        destructive: "bg-destructive/20",
+        info: "bg-info/20",
+      },
+      size: {
+        sm: "h-2",
+        md: "h-3",
+        lg: "h-4",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "md",
+    },
   }
+);
+
+const sliderRangeVariants = cva("absolute h-full", {
+  variants: {
+    variant: {
+      default: "bg-primary",
+      success: "bg-success",
+      warning: "bg-warning",
+      destructive: "bg-destructive",
+      info: "bg-info",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+  },
+});
+
+const sliderThumbVariants = cva(
+  "block rounded-full border-2 bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 shadow-md",
+  {
+    variants: {
+      variant: {
+        default: "border-primary",
+        success: "border-success",
+        warning: "border-warning",
+        destructive: "border-destructive",
+        info: "border-info",
+      },
+      size: {
+        sm: "h-5 w-5",
+        md: "h-6 w-6",
+        lg: "h-7 w-7",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "md",
+    },
+  }
+);
+
+export interface SliderProps
+  extends React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>,
+    VariantProps<typeof sliderThumbVariants> {
+  classNames?: {
+    track?: string;
+    range?: string;
+    thumb?: string;
+  };
 }
 
-export function Slider({ variant = "default", size = "md", className, ...props }: SliderProps) {
-  const height = size === "sm" ? "h-2" : size === "lg" ? "h-4" : "h-3";
-  const thumbClasses = size === "sm" ? "w-5 h-5" : size === "lg" ? "w-7 h-7" : "w-6 h-6";
-
-  return (
-    <SliderRoot className={cn("w-full relative", className)} {...props}>
-      <SliderTrack className={cn("bg-primary/20 rounded-full overflow-hidden", height)}>
-        <SliderIndicator className={cn("h-full", variantClass(variant))} />
-      </SliderTrack>
-      <SliderThumb 
-        className={cn(
-          "rounded-full bg-white border-2 shadow-md outline-none focus-visible:ring-2 focus-visible:ring-offset-2 z-10",
-          thumbClasses, variantBorderClass(variant)
-        )}
-        
+const Slider = React.forwardRef<
+  React.ElementRef<typeof SliderPrimitive.Root>,
+  SliderProps
+>(({ className, classNames, variant, size, ...props }, ref) => (
+  <SliderPrimitive.Root
+    ref={ref}
+    className={cn(sliderVariants({ size }), className)}
+    {...props}
+  >
+    <SliderPrimitive.Track
+      className={cn(sliderTrackVariants({ variant, size }), classNames?.track)}
+    >
+      <SliderPrimitive.Indicator
+        className={cn(sliderRangeVariants({ variant }), classNames?.range)}
       />
-    </SliderRoot>
-  );
-}
+    </SliderPrimitive.Track>
+    <SliderPrimitive.Thumb
+      className={cn(sliderThumbVariants({ variant, size }), classNames?.thumb)}
+    />
+  </SliderPrimitive.Root>
+));
+Slider.displayName = "Slider";
 
+export { Slider, sliderVariants, sliderThumbVariants, sliderTrackVariants, sliderRangeVariants };
 export default Slider;
