@@ -61,8 +61,10 @@ export {
     ComboboxSeparator,
     ComboboxTrigger,
     ComboboxValue,
+    // Design system (Figma Design-System-for-Plugin)
+    ComponentPreview,
     // Currency input (uses InputGroup)
-    CurrencyInput,
+    CurrencyInput, DesignSystemSection,
     // DropdownMenu
     DropdownMenu,
     DropdownMenuCheckboxItem,
@@ -172,6 +174,7 @@ export {
     type CardProps,
     type CardTitleProps,
     type CircularProgressProps,
+    type ComponentPreviewProps,
     type CurrencyInputProps,
     type CurrencyOption,
     type CheckboxProps,
@@ -180,6 +183,7 @@ export {
     type RadioGroupItemProps,
     type LabeledRadioProps,
     type RadioCardProps,
+    type DesignSystemSectionProps,
     type LabelProps,
     type ModalProps,
     type ProgressProps,
@@ -205,4 +209,3 @@ export {
 // ============================================
 export { cn } from "@/lib/utils";
 export { twMerge } from "tailwind-merge";
-

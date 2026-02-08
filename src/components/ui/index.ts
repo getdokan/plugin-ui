@@ -1,49 +1,65 @@
 // Core UI Components following ShadCN pattern
 // All components are pure React - no WordPress dependencies
 
-export { Alert, AlertAction, AlertDescription, AlertTitle } from "./alert";
-export {
-  Avatar, AvatarBadge, AvatarFallback,
+export { Alert, AlertDescription, AlertTitle, AlertAction } from "./alert";
+export { Avatar,
+  AvatarImage,
+  AvatarFallback,
   AvatarGroup,
-  AvatarGroupCount, AvatarImage
-} from "./avatar";
+  AvatarGroupCount,
+  AvatarBadge } from "./avatar";
+export { Thumbnail, type ThumbnailProps, type ThumbnailSize, type ThumbnailAspect } from "./thumbnail";
+export { Notice, NoticeTitle, NoticeAction } from "./notice";
 export { Badge, type BadgeProps, type BadgeVariant } from "./badge";
-export {
-  Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem,
-  BreadcrumbLink, BreadcrumbList, BreadcrumbPage,
-  BreadcrumbSeparator
-} from "./breadcrumb";
 export { Button, buttonVariants } from "./button";
 export {
-  Card, CardContent, CardDescription, CardFooter, CardHeader,
-  CardTitle, type CardContentProps, type CardDescriptionProps, type CardFooterProps, type CardHeaderProps, type CardProps, type CardTitleProps
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  BreadcrumbEllipsis,
+} from "./breadcrumb";
+export {
+    Card, CardContent, CardDescription, CardFooter, CardHeader,
+    CardTitle, type CardContentProps, type CardDescriptionProps, type CardFooterProps, type CardHeaderProps, type CardProps, type CardTitleProps
 } from "./card";
 export {
   CurrencyInput,
   type CurrencyInputProps,
-  type CurrencyOption
+  type CurrencyOption,
 } from "./currency-input";
 export { Input } from "./input";
 export {
   InputGroup,
   InputGroupAddon,
-  InputGroupButton, InputGroupInput, InputGroupText, InputGroupTextarea
+  InputGroupButton,
+  InputGroupText,
+  InputGroupInput,
+  InputGroupTextarea,
 } from "./input-group";
 export {
   InputOTP,
-  InputOTPGroup, InputOTPSeparator, InputOTPSlot
+  InputOTPGroup,
+  InputOTPSlot,
+  InputOTPSeparator,
 } from "./input-otp";
 export { Label, type LabelProps } from "./label";
 export {
-  Modal, ModalClose, ModalContent, ModalDescription,
-  ModalFooter, ModalHeader, ModalOverlay, ModalTitle, type ModalProps
+    Modal, ModalClose, ModalContent, ModalDescription,
+    ModalFooter, ModalHeader, ModalOverlay, ModalTitle, type ModalProps
 } from "./modal";
-export { Notice, NoticeAction, NoticeTitle } from "./notice";
+export {
+  ComponentPreview,
+  DesignSystemSection,
+  type ComponentPreviewProps,
+  type DesignSystemSectionProps,
+} from "./design-system-section";
 export { Separator, type SeparatorProps } from "./separator";
 export { Spinner } from "./spinner";
 export { Switch, LabeledSwitch, SwitchCard, type SwitchProps, type LabeledSwitchProps, type SwitchCardProps } from "./switch";
 export { Textarea } from "./textarea";
-export { Thumbnail, type ThumbnailAspect, type ThumbnailProps, type ThumbnailSize } from "./thumbnail";
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 export { Toggle } from './toggle'
 export { ToggleGroup, ToggleGroupItem } from './toggle-group'
@@ -134,4 +150,3 @@ export {
   FieldContent,
   FieldTitle,
 } from "./field";
-
