@@ -5,8 +5,9 @@
         "declarationMap": true,
         "sourceMap": true,
         "rootDir": "src",
-        "module": "commonjs",
-        "target": "es5",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "target": "es2015",
         "jsx": "react-jsx",
         "esModuleInterop": true,
         "skipLibCheck": true,
@@ -21,6 +22,8 @@
     ],
     "exclude": [
         "node_modules",
-        "dist"
+        "dist",
+        "**/*.stories.tsx",
+        "**/*.stories.ts"
     ]
 }

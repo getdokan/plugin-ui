@@ -17,6 +17,19 @@ export {
 export {
     // Alert
     Alert, AlertAction, AlertDescription, AlertTitle,
+    // AlertDialog
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogMedia,
+    AlertDialogOverlay,
+    AlertDialogPortal,
+    AlertDialogTitle,
+    AlertDialogTrigger,
     // Avatar
     Avatar, AvatarBadge, AvatarFallback,
     AvatarGroup,
@@ -32,8 +45,60 @@ export {
     // Card
     Card, CardContent, CardDescription, CardFooter, CardHeader,
     CardTitle, CircularProgress,
+    // Combobox
+    Combobox,
+    ComboboxChip,
+    ComboboxChips,
+    ComboboxChipsInput,
+    ComboboxCollection,
+    ComboboxContent,
+    ComboboxEmpty,
+    ComboboxGroup,
+    ComboboxInput,
+    ComboboxItem,
+    ComboboxLabel,
+    ComboboxList,
+    ComboboxSeparator,
+    ComboboxTrigger,
+    ComboboxValue,
     // Currency input (uses InputGroup)
     CurrencyInput,
+    // DropdownMenu
+    DropdownMenu,
+    DropdownMenuCheckboxItem,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+    // Checkbox
+    Checkbox,
+    LabeledCheckbox,
+    CheckboxCard,
+    // Radio
+    RadioGroup,
+    RadioGroupItem,
+    LabeledRadio,
+    RadioCard,
+    // Field
+    Field,
+    FieldLabel,
+    FieldDescription,
+    FieldError,
+    FieldGroup,
+    FieldLegend,
+    FieldSeparator,
+    FieldSet,
+    FieldContent,
+    FieldTitle,
     // Input
     Input,
     InputGroup,
@@ -56,8 +121,20 @@ export {
     Notice, NoticeAction, NoticeTitle,
     // Progress
     Progress, ProgressIndicator,
-    ProgressLabel, ProgressTrack, ProgressValue, SelectionItem,
+    ProgressLabel, ProgressTrack, ProgressValue,
+    // Select
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectScrollDownButton,
+    SelectScrollUpButton,
+    SelectSeparator,
+    SelectTrigger,
+    SelectValue,
     // Selection Type
+    SelectionItem,
     SelectionType,
     // Separator
     Separator,
@@ -66,7 +143,9 @@ export {
     // Spinner
     Spinner,
     // Switch
-    Switch,
+    Switch, 
+    LabeledSwitch, 
+    SwitchCard,
     // Tabs
     Tabs, TabsContent, TabsList,
     TabsTrigger,
@@ -81,6 +160,8 @@ export {
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
+    // Utilities
+    useComboboxAnchor,
     // Types
     type BadgeProps,
     type BadgeVariant,
@@ -93,12 +174,20 @@ export {
     type CircularProgressProps,
     type CurrencyInputProps,
     type CurrencyOption,
+    type CheckboxProps,
+    type LabeledCheckboxProps,
+    type CheckboxCardProps,
+    type RadioGroupItemProps,
+    type LabeledRadioProps,
+    type RadioCardProps,
     type LabelProps,
     type ModalProps,
     type ProgressProps,
     type SeparatorProps,
     type SliderProps,
     type SwitchProps,
+    type LabeledSwitchProps,
+    type SwitchCardProps,
     type ThumbnailAspect,
     type ThumbnailProps,
     type ThumbnailSize

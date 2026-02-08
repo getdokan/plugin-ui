@@ -1,168 +1,120 @@
-import React, {
-  forwardRef,
-  useId,
-  type InputHTMLAttributes,
-  type ReactNode,
-} from "react";
-import { cn } from "@/lib/utils";
+import { Switch as SwitchPrimitive } from "@base-ui/react/switch"
+import { Field, FieldGroup, FieldLabel, FieldContent, FieldDescription, FieldTitle } from "@/components/ui/field"
+import { cn } from "@/lib/utils"
 
-export interface SwitchProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "onChange"> {
-  /**
-   * Whether switch is checked
-   */
-  checked?: boolean;
-
-  /**
-   * Default checked state (uncontrolled)
-   */
-  defaultChecked?: boolean;
-
-  /**
-   * Change handler
-   */
-  onCheckedChange?: (checked: boolean) => void;
-
-  /**
-   * Native onChange handler
-   */
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-
-  /**
-   * Label for the switch
-   */
-  label?: ReactNode;
-
-  /**
-   * Description below the switch
-   */
-  description?: ReactNode;
-
-  /**
-   * Additional CSS classes for the switch track
-   */
-  className?: string;
-
-  /**
-   * Additional CSS classes for the container
-   */
-  containerClassName?: string;
+interface SwitchProps extends SwitchPrimitive.Root.Props {
+  size?: "sm" | "default"
 }
 
-/**
- * Switch component following ShadCN pattern
- *
- * @example
- * ```tsx
- * // Basic usage
- * <Switch checked={enabled} onCheckedChange={setEnabled} />
- *
- * // With label
- * <Switch
- *   label="Enable notifications"
- *   checked={notifications}
- *   onCheckedChange={setNotifications}
- * />
- *
- * // With description
- * <Switch
- *   label="Marketing emails"
- *   description="Receive emails about new products and features"
- *   checked={marketing}
- *   onCheckedChange={setMarketing}
- * />
- * ```
- */
-export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
-  (
-    {
-      className,
-      containerClassName,
-      checked,
-      defaultChecked,
-      onCheckedChange,
-      onChange,
-      label,
-      description,
-      disabled,
-      id: providedId,
-      ...props
-    },
-    ref,
-  ) => {
-    const generatedId = useId();
-    const id = providedId || generatedId;
+function Switch({
+  className,
+  size = "default",
+  ...props
+}: SwitchProps) {
+  return (
+    <SwitchPrimitive.Root
+      data-slot="switch"
+      data-size={size}
+      className={cn(
+        "data-checked:bg-primary data-unchecked:bg-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 dark:data-unchecked:bg-input/80 shrink-0 rounded-full border border-transparent shadow-xs focus-visible:ring-3 aria-invalid:ring-3 data-[size=default]:h-[18.4px] data-[size=default]:w-7.5 data-[size=sm]:h-3.5 data-[size=sm]:w-6 peer group/switch relative inline-flex items-center transition-colors outline-none after:absolute after:-inset-x-3 after:-inset-y-2 data-disabled:cursor-not-allowed data-disabled:opacity-50",
+        className
+      )}
+      {...props}
+    >
+      <SwitchPrimitive.Thumb
+        data-slot="switch-thumb"
+        className="bg-background dark:data-unchecked:bg-foreground dark:data-checked:bg-primary-foreground rounded-full group-data-[size=default]/switch:size-3.5 group-data-[size=sm]/switch:size-2.5 ml-0.5 group-data-[size=default]/switch:data-checked:ml-3 group-data-[size=sm]/switch:data-checked:ml-2.5 rtl:mr-0.5 rtl:ml-0 rtl:group-data-[size=default]/switch:data-checked:mr-3.5 rtl:group-data-[size=sm]/switch:data-checked:mr-2.5 rtl:group-data-[size=default]/switch:data-checked:ml-0 rtl:group-data-[size=sm]/switch:data-checked:ml-0 pointer-events-none flex ring-0 transition-[margin] duration-200 ease-in-out"
+      />
+    </SwitchPrimitive.Root>
+  )
+}
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      onChange?.(event);
-      onCheckedChange?.(event.target.checked);
-    };
+type OrientationVariants = "horizontal" | "vertical" | "responsive";
+type PositionVariants = "left" | "right";
 
-    const switchElement = (
-      <label
-        htmlFor={id}
-        className={cn(
-          "peer relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full",
-          "border-2 border-transparent shadow-sm transition-colors",
-          "focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background",
-          "disabled:cursor-not-allowed disabled:opacity-50",
-          "has-[:checked]:bg-primary bg-input",
-          disabled && "cursor-not-allowed opacity-50",
-          className,
-        )}
+interface LabeledSwitchProps extends SwitchProps {
+  label: React.ReactNode;
+  description?: React.ReactNode;
+  orientation?: OrientationVariants;
+  position?: PositionVariants;
+}
+
+function LabeledSwitch({ 
+  label, 
+  description, 
+  className,
+  orientation = "horizontal",
+  position = "left",
+  disabled,
+  ...props 
+}: LabeledSwitchProps) {
+  return (
+    <FieldGroup className={cn(disabled && "opacity-50")}>
+      <Field 
+        orientation={orientation} 
+        data-disabled={disabled}
+        className={cn(position === "right" && "flex-row-reverse")}
       >
-        <input
-          ref={ref}
-          type="checkbox"
-          role="switch"
-          id={id}
-          checked={checked}
-          defaultChecked={defaultChecked}
+        <Switch
+          className={cn("data-disabled:opacity-100", className)}
           disabled={disabled}
-          onChange={handleChange}
-          className="sr-only"
           {...props}
         />
-        <span
-          className={cn(
-            "pointer-events-none block h-4 w-4 rounded-full bg-background shadow-lg ring-0 transition-transform",
-            "translate-x-0",
-            "[input:checked~&]:translate-x-4",
+        <FieldContent>
+          <FieldLabel htmlFor={props.id}>
+            {label}
+          </FieldLabel>
+          {description && (
+            <FieldDescription>
+              {description}
+            </FieldDescription>
           )}
-        />
-      </label>
-    );
+        </FieldContent>
+      </Field>
+    </FieldGroup>
+  )
+}
 
-    if (!label && !description) {
-      return switchElement;
-    }
+interface SwitchCardProps extends LabeledSwitchProps {}
 
-    return (
-      <div className={cn("flex items-start gap-3", containerClassName)}>
-        {switchElement}
-        {(label || description) && (
-          <div className="flex flex-col gap-0.5">
-            {label && (
-              <label
-                htmlFor={id}
-                className={cn(
-                  "text-sm font-medium leading-none cursor-pointer",
-                  disabled && "cursor-not-allowed opacity-70",
-                )}
-              >
-                {label}
-              </label>
-            )}
+function SwitchCard({ 
+  label, 
+  description, 
+  className,
+  orientation = "horizontal",
+  position = "left",
+  disabled,
+  ...props 
+}: SwitchCardProps) {
+  return (
+    <FieldGroup className={cn(disabled && "opacity-50")}>
+      <FieldLabel className={cn(
+        "transition-colors has-data-checked:bg-transparent dark:has-data-checked:bg-transparent has-data-checked:border-primary", 
+        !disabled && "hover:border-primary"
+      )}>
+        <Field 
+          orientation={orientation} 
+          data-disabled={disabled}
+          className={cn(position === "right" && "flex-row-reverse")}
+        >
+          <Switch 
+            className={cn("data-disabled:opacity-100", className)}
+            disabled={disabled}
+            {...props} 
+          />
+          <FieldContent>
+            <FieldTitle>{label}</FieldTitle>
             {description && (
-              <p className="text-sm text-muted-foreground">{description}</p>
+              <FieldDescription>
+                {description}
+              </FieldDescription>
             )}
-          </div>
-        )}
-      </div>
-    );
-  },
-);
+          </FieldContent>
+        </Field>
+      </FieldLabel>
+    </FieldGroup>
+  )
+}
 
-Switch.displayName = "Switch";
-
-export default Switch;
+export { Switch, LabeledSwitch, SwitchCard }
+export type { SwitchProps, LabeledSwitchProps, SwitchCardProps }
