@@ -8,11 +8,11 @@ const alertVariants = cva(
   {
     variants: {
       variant: {
-        default: "[&]:bg-[#F8F9F8] [&]:border-[#E9E9E9] *:data-[slot=alert-title]:text-[#25252D] *:data-[slot=alert-description]:text-[#575757]",
-        destructive: "[&]:bg-red-50 [&]:border-transparent *:data-[slot=alert-title]:text-red-700 *:data-[slot=alert-description]:text-red-500",
-        success: "[&]:bg-green-50 [&]:border-none *:data-[slot=alert-title]:text-green-700 *:data-[slot=alert-description]:text-green-700",
-        warning: "[&]:bg-yellow-50 [&]:border-none *:data-[slot=alert-title]:text-yellow-900 *:data-[slot=alert-description]:text-yellow-900",
-        info: "[&]:bg-blue-600 [&]:border-none *:data-[slot=alert-title]:text-white *:data-[slot=alert-description]:text-white/80",
+        default: "[&]:bg-muted [&]:border-border *:data-[slot=alert-title]:text-foreground *:data-[slot=alert-description]:text-muted-foreground",
+        destructive: "[&]:bg-destructive/10 [&]:border-transparent *:data-[slot=alert-title]:text-destructive *:data-[slot=alert-description]:text-destructive/80",
+        success: "[&]:bg-success/10 [&]:border-transparent *:data-[slot=alert-title]:text-success *:data-[slot=alert-description]:text-success/80",
+        warning: "[&]:bg-warning/10 [&]:border-transparent *:data-[slot=alert-title]:text-warning-foreground *:data-[slot=alert-description]:text-warning-foreground/80",
+        info: "[&]:bg-info [&]:border-transparent *:data-[slot=alert-title]:text-info-foreground *:data-[slot=alert-description]:text-info-foreground/80",
       },
     },
     defaultVariants: {
