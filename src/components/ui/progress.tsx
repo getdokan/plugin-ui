@@ -10,21 +10,18 @@ const {
   Value: ProgressValuePrimitive,
 } = ProgressPrimitive
 
-export type ProgressVariant = "default" | "success" | "danger" | "warning" | "purple" | "green" | "brown"
+export type ProgressVariant = "default" | "success" | "destructive" | "warning" | "info"
 
 function indicatorClass(variant?: ProgressVariant) {
   switch (variant) {
     case "success":
-    case "green":
-      return "bg-green-600"
-    case "danger":
-      return "bg-red-600"
+      return "bg-success"
+    case "destructive":
+      return "bg-destructive"
     case "warning":
-      return "bg-amber-600"
-    case "purple":
-      return "bg-purple-600"
-    case "brown":
-      return "bg-amber-800"
+      return "bg-warning"
+    case "info":
+      return "bg-info"
     default:
       return "bg-primary"
   }
@@ -33,20 +30,19 @@ function indicatorClass(variant?: ProgressVariant) {
 function trackClass(variant?: ProgressVariant) {
   switch (variant) {
     case "success":
-    case "green":
-      return "bg-green-600/20 dark:bg-green-600/10"
-    case "danger":
-      return "bg-red-600/20 dark:bg-red-600/10"
+      return "bg-success/20 dark:bg-success/10"
+    case "destructive":
+      return "bg-destructive/20 dark:bg-destructive/10"
     case "warning":
-      return "bg-amber-600/20 dark:bg-amber-600/10"
-    case "purple":
-      return "bg-purple-600/20 dark:bg-purple-600/10"
-    case "brown":
-      return "bg-amber-800/20 dark:bg-amber-800/10"
+      return "bg-warning/20 dark:bg-warning/10"
+    case "info":
+      return "bg-info/20 dark:bg-info/10"
     default:
-      return "bg-stone-50"
+      return "bg-primary/20 dark:bg-primary/10"
   }
 }
+
+
 
 function sizeClass(size?: "sm" | "md" | "lg") {
   switch (size) {
@@ -121,22 +117,18 @@ function CircularProgress({ value, max = 100, size = 100, strokeWidth = 10, shap
 
   const progressStrokeClass: Record<ProgressVariant, string> = {
     default: "stroke-primary",
-    success: "stroke-green-600",
-    green: "stroke-green-600",
-    danger: "stroke-red-600",
-    warning: "stroke-amber-600",
-    purple: "stroke-purple-600",
-    brown: "stroke-amber-800",
+    success: "stroke-success",
+    destructive: "stroke-destructive",
+    warning: "stroke-warning",
+    info: "stroke-info",
   }
 
   const bgStrokeClass: Record<ProgressVariant, string> = {
     default: "stroke-primary/25",
-    success: "stroke-green-600/25",
-    green: "stroke-green-600/25",
-    danger: "stroke-red-600/25",
-    warning: "stroke-amber-600/25",
-    purple: "stroke-purple-600/25",
-    brown: "stroke-amber-800/25",
+    success: "stroke-success/25",
+    destructive: "stroke-destructive/25",
+    warning: "stroke-warning/25",
+    info: "stroke-info/25",
   }
 
   return (

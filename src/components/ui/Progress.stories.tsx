@@ -39,13 +39,19 @@ export const Variants: Story = {
   render: () => (
     <div className="flex flex-col gap-4 w-64">
       <Progress value={70}>
-        <ProgressTrack variant="default"><ProgressIndicator /></ProgressTrack>
+        <ProgressTrack variant="default"><ProgressIndicator variant="default" /></ProgressTrack>
       </Progress>
       <Progress value={70}>
-        <ProgressTrack variant="success"><ProgressIndicator /></ProgressTrack>
+        <ProgressTrack variant="success"><ProgressIndicator variant="success" /></ProgressTrack>
       </Progress>
       <Progress value={70}>
-        <ProgressTrack variant="danger"><ProgressIndicator /></ProgressTrack>
+        <ProgressTrack variant="destructive"><ProgressIndicator variant="destructive" /></ProgressTrack>
+      </Progress>
+      <Progress value={70}>
+        <ProgressTrack variant="warning"><ProgressIndicator variant="warning" /></ProgressTrack>
+      </Progress>
+      <Progress value={70}>
+        <ProgressTrack variant="info"><ProgressIndicator variant="info" /></ProgressTrack>
       </Progress>
     </div>
   ),
