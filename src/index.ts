@@ -17,6 +17,19 @@ export {
 export {
     // Alert
     Alert, AlertAction, AlertDescription, AlertTitle,
+    // AlertDialog
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogMedia,
+    AlertDialogOverlay,
+    AlertDialogPortal,
+    AlertDialogTitle,
+    AlertDialogTrigger,
     // Avatar
     Avatar, AvatarBadge, AvatarFallback,
     AvatarGroup,
@@ -32,10 +45,42 @@ export {
     // Card
     Card, CardContent, CardDescription, CardFooter, CardHeader,
     CardTitle, CircularProgress,
+    // Combobox
+    Combobox,
+    ComboboxChip,
+    ComboboxChips,
+    ComboboxChipsInput,
+    ComboboxCollection,
+    ComboboxContent,
+    ComboboxEmpty,
+    ComboboxGroup,
+    ComboboxInput,
+    ComboboxItem,
+    ComboboxLabel,
+    ComboboxList,
+    ComboboxSeparator,
+    ComboboxTrigger,
+    ComboboxValue,
     // Design system (Figma Design-System-for-Plugin)
     ComponentPreview,
     // Currency input (uses InputGroup)
     CurrencyInput, DesignSystemSection,
+    // DropdownMenu
+    DropdownMenu,
+    DropdownMenuCheckboxItem,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
     // Input
     Input,
     InputGroup,
@@ -58,8 +103,20 @@ export {
     Notice, NoticeAction, NoticeTitle,
     // Progress
     Progress, ProgressIndicator,
-    ProgressLabel, ProgressTrack, ProgressValue, SelectionItem,
+    ProgressLabel, ProgressTrack, ProgressValue,
+    // Select
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectScrollDownButton,
+    SelectScrollUpButton,
+    SelectSeparator,
+    SelectTrigger,
+    SelectValue,
     // Selection Type
+    SelectionItem,
     SelectionType,
     // Separator
     Separator,
@@ -83,6 +140,8 @@ export {
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
+    // Utilities
+    useComboboxAnchor,
     // Types
     type BadgeProps,
     type BadgeVariant,

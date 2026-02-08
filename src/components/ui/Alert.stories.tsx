@@ -37,12 +37,16 @@ export const Destructive: Story = {
 };
 
 export const Success: Story = {
+  args: {
+    variant: "default"
+  },
+
   render: () => (
     <Alert variant="success">
       <AlertTitle>Success</AlertTitle>
       <AlertDescription>Your changes have been saved.</AlertDescription>
     </Alert>
-  ),
+  )
 };
 
 export const Warning: Story = {
