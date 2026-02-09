@@ -2,7 +2,15 @@ import React from "react";
 import { ThemeProvider } from "../src/providers";
 import * as Themes from "../src/themes";
 import "../src/styles.css";
-import { withThemeByClassName } from "@storybook/addon-themes";
+
+// Optional: theme-by-class-name decorator (light/dark on html); skip if addon not installed
+let withThemeByClassName = null;
+try {
+  // eslint-disable-next-line global-require -- optional addon
+  withThemeByClassName = require("@storybook/addon-themes").withThemeByClassName;
+} catch {
+  // Addon not available; decorators below will omit it
+}
 
 // Ensure React is available in the story iframe
 if (typeof window !== "undefined") {
@@ -62,13 +70,14 @@ export const globalTypes = {
 };
 
 export const decorators = [
-  withThemeByClassName({
-    themes: {
-      light: 'light',
-      dark: 'dark',
-    },
-    defaultTheme: 'light',
-  }),
+  ...(withThemeByClassName
+    ? [
+        withThemeByClassName({
+          themes: { light: "light", dark: "dark" },
+          defaultTheme: "light",
+        }),
+      ]
+    : []),
   (Story, context) => {
     const { brand } = context.globals;
     const mode = context.globals.theme || 'light';

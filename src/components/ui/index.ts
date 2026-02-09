@@ -153,3 +153,32 @@ export {
   FieldTitle,
 } from "./field";
 export { DataViews, type DataViewAction, type DataViewField, type DataViewFilterField, type DataViewFilterProps, type DataViewLayouts, type DataViewsProps, type DataViewState } from '../wordpress/dataviews';
+
+// Layout (responsive app layout with optional header/footer and right sidebar)
+export {
+  Layout,
+  LayoutHeader,
+  LayoutBody,
+  LayoutMain,
+  LayoutSidebar,
+  LayoutFooter,
+  type LayoutProps,
+  type LayoutHeaderProps,
+  type LayoutBodyProps,
+  type LayoutMainProps,
+  type LayoutSidebarProps,
+  type LayoutFooterProps,
+  type LayoutSidebarPosition,
+  type LayoutSidebarVariant,
+  type LayoutContextValue,
+} from "./layout";
+
+// Layout menu (searchable, multi-label nested menu for LayoutSidebar)
+export {
+  LayoutMenu,
+  LayoutMenuSearch,
+  type LayoutMenuItemData,
+  type LayoutMenuGroupData,
+  type LayoutMenuProps,
+  type LayoutMenuSearchProps,
+} from "./layout-menu";
