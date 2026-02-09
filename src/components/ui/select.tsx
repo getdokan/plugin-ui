@@ -3,6 +3,7 @@ import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/providers";
 
 const Select = SelectPrimitive.Root;
 
@@ -68,8 +69,9 @@ function SelectContent({
     SelectPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset" | "alignItemWithTrigger"
   >) {
+  const {mode} = useTheme();
   return (
-    <SelectPrimitive.Portal>
+    <SelectPrimitive.Portal className={ cn('pui-root', mode) }>
       <SelectPrimitive.Positioner
         side={side}
         sideOffset={sideOffset}

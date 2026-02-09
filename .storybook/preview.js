@@ -1,8 +1,10 @@
 import React from "react";
 import { ThemeProvider } from "../src/providers";
+import * as Themes from "../src/themes";
 import "../src/styles.css";
+import { withThemeByClassName } from "@storybook/addon-themes";
 
-// Ensure React is available in the story iframe (fixes "React is not defined" when story bundles load)
+// Ensure React is available in the story iframe
 if (typeof window !== "undefined") {
   window.React = React;
 }
@@ -13,11 +15,7 @@ export const parameters = {
     expanded: true,
   },
   layout: "centered",
-  // Accessibility (axe-core). See https://storybook.js.org/docs/writing-tests/accessibility-testing
   a11y: {
-    config: {},
-    options: {},
-    // 'error' = fail tests on violations; 'todo' = warn only; 'off' = skip
     test: "error",
   },
   viewport: {
@@ -41,11 +39,62 @@ export const parameters = {
   },
 };
 
+export const globalTypes = {
+  brand: {
+    name: 'Brand',
+    description: 'Global brand theme',
+    defaultValue: 'default',
+    toolbar: {
+      icon: 'paintbrush',
+      items: [
+        { value: 'default', title: 'Default' },
+        { value: 'amber-minimal', title: 'Amber Minimal' },
+        { value: 't3-chat', title: 'T3 Chat' },
+        { value: 'midnight-bloom', title: 'Midnight Bloom' },
+        { value: 'bubblegum', title: 'Bubblegum' },
+        { value: 'cyberpunk', title: 'Cyberpunk' },
+        { value: 'twitter', title: 'Twitter' },
+        { value: 'slate', title: 'Slate' },
+      ],
+      showName: true,
+    },
+  },
+};
+
 export const decorators = [
-  (Story) =>
-    React.createElement(
+  withThemeByClassName({
+    themes: {
+      light: 'light',
+      dark: 'dark',
+    },
+    defaultTheme: 'light',
+  }),
+  (Story, context) => {
+    const { brand } = context.globals;
+    const mode = context.globals.theme || 'light';
+    
+    const themeMap = {
+        default: { tokens: Themes.defaultTheme, darkTokens: Themes.defaultDarkTheme },
+        'amber-minimal': { tokens: Themes.amberMinimalTheme, darkTokens: Themes.amberMinimalDarkTheme },
+        't3-chat': { tokens: Themes.t3ChatTheme, darkTokens: Themes.t3ChatDarkTheme },
+        'midnight-bloom': { tokens: Themes.midnightBloomTheme, darkTokens: Themes.midnightBloomDarkTheme },
+        'bubblegum': { tokens: Themes.bubblegumTheme, darkTokens: Themes.bubblegumDarkTheme },
+        'cyberpunk': { tokens: Themes.cyberpunkTheme, darkTokens: Themes.cyberpunkDarkTheme },
+        'twitter': { tokens: Themes.twitterTheme, darkTokens: Themes.twitterDarkTheme },
+        slate: { tokens: Themes.slateTheme, darkTokens: Themes.slateDarkTheme },
+    };
+    
+    const activeBrand = themeMap[brand] || themeMap.default;
+
+    return React.createElement(
       ThemeProvider,
-      { pluginId: "storybook" },
-      React.createElement("div", { className: "pui-root min-h-[200px] p-6" }, React.createElement(Story))
-    ),
+      { 
+        pluginId: "storybook", 
+        mode: mode,
+        tokens: activeBrand.tokens,
+        darkTokens: activeBrand.darkTokens,
+      },
+      React.createElement("div", { className: "bg-background text-foreground min-h-[200px] p-6" }, React.createElement(Story))
+    );
+  },
 ];

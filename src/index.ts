@@ -36,6 +36,7 @@ export {
     AvatarGroupCount, AvatarImage,
     // Badge
     Badge,
+    badgeVariants,
     // Breadcrumb
     Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem,
     BreadcrumbLink, BreadcrumbList, BreadcrumbPage,
@@ -145,8 +146,8 @@ export {
     // Spinner
     Spinner,
     // Switch
-    Switch, 
-    LabeledSwitch, 
+    Switch,
+    LabeledSwitch,
     SwitchCard,
     // Tabs
     Tabs, TabsContent, TabsList,
@@ -165,14 +166,6 @@ export {
     // Utilities
     useComboboxAnchor,
     // Types
-    type BadgeProps,
-    type BadgeVariant,
-    type CardContentProps,
-    type CardDescriptionProps,
-    type CardFooterProps,
-    type CardHeaderProps,
-    type CardProps,
-    type CardTitleProps,
     type CircularProgressProps,
     type ComponentPreviewProps,
     type CurrencyInputProps,
@@ -197,11 +190,28 @@ export {
     type ThumbnailSize
 } from "./components/ui";
 
+export { MatricsCard, type MatricsCardProps } from './components/matrics-card';
+export { MatricsGroup, MatricsGroupItem, type MatricsGroupProps, type MatricsGroupItemProps } from './components/matrics-group';
+export { MatricsPill, type MatricsPillProps } from './components/matrics-pill';
+export { FileUpload, type FileUploadProps } from './components/file-upload';
+export { FileView, type FileViewProps, } from './components/file-view';
+export {
+    Logo,
+    type LogoProps,
+    YoutubeCircleLightLogo,
+    type YoutubeCircleLightLogoProps,
+    YoutubeCircleDarkLogo,
+    type YoutubeCircleLightDarkProps,
+} from './components/logo';
+export { TopBar, type TopBarProps } from './components/top-bar'
+export { CrownIcon, type CrownIconProps } from './components/crown-icon'
+export { ButtonToggleGroup, type ButtonToggleGroupProps, type ButtonToggleGroupItem } from './components/button-toggle-group'
+
 // ============================================
 // Theme Presets
 // ============================================
 export {
-    amberDarkTheme, amberTheme, blueDarkTheme, blueTheme, createDarkTheme, createTheme, defaultDarkTheme, defaultTheme, dokanDarkTheme, dokanTheme, greenDarkTheme, greenTheme, slateDarkTheme, slateTheme
+    createDarkTheme, createTheme, defaultDarkTheme, defaultTheme, slateDarkTheme, slateTheme
 } from "./themes";
 
 // ============================================

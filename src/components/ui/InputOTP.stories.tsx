@@ -1,6 +1,11 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta } from "@storybook/react";
 import React from "react";
-import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from "./input-otp";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+  InputOTPSeparator,
+} from "./input-otp";
 
 const meta = {
   title: "UI/InputOTP",
@@ -11,21 +16,20 @@ const meta = {
 
 export default meta;
 
-type Story = StoryObj<typeof meta>;
-
-export const Default: Story = {
+export const Default = {
   render: () => (
-    <InputOTPGroup>
-      <InputOTP maxLength={6}>
-        {({ slots }) =>
-          slots.map((slot, i) => (
-            <React.Fragment key={slot.index}>
-              <InputOTPSlot index={slot.index}>{slot.char}</InputOTPSlot>
-              {i < slots.length - 1 && <InputOTPSeparator />}
-            </React.Fragment>
-          ))
-        }
-      </InputOTP>
-    </InputOTPGroup>
+    <InputOTP maxLength={6}>
+      <InputOTPGroup>
+        <InputOTPSlot index={0} />
+        <InputOTPSlot index={1} />
+        <InputOTPSlot index={2} />
+      </InputOTPGroup>
+      <InputOTPSeparator />
+      <InputOTPGroup>
+        <InputOTPSlot index={3} />
+        <InputOTPSlot index={4} />
+        <InputOTPSlot index={5} />
+      </InputOTPGroup>
+    </InputOTP>
   ),
 };

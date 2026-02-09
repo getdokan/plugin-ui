@@ -10,7 +10,6 @@ export { Avatar,
   AvatarBadge } from "./avatar";
 export { Thumbnail, type ThumbnailProps, type ThumbnailSize, type ThumbnailAspect } from "./thumbnail";
 export { Notice, NoticeTitle, NoticeAction } from "./notice";
-export { Badge, type BadgeProps, type BadgeVariant } from "./badge";
 export { Button, buttonVariants } from "./button";
 export {
   Breadcrumb,
@@ -21,9 +20,11 @@ export {
   BreadcrumbSeparator,
   BreadcrumbEllipsis,
 } from "./breadcrumb";
+export { Badge, badgeVariants} from "./badge";
 export {
     Card, CardContent, CardDescription, CardFooter, CardHeader,
-    CardTitle, type CardContentProps, type CardDescriptionProps, type CardFooterProps, type CardHeaderProps, type CardProps, type CardTitleProps
+    CardTitle,
+  CardAction,
 } from "./card";
 export {
   CurrencyInput,
@@ -60,6 +61,7 @@ export { Separator, type SeparatorProps } from "./separator";
 export { Spinner } from "./spinner";
 export { Switch, LabeledSwitch, SwitchCard, type SwitchProps, type LabeledSwitchProps, type SwitchCardProps } from "./switch";
 export { Textarea } from "./textarea";
+export { RichTextEditor, type RichTextEditorProps } from "./rich-text-editor";
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 export { Toggle } from './toggle'
 export { ToggleGroup, ToggleGroupItem } from './toggle-group'
@@ -150,3 +152,5 @@ export {
   FieldContent,
   FieldTitle,
 } from "./field";
+
+

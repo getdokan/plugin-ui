@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Combobox,
   ComboboxInput,
@@ -17,7 +17,7 @@ import {
 } from "./combobox";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
 
-const items = ["Apple", "Banana", "Orange", "Mango", "Grape"];
+const frameworks = ["Next.js", "SvelteKit", "Nuxt.js", "Remix", "Astro"] as const;
 
 const meta = {
   title: "UI/Combobox",
@@ -40,14 +40,14 @@ export const Default: Story = {
 
     return (
       <Combobox
-        items={items}
+        items={frameworks}
         value={value}
         onValueChange={setValue}
       >
         <ComboboxInput placeholder="Search fruits..." className="w-64" />
         <ComboboxContent>
           <ComboboxList>
-            {items.map((item) => (
+            {frameworks.map((item) => (
               <ComboboxItem key={item} value={item}>{item}</ComboboxItem>
             ))}
           </ComboboxList>
@@ -67,11 +67,11 @@ export const WithClearButton: Story = {
     const [value, setValue] = useState<string | null>(null);
 
     return (
-      <Combobox items={items} value={value} onValueChange={setValue}>
+      <Combobox items={frameworks} value={value} onValueChange={setValue}>
         <ComboboxInput placeholder="Search..." className="w-64" showClear />
         <ComboboxContent>
           <ComboboxList>
-            {items.map((item) => (
+            {frameworks.map((item) => (
               <ComboboxItem key={item} value={item}>{item}</ComboboxItem>
             ))}
           </ComboboxList>
@@ -265,11 +265,11 @@ export const MultiSelectWithTrigger: Story = {
  */
 export const Disabled: Story = {
   render: () => (
-    <Combobox items={items} value="Apple">
+    <Combobox items={frameworks} value="Apple">
       <ComboboxInput placeholder="Disabled..." className="w-64" disabled />
       <ComboboxContent>
         <ComboboxList>
-          {items.map((item) => (
+          {frameworks.map((item) => (
             <ComboboxItem key={item} value={item}>{item}</ComboboxItem>
           ))}
         </ComboboxList>

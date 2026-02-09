@@ -1,5 +1,6 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -51,43 +52,50 @@ export interface ButtonProps
   progress?: number;
 }
 
-function Button({
-  className,
-  variant = "default",
-  size = "default",
-  progress,
-  children,
-  disabled,
-  ...props
-}: ButtonProps) {
-  const hasProgress =
-    typeof progress === "number" && progress >= 0 && progress <= 100;
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      className,
+      variant = "default",
+      size = "default",
+      progress,
+      children,
+      disabled,
+      ...props
+    },
+    ref,
+  ) => {
+    const hasProgress =
+      typeof progress === "number" && progress >= 0 && progress <= 100;
 
-  return (
-    <ButtonPrimitive
-      data-slot="button"
-      className={cn(
-        buttonVariants({ variant, size }),
-        hasProgress && "relative overflow-hidden",
-        className,
-      )}
-      disabled={disabled}
-      {...props}
-    >
-      {/* Progress bar background */}
-      {hasProgress && (
-        <span
-          className="absolute inset-0 bg-primary/20 dark:bg-primary/40 transition-all"
-          style={{
-            width: `${progress}%`,
-          }}
-        />
-      )}
+    return (
+      <ButtonPrimitive
+        ref={ref}
+        data-slot="button"
+        className={cn(
+          buttonVariants({ variant, size }),
+          hasProgress && "relative overflow-hidden",
+          className,
+        )}
+        disabled={disabled}
+        {...props}
+      >
+        {/* Progress bar background */}
+        {hasProgress && (
+          <span
+            className="absolute inset-0 bg-primary/20 dark:bg-primary/40 transition-all"
+            style={{
+              width: `${progress}%`,
+            }}
+          />
+        )}
 
-      {/* Content */}
-      {children}
-    </ButtonPrimitive>
-  );
-}
+        {/* Content */}
+        {children}
+      </ButtonPrimitive>
+    );
+  },
+);
+Button.displayName = "Button";
 
 export { Button, buttonVariants };
