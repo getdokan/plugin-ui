@@ -39,6 +39,16 @@ export interface ButtonToggleGroupProps {
   className?: string
   /** Extra CSS classes for individual toggle items */
   itemClassName?: string
+  /**
+   * The orientation of the toggle items
+   * @default "horizontal"
+   */
+  orientation?: "horizontal" | "vertical"
+  /**
+   * The variant of the toggle items
+   * @default "outline"
+   */
+  variant?: "default" | "outline";
 }
 
 /**
@@ -53,6 +63,8 @@ export function ButtonToggleGroup({
   size = "default",
   className,
   itemClassName,
+  orientation = "horizontal",
+  variant = "outline",
 }: ButtonToggleGroupProps) {
   return (
     <ToggleGroup
@@ -64,10 +76,10 @@ export function ButtonToggleGroup({
           onChange?.(nextValue)
         }
       }}
-      variant="default"
+      variant={variant}
       size={size}
-      className={cn("gap-0! rounded-lg! shadow-none!", className)}
-      orientation="horizontal"
+      className={cn( className)}
+      orientation={orientation}
     >
       {items.map((item) => (
         <ToggleGroupItem
@@ -76,10 +88,6 @@ export function ButtonToggleGroup({
           className={cn(
             "bg-background flex items-center gap-2 px-4! transition-colors cursor-pointer!",
             "aria-pressed:bg-primary! aria-pressed:text-primary-foreground!",
-            "border! border-border! aria-pressed:border-primary!",
-            "not-first:border-l-0!",
-            "group-data-[spacing=0]/toggle-group:first:rounded-l-md!",
-            "group-data-[spacing=0]/toggle-group:last:rounded-r-md!",
             itemClassName
           )}
         >
