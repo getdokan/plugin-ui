@@ -1,8 +1,8 @@
 import type { Meta, StoryFn } from "@storybook/react";
 import { SlotFillProvider } from "@wordpress/components";
-import { Archive, Eye, Pencil, Search, Trash2, UserCheck, Users, UserX } from "lucide-react";
+import { Archive, Eye, Pencil, Trash2, UserCheck, Users, UserX } from "lucide-react";
 import React, { useState } from "react";
-import { Badge, Input, InputGroup, InputGroupAddon, InputGroupInput } from "../ui";
+import { Badge, Input } from "../ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { DataViews, type DataViewAction, type DataViewField, type DataViewFilterField, type DataViewState } from "./dataviews";
 
@@ -132,7 +132,7 @@ const paginateData = (data: User[], view: DataViewState) => {
 const getTotalPages = (totalItems: number, perPage: number = 10) => Math.ceil(totalItems / perPage);
 
 const meta: Meta<typeof DataViews> = {
-  title: "UI/DataViews",
+  title: "WordPress/DataViews",
   component: DataViews,
   decorators: [
     (Story) => (
