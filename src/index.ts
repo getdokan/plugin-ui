@@ -211,7 +211,7 @@ export { ButtonToggleGroup, type ButtonToggleGroupProps, type ButtonToggleGroupI
 // Theme Presets
 // ============================================
 export {
-    amberDarkTheme, amberTheme, blueDarkTheme, blueTheme, createDarkTheme, createTheme, defaultDarkTheme, defaultTheme, dokanDarkTheme, dokanTheme, greenDarkTheme, greenTheme, slateDarkTheme, slateTheme
+    createDarkTheme, createTheme, defaultDarkTheme, defaultTheme, slateDarkTheme, slateTheme
 } from "./themes";
 
 // ============================================

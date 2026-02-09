@@ -77,8 +77,6 @@ export function ButtonToggleGroup({
             "bg-background flex items-center gap-2 px-4! transition-colors cursor-pointer!",
             "aria-pressed:bg-primary! aria-pressed:text-primary-foreground!",
             "border! border-border! aria-pressed:border-primary!",
-            "aria-pressed:z-10!",
-            "aria-pressed:border-l!",
             "not-first:border-l-0!",
             "group-data-[spacing=0]/toggle-group:first:rounded-l-md!",
             "group-data-[spacing=0]/toggle-group:last:rounded-r-md!",
