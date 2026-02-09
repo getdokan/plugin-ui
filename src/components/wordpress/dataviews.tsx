@@ -1,5 +1,6 @@
 import useWindowDimensions from '@/hooks/useWindowDimensions';
 import { Popover, Slot } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 import { cn } from '@/lib/utils';
 import {
     DataViews as DataViewsTable,
@@ -8,13 +9,15 @@ import {
     type SupportedLayouts,
     type View
 } from '@wordpress/dataviews/wp';
-import { FileSearch, Funnel, Plus, X } from 'lucide-react';
+import { FileSearch, Funnel, Plus, Search, X } from 'lucide-react';
 import { Fragment, useEffect, useState } from 'react';
 import { Button } from '../ui/button';
+import { InputGroup, InputGroupAddon, InputGroupInput } from '../ui';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 
 /** Convert string to snake_case (e.g. "myNamespace" -> "my_namespace"). */
 function snakeCase(str: string): string {
+    if( !str ) return '';
     return str
         .replace(/-/g, '_')
         .replace(/\s+/g, '_')
@@ -25,6 +28,7 @@ function snakeCase(str: string): string {
 
 /** Convert string to kebab-case (e.g. "myNamespace" -> "my-namespace"). */
 function kebabCase(str: string): string {
+    if( !str ) return '';
     return str
         .replace(/([a-z])([A-Z])/g, '$1-$2')
         .replace(/[\s_]+/g, '-')
@@ -53,6 +57,66 @@ function applyFiltersToTableElements<Item>(
     }
     const hookName = `${snakeCase(namespace)}_dataviews_${elementName}`;
     return window.wp.hooks.applyFilters(hookName, element, props) as unknown;
+}
+
+/**
+ * Update the current URL's query parameters without causing a full page reload.
+ */
+function updateUrlQueryParams(params: Record<string, string | number | null | undefined>): void {
+    if (typeof window === 'undefined') {
+        return;
+    }
+
+    const url = new URL(window.location.href);
+
+    Object.entries(params).forEach(([key, value]) => {
+        if (value === undefined || value === null || value === '') {
+            url.searchParams.delete(key);
+        } else {
+            url.searchParams.set(key, String(value));
+        }
+    });
+
+    window.history.replaceState({}, '', url.toString());
+}
+
+/**
+ * Extract query-param friendly values from a DataViews `View`.
+ *
+ * We intentionally support both camelCase (`perPage`) and snake_case (`per_page`)
+ * so that whatever the upstream shape is, we can still sync it into the URL.
+ */
+function getQueryParamsFromView(view: View): Record<string, string | number | null | undefined> {
+    const v = view as View & {
+        page?: number;
+        per_page?: number;
+        perPage?: number;
+        search?: string;
+        filters?: unknown;
+        status?: string;
+    };
+
+    const perPage = v.perPage ?? v.per_page;
+
+    const filters =
+        v.filters &&
+        typeof v.filters === 'object' &&
+        Object.keys(v.filters as unknown as Record<string, unknown>).length > 0
+            ? JSON.stringify(v.filters)
+            : null;
+
+    // Start with the core pieces of state we always want in the URL.
+    const params: Record<string, string | number | null | undefined> = {
+        // Use `current_page` instead of `page` so we don't conflict with
+        // WordPress admin's own `page` query param (e.g. ?page=plugin-ui-test).
+        current_page: v.page ?? null,
+        per_page: perPage ?? null,
+        search: v.search ?? '',
+        status: v.status ?? '',
+        filters,
+    };
+
+    return params;
 }
 
 // Re-export types from @wordpress/dataviews with prefixed names to avoid conflicts
@@ -99,7 +163,7 @@ const FilterItems = ({
     buttonPopOverAnchor = null,
     labels = {}
 }: DataViewFilterProps) => {
-    const { removeFilter = 'Remove filter', addFilter = 'Add Filter', reset = 'Reset' } = labels;
+    const { removeFilter = __('Remove filter', 'default'), addFilter = __('Add Filter', 'default'), reset = __('Reset', 'default') } = labels;
 
     const [activeFilters, setActiveFilters] = useState<string[]>([]);
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -252,6 +316,7 @@ export type DataViewsProps<Item> = {
     fields: Field<Item>[];
     search?: boolean;
     searchLabel?: string;
+    searchPlaceholder?: string;
     actions?: Action<Item>[];
     data: Item[];
     isLoading?: boolean;
@@ -281,7 +346,7 @@ interface ListEmptyProps {
 
 const ListEmpty = ({ icon, description, title }: ListEmptyProps) => {
     const desc = description ?? '';
-    const heading = title ?? 'No data found';
+    const heading = title ?? __('No data found', 'default');
 
     return (
         <div className="w-full flex items-center justify-center py-40">
@@ -315,6 +380,9 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
         header,
         filter,
         tabs,
+        search,
+        searchLabel,
+        searchPlaceholder = __('Search', 'default'),
         ...dataViewsTableProps
     } = props;
     /**
@@ -338,9 +406,15 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
         fields: view.fields ?? fields.map((f) => f.id)
     };
 
+    const handleViewChange = (nextView: View) => {
+        // Sync key pieces of state into the URL so that the UI is shareable and bookmarkable.
+        updateUrlQueryParams(getQueryParamsFromView(nextView));
+        onChangeView(nextView);
+    };
+
     const baseProps = {
         ...dataViewsTableProps,
-        onChangeView,
+        onChangeView: handleViewChange,
         view: normalizedView,
         fields: normalizedFields,
         defaultLayouts,
@@ -367,12 +441,18 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
         ) as typeof baseProps.defaultLayouts
     };
 
-    // Set view type `list` for mobile device when responsive
+    // Set view type `list` for mobile devices when responsive.
     useEffect(() => {
-        if (responsive) {
+        if (!responsive) {
+            return;
+        }
+
+        const targetType: View['type'] = windowWidth <= 768 ? 'list' : 'table';
+
+        if (view.type !== targetType) {
             onChangeView({
                 ...view,
-                type: windowWidth <= 768 ? 'list' : 'table'
+                type: targetType
             } as View);
         }
     }, [responsive, windowWidth, onChangeView, view]);
@@ -430,6 +510,27 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     const beforeSlotId = `${filterId}-before`;
     const afterSlotId = `${filterId}-after`;
 
+    const searchTerm = (view as View & { search?: string }).search ?? '';
+
+    const searchInput = search ? (
+        <InputGroup className="w-64 min-w-64">
+            <InputGroupAddon>
+                <Search size={18} className="text-muted-foreground" />
+            </InputGroupAddon>
+            <InputGroupInput
+                placeholder={searchPlaceholder}
+                value={searchTerm}
+                onChange={(event) =>
+                    handleViewChange({
+                        ...view,
+                        search: event.target.value,
+                        page: 1
+                    } as View)
+                }
+            />
+        </InputGroup>
+    ) : null;
+
     return (
         <div className="pui-root-dataviews" id={tableNameSpace} data-filter-id={filterId}>
             <Slot name={beforeSlotId} fillProps={{ ...filteredProps }} />
@@ -446,6 +547,15 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                                     (tabsWithFilterButton || tabs)?.tabs[0]?.value
                                 }
                                 onValueChange={(value) => {
+                                    // When a tab changes, reflect that in the view state
+                                    const nextView = {
+                                        ...view,
+                                        status: value,
+                                        page: 1,
+                                    } as View & { status?: string };
+
+                                    handleViewChange(nextView);
+
                                     tabs?.onSelect?.(value);
                                     filteredProps.onChangeSelection?.([]);
                                 }}>
@@ -466,6 +576,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                                 </TabsList>
                             </Tabs>
                             <div className="flex items-center gap-2">
+                                {searchInput}
                                 {(tabsWithFilterButton || tabs)?.headerSlot?.map((node, index) => (
                                     <Fragment key={index}>{node}</Fragment>
                                 ))}
@@ -475,7 +586,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
 
                     {filter && filter.fields && filter.fields.length > 0 && (
                         <div
-                            className={`transition-all flex w-full justify-between p-4 bg-background ${
+                            className={`transition-all flex w-full justify-between px-4 bg-background ${
                                 showFilters ? '' : 'hidden!'
                             }`}>
                             <FilterItems

@@ -437,6 +437,8 @@ export const WithSearch: StoryFn = () => {
         fields={fields}
         view={view}
         onChangeView={setView}
+        search
+        searchPlaceholder="Search by name or email..."
         paginationInfo={{
           totalItems: filteredUsers.length,
           totalPages: getTotalPages(filteredUsers.length, view.perPage),
@@ -472,19 +474,6 @@ export const WithSearchInHeaderSlot: StoryFn = () => {
 
   const paginatedData = paginateData(filteredUsers, view);
 
-  const searchInput = (
-    <InputGroup className="w-64">
-      <InputGroupAddon>
-        <Search size={18} className="text-muted-foreground" />
-      </InputGroupAddon>
-      <InputGroupInput
-        placeholder="Search by name or email..."
-        value={searchTerm}
-        onChange={(e) => setView(prev => ({ ...prev, search: e.target.value, page: 1 }))}
-      />
-    </InputGroup>
-  );
-
   const filterFields: DataViewFilterField[] = [
     {
       id: "status",
@@ -518,6 +507,8 @@ export const WithSearchInHeaderSlot: StoryFn = () => {
         fields={fields}
         view={view}
         onChangeView={setView}
+        search
+        searchPlaceholder="Search by name or email..."
         actions={actions}
         paginationInfo={{
           totalItems: filteredUsers.length,
@@ -536,7 +527,6 @@ export const WithSearchInHeaderSlot: StoryFn = () => {
             setActiveTab(value);
             setView(prev => ({ ...prev, page: 1 }));
           },
-          headerSlot: [<div key="search">{searchInput}</div>],
         }}
         filter={{
           fields: filterFields,
@@ -691,6 +681,8 @@ export const FullFeatured: StoryFn = () => {
         fields={fields}
         view={view}
         onChangeView={setView}
+        search
+        searchPlaceholder="Search by name or email..."
         actions={actions}
         selection={selection}
         onChangeSelection={setSelection}
