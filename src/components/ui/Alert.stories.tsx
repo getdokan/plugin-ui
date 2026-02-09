@@ -131,8 +131,8 @@ export const WithButtons: Story = {
   args: { variant: defaultVariant },
   render: (args) => (
     <Alert variant={args.variant}>
-      <AlertIcon variant={args.variant ?? defaultVariant} />
       <div className="flex items-center justify-between gap-4 col-start-2">
+        <AlertIcon variant={args.variant ?? defaultVariant} />
         <AlertTitle>Hold on I need at least a few minutes!</AlertTitle>
         <div className="flex gap-2">
           <Button variant="default">Primary</Button>
