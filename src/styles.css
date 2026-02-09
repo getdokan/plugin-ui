@@ -233,15 +233,6 @@
    ============================================ */
 
 .pui-root {
-    /* Scoped reset */
-    *,
-    *::before,
-    *::after {
-        box-sizing: border-box;
-        border-style: solid;
-        border-color: var(--border);
-    }
-
     /* Base styles */
     font-family: var(--font-sans);
     color: var(--foreground);
