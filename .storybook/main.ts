@@ -1,7 +1,7 @@
 import type { StorybookConfig } from "@storybook/react-webpack5";
+import { createRequire } from "module";
 import path from "path";
 import { fileURLToPath } from "url";
-import { createRequire } from "module";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
