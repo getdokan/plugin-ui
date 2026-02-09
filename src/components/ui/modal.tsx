@@ -80,8 +80,9 @@ const ModalHeader = forwardRef<HTMLDivElement, ModalHeaderProps>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
+      data-slot="modal-header"
       className={cn(
-        "flex flex-col space-y-1.5 text-center sm:text-left border-b border-border py-4 px-8",
+        "flex flex-col space-y-1.5 text-center sm:text-left border-b py-4 px-8",
         className,
       )}
       {...props}
@@ -147,8 +148,9 @@ const ModalFooter = forwardRef<HTMLDivElement, ModalFooterProps>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
+      data-slot="modal-footer"
       className={cn(
-        "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 border-t border-border py-5 px-8",
+        "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 border-t py-5 px-8",
         className,
       )}
       {...props}
