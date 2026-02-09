@@ -75,3 +75,12 @@ export const EndIcons: Story = {
     defaultValue: "asc",
   },
 };
+
+
+export const Vertical: Story = {
+  args: {
+    items,
+    defaultValue: "grid",
+    orientation: "vertical",
+  },
+};
