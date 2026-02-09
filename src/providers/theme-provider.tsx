@@ -246,6 +246,11 @@ export interface ThemeProviderProps {
   defaultMode?: ThemeMode;
 
   /**
+   * Controlled theme mode. If provided, the internal state is ignored.
+   */
+  mode?: ThemeMode;
+
+  /**
    * Storage key for persisting theme preference
    * Set to false to disable persistence
    */
@@ -381,9 +386,10 @@ export function ThemeProvider({
   children,
   className = "",
   style = {},
+  mode: controlledMode,
 }: ThemeProviderProps) {
   // Initialize mode from storage or default
-  const [mode, setModeState] = useState<ThemeMode>(() => {
+  const [internalMode, setInternalModeState] = useState<ThemeMode>(() => {
     if (storageKey && typeof window !== "undefined") {
       const stored = localStorage.getItem(storageKey);
       if (stored === "light" || stored === "dark" || stored === "system") {
@@ -392,6 +398,9 @@ export function ThemeProvider({
     }
     return defaultMode;
   });
+
+  // The actual mode being used
+  const mode = controlledMode !== undefined ? controlledMode : internalMode;
 
   // Track system preference
   const [systemPreference, setSystemPreference] = useState<"light" | "dark">(
@@ -424,7 +433,7 @@ export function ThemeProvider({
   // Set mode with persistence
   const setMode = useCallback(
     (newMode: ThemeMode) => {
-      setModeState(newMode);
+      setInternalModeState(newMode);
       if (storageKey && typeof window !== "undefined") {
         localStorage.setItem(storageKey, newMode);
       }

@@ -1,8 +1,10 @@
 import React from "react";
 import { ThemeProvider } from "../src/providers";
+import * as Themes from "../src/themes";
 import "../src/styles.css";
+import { withThemeByClassName } from "@storybook/addon-themes";
 
-// Ensure React is available in the story iframe (fixes "React is not defined" when story bundles load)
+// Ensure React is available in the story iframe
 if (typeof window !== "undefined") {
   window.React = React;
 }
@@ -13,11 +15,7 @@ export const parameters = {
     expanded: true,
   },
   layout: "centered",
-  // Accessibility (axe-core). See https://storybook.js.org/docs/writing-tests/accessibility-testing
   a11y: {
-    config: {},
-    options: {},
-    // 'error' = fail tests on violations; 'todo' = warn only; 'off' = skip
     test: "error",
   },
   viewport: {
@@ -41,11 +39,58 @@ export const parameters = {
   },
 };
 
+export const globalTypes = {
+  brand: {
+    name: 'Brand',
+    description: 'Global brand theme',
+    defaultValue: 'default',
+    toolbar: {
+      icon: 'paintbrush',
+      items: [
+        { value: 'default', title: 'Default' },
+        { value: 'dokan', title: 'Dokan' },
+        { value: 'blue', title: 'Blue' },
+        { value: 'green', title: 'Green' },
+        { value: 'amber', title: 'Amber' },
+        { value: 'slate', title: 'Slate' },
+      ],
+      showName: true,
+    },
+  },
+};
+
 export const decorators = [
-  (Story) =>
-    React.createElement(
+  withThemeByClassName({
+    themes: {
+      light: 'light',
+      dark: 'dark',
+    },
+    defaultTheme: 'light',
+  }),
+  (Story, context) => {
+    const { brand } = context.globals;
+    const mode = context.globals.theme || 'light';
+    
+    const themeMap = {
+        default: { tokens: Themes.defaultTheme, darkTokens: Themes.defaultDarkTheme },
+        dokan: { tokens: Themes.dokanTheme, darkTokens: Themes.dokanDarkTheme },
+        blue: { tokens: Themes.blueTheme, darkTokens: Themes.blueDarkTheme },
+        green: { tokens: Themes.greenTheme, darkTokens: Themes.greenDarkTheme },
+        amber: { tokens: Themes.amberTheme, darkTokens: Themes.amberDarkTheme },
+        slate: { tokens: Themes.slateTheme, darkTokens: Themes.slateDarkTheme },
+    };
+    
+    const activeBrand = themeMap[brand] || themeMap.default;
+
+    return React.createElement(
       ThemeProvider,
-      { pluginId: "storybook" },
-      React.createElement("div", { className: "pui-root min-h-[200px] p-6" }, React.createElement(Story))
-    ),
+      { 
+        pluginId: "storybook", 
+        mode: mode,
+        tokens: activeBrand.tokens,
+        darkTokens: activeBrand.darkTokens,
+      },
+      React.createElement("div", { className: "bg-background text-foreground min-h-[200px] p-6" }, React.createElement(Story))
+    );
+  },
 ];
