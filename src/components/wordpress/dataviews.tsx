@@ -1,19 +1,67 @@
 import useWindowDimensions from '@/hooks/useWindowDimensions';
-import { Popover } from '@wordpress/components';
+import { Popover, Slot } from '@wordpress/components';
 // @ts-ignore
 import { cn } from '@/lib/utils';
-import { DataViews as DataViewsTable, type Action, type Field, type SupportedLayouts, type View } from '@wordpress/dataviews/wp';
+import {
+    DataViews as DataViewsTable,
+    type Action,
+    type Field,
+    type SupportedLayouts,
+    type View
+} from '@wordpress/dataviews/wp';
 import { FileSearch, Funnel, Plus, X } from 'lucide-react';
 import { Fragment, useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 
+/** Convert string to snake_case (e.g. "myNamespace" -> "my_namespace"). */
+function snakeCase(str: string): string {
+    return str
+        .replace(/-/g, '_')
+        .replace(/\s+/g, '_')
+        .replace(/([a-z])([A-Z])/g, '$1_$2')
+        .toLowerCase()
+        .replace(/^_+|_+$/g, '');
+}
+
+/** Convert string to kebab-case (e.g. "myNamespace" -> "my-namespace"). */
+function kebabCase(str: string): string {
+    return str
+        .replace(/([a-z])([A-Z])/g, '$1-$2')
+        .replace(/[\s_]+/g, '-')
+        .toLowerCase()
+        .replace(/^-+|-+$/g, '');
+}
+
+declare global {
+    interface Window {
+        wp?: { hooks?: { applyFilters: (hookName: string, value: unknown, ...args: unknown[]) => unknown } };
+    }
+}
+
+/**
+ * Apply WordPress filters to a table element when wp.hooks is available.
+ * Hook name format: `{snakeNamespace}_dataviews_{elementName}`
+ */
+function applyFiltersToTableElements<Item>(
+    namespace: string,
+    elementName: string,
+    element: unknown,
+    props: DataViewsProps<Item>
+): unknown {
+    if (typeof window === 'undefined' || !window.wp?.hooks?.applyFilters) {
+        return element;
+    }
+    const hookName = `${snakeCase(namespace)}_dataviews_${elementName}`;
+    return window.wp.hooks.applyFilters(hookName, element, props) as unknown;
+}
+
 // Re-export types from @wordpress/dataviews with prefixed names to avoid conflicts
 export type {
-  Action as DataViewAction,
-  Field as DataViewField,
-  SupportedLayouts as DataViewLayouts,
-  View as DataViewState
+    Action as DataViewAction,
+    Field as DataViewField,
+    SupportedLayouts as DataViewLayouts,
+    View as DataViewState
 };
 
 // Filter types
@@ -54,8 +102,6 @@ const FilterItems = ({
 }: DataViewFilterProps) => {
     const { removeFilter = 'Remove filter', addFilter = 'Add Filter', reset = 'Reset' } = labels;
 
-    const filteredFields: DataViewFilterField[] = fields;
-
     const [activeFilters, setActiveFilters] = useState<string[]>([]);
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
@@ -94,7 +140,7 @@ const FilterItems = ({
         onActiveFiltersChange?.(activeFilters.length);
     }, [activeFilters.length]);
 
-    const availableFilters = filteredFields.filter((f) => !activeFilters.includes(f.id));
+    const availableFilters = fields.filter((f) => !activeFilters.includes(f.id));
 
     const handleAddFilter = (id: string) => {
         setActiveFilters((prev) => {
@@ -124,7 +170,7 @@ const FilterItems = ({
             <div className={cn('flex w-full justify-between items-center', className)}>
                 <div className="flex flex-row flex-wrap gap-4 items-center">
                     {activeFilters.map((id) => {
-                        const field = filteredFields.find((f) => f.id === id);
+                        const field = fields.find((f) => f.id === id);
                         if (!field) {
                             return null;
                         }
@@ -194,13 +240,14 @@ interface TabsProps {
     onSelect?: (tabValue: string) => void;
     initialTab?: string;
     headerSlot?: React.ReactNode[];
-    className?: string;
 }
 
 type ItemWithId = { id: string };
 
 export type DataViewsProps<Item> = {
     view: View;
+    /** Required. Enables WordPress filter hooks and before/after Slots. Hook: `{snake_namespace}_dataviews_{elementName}` */
+    namespace: string;
     responsive?: boolean;
     onChangeView: (view: View) => void;
     fields: Field<Item>[];
@@ -258,6 +305,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     const [activeFilterCount, setActiveFilterCount] = useState(0);
     const {
         responsive = true,
+        namespace,
         onChangeView,
         fields,
         view,
@@ -291,13 +339,33 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
         fields: view.fields ?? fields.map((f) => f.id)
     };
 
-    const filteredProps = {
+    const baseProps = {
         ...dataViewsTableProps,
         onChangeView,
         view: normalizedView,
         fields: normalizedFields,
         defaultLayouts,
         empty: empty || <ListEmpty icon={emptyIcon} title={emptyTitle} description={emptyDescription} />
+    };
+
+    // Run WordPress filter hooks on table elements (only applies when wp.hooks exists)
+    const filteredProps = {
+        ...baseProps,
+        data: applyFiltersToTableElements(namespace, 'data', baseProps.data, props) as typeof baseProps.data,
+        view: applyFiltersToTableElements(namespace, 'view', baseProps.view, props) as typeof baseProps.view,
+        fields: applyFiltersToTableElements(namespace, 'fields', baseProps.fields, props) as typeof baseProps.fields,
+        actions: applyFiltersToTableElements(
+            namespace,
+            'actions',
+            baseProps.actions,
+            props
+        ) as typeof baseProps.actions,
+        defaultLayouts: applyFiltersToTableElements(
+            namespace,
+            'layouts',
+            baseProps.defaultLayouts,
+            props
+        ) as typeof baseProps.defaultLayouts
     };
 
     if (responsive) {
@@ -355,14 +423,23 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
               })()
             : tabs;
 
+    const tableNameSpace = kebabCase(namespace);
+
+    if (!namespace) {
+        throw new Error('Namespace is required for the DataViewTable component');
+    }
+
+    const filterId = `${snakeCase(namespace)}_dataviews`;
+    const beforeSlotId = `${filterId}-before`;
+    const afterSlotId = `${filterId}-after`;
+
     return (
-        <div className="pui-root-dataviews">
+        <div className="pui-root-dataviews" id={tableNameSpace} data-filter-id={filterId}>
+            <Slot name={beforeSlotId} fillProps={{ ...filteredProps }} />
             {/* @ts-expect-error - Complex conditional types from wrapper don't perfectly align with @wordpress/dataviews types */}
             <DataViewsTable {...filteredProps}>
                 <div className="w-full flex items-center flex-col justify-between gap-4 rounded-tr-md rounded-tl-md">
-                    {header && (
-                        <div className="font-semibold text-sm text-foreground">{header}</div>
-                    )}
+                    {header && <div className="font-semibold text-sm text-foreground">{header}</div>}
 
                     {tabs && tabs.tabs && tabs.tabs.length > 0 && (
                         <div className="md:flex justify-between w-full items-center px-4 border-b border-border">
@@ -381,7 +458,10 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                                             key={tab.value}
                                             value={tab.value}
                                             disabled={tab.disabled}
-                                            className={cn('py-4 px-3 md:py-6 border-0 md:px-4 bg-transparent rounded-none hover:bg-transparent', tab.className)}>
+                                            className={cn(
+                                                'py-4 px-3 md:py-6 border-0 md:px-4 bg-transparent rounded-none hover:bg-transparent',
+                                                tab.className
+                                            )}>
                                             {tab.icon && <tab.icon className="size-4" />}
                                             {tab.label}
                                         </TabsTrigger>
@@ -432,6 +512,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                     <DataViewsTable.Pagination />
                 </div>
             </DataViewsTable>
+            <Slot name={afterSlotId} fillProps={{ ...filteredProps }} />
         </div>
     );
 }

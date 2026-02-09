@@ -2,6 +2,8 @@
 
 A powerful data table component built on top of WordPress DataViews with responsive layouts, filtering, tabs, pagination, and bulk actions support.
 
+**Required:** Every `DataViews` instance must receive a `namespace` string. It is used for before/after Slots and WordPress filter hooks (when `wp.hooks` exists).
+
 ## Installation
 
 ```bash
@@ -71,6 +73,7 @@ function MyTable() {
 
   return (
     <DataViews<User>
+      namespace="my-users-table"
       data={users}
       fields={fields}
       view={view}
@@ -79,10 +82,25 @@ function MyTable() {
         totalItems: users.length,
         totalPages: 1,
       }}
+      getItemId={(item) => item.id}
     />
   );
 }
 ```
+
+## Namespace, Slots & filter hooks
+
+The required `namespace` prop enables:
+
+- **Slots:** Renders `{snake_namespace}_dataviews-before` and `{snake_namespace}_dataviews-after` so host apps can inject content via WordPress `Fill` (e.g. `dataviews_demo_dataviews-before` for `namespace="dataviews-demo"`).
+- **Filter hooks** (when `wp.hooks` exists): Table elements can be filtered with:
+  - `{snake_namespace}_dataviews_data`
+  - `{snake_namespace}_dataviews_view`
+  - `{snake_namespace}_dataviews_fields`
+  - `{snake_namespace}_dataviews_actions`
+  - `{snake_namespace}_dataviews_layouts`
+
+Example: for `namespace="product-list"`, use `wp.hooks.addFilter('product_list_dataviews_data', 'myPlugin', (data, props) => data, 10, 2);`
 
 ## Props
 
@@ -90,19 +108,20 @@ function MyTable() {
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
+| `namespace` | `string` | **required** | Used for Slots and WordPress filter hook names (e.g. `my-table`) |
 | `data` | `Item[]` | required | Array of data items to display |
 | `fields` | `DataViewField<Item>[]` | required | Field definitions for columns |
 | `view` | `DataViewState` | required | Current view state (pagination, sorting, filters) |
 | `onChangeView` | `(view: DataViewState) => void` | required | Callback when view state changes |
 | `paginationInfo` | `{ totalItems: number; totalPages: number }` | required | Pagination information |
+| `getItemId` | `(item: Item) => string` | required* | Function to get unique ID (*optional when item has `id: string`) |
 | `actions` | `DataViewAction<Item>[]` | `[]` | Row actions (edit, delete, etc.) |
 | `selection` | `string[]` | `[]` | Array of selected item IDs |
 | `onChangeSelection` | `(items: string[]) => void` | - | Callback when selection changes |
-| `search` | `boolean` | `true` | Enable/disable search |
+| `search` | `boolean` | - | Enable/disable search |
 | `searchLabel` | `string` | - | Placeholder text for search input |
 | `isLoading` | `boolean` | `false` | Show loading state |
 | `responsive` | `boolean` | `true` | Auto-switch to list view on mobile |
-| `getItemId` | `(item: Item) => string` | - | Function to get unique ID from item |
 | `onClickItem` | `(item: Item) => void` | - | Callback when row is clicked |
 | `isItemClickable` | `(item: Item) => boolean` | - | Determine if row is clickable |
 | `empty` | `JSX.Element` | - | Custom empty state component |
@@ -174,6 +193,7 @@ const actions: DataViewAction<User>[] = [
 ];
 
 <DataViews<User>
+  namespace="users-with-actions"
   data={users}
   fields={fields}
   view={view}
@@ -183,6 +203,7 @@ const actions: DataViewAction<User>[] = [
     totalItems: users.length,
     totalPages: 1,
   }}
+  getItemId={(item) => item.id}
 />
 ```
 
@@ -225,7 +246,8 @@ function TableWithSelection() {
   ];
 
   return (
-    <DataViews
+    <DataViews<User>
+      namespace="users-bulk"
       data={users}
       fields={fields}
       view={view}
@@ -237,6 +259,7 @@ function TableWithSelection() {
         totalItems: users.length,
         totalPages: 1,
       }}
+      getItemId={(item) => item.id}
     />
   );
 }
@@ -271,7 +294,8 @@ function TableWithTabs() {
   };
 
   return (
-    <DataViews
+    <DataViews<User>
+      namespace="users-tabs"
       data={filteredData}
       fields={fields}
       view={view}
@@ -280,6 +304,7 @@ function TableWithTabs() {
         totalItems: filteredData.length,
         totalPages: Math.ceil(filteredData.length / view.perPage),
       }}
+      getItemId={(item) => item.id}
       tabs={{
         tabs: [
           { label: 'All Users', value: 'all', icon: Users },
@@ -300,7 +325,8 @@ function TableWithTabs() {
 import { Button } from "@wedevs/plugin-ui";
 import { Plus, Download } from 'lucide-react';
 
-<DataViews
+<DataViews<User>
+  namespace="users-tabs-header"
   data={users}
   fields={fields}
   view={view}
@@ -309,6 +335,7 @@ import { Plus, Download } from 'lucide-react';
     totalItems: users.length,
     totalPages: 1,
   }}
+  getItemId={(item) => item.id}
   tabs={{
     tabs: [
       { label: 'All', value: 'all' },
@@ -390,7 +417,8 @@ function TableWithFilters() {
   };
 
   return (
-    <DataViews
+    <DataViews<User>
+      namespace="users-filters"
       data={users}
       fields={fields}
       view={view}
@@ -399,6 +427,7 @@ function TableWithFilters() {
         totalItems: users.length,
         totalPages: 1,
       }}
+      getItemId={(item) => item.id}
       tabs={{
         tabs: [
           { label: 'All', value: 'all' },
@@ -428,7 +457,8 @@ function TableWithFilters() {
 import { FileSearch, Inbox } from 'lucide-react';
 
 // Using props
-<DataViews
+<DataViews<User>
+  namespace="users-empty"
   data={[]}
   fields={fields}
   view={view}
@@ -437,13 +467,15 @@ import { FileSearch, Inbox } from 'lucide-react';
     totalItems: 0,
     totalPages: 0,
   }}
+  getItemId={(item) => item.id}
   emptyIcon={<Inbox size={52} />}
   emptyTitle="No users found"
   emptyDescription="Try adjusting your search or filters to find what you're looking for."
 />
 
 // Using custom component
-<DataViews
+<DataViews<User>
+  namespace="users-empty-custom"
   data={[]}
   fields={fields}
   view={view}
@@ -452,6 +484,7 @@ import { FileSearch, Inbox } from 'lucide-react';
     totalItems: 0,
     totalPages: 0,
   }}
+  getItemId={(item) => item.id}
   empty={
     <div className="text-center py-20">
       <FileSearch className="mx-auto h-16 w-16 text-muted-foreground" />
@@ -466,7 +499,8 @@ import { FileSearch, Inbox } from 'lucide-react';
 ## Clickable Rows
 
 ```tsx
-<DataViews
+<DataViews<User>
+  namespace="users-clickable"
   data={users}
   fields={fields}
   view={view}
@@ -475,6 +509,7 @@ import { FileSearch, Inbox } from 'lucide-react';
     totalItems: users.length,
     totalPages: 1,
   }}
+  getItemId={(item) => item.id}
   onClickItem={(item) => {
     console.log('Row clicked:', item);
     // Navigate to detail page
@@ -489,7 +524,8 @@ import { FileSearch, Inbox } from 'lucide-react';
 The component automatically switches from table to list view on mobile devices (< 768px width). You can disable this behavior:
 
 ```tsx
-<DataViews
+<DataViews<User>
+  namespace="users-not-responsive"
   data={users}
   fields={fields}
   view={view}
@@ -499,6 +535,7 @@ The component automatically switches from table to list view on mobile devices (
     totalItems: users.length,
     totalPages: 1,
   }}
+  getItemId={(item) => item.id}
 />
 ```
 
@@ -545,7 +582,8 @@ function ServerPaginatedTable() {
   }, [view.page, view.perPage, view.search]);
 
   return (
-    <DataViews
+    <DataViews<User>
+      namespace="users-server-pagination"
       data={data}
       fields={fields}
       view={view}
@@ -555,6 +593,7 @@ function ServerPaginatedTable() {
         totalItems,
         totalPages,
       }}
+      getItemId={(item) => item.id}
     />
   );
 }
@@ -716,7 +755,8 @@ function UsersTable() {
   ];
 
   return (
-    <DataViews
+    <DataViews<User>
+      namespace="users-complete"
       data={filteredData}
       fields={fields}
       view={view}
@@ -728,6 +768,7 @@ function UsersTable() {
         totalItems: filteredData.length,
         totalPages: Math.ceil(filteredData.length / view.perPage),
       }}
+      getItemId={(item) => item.id}
       emptyTitle="No users found"
       emptyDescription="Try adjusting your filters or add a new user."
       tabs={{
@@ -852,14 +893,14 @@ interface TabsProps {
   onSelect?: (tabValue: string) => void;
   initialTab?: string;
   headerSlot?: React.ReactNode[];
-  className?: string;
 }
 ```
 
 ## Notes
 
-- The component is built on WordPress DataViews and requires `@wordpress/dataviews` as a peer dependency
-- Responsive behavior switches to list view on screens narrower than 768px
-- Sorting and column hiding are disabled by default; enable them per-field if needed
-- When using tabs with filters, a filter button is automatically added to the header slot
-- The bulk action toolbar appears when items are selected
+- **`namespace`** is required. It is used for Slot names (`{snake_namespace}_dataviews-before`, `{snake_namespace}_dataviews-after`) and WordPress filter hooks (`{snake_namespace}_dataviews_data`, `_view`, `_fields`, `_actions`, `_layouts`) when `wp.hooks` exists.
+- The component is built on WordPress DataViews and requires `@wordpress/dataviews` as a peer dependency. Use `SlotFillProvider` from `@wordpress/components` when rendering Fills for the before/after Slots.
+- Responsive behavior switches to list view on screens narrower than 768px.
+- Sorting and column hiding are disabled by default; enable them per-field if needed.
+- When using tabs with filters, a filter button is automatically added to the header slot.
+- The bulk action toolbar appears when items are selected.

@@ -1,7 +1,8 @@
 import type { Meta, StoryFn } from "@storybook/react";
-import { Archive, Eye, Pencil, Trash2, UserCheck, Users, UserX } from "lucide-react";
+import { SlotFillProvider } from "@wordpress/components";
+import { Archive, Eye, Pencil, Search, Trash2, UserCheck, Users, UserX } from "lucide-react";
 import React, { useState } from "react";
-import { Badge, Input } from "../ui";
+import { Badge, Input, InputGroup, InputGroupAddon, InputGroupInput } from "../ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { DataViews, type DataViewAction, type DataViewField, type DataViewFilterField, type DataViewState } from "./dataviews";
 
@@ -133,12 +134,26 @@ const getTotalPages = (totalItems: number, perPage: number = 10) => Math.ceil(to
 const meta: Meta<typeof DataViews> = {
   title: "UI/DataViews",
   component: DataViews,
+  decorators: [
+    (Story) => (
+      <SlotFillProvider>
+        <Story />
+      </SlotFillProvider>
+    ),
+  ],
   parameters: {
     layout: "fullscreen",
     docs: {
       description: {
         component: `
 A powerful data table component built on top of WordPress DataViews with responsive layouts, filtering, tabs, pagination, and bulk actions support.
+
+## Required prop: \`namespace\`
+
+Every \`DataViews\` instance must receive a \`namespace\` string. It is used for:
+
+- **Slots**: Renders \`{snake_namespace}_dataviews-before\` and \`{snake_namespace}_dataviews-after\` so host apps can inject content via \`Fill\`.
+- **Filter hooks** (when \`wp.hooks\` exists): Table elements can be filtered with \`{snake_namespace}_dataviews_data\`, \`{snake_namespace}_dataviews_view\`, \`{snake_namespace}_dataviews_fields\`, \`{snake_namespace}_dataviews_actions\`, \`{snake_namespace}_dataviews_layouts\`.
 
 ## Features
 - **Pagination**: Built-in pagination with customizable page size
@@ -149,11 +164,21 @@ A powerful data table component built on top of WordPress DataViews with respons
 - **Actions**: Row-level actions (view, edit, delete, etc.)
 - **Empty State**: Customizable empty state display
 - **Loading State**: Built-in loading indicator
+- **Extensibility**: Before/after Slots and WordPress filter hooks (\`{namespace}_dataviews_*\`)
         `,
       },
     },
   },
   tags: ["autodocs"],
+  argTypes: {
+    namespace: {
+      description: "Required. Used for Slots (before/after table) and WordPress filter hook names.",
+      control: "text",
+      table: {
+        type: { summary: "string" },
+      },
+    },
+  },
 };
 
 export default meta;
@@ -167,6 +192,7 @@ export const BasicWithPagination: StoryFn = () => {
   return (
     <div className="p-4">
       <DataViews<User>
+        namespace="dataviews-demo"
         data={paginatedData}
         fields={fields}
         view={view}
@@ -191,6 +217,7 @@ export const WithActions: StoryFn = () => {
   return (
     <div className="p-4">
       <DataViews<User>
+        namespace="dataviews-demo"
         data={paginatedData}
         fields={fields}
         view={view}
@@ -217,6 +244,7 @@ export const WithBulkSelection: StoryFn = () => {
   return (
     <div className="p-4">
       <DataViews<User>
+        namespace="dataviews-demo"
         data={paginatedData}
         fields={fields}
         view={view}
@@ -249,6 +277,7 @@ export const WithTabs: StoryFn = () => {
   return (
     <div className="p-4">
       <DataViews<User>
+        namespace="dataviews-demo"
         data={paginatedData}
         fields={fields}
         view={view}
@@ -344,6 +373,7 @@ export const WithFilters: StoryFn = () => {
   return (
     <div className="p-4">
       <DataViews<User>
+        namespace="dataviews-demo"
         data={paginatedData}
         fields={fields}
         view={view}
@@ -402,12 +432,11 @@ export const WithSearch: StoryFn = () => {
   return (
     <div className="p-4">
       <DataViews<User>
+        namespace="dataviews-demo"
         data={paginatedData}
         fields={fields}
         view={view}
         onChangeView={setView}
-        search={true}
-        searchLabel="Search users..."
         paginationInfo={{
           totalItems: filteredUsers.length,
           totalPages: getTotalPages(filteredUsers.length, view.perPage),
@@ -419,6 +448,115 @@ export const WithSearch: StoryFn = () => {
 };
 WithSearch.storyName = "With Search";
 
+/** DataViews with tabs, search in header slot, and one filter (Status). */
+export const WithSearchInHeaderSlot: StoryFn = () => {
+  const [view, setView] = useState<DataViewState>(createDefaultView());
+  const [activeTab, setActiveTab] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("");
+
+  const searchTerm = view.search ?? "";
+  let filteredUsers = activeTab === "all"
+    ? allUsers
+    : allUsers.filter(user => user.status === activeTab);
+
+  if (searchTerm) {
+    filteredUsers = filteredUsers.filter(user =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
+
+  if (statusFilter) {
+    filteredUsers = filteredUsers.filter(user => user.status === statusFilter);
+  }
+
+  const paginatedData = paginateData(filteredUsers, view);
+
+  const searchInput = (
+    <InputGroup className="w-64">
+      <InputGroupAddon>
+        <Search size={18} className="text-muted-foreground" />
+      </InputGroupAddon>
+      <InputGroupInput
+        placeholder="Search by name or email..."
+        value={searchTerm}
+        onChange={(e) => setView(prev => ({ ...prev, search: e.target.value, page: 1 }))}
+      />
+    </InputGroup>
+  );
+
+  const filterFields: DataViewFilterField[] = [
+    {
+      id: "status",
+      label: "Status",
+      field: (
+        <Select
+          value={statusFilter}
+          onValueChange={(value) => {
+            setStatusFilter(value ?? "");
+            setView(prev => ({ ...prev, page: 1 }));
+          }}
+        >
+          <SelectTrigger className="w-40">
+            <SelectValue placeholder="Select status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="active">Active</SelectItem>
+            <SelectItem value="inactive">Inactive</SelectItem>
+            <SelectItem value="pending">Pending</SelectItem>
+          </SelectContent>
+        </Select>
+      ),
+    },
+  ];
+
+  return (
+    <div className="p-4">
+      <DataViews<User>
+        namespace="dataviews-demo"
+        data={paginatedData}
+        fields={fields}
+        view={view}
+        onChangeView={setView}
+        actions={actions}
+        paginationInfo={{
+          totalItems: filteredUsers.length,
+          totalPages: getTotalPages(filteredUsers.length, view.perPage),
+        }}
+        getItemId={(item) => item.id}
+        tabs={{
+          tabs: [
+            { label: "All", value: "all", icon: Users },
+            { label: "Active", value: "active", icon: UserCheck },
+            { label: "Inactive", value: "inactive", icon: UserX },
+            { label: "Pending", value: "pending", icon: Archive },
+          ],
+          initialTab: "all",
+          onSelect: (value) => {
+            setActiveTab(value);
+            setView(prev => ({ ...prev, page: 1 }));
+          },
+          headerSlot: [<div key="search">{searchInput}</div>],
+        }}
+        filter={{
+          fields: filterFields,
+          onReset: () => {
+            setStatusFilter("");
+            setView(prev => ({ ...prev, page: 1 }));
+          },
+          onFilterRemove: (filterId) => {
+            if (filterId === "status") {
+              setStatusFilter("");
+              setView(prev => ({ ...prev, page: 1 }));
+            }
+          },
+        }}
+      />
+    </div>
+  );
+};
+WithSearchInHeaderSlot.storyName = "With Search in Header Slot";
+
 /** DataViews showing empty state when no data is available. */
 export const EmptyState: StoryFn = () => {
   const [view, setView] = useState<DataViewState>(createDefaultView());
@@ -426,6 +564,7 @@ export const EmptyState: StoryFn = () => {
   return (
     <div className="p-4">
       <DataViews<User>
+        namespace="dataviews-demo"
         data={[]}
         fields={fields}
         view={view}
@@ -450,6 +589,7 @@ export const Loading: StoryFn = () => {
   return (
     <div className="p-4">
       <DataViews<User>
+        namespace="dataviews-demo"
         data={[]}
         fields={fields}
         view={view}
@@ -546,6 +686,7 @@ export const FullFeatured: StoryFn = () => {
   return (
     <div className="p-4">
       <DataViews<User>
+        namespace="dataviews-demo"
         data={paginatedData}
         fields={fields}
         view={view}
@@ -553,8 +694,6 @@ export const FullFeatured: StoryFn = () => {
         actions={actions}
         selection={selection}
         onChangeSelection={setSelection}
-        search={true}
-        searchLabel="Search by name or email..."
         paginationInfo={{
           totalItems: filteredUsers.length,
           totalPages: getTotalPages(filteredUsers.length, view.perPage),
@@ -617,6 +756,7 @@ export const DifferentPageSizes: StoryFn = () => {
         </select>
       </div>
       <DataViews<User>
+        namespace="dataviews-demo"
         data={paginatedData}
         fields={fields.filter(f => ["name", "email", "status"].includes(f.id))}
         view={view}

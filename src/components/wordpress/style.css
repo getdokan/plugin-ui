@@ -90,6 +90,9 @@
     background-color: var(--background);
     border-color: var(--border);
   }
+  .pui-root-dataviews .dataviews-loading {
+    padding: 50px;
+  }
   .pui-root-dataviews .dataviews-view-table.has-bulk-actions tr.is-selected td.dataviews-view-table__actions-column,
   .pui-root-dataviews .dataviews-view-table.has-bulk-actions tr:hover td.dataviews-view-table__actions-column {
     background-color: var(--accent);
