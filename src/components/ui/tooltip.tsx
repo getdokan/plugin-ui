@@ -1,6 +1,7 @@
 import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip"
 
 import { cn } from "@/lib/utils"
+import { useTheme } from "@/providers";
 
 function TooltipProvider({
   delay = 0,
@@ -27,7 +28,16 @@ function TooltipTrigger({ ...props }: TooltipPrimitive.Trigger.Props) {
   return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />
 }
 
+interface TooltipContentProps extends TooltipPrimitive.Popup.Props {
+  portalClassName?: string;
+  positionerClassName?: string;
+  arrowClassName?: string;
+}
+
 function TooltipContent({
+  portalClassName,
+  positionerClassName,
+  arrowClassName,
   className,
   side = "top",
   sideOffset = 4,
@@ -35,19 +45,20 @@ function TooltipContent({
   alignOffset = 0,
   children,
   ...props
-}: TooltipPrimitive.Popup.Props &
+}: TooltipContentProps &
   Pick<
     TooltipPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset"
   >) {
+  const {mode} = useTheme();
   return (
-    <TooltipPrimitive.Portal>
+    <TooltipPrimitive.Portal className={ cn('pui-root', mode, portalClassName) }>
       <TooltipPrimitive.Positioner
         align={align}
         alignOffset={alignOffset}
         side={side}
         sideOffset={sideOffset}
-        className="isolate z-50"
+        className={ cn( 'isolate z-50', positionerClassName ) }
       >
         <TooltipPrimitive.Popup
           data-slot="tooltip-content"
@@ -58,7 +69,7 @@ function TooltipContent({
           {...props}
         >
           {children}
-          <TooltipPrimitive.Arrow className="size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px] data-[side=inline-end]:top-1/2! data-[side=inline-end]:-left-1 data-[side=inline-end]:-translate-y-1/2 data-[side=inline-start]:top-1/2! data-[side=inline-start]:-right-1 data-[side=inline-start]:-translate-y-1/2 bg-foreground fill-foreground z-50 data-[side=bottom]:top-1 data-[side=left]:top-1/2! data-[side=left]:-right-1 data-[side=left]:-translate-y-1/2 data-[side=right]:top-1/2! data-[side=right]:-left-1 data-[side=right]:-translate-y-1/2 data-[side=top]:-bottom-2.5" />
+          <TooltipPrimitive.Arrow className={ cn( 'size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px] data-[side=inline-end]:top-1/2! data-[side=inline-end]:-left-1 data-[side=inline-end]:-translate-y-1/2 data-[side=inline-start]:top-1/2! data-[side=inline-start]:-right-1 data-[side=inline-start]:-translate-y-1/2 bg-foreground fill-foreground z-50 data-[side=bottom]:top-1 data-[side=left]:top-1/2! data-[side=left]:-right-1 data-[side=left]:-translate-y-1/2 data-[side=right]:top-1/2! data-[side=right]:-left-1 data-[side=right]:-translate-y-1/2 data-[side=top]:-bottom-2.5', arrowClassName ) } />
         </TooltipPrimitive.Popup>
       </TooltipPrimitive.Positioner>
     </TooltipPrimitive.Portal>

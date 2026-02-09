@@ -6,9 +6,10 @@ import {
   ComboboxList,
   ComboboxItem,
   ComboboxEmpty,
+  useComboboxAnchor,
 } from "./combobox";
 
-const items = ["Apple", "Banana", "Orange", "Mango", "Grape"];
+const frameworks = ["Next.js", "SvelteKit", "Nuxt.js", "Remix", "Astro"] as const;
 
 const meta = {
   title: "UI/Combobox",
@@ -21,18 +22,27 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+const ComboboxDemo = () => {
+  const anchor = useComboboxAnchor();
+  return (
+    <div className="w-64">
+      <Combobox items={frameworks}>
+        <ComboboxInput placeholder="Select a framework" ref={anchor} />
+        <ComboboxContent anchor={anchor}>
+          <ComboboxEmpty>No items found.</ComboboxEmpty>
+          <ComboboxList>
+            {(item) => (
+              <ComboboxItem key={item} value={item}>
+                {item}
+              </ComboboxItem>
+            )}
+          </ComboboxList>
+        </ComboboxContent>
+      </Combobox>
+    </div>
+  );
+};
+
 export const Default: Story = {
-  render: () => (
-    <Combobox className="w-64">
-      <ComboboxInput placeholder="Search..." />
-      <ComboboxContent>
-        <ComboboxList>
-          {items.map((item) => (
-            <ComboboxItem key={item} value={item}>{item}</ComboboxItem>
-          ))}
-        </ComboboxList>
-        <ComboboxEmpty>No results.</ComboboxEmpty>
-      </ComboboxContent>
-    </Combobox>
-  ),
+  render: () => <ComboboxDemo />,
 };

@@ -14,7 +14,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Single: Story = {
   render: () => (
-    <ToggleGroup type="single">
+    <ToggleGroup multiple={false}>
       <ToggleGroupItem value="left">Left</ToggleGroupItem>
       <ToggleGroupItem value="center">Center</ToggleGroupItem>
       <ToggleGroupItem value="right">Right</ToggleGroupItem>
@@ -24,7 +24,7 @@ export const Single: Story = {
 
 export const Multiple: Story = {
   render: () => (
-    <ToggleGroup type="multiple">
+    <ToggleGroup multiple>
       <ToggleGroupItem value="bold">Bold</ToggleGroupItem>
       <ToggleGroupItem value="italic">Italic</ToggleGroupItem>
       <ToggleGroupItem value="underline">Underline</ToggleGroupItem>
@@ -34,7 +34,7 @@ export const Multiple: Story = {
 
 export const Outline: Story = {
   render: () => (
-    <ToggleGroup type="single" variant="outline">
+    <ToggleGroup multiple={false} variant="outline">
       <ToggleGroupItem value="a">A</ToggleGroupItem>
       <ToggleGroupItem value="b">B</ToggleGroupItem>
       <ToggleGroupItem value="c">C</ToggleGroupItem>

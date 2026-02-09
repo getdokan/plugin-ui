@@ -5,6 +5,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
 import { Input } from "./input";
+import { useTheme } from "@/providers";
 
 const Combobox = ComboboxPrimitive.Root;
 
@@ -56,41 +57,51 @@ function ComboboxClear({ className, ...props }: ComboboxPrimitive.Clear.Props) {
   );
 }
 
-function ComboboxInput({
-  className,
-  children,
-  disabled = false,
-  showTrigger = true,
-  showClear = false,
-  ...props
-}: ComboboxPrimitive.Input.Props & {
-  showTrigger?: boolean;
-  showClear?: boolean;
-}) {
-  return (
-    <div
-      className={cn(
-        "border-input dark:bg-input/30 focus-within:border-ring focus-within:ring-ring/50 flex h-9 w-full items-center gap-1 rounded-md border bg-transparent px-2 shadow-xs transition-[color,box-shadow] focus-within:ring-[3px]",
-        className
-      )}
-      data-slot="combobox-input-wrapper"
-    >
-      <ComboboxPrimitive.Input
-        render={
-          <Input
-            data-in-group={true}
-            className="h-auto min-w-0 flex-1 border-0 bg-transparent p-0 shadow-none ring-0 focus-visible:ring-0"
-            disabled={disabled}
-          />
-        }
-        {...props}
-      />
-      {showTrigger && <ComboboxTrigger />}
-      {showClear && <ComboboxClear disabled={disabled} />}
-      {children}
-    </div>
-  );
-}
+const ComboboxInput = React.forwardRef<
+  HTMLDivElement,
+  ComboboxPrimitive.Input.Props & {
+    showTrigger?: boolean;
+    showClear?: boolean;
+  }
+>(
+  (
+    {
+      className,
+      children,
+      disabled = false,
+      showTrigger = true,
+      showClear = false,
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "border-input dark:bg-input/30 focus-within:border-ring focus-within:ring-ring/50 flex h-9 w-full items-center gap-1 rounded-md border bg-transparent px-2 shadow-xs transition-[color,box-shadow] focus-within:ring-[3px]",
+          className
+        )}
+        data-slot="combobox-input-wrapper"
+      >
+        <ComboboxPrimitive.Input
+          render={
+            <Input
+              data-in-group={true}
+              className="h-auto min-w-0 flex-1 border-0 bg-transparent p-0 shadow-none ring-0 focus-visible:ring-0"
+              disabled={disabled}
+            />
+          }
+          {...props}
+        />
+        {showTrigger && <ComboboxTrigger />}
+        {showClear && <ComboboxClear disabled={disabled} />}
+        {children}
+      </div>
+    );
+  }
+);
+ComboboxInput.displayName = "ComboboxInput";
 
 function ComboboxContent({
   className,
@@ -105,8 +116,9 @@ function ComboboxContent({
     ComboboxPrimitive.Positioner.Props,
     "side" | "align" | "sideOffset" | "alignOffset" | "anchor"
   >) {
+  const {mode} = useTheme();
   return (
-    <ComboboxPrimitive.Portal>
+    <ComboboxPrimitive.Portal className={ cn('pui-root', mode) }>
       <ComboboxPrimitive.Positioner
         side={side}
         sideOffset={sideOffset}

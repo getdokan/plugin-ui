@@ -42,5 +42,22 @@ export const WithLabel: Story = {
   args: { placeholder: "you@example.com" },
 };
 
-export const Password: Story = { args: { type: "password", placeholder: "Enter password" } };
-export const Disabled: Story = { args: { disabled: true, placeholder: "Disabled input" } };
+export const Password: Story = {
+  args: { type: "password", placeholder: "Enter password" },
+};
+export const Disabled: Story = {
+  args: { disabled: true, placeholder: "Disabled input" },
+};
+
+export const Error: Story = {
+  render: (args) => (
+    <div className="grid w-full max-w-sm gap-2">
+      <Label htmlFor="error-input">Email</Label>
+      <Input id="error-input" aria-invalid {...args} />
+      <p className="text-destructive text-sm">
+        Please enter a valid email address.
+      </p>
+    </div>
+  ),
+  args: { placeholder: "Error state", type: "email" },
+};

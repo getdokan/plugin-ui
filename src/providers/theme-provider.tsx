@@ -246,6 +246,11 @@ export interface ThemeProviderProps {
   defaultMode?: ThemeMode;
 
   /**
+   * Controlled theme mode. If provided, the internal state is ignored.
+   */
+  mode?: ThemeMode;
+
+  /**
    * Storage key for persisting theme preference
    * Set to false to disable persistence
    */
@@ -271,84 +276,112 @@ export interface ThemeProviderProps {
  * Default light theme tokens following tweakcn pattern
  */
 const defaultLightTokens: ThemeTokens = {
-  background: "oklch(1.0000 0 0)",
-  foreground: "oklch(0.2686 0 0)",
-  card: "oklch(1.0000 0 0)",
-  cardForeground: "oklch(0.2686 0 0)",
-  popover: "oklch(1.0000 0 0)",
-  popoverForeground: "oklch(0.2686 0 0)",
-  primary: "oklch(0.5410 0.2120 265.7540)", // Purple similar to #7047EB
-  primaryForeground: "oklch(1.0000 0 0)",
-  secondary: "oklch(0.9670 0.0029 264.5419)",
-  secondaryForeground: "oklch(0.4461 0.0263 256.8018)",
-  muted: "oklch(0.9846 0.0017 247.8389)",
-  mutedForeground: "oklch(0.5510 0.0234 264.3637)",
-  accent: "oklch(0.9869 0.0214 95.2774)",
-  accentForeground: "oklch(0.4732 0.1247 46.2007)",
-  destructive: "oklch(0.6368 0.2078 25.3313)",
-  destructiveForeground: "oklch(1.0000 0 0)",
-  border: "oklch(0.9276 0.0058 264.5313)",
-  input: "oklch(0.9276 0.0058 264.5313)",
-  ring: "oklch(0.5410 0.2120 265.7540)",
-  chart1: "oklch(0.5410 0.2120 265.7540)",
-  chart2: "oklch(0.6658 0.1574 58.3183)",
-  chart3: "oklch(0.5553 0.1455 48.9975)",
-  chart4: "oklch(0.4732 0.1247 46.2007)",
-  chart5: "oklch(0.4137 0.1054 45.9038)",
-  sidebar: "oklch(0.9846 0.0017 247.8389)",
-  sidebarForeground: "oklch(0.2686 0 0)",
-  sidebarPrimary: "oklch(0.5410 0.2120 265.7540)",
-  sidebarPrimaryForeground: "oklch(1.0000 0 0)",
-  sidebarAccent: "oklch(0.9869 0.0214 95.2774)",
-  sidebarAccentForeground: "oklch(0.4732 0.1247 46.2007)",
-  sidebarBorder: "oklch(0.9276 0.0058 264.5313)",
-  sidebarRing: "oklch(0.5410 0.2120 265.7540)",
-  fontSans: "Inter, ui-sans-serif, system-ui, sans-serif",
-  fontSerif: "ui-serif, Georgia, serif",
-  fontMono: "ui-monospace, monospace",
-  radius: "0.5rem",
+  background: "oklch(1 0 0)",
+  foreground: "oklch(0.1450 0 0)",
+  card: "oklch(1 0 0)",
+  cardForeground: "oklch(0.1450 0 0)",
+  popover: "oklch(1 0 0)",
+  popoverForeground: "oklch(0.1450 0 0)",
+  primary: "oklch(0.2050 0 0)",
+  primaryForeground: "oklch(0.9850 0 0)",
+  secondary: "oklch(0.9700 0 0)",
+  secondaryForeground: "oklch(0.2050 0 0)",
+  muted: "oklch(0.9700 0 0)",
+  mutedForeground: "oklch(0.5560 0 0)",
+  accent: "oklch(0.9700 0 0)",
+  accentForeground: "oklch(0.2050 0 0)",
+  destructive: "oklch(0.5770 0.2450 27.3250)",
+  destructiveForeground: "oklch(1 0 0)",
+  border: "oklch(0.9220 0 0)",
+  input: "oklch(0.9220 0 0)",
+  ring: "oklch(0.7080 0 0)",
+  chart1: "oklch(0.8100 0.1000 252)",
+  chart2: "oklch(0.6200 0.1900 260)",
+  chart3: "oklch(0.5500 0.2200 263)",
+  chart4: "oklch(0.4900 0.2200 264)",
+  chart5: "oklch(0.4200 0.1800 266)",
+  sidebar: "oklch(0.9850 0 0)",
+  sidebarForeground: "oklch(0.1450 0 0)",
+  sidebarPrimary: "oklch(0.2050 0 0)",
+  sidebarPrimaryForeground: "oklch(0.9850 0 0)",
+  sidebarAccent: "oklch(0.9700 0 0)",
+  sidebarAccentForeground: "oklch(0.2050 0 0)",
+  sidebarBorder: "oklch(0.9220 0 0)",
+  sidebarRing: "oklch(0.7080 0 0)",
+  fontSans:
+    "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
+  fontSerif: "ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif",
+  fontMono:
+    "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+  radius: "0.625rem",
+  "shadow-2xs": "0 1px 3px 0px hsl(0 0% 0% / 0.05)",
+  "shadow-xs": "0 1px 3px 0px hsl(0 0% 0% / 0.05)",
+  "shadow-sm":
+    "0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10)",
+  shadow: "0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10)",
+  "shadow-md":
+    "0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10)",
+  "shadow-lg":
+    "0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10)",
+  "shadow-xl":
+    "0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10)",
+  "shadow-2xl": "0 1px 3px 0px hsl(0 0% 0% / 0.25)",
 };
 
 /**
  * Default dark theme tokens
  */
 const defaultDarkTokens: ThemeTokens = {
-  background: "oklch(0.2046 0 0)",
-  foreground: "oklch(0.9219 0 0)",
-  card: "oklch(0.2686 0 0)",
-  cardForeground: "oklch(0.9219 0 0)",
-  popover: "oklch(0.2686 0 0)",
-  popoverForeground: "oklch(0.9219 0 0)",
-  primary: "oklch(0.5410 0.2120 265.7540)",
-  primaryForeground: "oklch(1.0000 0 0)",
-  secondary: "oklch(0.2686 0 0)",
-  secondaryForeground: "oklch(0.9219 0 0)",
-  muted: "oklch(0.2393 0 0)",
-  mutedForeground: "oklch(0.7155 0 0)",
-  accent: "oklch(0.4732 0.1247 46.2007)",
-  accentForeground: "oklch(0.9243 0.1151 95.7459)",
-  destructive: "oklch(0.6368 0.2078 25.3313)",
-  destructiveForeground: "oklch(1.0000 0 0)",
-  border: "oklch(0.3715 0 0)",
-  input: "oklch(0.3715 0 0)",
-  ring: "oklch(0.5410 0.2120 265.7540)",
-  chart1: "oklch(0.8369 0.1644 84.4286)",
-  chart2: "oklch(0.6658 0.1574 58.3183)",
-  chart3: "oklch(0.4732 0.1247 46.2007)",
-  chart4: "oklch(0.5553 0.1455 48.9975)",
-  chart5: "oklch(0.4732 0.1247 46.2007)",
-  sidebar: "oklch(0.1684 0 0)",
-  sidebarForeground: "oklch(0.9219 0 0)",
-  sidebarPrimary: "oklch(0.5410 0.2120 265.7540)",
-  sidebarPrimaryForeground: "oklch(1.0000 0 0)",
-  sidebarAccent: "oklch(0.4732 0.1247 46.2007)",
-  sidebarAccentForeground: "oklch(0.9243 0.1151 95.7459)",
-  sidebarBorder: "oklch(0.3715 0 0)",
-  sidebarRing: "oklch(0.5410 0.2120 265.7540)",
-  fontSans: "Inter, ui-sans-serif, system-ui, sans-serif",
-  fontSerif: "ui-serif, Georgia, serif",
-  fontMono: "ui-monospace, monospace",
-  radius: "0.5rem",
+  background: "oklch(0.1450 0 0)",
+  foreground: "oklch(0.9850 0 0)",
+  card: "oklch(0.2050 0 0)",
+  cardForeground: "oklch(0.9850 0 0)",
+  popover: "oklch(0.2690 0 0)",
+  popoverForeground: "oklch(0.9850 0 0)",
+  primary: "oklch(0.9220 0 0)",
+  primaryForeground: "oklch(0.2050 0 0)",
+  secondary: "oklch(0.2690 0 0)",
+  secondaryForeground: "oklch(0.9850 0 0)",
+  muted: "oklch(0.2690 0 0)",
+  mutedForeground: "oklch(0.7080 0 0)",
+  accent: "oklch(0.3710 0 0)",
+  accentForeground: "oklch(0.9850 0 0)",
+  destructive: "oklch(0.7040 0.1910 22.2160)",
+  destructiveForeground: "oklch(0.9850 0 0)",
+  border: "oklch(0.2750 0 0)",
+  input: "oklch(0.3250 0 0)",
+  ring: "oklch(0.5560 0 0)",
+  chart1: "oklch(0.8100 0.1000 252)",
+  chart2: "oklch(0.6200 0.1900 260)",
+  chart3: "oklch(0.5500 0.2200 263)",
+  chart4: "oklch(0.4900 0.2200 264)",
+  chart5: "oklch(0.4200 0.1800 266)",
+  sidebar: "oklch(0.2050 0 0)",
+  sidebarForeground: "oklch(0.9850 0 0)",
+  sidebarPrimary: "oklch(0.4880 0.2430 264.3760)",
+  sidebarPrimaryForeground: "oklch(0.9850 0 0)",
+  sidebarAccent: "oklch(0.2690 0 0)",
+  sidebarAccentForeground: "oklch(0.9850 0 0)",
+  sidebarBorder: "oklch(0.2750 0 0)",
+  sidebarRing: "oklch(0.4390 0 0)",
+  fontSans:
+    "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
+  fontSerif: "ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif",
+  fontMono:
+    "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+  radius: "0.625rem",
+  "shadow-2xs": "0 1px 3px 0px hsl(0 0% 0% / 0.05)",
+  "shadow-xs": "0 1px 3px 0px hsl(0 0% 0% / 0.05)",
+  "shadow-sm":
+    "0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10)",
+  shadow: "0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10)",
+  "shadow-md":
+    "0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10)",
+  "shadow-lg":
+    "0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10)",
+  "shadow-xl":
+    "0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10)",
+  "shadow-2xl": "0 1px 3px 0px hsl(0 0% 0% / 0.25)",
 };
 
 /**
@@ -381,9 +414,10 @@ export function ThemeProvider({
   children,
   className = "",
   style = {},
+  mode: controlledMode,
 }: ThemeProviderProps) {
   // Initialize mode from storage or default
-  const [mode, setModeState] = useState<ThemeMode>(() => {
+  const [internalMode, setInternalModeState] = useState<ThemeMode>(() => {
     if (storageKey && typeof window !== "undefined") {
       const stored = localStorage.getItem(storageKey);
       if (stored === "light" || stored === "dark" || stored === "system") {
@@ -392,6 +426,9 @@ export function ThemeProvider({
     }
     return defaultMode;
   });
+
+  // The actual mode being used
+  const mode = controlledMode !== undefined ? controlledMode : internalMode;
 
   // Track system preference
   const [systemPreference, setSystemPreference] = useState<"light" | "dark">(
@@ -424,7 +461,7 @@ export function ThemeProvider({
   // Set mode with persistence
   const setMode = useCallback(
     (newMode: ThemeMode) => {
-      setModeState(newMode);
+      setInternalModeState(newMode);
       if (storageKey && typeof window !== "undefined") {
         localStorage.setItem(storageKey, newMode);
       }

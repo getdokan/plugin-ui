@@ -11,16 +11,18 @@ const selectionItemVariants = cva(
         selected: "border-primary bg-background text-foreground",
       },
       size: {
+        xs: "h-8 px-2.5 py-1.5 text-xs",
         sm: "h-10 px-3 py-2",
         md: "h-11 px-4 py-2.5",
         lg: "h-12 px-4 py-3",
+        xl: "h-14 px-5 py-3.5 text-base",
       },
     },
     defaultVariants: {
       variant: "default",
       size: "md",
     },
-  }
+  },
 );
 
 interface SelectionTypeContextValue {
@@ -45,7 +47,10 @@ function SelectionType({
   return (
     <SelectionTypeContext.Provider value={{ value, onValueChange }}>
       <div
-        className={cn("flex flex-col gap-3 rounded-lg border border-dashed border-muted p-4", className)}
+        className={cn(
+          "flex flex-col gap-3 rounded-lg border border-dashed border-muted p-4",
+          className,
+        )}
         {...props}
       >
         {children}
@@ -85,20 +90,33 @@ function SelectionItem({
     <button
       type="button"
       className={cn(
-        selectionItemVariants({ variant: isSelected ? "selected" : variant, size }),
-        className
+        selectionItemVariants({
+          variant: isSelected ? "selected" : variant,
+          size,
+        }),
+        className,
       )}
       onClick={handleClick}
       {...props}
     >
       {icon && (
-        <span className={cn("shrink-0", isSelected ? "text-primary" : "text-muted-foreground")}>
+        <span
+          className={cn(
+            "shrink-0",
+            isSelected ? "text-primary" : "text-muted-foreground",
+          )}
+        >
           {icon}
         </span>
       )}
       <span className="flex-1 text-left">{children}</span>
       {endIcon && (
-        <span className={cn("shrink-0", isSelected ? "text-primary" : "text-muted-foreground")}>
+        <span
+          className={cn(
+            "shrink-0",
+            isSelected ? "text-primary" : "text-muted-foreground",
+          )}
+        >
           {endIcon}
         </span>
       )}
