@@ -1,6 +1,5 @@
 import useWindowDimensions from '@/hooks/useWindowDimensions';
 import { Popover, Slot } from '@wordpress/components';
-// @ts-ignore
 import { cn } from '@/lib/utils';
 import {
     DataViews as DataViewsTable,
@@ -138,7 +137,7 @@ const FilterItems = ({
 
     useEffect(() => {
         onActiveFiltersChange?.(activeFilters.length);
-    }, [activeFilters.length]);
+    }, [activeFilters.length, onActiveFiltersChange]);
 
     const availableFilters = fields.filter((f) => !activeFilters.includes(f.id));
 
@@ -368,17 +367,15 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
         ) as typeof baseProps.defaultLayouts
     };
 
-    if (responsive) {
-        // Set view type `list` for mobile device.
-        useEffect(
-            () =>
-                onChangeView({
-                    ...view,
-                    type: windowWidth <= 768 ? 'list' : 'table'
-                } as View),
-            [windowWidth]
-        );
-    }
+    // Set view type `list` for mobile device when responsive
+    useEffect(() => {
+        if (responsive) {
+            onChangeView({
+                ...view,
+                type: windowWidth <= 768 ? 'list' : 'table'
+            } as View);
+        }
+    }, [responsive, windowWidth, onChangeView, view]);
 
     // Auto-hide filter area when there are no active filters
     useEffect(() => {
