@@ -11,7 +11,7 @@ const basePath = process.env.STORYBOOK_BASE_PATH || "/";
 
 const config: StorybookConfig = {
   stories: ["../src/**/*.stories.@(ts|tsx|js|jsx)"],
-
+  staticDirs: ["./static"],
   addons: [
     "@storybook/addon-a11y",
     "@chromatic-com/storybook",
