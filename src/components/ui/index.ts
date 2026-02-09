@@ -1,62 +1,72 @@
 // Core UI Components following ShadCN pattern
 // All components are pure React - no WordPress dependencies
 
-export { Alert, AlertAction, AlertDescription, AlertTitle } from "./alert";
-export {
-  Avatar, AvatarBadge, AvatarFallback,
+export { Alert, AlertDescription, AlertTitle, AlertAction } from "./alert";
+export { Avatar,
+  AvatarImage,
+  AvatarFallback,
   AvatarGroup,
-  AvatarGroupCount, AvatarImage
-} from "./avatar";
+  AvatarGroupCount,
+  AvatarBadge } from "./avatar";
+export { Thumbnail, type ThumbnailProps, type ThumbnailSize, type ThumbnailAspect } from "./thumbnail";
+export { Notice, NoticeTitle, NoticeAction } from "./notice";
 export { Badge, type BadgeProps, type BadgeVariant } from "./badge";
-export {
-  Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem,
-  BreadcrumbLink, BreadcrumbList, BreadcrumbPage,
-  BreadcrumbSeparator
-} from "./breadcrumb";
 export { Button, buttonVariants } from "./button";
 export {
-  Card, CardContent, CardDescription, CardFooter, CardHeader,
-  CardTitle, type CardContentProps, type CardDescriptionProps, type CardFooterProps, type CardHeaderProps, type CardProps, type CardTitleProps
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  BreadcrumbEllipsis,
+} from "./breadcrumb";
+export {
+    Card, CardContent, CardDescription, CardFooter, CardHeader,
+    CardTitle, type CardContentProps, type CardDescriptionProps, type CardFooterProps, type CardHeaderProps, type CardProps, type CardTitleProps
 } from "./card";
 export {
   CurrencyInput,
   type CurrencyInputProps,
-  type CurrencyOption
+  type CurrencyOption,
 } from "./currency-input";
-export {
-  ComponentPreview,
-  DesignSystemSection,
-  type ComponentPreviewProps,
-  type DesignSystemSectionProps
-} from "./design-system-section";
 export { Input } from "./input";
 export {
   InputGroup,
   InputGroupAddon,
-  InputGroupButton, InputGroupInput, InputGroupText, InputGroupTextarea
+  InputGroupButton,
+  InputGroupText,
+  InputGroupInput,
+  InputGroupTextarea,
 } from "./input-group";
 export {
   InputOTP,
-  InputOTPGroup, InputOTPSeparator, InputOTPSlot
+  InputOTPGroup,
+  InputOTPSlot,
+  InputOTPSeparator,
 } from "./input-otp";
 export { Label, type LabelProps } from "./label";
 export {
-  Modal, ModalClose, ModalContent, ModalDescription,
-  ModalFooter, ModalHeader, ModalOverlay, ModalTitle, type ModalProps
+    Modal, ModalClose, ModalContent, ModalDescription,
+    ModalFooter, ModalHeader, ModalOverlay, ModalTitle, type ModalProps
 } from "./modal";
-export { Notice, NoticeAction, NoticeTitle } from "./notice";
-export { CircularProgress, Progress, ProgressIndicator, ProgressLabel, ProgressTrack, ProgressValue, type CircularProgressProps, type ProgressProps } from "./progress";
-export { SelectionItem, selectionItemVariants, SelectionType } from './selection-type';
+export {
+  ComponentPreview,
+  DesignSystemSection,
+  type ComponentPreviewProps,
+  type DesignSystemSectionProps,
+} from "./design-system-section";
 export { Separator, type SeparatorProps } from "./separator";
-export { Slider, type SliderProps } from "./slider";
 export { Spinner } from "./spinner";
-export { LabeledSwitch, Switch, SwitchCard, type LabeledSwitchProps, type SwitchCardProps, type SwitchProps } from "./switch";
-export { Tabs, TabsContent, TabsList, tabsListVariants, TabsTrigger } from './tabs';
+export { Switch, LabeledSwitch, SwitchCard, type SwitchProps, type LabeledSwitchProps, type SwitchCardProps } from "./switch";
 export { Textarea } from "./textarea";
-export { Thumbnail, type ThumbnailAspect, type ThumbnailProps, type ThumbnailSize } from "./thumbnail";
-export { Toggle } from './toggle';
-export { ToggleGroup, ToggleGroupItem } from './toggle-group';
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
+export { Toggle } from './toggle'
+export { ToggleGroup, ToggleGroupItem } from './toggle-group'
+export { Progress, ProgressTrack, ProgressIndicator, ProgressLabel, ProgressValue, CircularProgress, type ProgressProps, type CircularProgressProps } from "./progress";
+export { Slider, type SliderProps } from "./slider";
+export { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants } from './tabs'
+export { SelectionType, SelectionItem, selectionItemVariants } from './selection-type'
 // Select component
 export {
   Select,
@@ -68,7 +78,7 @@ export {
   SelectScrollUpButton,
   SelectSeparator,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from "./select";
 
 // Combobox component
@@ -88,7 +98,7 @@ export {
   ComboboxSeparator,
   ComboboxTrigger,
   ComboboxValue,
-  useComboboxAnchor
+  useComboboxAnchor,
 } from "./combobox";
 
 // DropdownMenu component
@@ -107,7 +117,7 @@ export {
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "./dropdown-menu";
 
 // AlertDialog component
@@ -123,17 +133,21 @@ export {
   AlertDialogOverlay,
   AlertDialogPortal,
   AlertDialogTitle,
-  AlertDialogTrigger
+  AlertDialogTrigger,
 } from "./alert-dialog";
 
-export { Checkbox, CheckboxCard, LabeledCheckbox, type CheckboxCardProps, type CheckboxProps, type LabeledCheckboxProps } from "./checkbox";
+export { Checkbox, LabeledCheckbox, CheckboxCard, type CheckboxProps, type LabeledCheckboxProps, type CheckboxCardProps } from "./checkbox";
+export { RadioGroup, RadioGroupItem, LabeledRadio, RadioCard, type RadioGroupItemProps, type LabeledRadioProps, type RadioCardProps } from "./radio-group";
 export {
-  Field, FieldContent, FieldDescription,
+  Field,
+  FieldLabel,
+  FieldDescription,
   FieldError,
-  FieldGroup, FieldLabel, FieldLegend,
+  FieldGroup,
+  FieldLegend,
   FieldSeparator,
-  FieldSet, FieldTitle
+  FieldSet,
+  FieldContent,
+  FieldTitle,
 } from "./field";
-export { LabeledRadio, RadioCard, RadioGroup, RadioGroupItem, type LabeledRadioProps, type RadioCardProps, type RadioGroupItemProps } from "./radio-group";
-
 export { DataViews, type DataViewAction, type DataViewField, type DataViewFilterField, type DataViewFilterProps, type DataViewLayouts, type DataViewsProps, type DataViewState } from '../wordpress/dataviews';

@@ -16,7 +16,7 @@ export {
 // ============================================
 export {
     // Alert
-    Alert, AlertAction, AlertDescription,
+    Alert, AlertAction, AlertDescription, AlertTitle,
     // AlertDialog
     AlertDialog,
     AlertDialogAction,
@@ -29,7 +29,7 @@ export {
     AlertDialogOverlay,
     AlertDialogPortal,
     AlertDialogTitle,
-    AlertDialogTrigger, AlertTitle,
+    AlertDialogTrigger,
     // Avatar
     Avatar, AvatarBadge, AvatarFallback,
     AvatarGroup,
@@ -44,9 +44,7 @@ export {
     Button,
     // Card
     Card, CardContent, CardDescription, CardFooter, CardHeader,
-    CardTitle,
-    // Checkbox
-    Checkbox, CheckboxCard, CircularProgress,
+    CardTitle, CircularProgress,
     // Combobox
     Combobox,
     ComboboxChip,
@@ -66,10 +64,9 @@ export {
     // Design system (Figma Design-System-for-Plugin)
     ComponentPreview,
     // Currency input (uses InputGroup)
-    CurrencyInput,
+    CurrencyInput, DesignSystemSection,
     // DataViews
     DataViews,
-    DesignSystemSection,
     // DropdownMenu
     DropdownMenu,
     DropdownMenuCheckboxItem,
@@ -86,12 +83,26 @@ export {
     DropdownMenuSubContent,
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
+    // Checkbox
+    Checkbox,
+    LabeledCheckbox,
+    CheckboxCard,
+    // Radio
+    RadioGroup,
+    RadioGroupItem,
+    LabeledRadio,
+    RadioCard,
     // Field
-    Field, FieldContent, FieldDescription,
+    Field,
+    FieldLabel,
+    FieldDescription,
     FieldError,
-    FieldGroup, FieldLabel, FieldLegend,
+    FieldGroup,
+    FieldLegend,
     FieldSeparator,
-    FieldSet, FieldTitle,
+    FieldSet,
+    FieldContent,
+    FieldTitle,
     // Input
     Input,
     InputGroup,
@@ -106,7 +117,7 @@ export {
     InputOTPSeparator,
     InputOTPSlot,
     // Label
-    Label, LabeledCheckbox, LabeledRadio, LabeledSwitch,
+    Label,
     // Modal
     Modal, ModalClose, ModalContent, ModalDescription,
     ModalFooter, ModalHeader, ModalOverlay, ModalTitle,
@@ -114,23 +125,21 @@ export {
     Notice, NoticeAction, NoticeTitle,
     // Progress
     Progress, ProgressIndicator,
-    ProgressLabel, ProgressTrack, ProgressValue, RadioCard,
-    // Radio
-    RadioGroup,
-    RadioGroupItem,
+    ProgressLabel, ProgressTrack, ProgressValue,
     // Select
     Select,
     SelectContent,
     SelectGroup,
-    // Selection Type
-    SelectionItem,
-    SelectionType, SelectItem,
+    SelectItem,
     SelectLabel,
     SelectScrollDownButton,
     SelectScrollUpButton,
     SelectSeparator,
     SelectTrigger,
     SelectValue,
+    // Selection Type
+    SelectionItem,
+    SelectionType,
     // Separator
     Separator,
     // Slider
@@ -138,7 +147,9 @@ export {
     // Spinner
     Spinner,
     // Switch
-    Switch, SwitchCard,
+    Switch, 
+    LabeledSwitch, 
+    SwitchCard,
     // Tabs
     Tabs, TabsContent, TabsList,
     TabsTrigger,
@@ -163,20 +174,34 @@ export {
     type CardFooterProps,
     type CardHeaderProps,
     type CardProps,
-    type CardTitleProps, type CheckboxCardProps, type CheckboxProps, type CircularProgressProps,
+    type CardTitleProps,
+    type CircularProgressProps,
     type ComponentPreviewProps,
     type CurrencyInputProps,
     type CurrencyOption,
+    type CheckboxProps,
     type DataViewAction,
     type DataViewField,
     type DataViewFilterField,
     type DataViewFilterProps,
     type DataViewLayouts,
     type DataViewsProps,
-    type DataViewState, type DesignSystemSectionProps, type LabeledCheckboxProps, type LabeledRadioProps, type LabeledSwitchProps, type LabelProps,
+    type DataViewState,
+    type LabeledCheckboxProps,
+    type CheckboxCardProps,
+    type RadioGroupItemProps,
+    type LabeledRadioProps,
+    type RadioCardProps,
+    type DesignSystemSectionProps,
+    type LabelProps,
     type ModalProps,
-    type ProgressProps, type RadioCardProps, type RadioGroupItemProps, type SeparatorProps,
-    type SliderProps, type SwitchCardProps, type SwitchProps, type ThumbnailAspect,
+    type ProgressProps,
+    type SeparatorProps,
+    type SliderProps,
+    type SwitchProps,
+    type LabeledSwitchProps,
+    type SwitchCardProps,
+    type ThumbnailAspect,
     type ThumbnailProps,
     type ThumbnailSize
 } from "./components/ui";
@@ -193,4 +218,3 @@ export {
 // ============================================
 export { cn } from "@/lib/utils";
 export { twMerge } from "tailwind-merge";
-
