@@ -61,6 +61,7 @@ export { Separator, type SeparatorProps } from "./separator";
 export { Spinner } from "./spinner";
 export { Switch, LabeledSwitch, SwitchCard, type SwitchProps, type LabeledSwitchProps, type SwitchCardProps } from "./switch";
 export { Textarea } from "./textarea";
+export { RichTextEditor, type RichTextEditorProps } from "./rich-text-editor";
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 export { Toggle } from './toggle'
 export { ToggleGroup, ToggleGroupItem } from './toggle-group'

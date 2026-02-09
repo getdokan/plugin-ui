@@ -32,9 +32,21 @@ export const Sizes: Story = {
       const [v, setV] = useState("md");
       return (
         <SelectionType value={v} onValueChange={setV} className="w-72">
-          <SelectionItem value="sm" size="sm">Small</SelectionItem>
-          <SelectionItem value="md" size="md">Medium</SelectionItem>
-          <SelectionItem value="lg" size="lg">Large</SelectionItem>
+          <SelectionItem value="xs" size="xs">
+            Extra Small
+          </SelectionItem>
+          <SelectionItem value="sm" size="sm">
+            Small
+          </SelectionItem>
+          <SelectionItem value="md" size="md">
+            Medium
+          </SelectionItem>
+          <SelectionItem value="lg" size="lg">
+            Large
+          </SelectionItem>
+          <SelectionItem value="xl" size="xl">
+            Extra Large
+          </SelectionItem>
         </SelectionType>
       );
     }
