@@ -1,72 +1,62 @@
 // Core UI Components following ShadCN pattern
 // All components are pure React - no WordPress dependencies
 
-export { Alert, AlertDescription, AlertTitle, AlertAction } from "./alert";
-export { Avatar,
-  AvatarImage,
-  AvatarFallback,
+export { DataViews, type DataViewAction, type DataViewField, type DataViewFilterField, type DataViewFilterProps, type DataViewLayouts, type DataViewsProps, type DataViewState } from '../wordpress/dataviews';
+export { Alert, AlertAction, AlertDescription, AlertTitle } from "./alert";
+export {
+  Avatar, AvatarBadge, AvatarFallback,
   AvatarGroup,
-  AvatarGroupCount,
-  AvatarBadge } from "./avatar";
-export { Thumbnail, type ThumbnailProps, type ThumbnailSize, type ThumbnailAspect } from "./thumbnail";
-export { Notice, NoticeTitle, NoticeAction } from "./notice";
+  AvatarGroupCount, AvatarImage
+} from "./avatar";
 export { Badge, type BadgeProps, type BadgeVariant } from "./badge";
+export {
+  Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem,
+  BreadcrumbLink, BreadcrumbList, BreadcrumbPage,
+  BreadcrumbSeparator
+} from "./breadcrumb";
 export { Button, buttonVariants } from "./button";
 export {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-  BreadcrumbEllipsis,
-} from "./breadcrumb";
-export {
-    Card, CardContent, CardDescription, CardFooter, CardHeader,
-    CardTitle, type CardContentProps, type CardDescriptionProps, type CardFooterProps, type CardHeaderProps, type CardProps, type CardTitleProps
+  Card, CardContent, CardDescription, CardFooter, CardHeader,
+  CardTitle, type CardContentProps, type CardDescriptionProps, type CardFooterProps, type CardHeaderProps, type CardProps, type CardTitleProps
 } from "./card";
 export {
   CurrencyInput,
   type CurrencyInputProps,
-  type CurrencyOption,
+  type CurrencyOption
 } from "./currency-input";
-export { Input } from "./input";
-export {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupText,
-  InputGroupInput,
-  InputGroupTextarea,
-} from "./input-group";
-export {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-  InputOTPSeparator,
-} from "./input-otp";
-export { Label, type LabelProps } from "./label";
-export {
-    Modal, ModalClose, ModalContent, ModalDescription,
-    ModalFooter, ModalHeader, ModalOverlay, ModalTitle, type ModalProps
-} from "./modal";
 export {
   ComponentPreview,
   DesignSystemSection,
   type ComponentPreviewProps,
-  type DesignSystemSectionProps,
+  type DesignSystemSectionProps
 } from "./design-system-section";
+export { Input } from "./input";
+export {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton, InputGroupInput, InputGroupText, InputGroupTextarea
+} from "./input-group";
+export {
+  InputOTP,
+  InputOTPGroup, InputOTPSeparator, InputOTPSlot
+} from "./input-otp";
+export { Label, type LabelProps } from "./label";
+export {
+  Modal, ModalClose, ModalContent, ModalDescription,
+  ModalFooter, ModalHeader, ModalOverlay, ModalTitle, type ModalProps
+} from "./modal";
+export { Notice, NoticeAction, NoticeTitle } from "./notice";
+export { CircularProgress, Progress, ProgressIndicator, ProgressLabel, ProgressTrack, ProgressValue, type CircularProgressProps, type ProgressProps } from "./progress";
+export { SelectionItem, selectionItemVariants, SelectionType } from './selection-type';
 export { Separator, type SeparatorProps } from "./separator";
+export { Slider, type SliderProps } from "./slider";
 export { Spinner } from "./spinner";
 export { Switch, type SwitchProps } from "./switch";
+export { Tabs, TabsContent, TabsList, tabsListVariants, TabsTrigger } from './tabs';
 export { Textarea } from "./textarea";
+export { Thumbnail, type ThumbnailAspect, type ThumbnailProps, type ThumbnailSize } from "./thumbnail";
+export { Toggle } from './toggle';
+export { ToggleGroup, ToggleGroupItem } from './toggle-group';
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
-export { Toggle } from './toggle'
-export { ToggleGroup, ToggleGroupItem } from './toggle-group'
-export { Progress, ProgressTrack, ProgressIndicator, ProgressLabel, ProgressValue, CircularProgress, type ProgressProps, type CircularProgressProps } from "./progress";
-export { Slider, type SliderProps } from "./slider";
-export { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants } from './tabs'
-export { SelectionType, SelectionItem, selectionItemVariants } from './selection-type'
-export { DataViews, type DataViewsProps, type DataViewAction, type DataViewField, type DataViewLayouts, type DataViewState, type DataViewFilterField, type DataViewFilterProps } from './dataviews'
 
 

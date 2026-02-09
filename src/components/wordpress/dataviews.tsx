@@ -1,19 +1,19 @@
 import useWindowDimensions from '@/hooks/useWindowDimensions';
 import { Popover } from '@wordpress/components';
 // @ts-ignore
-import { DataViews as DataViewsTable, type Action, type Field, type SupportedLayouts, type View } from '@wordpress/dataviews/wp';
-import { Fragment, useEffect, useState } from 'react';
-import { FileSearch, Funnel, Plus, X } from 'lucide-react';
-import { Button } from './button';
-import { Tabs, TabsList, TabsTrigger } from './tabs';
 import { cn } from '@/lib/utils';
+import { DataViews as DataViewsTable, type Action, type Field, type SupportedLayouts, type View } from '@wordpress/dataviews/wp';
+import { FileSearch, Funnel, Plus, X } from 'lucide-react';
+import { Fragment, useEffect, useState } from 'react';
+import { Button } from '../ui/button';
+import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 
 // Re-export types from @wordpress/dataviews with prefixed names to avoid conflicts
 export type {
-    Action as DataViewAction,
-    Field as DataViewField,
-    SupportedLayouts as DataViewLayouts,
-    View as DataViewState
+  Action as DataViewAction,
+  Field as DataViewField,
+  SupportedLayouts as DataViewLayouts,
+  View as DataViewState
 };
 
 // Filter types

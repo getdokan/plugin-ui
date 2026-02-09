@@ -1,10 +1,9 @@
 import type { Meta, StoryFn } from "@storybook/react";
-import { useState } from "react";
-import { DataViews, type DataViewState, type DataViewField, type DataViewAction, type DataViewFilterField } from "./dataviews";
-import { Pencil, Trash2, Eye, Users, UserCheck, UserX, Archive } from "lucide-react";
-import { Input } from "./input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
-import { Badge } from "./badge";
+import { Archive, Eye, Pencil, Trash2, UserCheck, Users, UserX } from "lucide-react";
+import React, { useState } from "react";
+import { Badge, Input } from "../ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { DataViews, type DataViewAction, type DataViewField, type DataViewFilterField, type DataViewState } from "./dataviews";
 
 // Sample data type
 interface User {
