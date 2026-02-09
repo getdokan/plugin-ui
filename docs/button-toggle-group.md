@@ -8,7 +8,7 @@
 - [Usage Examples](#usage-examples)
 
 ## Introduction
-`ButtonToggleGroup` is a specialized wrapper around the standard `ToggleGroup` component, designed to easily create segmented controls with optional icons (start or end) and specific active state styling. It supports two main variants: `primary` (solid background when active) and `outline` (bordered when active).
+`ButtonToggleGroup` is a specialized wrapper around the standard `ToggleGroup` component, designed to easily create segmented controls with optional icons (start or end) and specific active state styling. It uses the theme's primary color for the active item and ensures borders are visible for unselected items.
 
 ## Component Dependency
 - `@/components/ui/toggle-group` for the underlying group logic.
@@ -28,17 +28,15 @@ const items = [
   items={items} 
   value="list" 
   onValueChange={(val) => console.log(val)} 
-  variant="primary" 
 />
 ```
 
 ## Features
 - **Icon Support**: Easily add `startIcon` or `endIcon` to each toggle item.
-- **Predefined Variants**: 
-    - `primary`: Uses the theme's primary color as background for the active item.
-    - `outline`: Uses the theme's primary color for the border and text of the active item, with a transparent background.
+- **Unified Style**: Uses the theme's primary color as background for the active item.
 - **Customizable**: Pass `className` for the container or `itemClassName` for individual items.
 - **Standard Toggle Props**: Supports `value`, `onValueChange`, and `size`.
+- **Improved Rounding**: Respects the rounding applied to the container via `className`.
 
 ## Props API
 
@@ -49,7 +47,6 @@ const items = [
 | `items` | `ButtonToggleGroupItem[]` | Yes | - | Array of items to render in the group. |
 | `value` | `string` | No | - | The value of the currently active item. |
 | `onValueChange` | `(value: string) => void` | No | - | Callback fired when the active item changes. |
-| `variant` | `'primary' \| 'outline'` | No | `'primary'` | Visual style of the active item. |
 | `size` | `'sm' \| 'default' \| 'lg'` | No | `'default'` | Size of the toggle items. |
 | `className` | `string` | No | - | Extra classes for the `ToggleGroup` container. |
 | `itemClassName` | `string` | No | - | Extra classes for each `ToggleGroupItem`. |
@@ -65,24 +62,24 @@ const items = [
 
 ## Usage Examples
 
-### 1. Primary Variant with Start Icons
+### 1. Simple Toggle with Icons
 ```jsx
 const items = [
   { value: "day", label: "Day", startIcon: <Sun size={16} /> },
   { value: "night", label: "Night", startIcon: <Moon size={16} /> },
 ];
 
-<ButtonToggleGroup items={items} variant="primary" />
+<ButtonToggleGroup items={items} />
 ```
 
-### 2. Outline Variant with End Icons
+### 2. Large Rounded Control
 ```jsx
 const items = [
   { value: "asc", label: "Ascending", endIcon: <ArrowUp size={16} /> },
   { value: "desc", label: "Descending", endIcon: <ArrowDown size={16} /> },
 ];
 
-<ButtonToggleGroup items={items} variant="outline" />
+<ButtonToggleGroup items={items} className="rounded-xl" />
 ```
 
 ### 3. Mixed Icons and No Icons

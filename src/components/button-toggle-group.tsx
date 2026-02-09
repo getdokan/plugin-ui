@@ -29,13 +29,6 @@ export interface ButtonToggleGroupProps {
   /** Callback fired when the active toggle item changes */
   onValueChange?: (value: string) => void
   /**
-   * The visual variant of the active item:
-   * - `primary`: Solid primary color background
-   * - `outline`: Primary color border and text with transparent background
-   * @default "primary"
-   */
-  variant?: "primary" | "outline"
-  /**
    * The size of the toggle items
    * @default "default"
    */
@@ -54,7 +47,6 @@ export function ButtonToggleGroup({
   items,
   value,
   onValueChange,
-  variant = "primary",
   size = "default",
   className,
   itemClassName,
@@ -68,18 +60,21 @@ export function ButtonToggleGroup({
           onValueChange?.(nextValue)
         }
       }}
-      variant="outline"
+      variant="default"
       size={size}
-      className={cn("gap-0", className)}
+      className={cn("gap-0! rounded-lg! shadow-none!", className)}
+      orientation="horizontal"
     >
       {items.map((item) => (
         <ToggleGroupItem
           key={item.value}
           value={item.value}
           className={cn(
-            "flex items-center gap-2 px-4! transition-colors",
-            variant === "primary" && "aria-pressed:bg-primary! aria-pressed:text-primary-foreground!",
-            variant === "outline" && "aria-pressed:bg-transparent! aria-pressed:text-primary! aria-pressed:border-primary!",
+            "bg-background flex items-center gap-2 px-4! transition-colors",
+            "aria-pressed:bg-primary! aria-pressed:text-primary-foreground!",
+            "border! border-border! aria-pressed:border-primary!",
+            "group-data-[spacing=0]/toggle-group:first:rounded-l-[5px]!",
+            "group-data-[spacing=0]/toggle-group:last:rounded-r-[5px]!",
             itemClassName
           )}
         >
