@@ -42,7 +42,7 @@
     ],
     "scripts": {
         "build": "npm run build:wp && npm run build:types",
-        "build:wp": "wp-scripts build --progress",
+        "build:wp": "wp-scripts build --config webpack.config.js",
         "build:types": "tsc --emitDeclarationOnly",
         "start": "wp-scripts start --config webpack.config.js",
         "storybook": "storybook dev -p 6006",
