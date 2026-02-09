@@ -8,6 +8,7 @@
 
 @import "tailwindcss" source("../src/components");
 @import "tw-animate-css";
+@import "./components/wordpress/style.css";
 
 /* ============================================
    CSS Custom Properties (Design Tokens)

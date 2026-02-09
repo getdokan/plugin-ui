@@ -152,6 +152,7 @@ export {
   FieldContent,
   FieldTitle,
 } from "./field";
+export { DataViews, type DataViewAction, type DataViewField, type DataViewFilterField, type DataViewFilterProps, type DataViewLayouts, type DataViewsProps, type DataViewState } from '../wordpress/dataviews';
 
 // Layout (responsive app layout with optional header/footer and right sidebar)
 export {

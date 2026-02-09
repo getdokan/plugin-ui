@@ -66,6 +66,8 @@ export {
     ComponentPreview,
     // Currency input (uses InputGroup)
     CurrencyInput, DesignSystemSection,
+    // DataViews
+    DataViews,
     // DropdownMenu
     DropdownMenu,
     DropdownMenuCheckboxItem,
@@ -180,6 +182,13 @@ export {
     type CurrencyInputProps,
     type CurrencyOption,
     type CheckboxProps,
+    type DataViewAction,
+    type DataViewField,
+    type DataViewFilterField,
+    type DataViewFilterProps,
+    type DataViewLayouts,
+    type DataViewsProps,
+    type DataViewState,
     type LabeledCheckboxProps,
     type CheckboxCardProps,
     type RadioGroupItemProps,
@@ -241,4 +250,3 @@ export {
 // ============================================
 export { cn } from "@/lib/utils";
 export { twMerge } from "tailwind-merge";
-
