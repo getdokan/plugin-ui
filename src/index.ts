@@ -16,7 +16,20 @@ export {
 // ============================================
 export {
     // Alert
-    Alert, AlertAction, AlertDescription, AlertTitle,
+    Alert, AlertAction, AlertDescription,
+    // AlertDialog
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogMedia,
+    AlertDialogOverlay,
+    AlertDialogPortal,
+    AlertDialogTitle,
+    AlertDialogTrigger, AlertTitle,
     // Avatar
     Avatar, AvatarBadge, AvatarFallback,
     AvatarGroup,
@@ -31,11 +44,54 @@ export {
     Button,
     // Card
     Card, CardContent, CardDescription, CardFooter, CardHeader,
-    CardTitle, CircularProgress,
+    CardTitle,
+    // Checkbox
+    Checkbox, CheckboxCard, CircularProgress,
+    // Combobox
+    Combobox,
+    ComboboxChip,
+    ComboboxChips,
+    ComboboxChipsInput,
+    ComboboxCollection,
+    ComboboxContent,
+    ComboboxEmpty,
+    ComboboxGroup,
+    ComboboxInput,
+    ComboboxItem,
+    ComboboxLabel,
+    ComboboxList,
+    ComboboxSeparator,
+    ComboboxTrigger,
+    ComboboxValue,
     // Design system (Figma Design-System-for-Plugin)
     ComponentPreview,
     // Currency input (uses InputGroup)
-    CurrencyInput, DesignSystemSection,
+    CurrencyInput,
+    // DataViews
+    DataViews,
+    DesignSystemSection,
+    // DropdownMenu
+    DropdownMenu,
+    DropdownMenuCheckboxItem,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+    // Field
+    Field, FieldContent, FieldDescription,
+    FieldError,
+    FieldGroup, FieldLabel, FieldLegend,
+    FieldSeparator,
+    FieldSet, FieldTitle,
     // Input
     Input,
     InputGroup,
@@ -50,7 +106,7 @@ export {
     InputOTPSeparator,
     InputOTPSlot,
     // Label
-    Label,
+    Label, LabeledCheckbox, LabeledRadio, LabeledSwitch,
     // Modal
     Modal, ModalClose, ModalContent, ModalDescription,
     ModalFooter, ModalHeader, ModalOverlay, ModalTitle,
@@ -58,9 +114,23 @@ export {
     Notice, NoticeAction, NoticeTitle,
     // Progress
     Progress, ProgressIndicator,
-    ProgressLabel, ProgressTrack, ProgressValue, SelectionItem,
+    ProgressLabel, ProgressTrack, ProgressValue, RadioCard,
+    // Radio
+    RadioGroup,
+    RadioGroupItem,
+    // Select
+    Select,
+    SelectContent,
+    SelectGroup,
     // Selection Type
-    SelectionType,
+    SelectionItem,
+    SelectionType, SelectItem,
+    SelectLabel,
+    SelectScrollDownButton,
+    SelectScrollUpButton,
+    SelectSeparator,
+    SelectTrigger,
+    SelectValue,
     // Separator
     Separator,
     // Slider
@@ -68,7 +138,7 @@ export {
     // Spinner
     Spinner,
     // Switch
-    Switch,
+    Switch, SwitchCard,
     // Tabs
     Tabs, TabsContent, TabsList,
     TabsTrigger,
@@ -83,8 +153,8 @@ export {
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
-    // DataViews
-    DataViews,
+    // Utilities
+    useComboboxAnchor,
     // Types
     type BadgeProps,
     type BadgeVariant,
@@ -93,8 +163,7 @@ export {
     type CardFooterProps,
     type CardHeaderProps,
     type CardProps,
-    type CardTitleProps,
-    type CircularProgressProps,
+    type CardTitleProps, type CheckboxCardProps, type CheckboxProps, type CircularProgressProps,
     type ComponentPreviewProps,
     type CurrencyInputProps,
     type CurrencyOption,
@@ -104,15 +173,10 @@ export {
     type DataViewFilterProps,
     type DataViewLayouts,
     type DataViewsProps,
-    type DataViewState,
-    type DesignSystemSectionProps,
-    type LabelProps,
+    type DataViewState, type DesignSystemSectionProps, type LabeledCheckboxProps, type LabeledRadioProps, type LabeledSwitchProps, type LabelProps,
     type ModalProps,
-    type ProgressProps,
-    type SeparatorProps,
-    type SliderProps,
-    type SwitchProps,
-    type ThumbnailAspect,
+    type ProgressProps, type RadioCardProps, type RadioGroupItemProps, type SeparatorProps,
+    type SliderProps, type SwitchCardProps, type SwitchProps, type ThumbnailAspect,
     type ThumbnailProps,
     type ThumbnailSize
 } from "./components/ui";

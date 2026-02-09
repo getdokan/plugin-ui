@@ -8,11 +8,11 @@ const noticeVariants = cva(
   {
     variants: {
       variant: {
-        default: "[&]:border-[#9CA3AF] *:data-[slot=notice-title]:text-[#25252D]",
-        destructive: "[&]:border-red-500 *:data-[slot=notice-title]:text-red-700",
-        success: "[&]:border-green-500 *:data-[slot=notice-title]:text-green-700",
-        warning: "[&]:border-yellow-500 *:data-[slot=notice-title]:text-yellow-900",
-        info: "[&]:border-blue-500 *:data-[slot=notice-title]:text-blue-700",
+        default: "[&]:border-muted-foreground/50 *:data-[slot=notice-title]:text-foreground bg-muted",
+        destructive: "[&]:border-destructive *:data-[slot=notice-title]:text-destructive bg-destructive/10",
+        success: "[&]:border-success *:data-[slot=notice-title]:text-success bg-success/10",
+        warning: "[&]:border-warning *:data-[slot=notice-title]:text-warning-foreground bg-warning/10",
+        info: "[&]:border-info *:data-[slot=notice-title]:text-info-foreground bg-info/10",
       },
     },
     defaultVariants: {
@@ -42,7 +42,7 @@ function Notice({
   const noticeClassName = noticeVariants({ variant })
 
   const customStyle: CSSProperties = {
-    backgroundColor: bgColor ?? "#EFEAFF",
+    ...(bgColor && { backgroundColor: bgColor }),
     ...(borderColor && { borderColor }),
     ...(titleColor && { '--notice-title-color': titleColor } as CSSProperties),
     ...style,
@@ -53,7 +53,7 @@ function Notice({
       data-slot="notice"
       role="status"
       className={cn(noticeClassName, className)}
-      style={customStyle}
+      style={Object.keys(customStyle).length > 0 ? customStyle : undefined}
       {...props}
     >
     </div>

@@ -93,6 +93,15 @@ const MyComponent = () => {
 
 ## Development Setup
 
+### Step 0: Node Version
+
+This project requires **Node.js 24**. We recommend using [nvm](https://github.com/nvm-sh/nvm) to manage your Node version.
+
+```bash
+# Use the Node version specified in .nvmrc
+nvm use
+```
+
 ### Step 1: Clone the Repository
 
 ```bash
