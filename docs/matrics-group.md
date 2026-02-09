@@ -27,8 +27,8 @@ import { Handbag, Info } from "lucide-react";
     value="$12,345"
     change="+10%"
     changeDirection="up"
-    Icon={Handbag}
-    ToolTipIcon={Info}
+    icon={Handbag}
+    tooltipIcon={Info}
     tooltip="Total sales in last 30 days"
   />
   <MatricsGroupItem
@@ -55,9 +55,9 @@ Extends `React.HTMLAttributes<HTMLDivElement>` (rendered as `CardContent`).
 | `value` | `string \| number` | Yes | - | Primary metric value. |
 | `change` | `string \| number` | No | - | Change delta text (e.g., `+10%`). |
 | `changeDirection` | `'up' \| 'down' \| 'neutral'` | No | `'neutral'` | Colors the change text. |
-| `Icon` | `LucideIcon` | No | - | Optional left icon. |
+| `icon` | `LucideIcon` | No | - | Optional left icon. |
 | `tooltip` | `string \| ReactNode` | No | - | Tooltip content. |
-| `ToolTipIcon` | `LucideIcon` | No | `Info` | Icon for tooltip trigger. |
+| `tooltipIcon` | `LucideIcon` | No | `Info` | Icon for tooltip trigger. |
 | `className` | `string` | No | - | Extra classes for the item. |
 
 ### MatricsGroup
@@ -82,7 +82,7 @@ Extends `React.HTMLAttributes<HTMLDivElement>` (rendered as a `Card`).
 ### 2. With icons and tooltips
 ```jsx
 <MatricsGroup>
-  <MatricsGroupItem label="Revenue" value="$12,345" change="+10%" changeDirection="up" Icon={Handbag} tooltip="Last 30 days" />
+  <MatricsGroupItem label="Revenue" value="$12,345" change="+10%" changeDirection="up" icon={Handbag} tooltip="Last 30 days" />
   <MatricsGroupItem label="AOV" value="$37.20" tooltip="Average order value" />
 </MatricsGroup>
 ```

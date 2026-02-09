@@ -5,23 +5,23 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Card, CardContent } from "@/components/ui/card";
 
 export interface MatricsGroupItemProps extends React.HTMLAttributes<HTMLDivElement> {
-  Icon?: LucideIcon;
+  icon?: LucideIcon;
   label: string;
   value: string | number;
   change?: string | number;
   changeDirection?: 'up' | 'down' | 'neutral';
   tooltip?: string | React.ReactNode;
-  ToolTipIcon?: LucideIcon;
+  tooltipIcon?: LucideIcon;
 }
 
 export function MatricsGroupItem({
-  Icon,
+  icon: Icon,
   label,
   value,
   change,
   changeDirection = 'neutral',
   tooltip,
-  ToolTipIcon = Info,
+  tooltipIcon: TooltipIcon = Info,
   className,
   ...props
 }: MatricsGroupItemProps) {
@@ -39,7 +39,7 @@ export function MatricsGroupItem({
         {tooltip && (
           <Tooltip>
             <TooltipTrigger>
-              <ToolTipIcon className="h-4 w-4 cursor-help text-muted-foreground" />
+              <TooltipIcon className="h-4 w-4 cursor-help text-muted-foreground" />
             </TooltipTrigger>
             <TooltipContent>{tooltip}</TooltipContent>
           </Tooltip>

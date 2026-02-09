@@ -6,25 +6,25 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { twMerge } from "tailwind-merge";
 
 export interface MatricsCardProps extends HTMLAttributes<HTMLDivElement> {
-  Icon?: LucideIcon;
+  icon?: LucideIcon;
   value: string | number | JSX.Element;
   count?: string | number;
   countDirection?: 'up' | 'down' | 'neutral';
   shortDescription: string | JSX.Element;
   tooltip?: string | JSX.Element;
-  ToolTipIcon?: LucideIcon;
+  tooltipIcon?: LucideIcon;
   onCardClick?: () => void;
 }
 
 export function MatricsCard({
-  Icon = Info,
+  icon: Icon = Info,
   value = '',
   count = '',
   countDirection = 'neutral',
   shortDescription = '',
   tooltip = '',
   className = '',
-  ToolTipIcon = Info,
+  tooltipIcon: TooltipIcon = Info,
   onCardClick = () => {},
   ...props
 }: MatricsCardProps) {
@@ -62,7 +62,7 @@ export function MatricsCard({
               <Tooltip>
                 <TooltipTrigger>
                   {
-                    <ToolTipIcon className="h-4 w-4 cursor-help" />
+                    <TooltipIcon className="h-4 w-4 cursor-help" />
                   }
                 </TooltipTrigger>
                 <TooltipContent>

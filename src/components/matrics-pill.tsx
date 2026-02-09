@@ -9,12 +9,12 @@ type MatricsPillProps = {
   iconClassName?: string;
   textClassName?: string;
   countClassName?: string;
-  Icon: LucideIcon
+  icon: LucideIcon
   text: string,
   count: number
 }
 
-function MatricsPill( { className = '', Icon, text, countClassName, count, textClassName, iconClassName, iconWrapperClassName }: MatricsPillProps ) {
+function MatricsPill( { className = '', icon: Icon, text, countClassName, count, textClassName, iconClassName, iconWrapperClassName }: MatricsPillProps ) {
   return (
     <Badge variant="outline" className={ cn( 'p-2.5 border! h-auto flex flex-row justify-between gap-2.5', className ) }>
       <span className={ cn( 'flex items-center gap-2' ) }>

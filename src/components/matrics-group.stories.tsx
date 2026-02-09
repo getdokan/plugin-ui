@@ -25,7 +25,7 @@ export const Default: Story = {
   render: () => (
     <MatricsGroup>
       <MatricsGroupItem
-        Icon={Users}
+        icon={Users}
         label="Total Users"
         value="2,345"
         change="+15%"
@@ -33,7 +33,7 @@ export const Default: Story = {
         tooltip="Total number of registered users"
       />
       <MatricsGroupItem
-        Icon={CreditCard}
+        icon={CreditCard}
         label="Revenue"
         value="$12,345"
         change="+5%"
@@ -41,7 +41,7 @@ export const Default: Story = {
         tooltip="Total revenue generated"
       />
       <MatricsGroupItem
-        Icon={ArrowUpRight}
+        icon={ArrowUpRight}
         label="Conversions"
         value="456"
         change="-2%"
@@ -49,7 +49,7 @@ export const Default: Story = {
         tooltip="Number of successful conversions"
       />
       <MatricsGroupItem
-        Icon={ArrowDownRight}
+        icon={ArrowDownRight}
         label="Bounce Rate"
         value="32%"
         change="Neutral"
@@ -64,7 +64,7 @@ export const SingleItem: Story = {
   render: () => (
     <MatricsGroup className="max-w-xs">
       <MatricsGroupItem
-        Icon={Users}
+        icon={Users}
         label="Total Users"
         value="2,345"
         change="+15%"

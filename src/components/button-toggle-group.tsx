@@ -29,7 +29,7 @@ export interface ButtonToggleGroupProps {
   /** The value of the toggle item that should be active by default (for uncontrolled component) */
   defaultValue?: string
   /** Callback fired when the active toggle item changes */
-  onValueChange?: (value: string) => void
+  onChange?: (value: string) => void
   /**
    * The size of the toggle items
    * @default "default"
@@ -49,7 +49,7 @@ export function ButtonToggleGroup({
   items,
   value,
   defaultValue,
-  onValueChange,
+  onChange,
   size = "default",
   className,
   itemClassName,
@@ -61,7 +61,7 @@ export function ButtonToggleGroup({
       onValueChange={(val) => {
         const nextValue = val[0]
         if (nextValue !== undefined) {
-          onValueChange?.(nextValue)
+          onChange?.(nextValue)
         }
       }}
       variant="default"

@@ -27,7 +27,7 @@ const items = [
 <ButtonToggleGroup 
   items={items} 
   value="list" 
-  onValueChange={(val) => console.log(val)} 
+  onChange={(val) => console.log(val)} 
 />
 ```
 
@@ -35,7 +35,7 @@ const items = [
 - **Icon Support**: Easily add `startIcon` or `endIcon` to each toggle item.
 - **Unified Style**: Uses the theme's primary color as background for the active item.
 - **Customizable**: Pass `className` for the container or `itemClassName` for individual items.
-- **Standard Toggle Props**: Supports `value`, `onValueChange`, and `size`.
+- **Standard Toggle Props**: Supports `value`, `onChange`, and `size`.
 - **Improved Rounding**: Respects the rounding applied to the container via `className`.
 
 ## Props API
@@ -46,7 +46,7 @@ const items = [
 | :--- | :--- | :--- | :--- | :--- |
 | `items` | `ButtonToggleGroupItem[]` | Yes | - | Array of items to render in the group. |
 | `value` | `string` | No | - | The value of the currently active item. |
-| `onValueChange` | `(value: string) => void` | No | - | Callback fired when the active item changes. |
+| `onChange` | `(value: string) => void` | No | - | Callback fired when the active item changes. |
 | `size` | `'sm' \| 'default' \| 'lg'` | No | `'default'` | Size of the toggle items. |
 | `className` | `string` | No | - | Extra classes for the `ToggleGroup` container. |
 | `itemClassName` | `string` | No | - | Extra classes for each `ToggleGroupItem`. |

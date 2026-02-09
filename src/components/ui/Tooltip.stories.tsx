@@ -29,7 +29,7 @@ export const AllSides: Story = {
     <div className="flex flex-wrap gap-8 p-12">
       <Tooltip>
         <TooltipTrigger><Button>Top</Button></TooltipTrigger>
-        <TooltipContent side="top">Top tooltip</TooltipContent>
+        <TooltipContent side="top">Top tooltip Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam amet ducimus harum iure maiores minus, modi nostrum officiis possimus provident quae quam qui quisquam, rem repudiandae tempore vero voluptates. Culpa cum earum expedita illum impedit ipsa quasi recusandae repellendus ullam unde? Aliquid animi asperiores consequuntur eligendi error fugiat impedit ipsum itaque, labore maxime nam nisi obcaecati perferendis reiciendis, reprehenderit sint suscipit unde! Animi assumenda atque dolorem doloribus, ea, eos id in incidunt ipsum libero mollitia omnis quibusdam recusandae sed velit voluptas, voluptates voluptatibus? Aliquid animi assumenda consequatur deleniti, dignissimos enim excepturi illo in incidunt mollitia quidem sequi temporibus totam. </TooltipContent>
       </Tooltip>
       <Tooltip>
         <TooltipTrigger><Button>Right</Button></TooltipTrigger>

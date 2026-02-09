@@ -10,7 +10,7 @@ const meta = {
   parameters: { layout: "centered" },
   tags: ["autodocs"],
   args: {
-    onValueChange: fn(),
+    onChange: fn(),
   },
   argTypes: {
     size: {

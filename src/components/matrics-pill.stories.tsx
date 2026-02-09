@@ -19,7 +19,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    Icon: Users,
+    icon: Users,
     text: "Total Users",
     count: 125,
   },
@@ -27,7 +27,7 @@ export const Default: Story = {
 
 export const Messages: Story = {
   args: {
-    Icon: Mail,
+    icon: Mail,
     text: "Messages",
     count: 12,
   },
@@ -35,7 +35,7 @@ export const Messages: Story = {
 
 export const Notifications: Story = {
   args: {
-    Icon: Bell,
+    icon: Bell,
     text: "Notifications",
     count: 5,
   },

@@ -28,7 +28,7 @@ const Example = () => {
       count="+10%"
       countDirection="up"
       shortDescription="from last month"
-      Icon={Handbag}
+      icon={Handbag}
       tooltip="Total sales in last 30 days"
     />
   );
@@ -47,11 +47,11 @@ const Example = () => {
 | :--- | :--- | :--- | :--- | :--- |
 | `value` | `string \| number \| JSX.Element` | Yes | - | The main metric value to display. |
 | `shortDescription` | `string \| JSX.Element` | Yes | - | A brief description of the metric. |
-| `Icon` | `LucideIcon` | No | `Info` | Icon displayed on the left. |
+| `icon` | `LucideIcon` | No | `Info` | Icon displayed on the left. |
 | `count` | `string \| number` | No | - | Trend value (e.g., "+10%"). |
 | `countDirection` | `'up' \| 'down' \| 'neutral'` | No | `'neutral'` | Color-codes the trend value (green, red, or gray). |
 | `tooltip` | `string \| JSX.Element` | No | - | Content for the help tooltip. |
-| `ToolTipIcon` | `LucideIcon` | No | `Info` | Icon used for the tooltip trigger. |
+| `tooltipIcon` | `LucideIcon` | No | `Info` | Icon used for the tooltip trigger. |
 | `onCardClick` | `() => void` | No | - | Callback when the card is clicked. |
 | `className` | `string` | No | `''` | Additional class names for the card. |
 
@@ -70,12 +70,12 @@ const Example = () => {
 import { TrendingUp, Info } from "lucide-react";
 
 <MatricsCard
-  Icon={TrendingUp}
+  icon={TrendingUp}
   value="85%"
   count="+5.2%"
   countDirection="up"
   shortDescription="Conversion Rate"
   tooltip="Measured over the last 7 days"
-  ToolTipIcon={Info}
+  tooltipIcon={Info}
 />
 ```

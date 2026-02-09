@@ -22,7 +22,7 @@ import { Handbag } from "lucide-react";
 
 export default function Example() {
   return (
-    <MatricsPill Icon={Handbag} text="Vendor Approval" count={10} />
+    <MatricsPill icon={Handbag} text="Vendor Approval" count={10} />
   );
 }
 ```
@@ -35,7 +35,7 @@ export default function Example() {
 ## Props API
 | Prop | Type | Required | Default | Description |
 | :--- | :--- | :--- | :--- | :--- |
-| `Icon` | `LucideIcon` | Yes | - | Left icon component. |
+| `icon` | `LucideIcon` | Yes | - | Left icon component. |
 | `text` | `string` | Yes | - | Label text. |
 | `count` | `number` | Yes | - | Numeric value displayed in the circular badge. |
 | `className` | `string` | No | `''` | Extra classes for the root badge. |
@@ -48,13 +48,13 @@ export default function Example() {
 
 ### 1. Basic
 ```jsx
-<MatricsPill Icon={Handbag} text="Pending Orders" count={7} />
+<MatricsPill icon={Handbag} text="Pending Orders" count={7} />
 ```
 
 ### 2. With Custom Colors
 ```jsx
 <MatricsPill
-  Icon={Handbag}
+  icon={Handbag}
   text="Vendor Approval"
   count={10}
   className="bg-amber-50 text-amber-700 border-amber-200"
