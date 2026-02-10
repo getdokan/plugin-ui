@@ -1,4 +1,5 @@
 export {
+    getThemeStyles,
     ThemeProvider,
     useTheme,
     useThemeOptional, type ThemeMode, type ThemeProviderProps,

@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const noticeVariants = cva(
-  "relative grid gap-2.5 rounded-[3px] border-l-[3px] border-y-0 border-r-0 px-4 py-3 text-left text-sm has-data-[slot=notice-action]:pr-10 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2.5 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4 w-full group/notice",
+  "relative grid gap-2.5 rounded-[3px] border-l-[3px] border-y-0 border-r-0 px-4 py-3 text-left text-sm has-data-[slot=notice-action]:pr-10 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2.5 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4 group/notice",
   {
     variants: {
       variant: {
