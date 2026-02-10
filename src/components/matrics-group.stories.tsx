@@ -10,9 +10,7 @@ const meta = {
   tags: ["autodocs"],
   decorators: [
     (Story) => (
-      <div className="w-[800px]">
-        <Story />
-      </div>
+      <Story />
     ),
   ],
 } satisfies Meta<typeof MatricsGroup>;
