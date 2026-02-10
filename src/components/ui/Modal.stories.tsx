@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
+  ModalDescription,
 } from "./index";
 import { ChevronDownIcon } from "lucide-react";
 
@@ -39,7 +40,7 @@ function ModalDemo() {
         <ModalHeader>
           <ModalTitle>Modal Title</ModalTitle>
         </ModalHeader>
-        <div className="p-6">Modal content.</div>
+        <ModalDescription>Modal content.</ModalDescription>
         <ModalFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>
             Cancel
