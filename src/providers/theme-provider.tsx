@@ -222,6 +222,14 @@ function tokensToCssVariables(tokens: ThemeTokens): Record<string, string> {
   return variables;
 }
 
+/**
+ * Returns theme tokens as inline CSS custom properties for use on a DOM element
+ * (e.g. modal portal root) so portaled content inherits the same theme.
+ */
+export function getThemeStyles(tokens: ThemeTokens): Record<string, string> {
+  return tokensToCssVariables(tokens);
+}
+
 export interface ThemeProviderProps {
   /**
    * Unique plugin identifier (e.g., "dokan", "wemail", "appsero")
