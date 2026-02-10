@@ -28,7 +28,7 @@ Add the package to your `package.json` dependencies:
 ```json
 {
   "dependencies": {
-    "@wedevs/plugin-ui": "git+https://github.com/mrabbani/plugin-ui.git"
+    "@wedevs/plugin-ui": "git+https://github.com/getdokan/plugin-ui.git"
   }
 }
 ```
@@ -105,7 +105,7 @@ nvm use
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/mrabbani/plugin-ui.git
+git clone https://github.com/getdokan/plugin-ui.git
 cd plugin-ui
 ```
 

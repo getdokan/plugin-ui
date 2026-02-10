@@ -1,7 +1,7 @@
 import type { StorybookConfig } from "@storybook/react-webpack5";
+import { createRequire } from "module";
 import path from "path";
 import { fileURLToPath } from "url";
-import { createRequire } from "module";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
@@ -11,7 +11,7 @@ const basePath = process.env.STORYBOOK_BASE_PATH || "/";
 
 const config: StorybookConfig = {
   stories: ["../src/**/*.stories.@(ts|tsx|js|jsx)"],
-
+  staticDirs: ["./static"],
   addons: [
     "@storybook/addon-a11y",
     "@chromatic-com/storybook",

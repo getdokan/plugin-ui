@@ -315,7 +315,7 @@ A GitHub Actions workflow deploys Storybook to GitHub Pages on push to `main` or
 2. Push to `main`/`master` (or run the **Deploy Storybook to GitHub Pages** workflow manually). The workflow:
    - Runs `npm ci` and `npm run build-storybook` with `STORYBOOK_BASE_PATH=/<repo-name>/` so assets load correctly.
    - Uploads `storybook-static` and deploys via `actions/deploy-pages`.
-3. The site will be at **`https://<owner>.github.io/<repo>/`** (e.g. `https://mrabbani.github.io/plugin-ui/`).
+3. The site will be at **`https://<owner>.github.io/<repo>/`** (e.g. `https://getdokan.github.io/plugin-ui/`).
 
 Workflow file: `.github/workflows/deploy-storybook.yml`.
 
