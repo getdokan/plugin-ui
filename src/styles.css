@@ -283,3 +283,34 @@
 .pui-root .animate-spin {
     animation: pui-spin 1s linear infinite;
 }
+
+/* ============================================
+   Progress Bar Striped Effect
+   ============================================ */
+
+@keyframes pui-progress-stripes {
+    from {
+        background-position: 1rem 0;
+    }
+    to {
+        background-position: 0 0;
+    }
+}
+
+.pui-root .pui-progress-striped {
+    background-image: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.15) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0.15) 75%,
+        transparent 75%,
+        transparent
+    );
+    background-size: 1rem 1rem;
+}
+
+.pui-root .pui-animate-progress-striped {
+    animation: pui-progress-stripes 1s linear infinite;
+}

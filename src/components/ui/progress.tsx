@@ -1,4 +1,5 @@
 
+import * as React from "react"
 import { Progress as ProgressPrimitive } from "@base-ui/react/progress"
 import { cn } from "@/lib/utils"
 
@@ -62,27 +63,46 @@ export type ProgressProps = ProgressPrimitive.Root.Props & {
   striped?: boolean
 }
 
-function Progress({ value = 0, className, children, ...props }: ProgressProps) {
+const ProgressContext = React.createContext<{
+  variant?: ProgressVariant
+  size?: "sm" | "md" | "lg"
+  rounded?: boolean
+  striped?: boolean
+}>({})
+
+function Progress({ value, className, children, variant, size, rounded, striped, ...props }: ProgressProps) {
   return (
-    <ProgressRoot value={value} className={cn("flex items-center gap-3", className)} {...props}>
-      {children}
-    </ProgressRoot>
+    <ProgressContext.Provider value={{ variant, size, rounded, striped }}>
+      <ProgressRoot value={value} className={cn("flex items-center gap-3", className)} {...props}>
+        {children}
+      </ProgressRoot>
+    </ProgressContext.Provider>
   )
 }
 
-function ProgressTrack({ className, variant = "default", size = "md", rounded = true, ...props }: ProgressPrimitive.Track.Props & { variant?: ProgressVariant; size?: "sm" | "md" | "lg"; rounded?: boolean }) {
+function ProgressTrack({ className, variant, size, rounded, ...props }: ProgressPrimitive.Track.Props & { variant?: ProgressVariant; size?: "sm" | "md" | "lg"; rounded?: boolean }) {
+  const context = React.useContext(ProgressContext)
+  const v = variant ?? context.variant ?? "default"
+  const s = size ?? context.size ?? "md"
+  const r = rounded ?? context.rounded ?? true
+
   return (
     <ProgressTrackPrimitive
-      className={cn("relative overflow-hidden flex-1 min-w-0", trackClass(variant), sizeClass(size), rounded ? "rounded-full" : "rounded", className)}
+      className={cn("relative overflow-hidden flex-1 min-w-0", trackClass(v), sizeClass(s), r ? "rounded-full" : "rounded", className)}
       {...props}
     />
   )
 }
 
-function ProgressIndicator({ className, variant = "default", rounded = true, striped = false, ...props }: ProgressPrimitive.Indicator.Props & { variant?: ProgressVariant; rounded?: boolean; striped?: boolean }) {
+function ProgressIndicator({ className, variant, rounded, striped, ...props }: ProgressPrimitive.Indicator.Props & { variant?: ProgressVariant; rounded?: boolean; striped?: boolean }) {
+  const context = React.useContext(ProgressContext)
+  const v = variant ?? context.variant ?? "default"
+  const r = rounded ?? context.rounded ?? true
+  const s = striped ?? context.striped ?? false
+
   return (
     <ProgressIndicatorPrimitive
-      className={cn("h-full transition-all duration-300", indicatorClass(variant), rounded ? "rounded-full" : "rounded", striped && "opacity-90 animate-pulse", className)}
+      className={cn("h-full transition-all duration-300", indicatorClass(v), r ? "rounded-full" : "rounded", s && "pui-progress-striped pui-animate-progress-striped", className)}
       {...props}
     />
   )
