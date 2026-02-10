@@ -23,11 +23,16 @@ function ScrollArea({
   );
 }
 
+type ScrollAreaPrimitiveType = ScrollAreaPrimitive.Scrollbar.Props & {
+  scrollBarClassName?: string
+}
+
 function ScrollBar({
   className,
   orientation = "vertical",
+  scrollBarClassName = "",
   ...props
-}: ScrollAreaPrimitive.Scrollbar.Props) {
+}: ScrollAreaPrimitiveType) {
   return (
     <ScrollAreaPrimitive.Scrollbar
       data-slot="scroll-area-scrollbar"
@@ -42,7 +47,7 @@ function ScrollBar({
       )}
       {...props}
     >
-      <ScrollAreaPrimitive.Thumb className="bg-border relative flex-1 rounded-full" />
+      <ScrollAreaPrimitive.Thumb className={ cn( 'bg-border relative flex-1 rounded-full', scrollBarClassName ) } />
     </ScrollAreaPrimitive.Scrollbar>
   );
 }
