@@ -7,7 +7,7 @@ import {
     useState,
     type ReactNode,
 } from 'react';
-import type { SettingsElement } from './settings-types';
+import type { SaveButtonRenderProps, SettingsElement } from './settings-types';
 import {
     evaluateDependencies,
     extractValues,
@@ -65,6 +65,8 @@ export interface SettingsContextValue {
     getPageValues: (pageId: string) => Record<string, any>;
     /** Consumer-provided save handler (exposed so SettingsContent can call it) */
     onSave?: (pageId: string, values: Record<string, any>) => void;
+    /** Consumer-provided render function for the save button */
+    renderSaveButton?: (props: SaveButtonRenderProps) => React.ReactNode;
 }
 
 const SettingsContext = createContext<SettingsContextValue | null>(null);
@@ -80,8 +82,9 @@ export interface SettingsProviderProps {
     children: ReactNode;
     schema: SettingsElement[];
     values?: Record<string, any>;
-    onChange?: (pageId: string, key: string, value: any) => void;
-    onSave?: (pageId: string, values: Record<string, any>) => void;
+    onChange?: (scopeId: string, key: string, value: any) => void;
+    onSave?: (scopeId: string, values: Record<string, any>) => void;
+    renderSaveButton?: (props: SaveButtonRenderProps) => React.ReactNode;
     loading?: boolean;
     hookPrefix?: string;
     /** Optional filter function for extensibility (e.g. @wordpress/hooks applyFilters) */
@@ -94,6 +97,7 @@ export function SettingsProvider({
     values: externalValues,
     onChange,
     onSave,
+    renderSaveButton,
     loading = false,
     hookPrefix = 'plugin_ui',
     applyFilters: applyFiltersProp,
@@ -420,6 +424,7 @@ export function SettingsProvider({
             isPageDirty,
             getPageValues,
             onSave: handleOnSave,
+            renderSaveButton,
         }),
         [
             schema,
@@ -442,6 +447,7 @@ export function SettingsProvider({
             isPageDirty,
             getPageValues,
             handleOnSave,
+            renderSaveButton,
         ]
     );
 

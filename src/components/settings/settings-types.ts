@@ -113,15 +113,43 @@ export type SettingsElement = {
 // Component Props
 // ============================================
 
+/** Props passed to the renderSaveButton render-prop. */
+export interface SaveButtonRenderProps {
+    /** The active scope ID (subpage ID if active, otherwise page ID). */
+    scopeId: string;
+    /** Whether any field in the current scope has been modified. */
+    dirty: boolean;
+    /** Call this to trigger save — invokes `onSave(scopeId, scopeValues)`. */
+    onSave: () => void;
+}
+
 export interface SettingsProps {
     /** Settings schema — JSON array (flat or hierarchical) */
     schema: SettingsElement[];
     /** Current values, keyed by dependency_key */
     values?: Record<string, any>;
-    /** Called when a field value changes. Receives the page ID, field key, and new value. */
-    onChange?: (pageId: string, key: string, value: any) => void;
-    /** Called when the page save button is clicked. Receives the page ID and that page's values only. */
-    onSave?: (pageId: string, values: Record<string, any>) => void;
+    /** Called when a field value changes. Receives the scope ID (subpage/page), field key, and new value. */
+    onChange?: (scopeId: string, key: string, value: any) => void;
+    /** Called when the save button is clicked. Receives the scope ID and that scope's values only. */
+    onSave?: (scopeId: string, values: Record<string, any>) => void;
+    /**
+     * Custom render function for the save button area.
+     * Use this to provide your own translated save button.
+     *
+     * @example
+     * ```tsx
+     * import { __ } from '@wordpress/i18n';
+     *
+     * renderSaveButton={({ dirty, onSave }) => (
+     *     <Button onClick={onSave} disabled={!dirty}>
+     *         {__('Save Changes', 'my-plugin')}
+     *     </Button>
+     * )}
+     * ```
+     *
+     * If not provided but `onSave` is set, a default icon-only save button is rendered.
+     */
+    renderSaveButton?: (props: SaveButtonRenderProps) => React.ReactNode;
     /** Whether settings are loading */
     loading?: boolean;
     /** Title displayed above the settings */

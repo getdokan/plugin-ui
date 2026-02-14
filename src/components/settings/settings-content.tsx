@@ -2,8 +2,7 @@ import type { SettingsElement as SettingsElementType } from './settings-types';
 import { useSettings } from './settings-context';
 import { FieldRenderer } from './field-renderer';
 import { cn } from '@/lib/utils';
-import { FileText, Save } from 'lucide-react';
-import { Button } from '../ui/button';
+import { FileText } from 'lucide-react';
 
 // ============================================
 // Settings Content — renders heading, tabs, sections
@@ -21,6 +20,7 @@ export function SettingsContent({ className }: { className?: string }) {
         isPageDirty,
         getPageValues,
         onSave,
+        renderSaveButton,
     } = useSettings();
 
     const subpage = getActiveSubpage();
@@ -37,11 +37,12 @@ export function SettingsContent({ className }: { className?: string }) {
         onSave(scopeId, scopeValues);
     };
 
+    // Determine whether to show a save area
+    const showSaveArea = Boolean(onSave);
+
     if (!subpage) {
         return (
-            <div className={cn('flex-1 p-6', className)}>
-                <p className="text-muted-foreground text-sm">Select a menu item to view settings.</p>
-            </div>
+            <div className={cn('flex-1 p-6', className)} />
         );
     }
 
@@ -109,17 +110,12 @@ export function SettingsContent({ className }: { className?: string }) {
                 </div>
             </div>
 
-            {/* Per-page save button — sticky at the bottom */}
-            {onSave && (
+            {/* Per-scope save button — sticky at the bottom */}
+            {showSaveArea && (
                 <div className="sticky bottom-0 border-t border-border bg-background px-6 py-3 flex justify-end">
-                    <Button
-                        onClick={handleSave}
-                        size="default"
-                        disabled={!dirty}
-                    >
-                        <Save className="size-4 mr-2" />
-                        Save Changes
-                    </Button>
+                    {renderSaveButton
+                        ? renderSaveButton({ scopeId, dirty, onSave: handleSave })
+                        : null}
                 </div>
             )}
         </div>

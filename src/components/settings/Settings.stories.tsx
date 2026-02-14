@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useRef, useState } from 'react';
+import { Save } from 'lucide-react';
+import { Button } from '../ui/button';
 import { Settings } from './index';
 import type { SettingsElement, SettingsProps } from './settings-types';
 
@@ -1030,15 +1032,21 @@ function SettingsStoryWrapper({
                 <Settings
                     {...args}
                     values={values}
-                    onChange={(pageId, key, value) => {
+                    onChange={(scopeId, key, value) => {
                         setValues((prev) => ({ ...prev, [key]: value }));
-                        log({ type: 'change', pageId, key, value });
+                        log({ type: 'change', pageId: scopeId, key, value });
                     }}
-                    onSave={(pageId, pageValues) => {
+                    onSave={(scopeId, scopeValues) => {
                         // eslint-disable-next-line no-console
-                        console.log(`Save page "${pageId}":`, pageValues);
-                        log({ type: 'save', pageId, values: pageValues });
+                        console.log(`Save scope "${scopeId}":`, scopeValues);
+                        log({ type: 'save', pageId: scopeId, values: scopeValues });
                     }}
+                    renderSaveButton={({ dirty, onSave: save }) => (
+                        <Button onClick={save} disabled={!dirty}>
+                            <Save className="size-4 mr-2" />
+                            Save Changes
+                        </Button>
+                    )}
                 />
             </div>
             <EventLog entries={entries} />

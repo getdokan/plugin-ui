@@ -17,6 +17,7 @@ export function Settings({
     values,
     onChange,
     onSave,
+    renderSaveButton,
     loading = false,
     title,
     hookPrefix = 'plugin_ui',
@@ -29,6 +30,7 @@ export function Settings({
             values={values}
             onChange={onChange}
             onSave={onSave}
+            renderSaveButton={renderSaveButton}
             loading={loading}
             hookPrefix={hookPrefix}
             applyFilters={applyFilters}
@@ -68,7 +70,6 @@ function SettingsInner({
             <div className={cn('flex items-center justify-center min-h-96', className)}>
                 <div className="flex flex-col items-center gap-3">
                     <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent" />
-                    <p className="text-sm text-muted-foreground">Loading settings…</p>
                 </div>
             </div>
         );
@@ -177,4 +178,4 @@ function usePrevious<T>(value: T): T | undefined {
 export { useSettings } from './settings-context';
 export type { ApplyFiltersFunction } from './settings-context';
 export { formatSettingsData, extractValues } from './settings-formatter';
-export type { SettingsElement, SettingsProps, FieldComponentProps } from './settings-types';
+export type { SettingsElement, SettingsProps, FieldComponentProps, SaveButtonRenderProps } from './settings-types';
