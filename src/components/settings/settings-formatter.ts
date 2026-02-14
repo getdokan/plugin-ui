@@ -76,6 +76,9 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
                 // Sections inside a tab
                 return item.tab_id === parentId && !item.section_id;
             }
+            if (parentType === 'section' && item.type === 'subsection') {
+                return item.section_id === parentId;
+            }
             if (parentType === 'section' && item.type === 'section') {
                 return item.section_id === parentId;
             }
@@ -83,6 +86,12 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
                 return item.section_id === parentId && !item.field_group_id;
             }
             if (parentType === 'section' && item.type === 'fieldgroup') {
+                return item.section_id === parentId;
+            }
+            if (parentType === 'subsection' && item.type === 'field') {
+                return item.section_id === parentId && !item.field_group_id;
+            }
+            if (parentType === 'subsection' && item.type === 'fieldgroup') {
                 return item.section_id === parentId;
             }
             if (parentType === 'fieldgroup' && item.type === 'field') {
