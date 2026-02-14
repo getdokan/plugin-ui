@@ -2,13 +2,16 @@ import { useMemo } from 'react';
 import { useSettings } from './settings-context';
 import {
     LayoutMenu,
-    type LayoutMenuGroupData,
+    type LayoutMenuItemData,
 } from '../ui/layout-menu';
+import type { SettingsElement } from './settings-types';
 import * as LucideIcons from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 // ============================================
 // Settings Sidebar — uses LayoutMenu
+// Page titles render as expandable parent items,
+// subpage titles render as clickable child items.
 // ============================================
 
 /**
@@ -32,35 +35,52 @@ export function SettingsSidebar({ className }: { className?: string }) {
         setActiveSubpage,
     } = useSettings();
 
-    // Transform schema pages into LayoutMenuGroupData
-    const groups: LayoutMenuGroupData[] = useMemo(() => {
+    // Recursive helper: map a subpage element to a LayoutMenuItemData
+    const mapSubpageToItem = (element: SettingsElement): LayoutMenuItemData => {
+        const nestedSubpages = (element.children || [])
+            .filter((child) => child.type === 'subpage' && child.display !== false)
+            .map(mapSubpageToItem);
+
+        return {
+            id: element.id,
+            label: element.title || element.id,
+            icon: getIcon(element.icon),
+            children: nestedSubpages.length > 0 ? nestedSubpages : undefined,
+        };
+    };
+
+    // Map each page as a parent item with subpages as children
+    const items: LayoutMenuItemData[] = useMemo(() => {
         return schema
             .filter((page) => page.display !== false)
-            .map((page) => ({
-                id: page.id,
-                label: page.title || page.id,
-                secondaryLabel: page.description || undefined,
-                items: (page.children || [])
-                    .filter((subpage) => subpage.type === 'subpage' && subpage.display !== false)
-                    .map((subpage) => ({
-                        id: subpage.id,
-                        label: subpage.title || subpage.id,
-                        secondaryLabel: subpage.description || undefined,
-                        icon: getIcon(subpage.icon),
-                    })),
-            }))
-            .filter((group) => group.items.length > 0);
+            .map((page) => {
+                const subpageItems = (page.children || [])
+                    .filter((child) => child.type === 'subpage' && child.display !== false)
+                    .map(mapSubpageToItem);
+
+                return {
+                    id: page.id,
+                    label: page.title || page.id,
+                    icon: getIcon(page.icon),
+                    children: subpageItems.length > 0 ? subpageItems : undefined,
+                };
+            })
+            .filter((item) => item.children && item.children.length > 0);
     }, [schema]);
 
     return (
         <div className={cn('flex flex-col h-full', className)}>
             <LayoutMenu
-                groups={groups}
+                items={items}
                 searchable={true}
                 searchPlaceholder="Search settings…"
                 activeItemId={activeSubpage}
                 onItemClick={(item) => {
-                    setActiveSubpage(item.id);
+                    // Only navigate when clicking a leaf subpage (not a page parent)
+                    const isPage = schema.some((p) => p.id === item.id);
+                    if (!isPage) {
+                        setActiveSubpage(item.id);
+                    }
                 }}
             />
         </div>

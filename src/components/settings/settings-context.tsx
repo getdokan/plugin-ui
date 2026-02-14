@@ -19,6 +19,9 @@ import {
 // Context Value
 // ============================================
 
+/** Filter function signature compatible with @wordpress/hooks applyFilters */
+export type ApplyFiltersFunction = (hookName: string, value: any, ...args: any[]) => any;
+
 export interface SettingsContextValue {
     /** Parsed hierarchical settings tree */
     schema: SettingsElement[];
@@ -38,6 +41,8 @@ export interface SettingsContextValue {
     loading: boolean;
     /** Prefix for WordPress filter hook names */
     hookPrefix: string;
+    /** Filter function for extensibility (e.g. @wordpress/hooks applyFilters) */
+    applyFilters: ApplyFiltersFunction;
     /** Update a single field value */
     updateValue: (key: string, value: any) => void;
     /** Navigate to a page */
@@ -64,6 +69,9 @@ const SettingsContext = createContext<SettingsContextValue | null>(null);
 // Provider
 // ============================================
 
+/** Default identity function when no applyFilters is provided */
+const defaultApplyFilters: ApplyFiltersFunction = (_hookName: string, value: any) => value;
+
 export interface SettingsProviderProps {
     children: ReactNode;
     schema: SettingsElement[];
@@ -71,6 +79,8 @@ export interface SettingsProviderProps {
     onChange?: (key: string, value: any) => void;
     loading?: boolean;
     hookPrefix?: string;
+    /** Optional filter function for extensibility (e.g. @wordpress/hooks applyFilters) */
+    applyFilters?: ApplyFiltersFunction;
 }
 
 export function SettingsProvider({
@@ -80,14 +90,21 @@ export function SettingsProvider({
     onChange,
     loading = false,
     hookPrefix = 'plugin_ui',
+    applyFilters: applyFiltersProp,
 }: SettingsProviderProps) {
     // Format schema (handles both flat and hierarchical)
     const schema = useMemo(() => formatSettingsData(rawSchema), [rawSchema]);
 
+    const filterFn = applyFiltersProp || defaultApplyFilters;
+
     // Merge external values with defaults extracted from schema
     const defaultValues = useMemo(() => extractValues(schema), [schema]);
-    const [internalValues, setInternalValues] = useState<Record<string, any>>({});
-    const [initialValues, setInitialValues] = useState<Record<string, any>>({});
+
+    // Compute initial merged values synchronously to avoid isDirty flash
+    const computeInitialMerged = () => ({ ...defaultValues, ...(externalValues || {}) });
+
+    const [internalValues, setInternalValues] = useState<Record<string, any>>(computeInitialMerged);
+    const [initialValues, setInitialValues] = useState<Record<string, any>>(computeInitialMerged);
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     // Navigation state
@@ -95,13 +112,15 @@ export function SettingsProvider({
     const [activeSubpage, setActiveSubpage] = useState<string>('');
     const [activeTab, setActiveTab] = useState<string>('');
 
-    // Initialize values and navigation from schema
+    // Sync when schema or external values change
     useEffect(() => {
         const merged = { ...defaultValues, ...(externalValues || {}) };
         setInternalValues(merged);
         setInitialValues(merged);
+    }, [defaultValues, externalValues]);
 
-        // Auto-select first page/subpage
+    // Auto-select first page/subpage on schema load
+    useEffect(() => {
         if (schema.length > 0 && !activePage) {
             const firstPage = schema[0];
             setActivePage(firstPage.id);
@@ -116,7 +135,7 @@ export function SettingsProvider({
                 }
             }
         }
-    }, [schema, externalValues]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [schema]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Merged values: external values take precedence, then internal, then defaults
     const values = useMemo(
@@ -195,9 +214,23 @@ export function SettingsProvider({
     const handleSetActiveSubpage = useCallback(
         (subpageId: string) => {
             setActiveSubpage(subpageId);
-            // Find the parent page
+
+            // Recursively find the subpage and its parent page
+            const findSubpageInPage = (
+                elements: SettingsElement[],
+            ): SettingsElement | undefined => {
+                for (const el of elements) {
+                    if (el.id === subpageId && el.type === 'subpage') return el;
+                    if (el.children) {
+                        const found = findSubpageInPage(el.children);
+                        if (found) return found;
+                    }
+                }
+                return undefined;
+            };
+
             for (const page of schema) {
-                const subpage = page.children?.find((c) => c.id === subpageId);
+                const subpage = findSubpageInPage(page.children || []);
                 if (subpage) {
                     if (activePage !== page.id) {
                         setActivePage(page.id);
@@ -217,8 +250,21 @@ export function SettingsProvider({
     );
 
     const getActiveSubpage = useCallback(() => {
+        // Recursively search for the active subpage in the page tree
+        const findSubpage = (elements: SettingsElement[]): SettingsElement | undefined => {
+            for (const el of elements) {
+                if (el.id === activeSubpage && el.type === 'subpage') return el;
+                if (el.children) {
+                    const found = findSubpage(el.children);
+                    if (found) return found;
+                }
+            }
+            return undefined;
+        };
+
         const page = getActivePage();
-        return page?.children?.find((c) => c.id === activeSubpage);
+        if (!page?.children) return undefined;
+        return findSubpage(page.children);
     }, [getActivePage, activeSubpage]);
 
     const getActiveTabs = useCallback(() => {
@@ -252,6 +298,7 @@ export function SettingsProvider({
             isDirty,
             loading,
             hookPrefix,
+            applyFilters: filterFn,
             updateValue,
             setActivePage: handleSetActivePage,
             setActiveSubpage: handleSetActiveSubpage,
@@ -272,6 +319,7 @@ export function SettingsProvider({
             isDirty,
             loading,
             hookPrefix,
+            filterFn,
             updateValue,
             handleSetActivePage,
             handleSetActiveSubpage,

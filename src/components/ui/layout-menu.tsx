@@ -3,6 +3,7 @@ import { ChevronDown, ChevronRight, Search } from "lucide-react";
 import {
   forwardRef,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -448,6 +449,21 @@ interface LayoutMenuItemNodeProps {
   renderItem?: (item: LayoutMenuItemData, depth: number) => ReactNode;
 }
 
+/**
+ * Check if any descendant of an item matches the active ID.
+ * Used to auto-expand parent items that contain the active selection.
+ */
+function hasActiveDescendant(
+  item: LayoutMenuItemData,
+  activeId: string | null | undefined
+): boolean {
+  if (!activeId || !item.children) return false;
+  return item.children.some(
+    (child) =>
+      child.id === activeId || hasActiveDescendant(child, activeId)
+  );
+}
+
 function LayoutMenuItemNode({
   item,
   depth,
@@ -457,8 +473,17 @@ function LayoutMenuItemNode({
   onItemClick,
   renderItem,
 }: LayoutMenuItemNodeProps) {
-  const [open, setOpen] = useState(false);
+  const containsActive = useMemo(
+    () => hasActiveDescendant(item, activeItemId),
+    [item, activeItemId]
+  );
+  const [open, setOpen] = useState(containsActive);
   const hasChildren = item.children && item.children.length > 0;
+
+  // Auto-expand when a descendant becomes active (e.g. programmatic navigation)
+  useEffect(() => {
+    if (containsActive) setOpen(true);
+  }, [containsActive]);
 
   const handleToggle = useCallback(() => {
     setOpen((o) => !o);

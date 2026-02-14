@@ -53,7 +53,15 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
 
         const children = enrichedData.filter((item) => {
             if (parentType === 'page' && item.type === 'subpage') {
-                return item.page_id === parentId;
+                return item.page_id === parentId && !item.subpage_id; // Added !item.subpage_id check
+            }
+            if (parentType === 'subpage' && item.type === 'subpage') {
+                // Nested subpage support
+                return item.subpage_id === parentId;
+            }
+            if (parentType === 'subpage' && item.type === 'tab') {
+                // Tabs belong directly under their subpage
+                return item.subpage_id === parentId;
             }
             if (parentType === 'subpage' && item.type === 'section') {
                 if (item.subpage_id === parentId && !item.section_id) return true;
@@ -63,6 +71,10 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
                     );
                 }
                 return false;
+            }
+            if (parentType === 'tab' && item.type === 'section') {
+                // Sections inside a tab
+                return item.tab_id === parentId && !item.section_id;
             }
             if (parentType === 'section' && item.type === 'section') {
                 return item.section_id === parentId;
@@ -123,18 +135,11 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
             // Transform validations
             if (child.validations) {
                 child.validations = child.validations.map((v) => {
-                    let ruleName = v.rules;
-                    let params = v.params || {};
-
-                    if (typeof v.rules === 'object' && v.rules !== null) {
-                        ruleName = Object.keys(v.rules as any)[0];
-                        params = { values: (v.rules as any)[ruleName] };
-                    }
-
+                    // Pass-through already formatted validations
                     return {
-                        rules: ruleName,
+                        rules: v.rules || '',
                         message: v.message || '',
-                        params,
+                        params: v.params || {},
                         self: child.dependency_key,
                     };
                 });
@@ -150,6 +155,11 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
                     effect: d.effect || 'show',
                     comparison: d.comparison || '==',
                 }));
+            }
+
+            // Ensure children array exists for nested structures
+            if (!child.children) {
+                child.children = [];
             }
 
             parent.children!.push(child);
@@ -222,6 +232,7 @@ export function evaluateDependencies(
 
 /**
  * Validates a field value against its validation rules.
+ * Supports pipe-delimited rules: "not_empty|min_value|max_value"
  * Returns an error message string or null if valid.
  */
 export function validateField(
@@ -233,36 +244,59 @@ export function validateField(
     }
 
     for (const validation of element.validations) {
-        switch (validation.rules) {
-            case 'not_in': {
-                const forbidden = validation.params?.values || [];
-                if (Array.isArray(forbidden) && forbidden.includes(value)) {
-                    return validation.message.replace('%s', String(value));
+        // Handle pipe-delimited rules
+        const rules = validation.rules.split('|');
+
+        for (const rule of rules) {
+            const params = (validation.params as any) || {};
+
+            switch (rule) {
+                case 'not_in': {
+                    const forbidden = params.values || [];
+                    if (Array.isArray(forbidden) && forbidden.includes(value)) {
+                        return validation.message.replace('%s', String(value)) ||
+                            `The value "${value}" is not allowed.`;
+                    }
+                    break;
                 }
-                break;
-            }
-            case 'required': {
-                if (value === undefined || value === null || value === '') {
-                    return validation.message || 'This field is required.';
+                case 'required':
+                case 'not_empty': {
+                    if (value === undefined || value === null || value === '') {
+                        return validation.message || 'This field is required.';
+                    }
+                    if (typeof value === 'string' && value.trim() === '') {
+                        return validation.message || 'This field cannot be empty.';
+                    }
+                    break;
                 }
-                break;
-            }
-            case 'min': {
-                const min = Number(validation.params?.value);
-                if (!isNaN(min) && Number(value) < min) {
-                    return validation.message || `Value must be at least ${min}.`;
+                case 'min':
+                case 'min_value': {
+                    let min: number | undefined;
+
+                    // Handle params structure: { min: 1 } or { value: 1 } or just pass as arg if manually formatted
+                    if ('min' in params) min = Number(params.min);
+                    else if ('value' in params) min = Number(params.value);
+
+                    if (min !== undefined && !isNaN(min) && Number(value) < min) {
+                        return validation.message || `Value must be at least ${min}.`;
+                    }
+                    break;
                 }
-                break;
-            }
-            case 'max': {
-                const max = Number(validation.params?.value);
-                if (!isNaN(max) && Number(value) > max) {
-                    return validation.message || `Value must be at most ${max}.`;
+                case 'max':
+                case 'max_value': {
+                    let max: number | undefined;
+
+                    if ('max' in params) max = Number(params.max);
+                    else if ('value' in params) max = Number(params.value);
+
+                    if (max !== undefined && !isNaN(max) && Number(value) > max) {
+                        return validation.message || `Value must be at most ${max}.`;
+                    }
+                    break;
                 }
-                break;
+                default:
+                    break;
             }
-            default:
-                break;
         }
     }
 

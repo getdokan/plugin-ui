@@ -7,6 +7,7 @@ import {
     SelectField,
     SwitchField,
     RadioCapsuleField,
+    CustomizeRadioField,
     MulticheckField,
     LabelField,
     HtmlField,
@@ -15,25 +16,13 @@ import {
 
 // ============================================
 // Field Renderer — dispatches by variant
-// Wraps each variant with applyFilters if @wordpress/hooks is available
+// Wraps each variant with applyFilters from context
+// (consumer passes applyFilters via Settings props,
+//  e.g. @wordpress/hooks applyFilters or a custom function)
 // ============================================
 
-/**
- * Try to use @wordpress/hooks if available (peer dependency).
- * Falls back to identity function if not installed.
- */
-let applyFilters: (hookName: string, value: any, ...args: any[]) => any;
-try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const hooks = require('@wordpress/hooks');
-    applyFilters = hooks.applyFilters;
-} catch {
-    // Fallback: no filtering, return value as-is
-    applyFilters = (hookName: string, value: any) => value;
-}
-
 export function FieldRenderer({ element }: { element: SettingsElement }) {
-    const { values, updateValue, shouldDisplay, hookPrefix, errors } = useSettings();
+    const { values, updateValue, shouldDisplay, hookPrefix, errors, applyFilters } = useSettings();
 
     // Check display status (dependency evaluation)
     if (!shouldDisplay(element)) {
@@ -99,7 +88,15 @@ export function FieldRenderer({ element }: { element: SettingsElement }) {
                 mergedElement
             );
 
+        case 'customize_radio':
+            return applyFilters(
+                `${filterPrefix}_settings_customize_radio_field`,
+                <CustomizeRadioField {...fieldProps} />,
+                mergedElement
+            );
+
         case 'multicheck':
+        case 'checkbox_group':
             return applyFilters(
                 `${filterPrefix}_settings_multicheck_field`,
                 <MulticheckField {...fieldProps} />,

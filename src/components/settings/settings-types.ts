@@ -5,7 +5,7 @@
 export type SettingsValidation = {
     rules: string;
     message: string;
-    params: Record<string, any>;
+    params?: Record<string, any> | any[];
     self?: string;
 };
 
@@ -44,7 +44,7 @@ export type SettingsElement = {
 
     // Field-specific
     value?: string | number | boolean | Array<string | number> | Record<string, any>;
-    default?: string | number;
+    default?: string | number | boolean | Array<string | number>;
     options?: SettingsElementOption[];
     readonly?: boolean;
     disabled?: boolean;
@@ -86,6 +86,7 @@ export type SettingsElement = {
     // Flat data pointers (used by formatter)
     page_id?: string;
     subpage_id?: string;
+    tab_id?: string;
     section_id?: string;
     field_group_id?: string;
     priority?: number;
@@ -118,6 +119,14 @@ export interface SettingsProps {
     hookPrefix?: string;
     /** Additional class name for the root element */
     className?: string;
+    /**
+     * Optional filter function for field extensibility.
+     * Pass @wordpress/hooks `applyFilters` to enable consumer plugins
+     * to inject/override field types via filter hooks.
+     * Signature: (hookName: string, value: any, ...args: any[]) => any
+     * If not provided, fields render without filtering.
+     */
+    applyFilters?: (hookName: string, value: any, ...args: any[]) => any;
 }
 
 export interface FieldComponentProps {

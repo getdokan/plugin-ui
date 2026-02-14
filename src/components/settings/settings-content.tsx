@@ -1,4 +1,4 @@
-import type { SettingsElement } from './settings-types';
+import type { SettingsElement as SettingsElementType } from './settings-types';
 import { useSettings } from './settings-context';
 import { FieldRenderer } from './field-renderer';
 import { cn } from '@/lib/utils';
@@ -98,7 +98,7 @@ export function SettingsContent({ className }: { className?: string }) {
 // Settings Section
 // ============================================
 
-function SettingsSection({ section }: { section: SettingsElement }) {
+function SettingsSection({ section }: { section: SettingsElementType }) {
     const { shouldDisplay } = useSettings();
 
     if (!shouldDisplay(section)) {
@@ -106,9 +106,6 @@ function SettingsSection({ section }: { section: SettingsElement }) {
     }
 
     const hasHeading = Boolean(section.title || section.description);
-
-    // Check if section has sub-sections
-    const hasSubSections = section.children?.some((c) => c.type === 'subsection' || c.type === 'section');
 
     return (
         <div className="rounded-lg border border-border bg-card overflow-hidden">
@@ -142,7 +139,7 @@ function SettingsSection({ section }: { section: SettingsElement }) {
 
             <div className="divide-y divide-border">
                 {section.children?.map((child) => (
-                    <SettingsElement key={child.id} element={child} />
+                    <ElementRenderer key={child.id} element={child} />
                 ))}
             </div>
         </div>
@@ -150,10 +147,10 @@ function SettingsSection({ section }: { section: SettingsElement }) {
 }
 
 // ============================================
-// Settings Element — dispatches by type
+// Element Renderer — dispatches by type
 // ============================================
 
-function SettingsElement({ element }: { element: SettingsElement }) {
+function ElementRenderer({ element }: { element: SettingsElementType }) {
     const { shouldDisplay } = useSettings();
 
     if (!shouldDisplay(element)) {
@@ -180,7 +177,7 @@ function SettingsElement({ element }: { element: SettingsElement }) {
 // Sub-Section
 // ============================================
 
-function SettingsSubSection({ element }: { element: SettingsElement }) {
+function SettingsSubSection({ element }: { element: SettingsElementType }) {
     const allChildrenAreFields = element.children?.every(
         (c) => c.type === 'field' || c.type === 'fieldgroup'
     );
@@ -203,7 +200,7 @@ function SettingsSubSection({ element }: { element: SettingsElement }) {
             )}
             <div className={cn(allChildrenAreFields && 'divide-y divide-border')}>
                 {element.children?.map((child) => (
-                    <SettingsElement key={child.id} element={child} />
+                    <ElementRenderer key={child.id} element={child} />
                 ))}
             </div>
         </div>
@@ -214,7 +211,7 @@ function SettingsSubSection({ element }: { element: SettingsElement }) {
 // Field Group
 // ============================================
 
-function SettingsFieldGroup({ element }: { element: SettingsElement }) {
+function SettingsFieldGroup({ element }: { element: SettingsElementType }) {
     return (
         <div className="p-4">
             <div className="flex flex-wrap gap-4">

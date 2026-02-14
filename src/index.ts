@@ -244,6 +244,7 @@ export {
     useSettings,
     formatSettingsData,
     extractValues,
+    type ApplyFiltersFunction,
     type SettingsProps,
     type SettingsElement,
     type FieldComponentProps,
