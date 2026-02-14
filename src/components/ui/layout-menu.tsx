@@ -29,6 +29,8 @@ export interface LayoutMenuItemData {
   disabled?: boolean;
   /** Custom className for the item row */
   className?: string;
+  /** Test ID for e2e selectors — rendered as `data-testid` on the interactive element */
+  testId?: string;
 }
 
 export interface LayoutMenuGroupData {
@@ -529,6 +531,7 @@ function LayoutMenuItemNode({
     <li
       data-slot="layout-menu-item"
       data-depth={depth}
+      data-testid={item.testId}
       className="rounded-md"
       role="none"
     >

@@ -1169,3 +1169,173 @@ export const FlatArrayWithValues: Story = {
         />
     ),
 };
+
+// ============================================
+// Single Page (no sidebar) — page without subpages
+// ============================================
+
+const singlePageSchema: SettingsElement[] = [
+    {
+        id: 'email_settings',
+        type: 'page',
+        label: 'Email Settings',
+        description: 'Configure email notification preferences.',
+        icon: 'Mail',
+        children: [
+            {
+                id: 'notifications_section',
+                type: 'section',
+                label: 'Notifications',
+                children: [
+                    {
+                        id: 'admin_email',
+                        type: 'field',
+                        variant: 'text',
+                        label: 'Admin Email',
+                        description: 'Primary email for admin notifications.',
+                        default: 'admin@example.com',
+                        dependency_key: 'admin_email',
+                    },
+                    {
+                        id: 'enable_notifications',
+                        type: 'field',
+                        variant: 'switch',
+                        label: 'Enable Notifications',
+                        description: 'Send email notifications for new orders.',
+                        default: true,
+                        dependency_key: 'enable_notifications',
+                    },
+                    {
+                        id: 'notification_frequency',
+                        type: 'field',
+                        variant: 'select',
+                        label: 'Frequency',
+                        default: 'instant',
+                        options: [
+                            { value: 'instant', label: 'Instant' },
+                            { value: 'hourly', label: 'Hourly Digest' },
+                            { value: 'daily', label: 'Daily Digest' },
+                        ],
+                        dependency_key: 'notification_frequency',
+                        dependencies: [{ key: 'enable_notifications', value: true, comparison: '==' }],
+                    },
+                ],
+            },
+        ],
+    },
+];
+
+/**
+ * Single page with no subpages — sidebar is auto-hidden.
+ * Demonstrates that the menu bar is hidden when there is only one navigable item.
+ */
+export const SinglePage: Story = {
+    args: {
+        schema: singlePageSchema,
+        title: 'Email Settings',
+    },
+    render: (args) => <SettingsStoryWrapper {...args} />,
+};
+
+// ============================================
+// Mixed: pages with and without subpages
+// ============================================
+
+const mixedSchema: SettingsElement[] = [
+    // Page WITH subpages
+    {
+        id: 'general',
+        type: 'page',
+        label: 'General',
+        icon: 'Settings',
+        children: [
+            {
+                id: 'store',
+                type: 'subpage',
+                label: 'Store Settings',
+                icon: 'Store',
+                children: [
+                    {
+                        id: 'store_section',
+                        type: 'section',
+                        label: 'Store Info',
+                        children: [
+                            {
+                                id: 'store_name',
+                                type: 'field',
+                                variant: 'text',
+                                label: 'Store Name',
+                                default: 'My Store',
+                                dependency_key: 'store_name',
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                id: 'appearance',
+                type: 'subpage',
+                label: 'Appearance',
+                icon: 'Palette',
+                children: [
+                    {
+                        id: 'appearance_section',
+                        type: 'section',
+                        label: 'Theme',
+                        children: [
+                            {
+                                id: 'color_scheme',
+                                type: 'field',
+                                variant: 'radio_capsule',
+                                label: 'Color Scheme',
+                                default: 'light',
+                                options: [
+                                    { value: 'light', label: 'Light' },
+                                    { value: 'dark', label: 'Dark' },
+                                    { value: 'auto', label: 'Auto' },
+                                ],
+                                dependency_key: 'color_scheme',
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+    },
+    // Page WITHOUT subpages — appears as a leaf menu item alongside "General"
+    {
+        id: 'about',
+        type: 'page',
+        label: 'About',
+        description: 'Plugin information and version details.',
+        icon: 'Info',
+        children: [
+            {
+                id: 'about_section',
+                type: 'section',
+                label: 'Version',
+                children: [
+                    {
+                        id: 'version_info',
+                        type: 'field',
+                        variant: 'html',
+                        label: 'Current Version',
+                        html_content: '<p><strong>v2.5.0</strong> — Released Feb 2026</p>',
+                    },
+                ],
+            },
+        ],
+    },
+];
+
+/**
+ * Mixed schema: one page with subpages + one page without.
+ * Demonstrates pages with and without submenus coexisting in the sidebar.
+ */
+export const MixedPages: Story = {
+    args: {
+        schema: mixedSchema,
+        title: 'Plugin Settings',
+    },
+    render: (args) => <SettingsStoryWrapper {...args} />,
+};

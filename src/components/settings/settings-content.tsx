@@ -12,7 +12,7 @@ export function SettingsContent({ className }: { className?: string }) {
     const {
         activePage,
         activeSubpage,
-        getActiveSubpage,
+        getActiveContentSource,
         getActiveTabs,
         getActiveContent,
         activeTab,
@@ -23,7 +23,7 @@ export function SettingsContent({ className }: { className?: string }) {
         renderSaveButton,
     } = useSettings();
 
-    const subpage = getActiveSubpage();
+    const contentSource = getActiveContentSource();
     const tabs = getActiveTabs();
     const content = getActiveContent();
 
@@ -40,39 +40,38 @@ export function SettingsContent({ className }: { className?: string }) {
     // Determine whether to show a save area
     const showSaveArea = Boolean(onSave);
 
-    if (!subpage) {
+    if (!contentSource) {
         return (
             <div className={cn('flex-1 p-6', className)} />
         );
     }
 
     return (
-        <div className={cn('flex flex-col', className)}>
+        <div className={cn('flex flex-col', className)} data-testid="settings-content">
             <div className="flex-1 overflow-y-auto">
-                {/* Page heading */}
-                <div className="px-6 pt-6 pb-4">
+                {/* Heading */}
+                <div className="px-6 pt-6 pb-4" data-testid={`settings-heading-${contentSource.id}`}>
                     <div className="flex justify-between items-start">
                         <div className="flex flex-col gap-2">
-                            {(subpage.label || subpage.title) && (
+                            {(contentSource.label || contentSource.title) && (
                                 <h2 className="text-2xl font-bold text-foreground leading-tight">
-                                    {subpage.label || subpage.title}
+                                    {contentSource.label || contentSource.title}
                                 </h2>
                             )}
-                            {subpage.description && (
+                            {contentSource.description && (
                                 <p className="text-sm text-muted-foreground">
-                                    {subpage.description}
+                                    {contentSource.description}
                                 </p>
                             )}
                         </div>
-                        {subpage.doc_link && (
+                        {contentSource.doc_link && (
                             <a
-                                href={subpage.doc_link}
+                                href={contentSource.doc_link}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-muted-foreground flex gap-1 items-center text-sm hover:text-foreground transition-colors shrink-0"
                             >
                                 <FileText className="size-4" />
-                                Doc
                             </a>
                         )}
                     </div>
@@ -80,7 +79,7 @@ export function SettingsContent({ className }: { className?: string }) {
 
                 {/* Tabs */}
                 {tabs.length > 0 && (
-                    <div className="px-6 border-b border-border">
+                    <div className="px-6 border-b border-border" data-testid="settings-tabs">
                         <nav className="flex gap-4 -mb-px">
                             {tabs
                                 .filter((tab) => tab.display !== false)
@@ -88,6 +87,7 @@ export function SettingsContent({ className }: { className?: string }) {
                                     <button
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id)}
+                                        data-testid={`settings-tab-${tab.id}`}
                                         className={cn(
                                             'px-1 py-2.5 text-sm font-medium border-b-2 transition-colors',
                                             activeTab === tab.id
@@ -112,7 +112,10 @@ export function SettingsContent({ className }: { className?: string }) {
 
             {/* Per-scope save button — sticky at the bottom */}
             {showSaveArea && (
-                <div className="sticky bottom-0 border-t border-border bg-background px-6 py-3 flex justify-end">
+                <div
+                    className="sticky bottom-0 border-t border-border bg-background px-6 py-3 flex justify-end"
+                    data-testid={`settings-save-${scopeId}`}
+                >
                     {renderSaveButton
                         ? renderSaveButton({ scopeId, dirty, onSave: handleSave })
                         : null}
@@ -139,7 +142,7 @@ function ContentBlock({ element }: { element: SettingsElementType }) {
 
         case 'subsection':
             return (
-                <div className="rounded-lg border border-border bg-card overflow-hidden">
+                <div className="rounded-lg border border-border bg-card overflow-hidden" data-testid={`settings-subsection-${element.id}`}>
                     <SettingsSubSection element={element} />
                 </div>
             );
@@ -148,14 +151,14 @@ function ContentBlock({ element }: { element: SettingsElementType }) {
             // Direct field under a subpage (no section wrapper)
             // Wrap in a minimal card for consistent styling
             return (
-                <div className="rounded-lg border border-border bg-card overflow-hidden">
+                <div className="rounded-lg border border-border bg-card overflow-hidden" data-testid={`settings-field-block-${element.id}`}>
                     <FieldRenderer element={element} />
                 </div>
             );
 
         case 'fieldgroup':
             return (
-                <div className="rounded-lg border border-border bg-card overflow-hidden">
+                <div className="rounded-lg border border-border bg-card overflow-hidden" data-testid={`settings-fieldgroup-${element.id}`}>
                     <SettingsFieldGroup element={element} />
                 </div>
             );
@@ -180,7 +183,7 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
     const hasHeading = Boolean(sectionLabel || section.description);
 
     return (
-        <div className="rounded-lg border border-border bg-card overflow-hidden">
+        <div className="rounded-lg border border-border bg-card overflow-hidden" data-testid={`settings-section-${section.id}`}>
             {hasHeading && (
                 <div className="px-5 pt-5 pb-3 flex justify-between items-start">
                     <div className="flex flex-col gap-1">

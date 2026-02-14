@@ -46,6 +46,7 @@ function FieldWrapper({
       <div
         className={cn("flex flex-col gap-3 w-full p-4", className)}
         id={element.id}
+        data-testid={`settings-field-${element.id}`}
       >
         {hasLabel && <FieldLabel element={element} />}
         <div className="w-full">{children}</div>
@@ -63,6 +64,7 @@ function FieldWrapper({
         className,
       )}
       id={element.id}
+      data-testid={`settings-field-${element.id}`}
     >
       {hasLabel && (
         <div className="sm:col-span-8 col-span-12">
@@ -356,6 +358,7 @@ export function LabelField({ element }: FieldComponentProps) {
     <div
       className="p-4 flex justify-between gap-4 items-center"
       id={element.id}
+      data-testid={`settings-field-${element.id}`}
     >
       <FieldLabel element={element} />
       {element.doc_link && (
@@ -379,7 +382,7 @@ export function LabelField({ element }: FieldComponentProps) {
 
 export function HtmlField({ element }: FieldComponentProps) {
   return (
-    <div className={cn("w-full p-4", element.css_class)} id={element.id}>
+    <div className={cn("w-full p-4", element.css_class)} id={element.id} data-testid={`settings-field-${element.id}`}>
       {(element.label || element.title || element.description) && (
         <div className="mb-3">
           {(element.label || element.title) && (
@@ -446,7 +449,7 @@ export function CustomizeRadioField({
 
 export function FallbackField({ element }: FieldComponentProps) {
   return (
-    <div className="p-4 text-sm text-muted-foreground italic" id={element.id}>
+    <div className="p-4 text-sm text-muted-foreground italic" id={element.id} data-testid={`settings-field-${element.id}`}>
       Unsupported field type:{" "}
       <code className="text-xs bg-muted px-1 py-0.5 rounded">
         {element.variant}

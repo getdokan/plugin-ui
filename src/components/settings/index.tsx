@@ -54,7 +54,7 @@ function SettingsInner({
     title?: string;
     className?: string;
 }) {
-    const { loading, activeSubpage } = useSettings();
+    const { loading, activeSubpage, isSidebarVisible } = useSettings();
     const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
     // Close mobile sidebar when a subpage is selected
@@ -81,73 +81,82 @@ function SettingsInner({
                 'relative flex min-h-[500px] rounded-lg border border-border bg-background overflow-hidden',
                 className
             )}
+            data-testid="settings-root"
         >
             {/* ── Mobile backdrop ── */}
-            <div
-                className={cn(
-                    'fixed inset-0 z-40 bg-black/50 lg:hidden transition-opacity duration-200',
-                    mobileSidebarOpen
-                        ? 'opacity-100'
-                        : 'pointer-events-none opacity-0'
-                )}
-                aria-hidden
-                onClick={() => setMobileSidebarOpen(false)}
-            />
-
-            {/* ── Sidebar ── */}
-            <aside
-                className={cn(
-                    // Desktop: static, always visible
-                    'hidden lg:flex lg:w-64 shrink-0 flex-col border-r border-border bg-muted/30 overflow-hidden',
-                    // Mobile: fixed slide-in drawer
-                    'max-lg:fixed max-lg:inset-y-0 max-lg:left-0 max-lg:z-50 max-lg:w-72 max-lg:flex max-lg:flex-col max-lg:bg-background max-lg:shadow-xl',
-                    'max-lg:transition-transform max-lg:duration-200 max-lg:ease-out',
-                    mobileSidebarOpen ? 'max-lg:translate-x-0' : 'max-lg:-translate-x-full',
-                )}
-            >
-                {/* Mobile close button */}
-                <div className="flex h-12 items-center justify-between border-b border-border px-3 lg:hidden">
-                    {title && (
-                        <span className="text-sm font-semibold text-foreground">{title}</span>
+            {isSidebarVisible && (
+                <div
+                    className={cn(
+                        'fixed inset-0 z-40 bg-black/50 lg:hidden transition-opacity duration-200',
+                        mobileSidebarOpen
+                            ? 'opacity-100'
+                            : 'pointer-events-none opacity-0'
                     )}
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="size-8"
-                        onClick={() => setMobileSidebarOpen(false)}
-                        aria-label="Close menu"
-                    >
-                        <X className="size-4" />
-                    </Button>
-                </div>
+                    aria-hidden
+                    onClick={() => setMobileSidebarOpen(false)}
+                />
+            )}
 
-                {/* Desktop title */}
-                {title && (
-                    <div className="px-4 py-3 border-b border-border hidden lg:block">
-                        <h1 className="text-base font-semibold text-foreground">{title}</h1>
+            {/* ── Sidebar (hidden when only one navigable item) ── */}
+            {isSidebarVisible && (
+                <aside
+                    className={cn(
+                        // Desktop: static, always visible
+                        'hidden lg:flex lg:w-64 shrink-0 flex-col border-r border-border bg-muted/30 overflow-hidden',
+                        // Mobile: fixed slide-in drawer
+                        'max-lg:fixed max-lg:inset-y-0 max-lg:left-0 max-lg:z-50 max-lg:w-72 max-lg:flex max-lg:flex-col max-lg:bg-background max-lg:shadow-xl',
+                        'max-lg:transition-transform max-lg:duration-200 max-lg:ease-out',
+                        mobileSidebarOpen ? 'max-lg:translate-x-0' : 'max-lg:-translate-x-full',
+                    )}
+                >
+                    {/* Mobile close button */}
+                    <div className="flex h-12 items-center justify-between border-b border-border px-3 lg:hidden">
+                        {title && (
+                            <span className="text-sm font-semibold text-foreground">{title}</span>
+                        )}
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-8"
+                            onClick={() => setMobileSidebarOpen(false)}
+                            aria-label="Close menu"
+                            data-testid="settings-mobile-close"
+                        >
+                            <X className="size-4" />
+                        </Button>
                     </div>
-                )}
 
-                <SettingsSidebar className="flex-1 overflow-y-auto" />
-            </aside>
+                    {/* Desktop title */}
+                    {title && (
+                        <div className="px-4 py-3 border-b border-border hidden lg:block">
+                            <h1 className="text-base font-semibold text-foreground">{title}</h1>
+                        </div>
+                    )}
+
+                    <SettingsSidebar className="flex-1 overflow-y-auto" />
+                </aside>
+            )}
 
             {/* ── Main content ── */}
             <div className="flex flex-1 min-w-0 flex-col">
-                {/* Mobile header with menu toggle */}
-                <div className="flex items-center gap-2 border-b border-border px-4 py-2 lg:hidden">
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="size-8 shrink-0"
-                        onClick={() => setMobileSidebarOpen(true)}
-                        aria-label="Open menu"
-                    >
-                        <Menu className="size-4" />
-                    </Button>
-                    {title && (
-                        <span className="text-sm font-semibold text-foreground truncate">{title}</span>
-                    )}
-                </div>
+                {/* Mobile header with menu toggle (only when sidebar is visible) */}
+                {isSidebarVisible && (
+                    <div className="flex items-center gap-2 border-b border-border px-4 py-2 lg:hidden">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-8 shrink-0"
+                            onClick={() => setMobileSidebarOpen(true)}
+                            aria-label="Open menu"
+                            data-testid="settings-mobile-open"
+                        >
+                            <Menu className="size-4" />
+                        </Button>
+                        {title && (
+                            <span className="text-sm font-semibold text-foreground truncate">{title}</span>
+                        )}
+                    </div>
+                )}
 
                 <SettingsContent className="flex-1" />
             </div>

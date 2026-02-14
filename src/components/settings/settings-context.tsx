@@ -55,10 +55,14 @@ export interface SettingsContextValue {
     getActivePage: () => SettingsElement | undefined;
     /** Get the currently active subpage element */
     getActiveSubpage: () => SettingsElement | undefined;
-    /** Get the active tab's children (sections) or the active subpage's children */
+    /** Get the active content source element (subpage, or page when no subpages exist) */
+    getActiveContentSource: () => SettingsElement | undefined;
+    /** Get the active tab's children (sections) or the active content source's children */
     getActiveContent: () => SettingsElement[];
-    /** Get tabs for the active subpage (if any) */
+    /** Get tabs for the active content source (if any) */
     getActiveTabs: () => SettingsElement[];
+    /** Whether the sidebar should be visible (false when there's only one navigable item) */
+    isSidebarVisible: boolean;
     /** Check if any field on a specific page has been modified */
     isPageDirty: (pageId: string) => boolean;
     /** Get only the values that belong to a specific page */
@@ -191,11 +195,13 @@ export function SettingsProvider({
             const firstSubpage = firstPage.children?.find((c) => c.type === 'subpage');
             if (firstSubpage) {
                 setActiveSubpage(firstSubpage.id);
-
                 const firstTab = firstSubpage.children?.find((c) => c.type === 'tab');
-                if (firstTab) {
-                    setActiveTab(firstTab.id);
-                }
+                if (firstTab) setActiveTab(firstTab.id);
+            } else {
+                // Page without subpages — check for direct tabs
+                setActiveSubpage('');
+                const firstTab = firstPage.children?.find((c) => c.type === 'tab');
+                setActiveTab(firstTab?.id || '');
             }
         }
     }, [schema]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -317,8 +323,10 @@ export function SettingsProvider({
                     const firstTab = firstSubpage.children?.find((c) => c.type === 'tab');
                     setActiveTab(firstTab?.id || '');
                 } else {
+                    // Page without subpages — check for direct tabs
                     setActiveSubpage('');
-                    setActiveTab('');
+                    const firstTab = page.children.find((c) => c.type === 'tab');
+                    setActiveTab(firstTab?.id || '');
                 }
             }
         },
@@ -381,25 +389,69 @@ export function SettingsProvider({
         return findSubpage(page.children);
     }, [getActivePage, activeSubpage]);
 
-    const getActiveTabs = useCallback(() => {
+    // The "content source" is the subpage when one is active,
+    // or the page itself when it has no subpages.
+    const getActiveContentSource = useCallback((): SettingsElement | undefined => {
         const subpage = getActiveSubpage();
-        if (!subpage?.children) return [];
-        return subpage.children.filter((c) => c.type === 'tab');
-    }, [getActiveSubpage]);
+        if (subpage) return subpage;
+
+        // No subpage — check if the active page has no subpages (direct content)
+        const page = getActivePage();
+        if (!page) return undefined;
+        const hasSubpages = page.children?.some((c) => c.type === 'subpage');
+        return hasSubpages ? undefined : page;
+    }, [getActiveSubpage, getActivePage]);
+
+    const getActiveTabs = useCallback(() => {
+        const source = getActiveContentSource();
+        if (!source?.children) return [];
+        return source.children.filter((c) => c.type === 'tab');
+    }, [getActiveContentSource]);
 
     const getActiveContent = useCallback(() => {
-        const subpage = getActiveSubpage();
-        if (!subpage?.children) return [];
+        const source = getActiveContentSource();
+        if (!source?.children) return [];
 
-        const tabs = subpage.children.filter((c) => c.type === 'tab');
+        const tabs = source.children.filter((c) => c.type === 'tab');
         if (tabs.length > 0 && activeTab) {
             const tab = tabs.find((t) => t.id === activeTab);
             return tab?.children || [];
         }
 
-        // No tabs — return sections directly
-        return subpage.children.filter((c) => c.type !== 'tab');
-    }, [getActiveSubpage, activeTab]);
+        // No tabs — return non-structural children
+        return source.children.filter((c) => c.type !== 'tab' && c.type !== 'subpage');
+    }, [getActiveContentSource, activeTab]);
+
+    // Sidebar visibility: count navigable leaf items. Hidden when <= 1.
+    const isSidebarVisible = useMemo(() => {
+        let count = 0;
+        const countLeafSubpages = (items: SettingsElement[]): void => {
+            for (const item of items) {
+                if (item.display === false) continue;
+                if (item.type !== 'subpage') continue;
+                const nested = (item.children || []).filter(
+                    (c) => c.type === 'subpage' && c.display !== false
+                );
+                if (nested.length > 0) {
+                    countLeafSubpages(nested);
+                } else {
+                    count++;
+                }
+            }
+        };
+        for (const page of schema) {
+            if (page.display === false) continue;
+            const subpages = (page.children || []).filter(
+                (c) => c.type === 'subpage' && c.display !== false
+            );
+            if (subpages.length > 0) {
+                countLeafSubpages(subpages);
+            } else {
+                count++; // page without subpages counts as one navigable item
+            }
+        }
+        return count > 1;
+    }, [schema]);
 
     const contextValue: SettingsContextValue = useMemo(
         () => ({
@@ -419,8 +471,10 @@ export function SettingsProvider({
             shouldDisplay,
             getActivePage,
             getActiveSubpage,
+            getActiveContentSource,
             getActiveContent,
             getActiveTabs,
+            isSidebarVisible,
             isPageDirty,
             getPageValues,
             onSave: handleOnSave,
@@ -442,8 +496,10 @@ export function SettingsProvider({
             shouldDisplay,
             getActivePage,
             getActiveSubpage,
+            getActiveContentSource,
             getActiveContent,
             getActiveTabs,
+            isSidebarVisible,
             isPageDirty,
             getPageValues,
             handleOnSave,
