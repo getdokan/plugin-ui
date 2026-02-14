@@ -7,6 +7,10 @@ import type { SettingsElement } from './settings-types';
 // Sample Schema — exercises all field variants
 // ============================================
 
+// ============================================
+// Sample Schema — exercises all field variants
+// ============================================
+
 const sampleSchema: SettingsElement[] = [
     // ── Page: General ──
     {
@@ -15,6 +19,45 @@ const sampleSchema: SettingsElement[] = [
         title: 'General',
         priority: 10,
         children: [
+            // Nested Subpage: Location (Nested Example)
+            {
+                id: 'location',
+                type: 'subpage',
+                title: 'Location',
+                icon: 'MapPin',
+                page_id: 'general',
+                priority: 5,
+                children: [
+                    {
+                        id: 'map_settings',
+                        type: 'section',
+                        title: 'Map Settings',
+                        subpage_id: 'location',
+                        priority: 10,
+                        children: [
+                            {
+                                id: 'map_zoom',
+                                type: 'field',
+                                variant: 'number',
+                                title: 'Map Zoom Level',
+                                dependency_key: 'location.map_zoom_level',
+                                default: 10,
+                                min: 1,
+                                max: 18,
+                                section_id: 'map_settings',
+                                priority: 10,
+                                validations: [
+                                    {
+                                        rules: 'not_empty|min_value|max_value',
+                                        message: '',
+                                        params: { min: 1, max: 18 },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
             // Subpage: Store
             {
                 id: 'store',
@@ -53,6 +96,13 @@ const sampleSchema: SettingsElement[] = [
                                         default: 'My Awesome Store',
                                         section_id: 'address_section',
                                         priority: 10,
+                                        validations: [
+                                            {
+                                                rules: 'required',
+                                                message: 'Store name is required.',
+                                                params: {},
+                                            },
+                                        ],
                                     },
                                     {
                                         id: 'store_city',
@@ -119,7 +169,7 @@ const sampleSchema: SettingsElement[] = [
                                             {
                                                 key: 'enable_store_listing',
                                                 value: true,
-                                                condition: 'equal',
+                                                comparison: '==',
                                             },
                                         ],
                                     },
@@ -142,7 +192,7 @@ const sampleSchema: SettingsElement[] = [
                                             {
                                                 key: 'enable_store_listing',
                                                 value: true,
-                                                condition: 'equal',
+                                                comparison: '==',
                                             },
                                         ],
                                     },
@@ -258,6 +308,22 @@ const sampleSchema: SettingsElement[] = [
                                 section_id: 'selling_section',
                                 priority: 30,
                             },
+                            {
+                                id: 'store_template',
+                                type: 'field',
+                                variant: 'customize_radio',
+                                title: 'Store Template',
+                                description: 'Choose a template for vendor store pages.',
+                                dependency_key: 'store_template',
+                                default: 'default',
+                                options: [
+                                    { value: 'default', title: 'Default', description: 'Standard layout with sidebar' },
+                                    { value: 'modern', title: 'Modern', description: 'Full-width hero layout' },
+                                    { value: 'minimal', title: 'Minimal', description: 'Clean and simple' },
+                                ],
+                                section_id: 'selling_section',
+                                priority: 40,
+                            },
                         ],
                     },
                 ],
@@ -311,13 +377,14 @@ const sampleSchema: SettingsElement[] = [
                                     {
                                         key: 'enable_paypal',
                                         value: true,
-                                        condition: 'equal',
+                                        comparison: '==',
                                     },
                                 ],
                                 validations: [
                                     {
-                                        type: 'required',
+                                        rules: 'required',
                                         message: 'PayPal email is required when PayPal is enabled.',
+                                        params: {},
                                     },
                                 ],
                             },
@@ -430,7 +497,11 @@ export const Loading: Story = {
 
 /** With pre-populated values. */
 export const WithValues: Story = {
-    render: () => {
+    args: {
+        schema: sampleSchema,
+        title: 'Acme Store Settings',
+    },
+    render: (args) => {
         const [values, setValues] = useState<Record<string, any>>({
             store_name: 'Acme Store',
             store_city: 'San Francisco',
@@ -444,14 +515,14 @@ export const WithValues: Story = {
             enable_paypal: true,
             paypal_email: 'acme@example.com',
             enable_stripe: true,
+            'location.map_zoom_level': 14,
         });
 
         return (
             <div className="h-[700px]">
                 <Settings
-                    schema={sampleSchema}
+                    {...args}
                     values={values}
-                    title="Acme Store Settings"
                     onChange={(key, value) => {
                         setValues((prev) => ({ ...prev, [key]: value }));
                     }}
@@ -468,7 +539,11 @@ export const WithValues: Story = {
 
 /** Dependency demo — toggle the switch to show/hide dependent fields. */
 export const DependencyDemo: Story = {
-    render: () => {
+    args: {
+        schema: sampleSchema,
+        title: 'Dependency Demo',
+    },
+    render: (args) => {
         const [values, setValues] = useState<Record<string, any>>({
             enable_store_listing: false,
         });
@@ -476,9 +551,8 @@ export const DependencyDemo: Story = {
         return (
             <div className="h-[700px]">
                 <Settings
-                    schema={sampleSchema}
+                    {...args}
                     values={values}
-                    title="Dependency Demo"
                     onChange={(key, value) => {
                         setValues((prev) => ({ ...prev, [key]: value }));
                     }}

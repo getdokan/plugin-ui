@@ -202,6 +202,9 @@ export function TextareaField({ element, onChange }: FieldComponentProps) {
 
 export function SelectField({ element, onChange }: FieldComponentProps) {
   const currentValue = String(element.value ?? element.default ?? "");
+  const selectedLabel = element.options?.find(
+    (o) => String(o.value) === currentValue
+  )?.title;
 
   return (
     <FieldWrapper element={element}>
@@ -215,7 +218,9 @@ export function SelectField({ element, onChange }: FieldComponentProps) {
             placeholder={
               element.placeholder ? String(element.placeholder) : "Select..."
             }
-          />
+          >
+            {selectedLabel}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent>
           {element.options?.map((option) => (
