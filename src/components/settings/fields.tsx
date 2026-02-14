@@ -36,7 +36,10 @@ function FieldWrapper({
   layout?: "horizontal" | "vertical" | "full-width";
   className?: string;
 }) {
-  const hasTitle = Boolean(element.title && element.title.length > 0);
+  const hasLabel = Boolean(
+    (element.label && element.label.length > 0) ||
+      (element.title && element.title.length > 0),
+  );
 
   if (layout === "full-width") {
     return (
@@ -44,7 +47,7 @@ function FieldWrapper({
         className={cn("flex flex-col gap-3 w-full p-4", className)}
         id={element.id}
       >
-        {hasTitle && <FieldLabel element={element} />}
+        {hasLabel && <FieldLabel element={element} />}
         <div className="w-full">{children}</div>
         {element.validationError && (
           <p className="text-sm text-destructive">{element.validationError}</p>
@@ -61,12 +64,18 @@ function FieldWrapper({
       )}
       id={element.id}
     >
-      {hasTitle && (
+      {hasLabel && (
         <div className="sm:col-span-8 col-span-12">
           <FieldLabel element={element} />
         </div>
       )}
-      <div className={hasTitle ? "sm:col-span-4 col-span-12" : "col-span-12"}>
+      <div
+        className={
+          hasLabel
+            ? "sm:col-span-4 col-span-12 flex sm:justify-end"
+            : "col-span-12"
+        }
+      >
         {children}
       </div>
       {element.validationError && (
@@ -79,6 +88,8 @@ function FieldWrapper({
 }
 
 function FieldLabel({ element }: { element: SettingsElement }) {
+  const displayLabel = element.label || element.title || '';
+
   return (
     <div className="flex flex-col gap-1 w-full">
       <div className="flex items-center gap-2">
@@ -90,7 +101,7 @@ function FieldLabel({ element }: { element: SettingsElement }) {
           />
         )}
         <span className="text-sm font-semibold text-foreground">
-          {element.title}
+          {displayLabel}
         </span>
         {element.tooltip && (
           <TooltipProvider>
@@ -202,9 +213,10 @@ export function TextareaField({ element, onChange }: FieldComponentProps) {
 
 export function SelectField({ element, onChange }: FieldComponentProps) {
   const currentValue = String(element.value ?? element.default ?? "");
-  const selectedLabel = element.options?.find(
+  const selectedOption = element.options?.find(
     (o) => String(o.value) === currentValue
-  )?.title;
+  );
+  const selectedLabel = selectedOption?.label ?? selectedOption?.title;
 
   return (
     <FieldWrapper element={element}>
@@ -225,7 +237,7 @@ export function SelectField({ element, onChange }: FieldComponentProps) {
         <SelectContent>
           {element.options?.map((option) => (
             <SelectItem key={String(option.value)} value={String(option.value)}>
-              {option.title}
+              {option.label ?? option.title}
             </SelectItem>
           ))}
         </SelectContent>
@@ -256,13 +268,11 @@ export function SwitchField({ element, onChange }: FieldComponentProps) {
 
   return (
     <FieldWrapper element={element}>
-      <div className="flex justify-end">
-        <Switch
-          checked={isEnabled}
-          onCheckedChange={handleChange}
-          disabled={element.disabled}
-        />
-      </div>
+      <Switch
+        checked={isEnabled}
+        onCheckedChange={handleChange}
+        disabled={element.disabled}
+      />
     </FieldWrapper>
   );
 }
@@ -282,7 +292,6 @@ export function RadioCapsuleField({ element, onChange }: FieldComponentProps) {
           const selected = Array.isArray(val) ? val[0] : val;
           if (selected) onChange(element.dependency_key!, selected);
         }}
-        className="justify-end"
       >
         {element.options?.map((option) => (
           <ToggleGroupItem
@@ -290,7 +299,7 @@ export function RadioCapsuleField({ element, onChange }: FieldComponentProps) {
             value={String(option.value)}
             className="text-xs px-3"
           >
-            {option.title}
+            {option.label ?? option.title}
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
@@ -330,7 +339,7 @@ export function MulticheckField({ element, onChange }: FieldComponentProps) {
                 handleToggle(String(option.value), Boolean(checked))
               }
             />
-            <span className="text-sm">{option.title}</span>
+            <span className="text-sm">{option.label ?? option.title}</span>
           </label>
         ))}
       </div>
@@ -371,11 +380,11 @@ export function LabelField({ element }: FieldComponentProps) {
 export function HtmlField({ element }: FieldComponentProps) {
   return (
     <div className={cn("w-full p-4", element.css_class)} id={element.id}>
-      {(element.title || element.description) && (
+      {(element.label || element.title || element.description) && (
         <div className="mb-3">
-          {element.title && (
+          {(element.label || element.title) && (
             <h3 className="text-sm font-semibold text-foreground mb-1">
-              {element.title}
+              {element.label || element.title}
             </h3>
           )}
           {element.description && (
@@ -421,7 +430,7 @@ export function CustomizeRadioField({
           <RadioCard
             key={String(option.value)}
             value={String(option.value)}
-            label={option.title}
+            label={option.label ?? option.title ?? ''}
             description={option.description}
             disabled={element.disabled}
           />
@@ -442,7 +451,9 @@ export function FallbackField({ element }: FieldComponentProps) {
       <code className="text-xs bg-muted px-1 py-0.5 rounded">
         {element.variant}
       </code>
-      {element.title && <span> — {element.title}</span>}
+      {(element.label || element.title) && (
+        <span> — {element.label || element.title}</span>
+      )}
     </div>
   );
 }

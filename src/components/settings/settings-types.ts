@@ -21,7 +21,10 @@ export type SettingsElementDependency = {
 };
 
 export type SettingsElementOption = {
-    title: string;
+    /** Primary display text (preferred over `title`). */
+    label?: string;
+    /** @deprecated Use `label` instead. Kept as fallback for backward compatibility. */
+    title?: string;
     value: string | number;
     description?: string;
     icon?: string;
@@ -34,6 +37,9 @@ export type SettingsElement = {
     type: 'page' | 'subpage' | 'tab' | 'section' | 'subsection' | 'field' | 'fieldgroup' | string;
     variant?: string;
     icon?: string;
+    /** Primary display text (preferred over `title`). */
+    label?: string;
+    /** @deprecated Use `label` instead. Kept as fallback for backward compatibility. */
     title?: string;
     description?: string;
     tooltip?: string;
@@ -84,10 +90,15 @@ export type SettingsElement = {
     dependencies?: SettingsElementDependency[];
 
     // Flat data pointers (used by formatter)
+    // These are generic parent pointers — each can reference any ancestor type.
+    // The formatter resolves the actual parent by looking up the element type via ID.
+    // e.g. `page_id` can point to a page OR a subpage;
+    //      `section_id` can point to a section OR a subsection.
     page_id?: string;
     subpage_id?: string;
     tab_id?: string;
     section_id?: string;
+    subsection_id?: string;
     field_group_id?: string;
     priority?: number;
 

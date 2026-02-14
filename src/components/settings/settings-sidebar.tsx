@@ -43,7 +43,7 @@ export function SettingsSidebar({ className }: { className?: string }) {
 
         return {
             id: element.id,
-            label: element.title || element.id,
+            label: element.label || element.title || element.id,
             icon: getIcon(element.icon),
             children: nestedSubpages.length > 0 ? nestedSubpages : undefined,
         };
@@ -60,7 +60,7 @@ export function SettingsSidebar({ className }: { className?: string }) {
 
                 return {
                     id: page.id,
-                    label: page.title || page.id,
+                    label: page.label || page.title || page.id,
                     icon: getIcon(page.icon),
                     children: subpageItems.length > 0 ? subpageItems : undefined,
                 };

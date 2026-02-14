@@ -3,6 +3,26 @@ import type { SettingsElement } from './settings-types';
 /**
  * Formats flat settings data into a hierarchical structure.
  * Also accepts already-hierarchical data (passes through).
+ *
+ * ## Parent resolution strategy (bottom-up)
+ *
+ * Each flat element may carry one or more "parent pointer" fields:
+ *   `field_group_id`, `subsection_id`, `section_id`, `tab_id`, `subpage_id`, `page_id`
+ *
+ * These pointers are **generic** — the referenced ID can be any element type.
+ * For example, `page_id` can point to a `page` **or** a `subpage`;
+ * `section_id` can point to a `section` **or** a `subsection`.
+ *
+ * The formatter resolves each element's direct parent by checking pointers
+ * from most specific to least specific. The first pointer whose value matches
+ * an existing element ID in the data becomes the parent.
+ *
+ * When multiple elements share the same ID (e.g. a subpage and a section both
+ * named "commission"), the resolver picks the element whose **type** is
+ * compatible with the pointer field being used.
+ *
+ * Priority order (most specific → least specific):
+ *   field_group_id → subsection_id → section_id → tab_id → subpage_id → page_id
  */
 export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
     if (!Array.isArray(data) || data.length === 0) {
@@ -11,110 +31,171 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
 
     // Detect if data is already hierarchical (pages with children)
     const isHierarchical = data.some(
-        (item) => item.type === 'page' && Array.isArray(item.children) && item.children.length > 0
+        (item) =>
+            item.type === 'page' &&
+            Array.isArray(item.children) &&
+            item.children.length > 0
     );
 
     if (isHierarchical) {
         return data;
     }
 
-    // Flat data — build hierarchy
-    const enrichedData = data.map((item) => ({
-        ...item,
-        children: [] as SettingsElement[],
-        display: item.display !== undefined ? item.display : true,
-        hook_key: item.hook_key || '',
-        dependency_key: item.dependency_key || '',
-        validations: Array.isArray(item.validations) ? item.validations : [],
-        dependencies: Array.isArray(item.dependencies) ? item.dependencies : [],
-    }));
+    // ── Step 1: Enrich all items and build a multi-map (id → element[]) ─
+    //
+    // A multi-map is needed because the source data may contain duplicate IDs
+    // (e.g. a subpage and section sharing the same id). When resolving parents
+    // we pick the type-compatible element.
+    const idMultiMap = new Map<string, SettingsElement[]>();
 
-    // Identify root pages
-    const roots: SettingsElement[] = [];
-    enrichedData.forEach((element) => {
-        if (element.type === 'page') {
-            element.icon = element.icon || '';
-            element.title = element.title || '';
-            element.tooltip = element.tooltip || '';
-            element.description = element.description || '';
-            element.hook_key = element.hook_key || `settings_${element.id}`;
-            element.dependency_key = '';
-            roots.push(element);
+    const enrichedData: SettingsElement[] = data.map((item) => {
+        const enriched: SettingsElement = {
+            ...item,
+            children: [],
+            display: item.display !== undefined ? item.display : true,
+            hook_key: item.hook_key || '',
+            dependency_key: item.dependency_key || '',
+            validations: Array.isArray(item.validations) ? item.validations : [],
+            dependencies: Array.isArray(item.dependencies)
+                ? item.dependencies
+                : [],
+        };
+
+        const bucket = idMultiMap.get(enriched.id);
+        if (bucket) {
+            bucket.push(enriched);
+        } else {
+            idMultiMap.set(enriched.id, [enriched]);
         }
+
+        return enriched;
     });
 
-    // Sort roots by priority
+    // ── Step 2: Resolve each element's direct parent ────────────────────
+    //
+    // For each pointer field we define which element types are "compatible"
+    // parents. When the referenced ID maps to multiple elements the
+    // type-compatible one is preferred; otherwise the first match is used.
+    type PointerSpec = {
+        value: string | undefined | null;
+        compatibleTypes: string[];
+    };
+
+    const resolveParent = (item: SettingsElement): SettingsElement | null => {
+        const pointers: PointerSpec[] = [
+            {
+                value: item.field_group_id,
+                compatibleTypes: ['fieldgroup'],
+            },
+            {
+                value: item.subsection_id,
+                compatibleTypes: ['subsection', 'section'],
+            },
+            {
+                value: item.section_id,
+                compatibleTypes: ['section', 'subsection'],
+            },
+            {
+                value: item.tab_id,
+                compatibleTypes: ['tab'],
+            },
+            {
+                value: item.subpage_id,
+                compatibleTypes: ['subpage', 'page'],
+            },
+            {
+                value: item.page_id,
+                compatibleTypes: ['page', 'subpage'],
+            },
+        ];
+
+        for (const { value: ptr, compatibleTypes } of pointers) {
+            if (!ptr) continue;
+
+            const candidates = idMultiMap.get(ptr);
+            if (!candidates || candidates.length === 0) continue;
+
+            // Prefer a type-compatible candidate; fall back to first match
+            const match =
+                candidates.find((c) => compatibleTypes.includes(c.type)) ??
+                candidates[0];
+
+            // Don't attach an element to itself
+            if (match === item) {
+                // If there's another candidate, try that
+                const alt = candidates.find(
+                    (c) => c !== item && compatibleTypes.includes(c.type)
+                );
+                if (alt) return alt;
+                continue;
+            }
+
+            return match;
+        }
+
+        return null;
+    };
+
+    // ── Step 3: Separate root pages and attach children to parents ──────
+    const roots: SettingsElement[] = [];
+
+    for (const element of enrichedData) {
+        if (element.type === 'page') {
+            // Initialize page-level defaults
+            element.label = element.label ?? element.title ?? '';
+            element.icon = element.icon || '';
+            element.tooltip = element.tooltip || '';
+            element.description = element.description || '';
+            element.hook_key =
+                element.hook_key || `settings_${element.id}`;
+            element.dependency_key = '';
+            roots.push(element);
+            continue;
+        }
+
+        const parent = resolveParent(element);
+        if (parent) {
+            parent.children!.push(element);
+        }
+        // Items with no resolvable parent are silently excluded (orphans).
+    }
+
+    // Sort root pages by priority
     roots.sort((a, b) => (a.priority || 100) - (b.priority || 100));
 
-    // Recursive hierarchy builder
-    const buildHierarchy = (parent: SettingsElement) => {
-        const parentId = parent.id;
-        const parentType = parent.type;
+    // ── Step 4: Recursive enrichment ────────────────────────────────────
+    //
+    // Walk the tree top-down to compute hook_key, dependency_key, apply
+    // field-specific defaults, transform validations/dependencies, and
+    // sort children at each level.
+    const enrichNode = (parent: SettingsElement) => {
+        if (!parent.children || parent.children.length === 0) return;
 
-        const children = enrichedData.filter((item) => {
-            if (parentType === 'page' && item.type === 'subpage') {
-                return item.page_id === parentId && !item.subpage_id; // Added !item.subpage_id check
-            }
-            if (parentType === 'subpage' && item.type === 'subpage') {
-                // Nested subpage support
-                return item.subpage_id === parentId;
-            }
-            if (parentType === 'subpage' && item.type === 'tab') {
-                // Tabs belong directly under their subpage
-                return item.subpage_id === parentId;
-            }
-            if (parentType === 'subpage' && item.type === 'section') {
-                if (item.subpage_id === parentId && !item.section_id) return true;
-                if (!item.subpage_id) {
-                    return enrichedData.some(
-                        (f) => f.type === 'field' && f.section_id === item.id && f.subpage_id === parentId
-                    );
-                }
-                return false;
-            }
-            if (parentType === 'tab' && item.type === 'section') {
-                // Sections inside a tab
-                return item.tab_id === parentId && !item.section_id;
-            }
-            if (parentType === 'section' && item.type === 'subsection') {
-                return item.section_id === parentId;
-            }
-            if (parentType === 'section' && item.type === 'section') {
-                return item.section_id === parentId;
-            }
-            if (parentType === 'section' && item.type === 'field') {
-                return item.section_id === parentId && !item.field_group_id;
-            }
-            if (parentType === 'section' && item.type === 'fieldgroup') {
-                return item.section_id === parentId;
-            }
-            if (parentType === 'subsection' && item.type === 'field') {
-                return item.section_id === parentId && !item.field_group_id;
-            }
-            if (parentType === 'subsection' && item.type === 'fieldgroup') {
-                return item.section_id === parentId;
-            }
-            if (parentType === 'fieldgroup' && item.type === 'field') {
-                return item.field_group_id === parentId;
-            }
-            return false;
-        });
+        parent.children.sort(
+            (a, b) => (a.priority || 100) - (b.priority || 100)
+        );
 
-        children.sort((a, b) => (a.priority || 100) - (b.priority || 100));
-
-        children.forEach((child) => {
+        for (const child of parent.children) {
+            // Common defaults — resolve label from label ?? title ?? ''
+            child.label = child.label ?? child.title ?? '';
             child.icon = child.icon || '';
-            child.title = child.title || '';
             child.tooltip = child.tooltip || '';
             child.description = child.description || '';
-            child.display = child.display !== undefined ? child.display : true;
+            child.display =
+                child.display !== undefined ? child.display : true;
             child.hook_key = `${parent.hook_key}_${child.id}`;
-            child.dependency_key = [parent.dependency_key, child.id].filter(Boolean).join('.');
+            child.dependency_key = [parent.dependency_key, child.id]
+                .filter(Boolean)
+                .join('.');
 
-            // Field-specific defaults
+            // ── Field-specific defaults ──
             if (child.type === 'field') {
-                child.default = child.default !== undefined ? child.default : '';
-                child.value = child.value !== undefined ? child.value : (child.default || '');
+                child.default =
+                    child.default !== undefined ? child.default : '';
+                child.value =
+                    child.value !== undefined
+                        ? child.value
+                        : child.default || '';
                 child.readonly = child.readonly || false;
                 child.disabled = child.disabled || false;
                 child.size = child.size || 20;
@@ -129,32 +210,41 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
                 }
 
                 if (child.options && Array.isArray(child.options)) {
-                    const iconVariants = ['radio_capsule', 'customize_radio'];
+                    const iconVariants = [
+                        'radio_capsule',
+                        'customize_radio',
+                    ];
                     child.options = child.options.map((opt) => {
+                        // Resolve label from label ?? title ?? ''
+                        const resolvedLabel =
+                            opt.label ?? opt.title ?? '';
                         const hasIcon = 'icon' in opt || 'image' in opt;
-                        const shouldHaveIcon = hasIcon || iconVariants.includes(child.variant || '');
+                        const shouldHaveIcon =
+                            hasIcon ||
+                            iconVariants.includes(child.variant || '');
                         if (shouldHaveIcon) {
-                            return { ...opt, icon: opt.icon || opt.image || '' };
+                            return {
+                                ...opt,
+                                label: resolvedLabel,
+                                icon: opt.icon || opt.image || '',
+                            };
                         }
-                        return opt;
+                        return { ...opt, label: resolvedLabel };
                     });
                 }
             }
 
-            // Transform validations
+            // ── Transform validations ──
             if (child.validations) {
-                child.validations = child.validations.map((v) => {
-                    // Pass-through already formatted validations
-                    return {
-                        rules: v.rules || '',
-                        message: v.message || '',
-                        params: v.params || {},
-                        self: child.dependency_key,
-                    };
-                });
+                child.validations = child.validations.map((v) => ({
+                    rules: v.rules || '',
+                    message: v.message || '',
+                    params: v.params || {},
+                    self: child.dependency_key,
+                }));
             }
 
-            // Transform dependencies
+            // ── Transform dependencies ──
             if (child.dependencies) {
                 child.dependencies = child.dependencies.map((d) => ({
                     ...d,
@@ -166,17 +256,16 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
                 }));
             }
 
-            // Ensure children array exists for nested structures
+            // Ensure children array exists
             if (!child.children) {
                 child.children = [];
             }
 
-            parent.children!.push(child);
-            buildHierarchy(child);
-        });
+            enrichNode(child);
+        }
     };
 
-    roots.forEach((root) => buildHierarchy(root));
+    roots.forEach((root) => enrichNode(root));
 
     return roots;
 }
@@ -184,7 +273,9 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
 /**
  * Extracts a flat key-value map of field values from a hierarchical schema.
  */
-export function extractValues(schema: SettingsElement[]): Record<string, any> {
+export function extractValues(
+    schema: SettingsElement[]
+): Record<string, any> {
     const values: Record<string, any> = {};
 
     const walk = (elements: SettingsElement[]) => {
@@ -222,17 +313,23 @@ export function evaluateDependencies(
 
         switch (comparison) {
             case '==':
-                return currentValue == expectedValue;    // eslint-disable-line eqeqeq
+                return currentValue == expectedValue; // eslint-disable-line eqeqeq
             case '!=':
-                return currentValue != expectedValue;    // eslint-disable-line eqeqeq
+                return currentValue != expectedValue; // eslint-disable-line eqeqeq
             case '===':
                 return currentValue === expectedValue;
             case '!==':
                 return currentValue !== expectedValue;
             case 'in':
-                return Array.isArray(expectedValue) && expectedValue.includes(currentValue);
+                return (
+                    Array.isArray(expectedValue) &&
+                    expectedValue.includes(currentValue)
+                );
             case 'not_in':
-                return Array.isArray(expectedValue) && !expectedValue.includes(currentValue);
+                return (
+                    Array.isArray(expectedValue) &&
+                    !expectedValue.includes(currentValue)
+                );
             default:
                 return true;
         }
@@ -262,19 +359,40 @@ export function validateField(
             switch (rule) {
                 case 'not_in': {
                     const forbidden = params.values || [];
-                    if (Array.isArray(forbidden) && forbidden.includes(value)) {
-                        return validation.message.replace('%s', String(value)) ||
-                            `The value "${value}" is not allowed.`;
+                    if (
+                        Array.isArray(forbidden) &&
+                        forbidden.includes(value)
+                    ) {
+                        return (
+                            validation.message.replace(
+                                '%s',
+                                String(value)
+                            ) ||
+                            `The value "${value}" is not allowed.`
+                        );
                     }
                     break;
                 }
                 case 'required':
                 case 'not_empty': {
-                    if (value === undefined || value === null || value === '') {
-                        return validation.message || 'This field is required.';
+                    if (
+                        value === undefined ||
+                        value === null ||
+                        value === ''
+                    ) {
+                        return (
+                            validation.message ||
+                            'This field is required.'
+                        );
                     }
-                    if (typeof value === 'string' && value.trim() === '') {
-                        return validation.message || 'This field cannot be empty.';
+                    if (
+                        typeof value === 'string' &&
+                        value.trim() === ''
+                    ) {
+                        return (
+                            validation.message ||
+                            'This field cannot be empty.'
+                        );
                     }
                     break;
                 }
@@ -282,12 +400,19 @@ export function validateField(
                 case 'min_value': {
                     let min: number | undefined;
 
-                    // Handle params structure: { min: 1 } or { value: 1 } or just pass as arg if manually formatted
                     if ('min' in params) min = Number(params.min);
-                    else if ('value' in params) min = Number(params.value);
+                    else if ('value' in params)
+                        min = Number(params.value);
 
-                    if (min !== undefined && !isNaN(min) && Number(value) < min) {
-                        return validation.message || `Value must be at least ${min}.`;
+                    if (
+                        min !== undefined &&
+                        !isNaN(min) &&
+                        Number(value) < min
+                    ) {
+                        return (
+                            validation.message ||
+                            `Value must be at least ${min}.`
+                        );
                     }
                     break;
                 }
@@ -296,10 +421,18 @@ export function validateField(
                     let max: number | undefined;
 
                     if ('max' in params) max = Number(params.max);
-                    else if ('value' in params) max = Number(params.value);
+                    else if ('value' in params)
+                        max = Number(params.value);
 
-                    if (max !== undefined && !isNaN(max) && Number(value) > max) {
-                        return validation.message || `Value must be at most ${max}.`;
+                    if (
+                        max !== undefined &&
+                        !isNaN(max) &&
+                        Number(value) > max
+                    ) {
+                        return (
+                            validation.message ||
+                            `Value must be at most ${max}.`
+                        );
                     }
                     break;
                 }

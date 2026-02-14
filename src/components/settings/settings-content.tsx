@@ -35,9 +35,9 @@ export function SettingsContent({ className }: { className?: string }) {
             <div className="px-6 pt-6 pb-4">
                 <div className="flex justify-between items-start">
                     <div className="flex flex-col gap-2">
-                        {subpage.title && (
+                        {(subpage.label || subpage.title) && (
                             <h2 className="text-2xl font-bold text-foreground leading-tight">
-                                {subpage.title}
+                                {subpage.label || subpage.title}
                             </h2>
                         )}
                         {subpage.description && (
@@ -77,21 +77,64 @@ export function SettingsContent({ className }: { className?: string }) {
                                             : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
                                     )}
                                 >
-                                    {tab.title}
+                                    {tab.label || tab.title}
                                 </button>
                             ))}
                     </nav>
                 </div>
             )}
 
-            {/* Sections */}
+            {/* Content — sections, fields, fieldgroups, subsections */}
             <div className="p-6 space-y-6">
-                {content.map((section) => (
-                    <SettingsSection key={section.id} section={section} />
+                {content.map((item) => (
+                    <ContentBlock key={item.id} element={item} />
                 ))}
             </div>
         </div>
     );
+}
+
+// ============================================
+// Content Block — dispatches top-level content by type
+// ============================================
+
+function ContentBlock({ element }: { element: SettingsElementType }) {
+    const { shouldDisplay } = useSettings();
+
+    if (!shouldDisplay(element)) {
+        return null;
+    }
+
+    switch (element.type) {
+        case 'section':
+            return <SettingsSection section={element} />;
+
+        case 'subsection':
+            return (
+                <div className="rounded-lg border border-border bg-card overflow-hidden">
+                    <SettingsSubSection element={element} />
+                </div>
+            );
+
+        case 'field':
+            // Direct field under a subpage (no section wrapper)
+            // Wrap in a minimal card for consistent styling
+            return (
+                <div className="rounded-lg border border-border bg-card overflow-hidden">
+                    <FieldRenderer element={element} />
+                </div>
+            );
+
+        case 'fieldgroup':
+            return (
+                <div className="rounded-lg border border-border bg-card overflow-hidden">
+                    <SettingsFieldGroup element={element} />
+                </div>
+            );
+
+        default:
+            return null;
+    }
 }
 
 // ============================================
@@ -105,16 +148,17 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
         return null;
     }
 
-    const hasHeading = Boolean(section.title || section.description);
+    const sectionLabel = section.label || section.title || '';
+    const hasHeading = Boolean(sectionLabel || section.description);
 
     return (
         <div className="rounded-lg border border-border bg-card overflow-hidden">
             {hasHeading && (
                 <div className="px-5 pt-5 pb-3 flex justify-between items-start">
                     <div className="flex flex-col gap-1">
-                        {section.title && (
+                        {sectionLabel && (
                             <h3 className="text-lg font-semibold text-foreground">
-                                {section.title}
+                                {sectionLabel}
                             </h3>
                         )}
                         {section.description && (
@@ -182,13 +226,15 @@ function SettingsSubSection({ element }: { element: SettingsElementType }) {
         (c) => c.type === 'field' || c.type === 'fieldgroup'
     );
 
+    const elementLabel = element.label || element.title || '';
+
     return (
         <div className={cn(!allChildrenAreFields && 'p-4')}>
-            {(element.title || element.description) && (
+            {(elementLabel || element.description) && (
                 <div className="px-4 pt-3 pb-2">
-                    {element.title && (
+                    {elementLabel && (
                         <h4 className="text-sm font-semibold text-foreground mb-1">
-                            {element.title}
+                            {elementLabel}
                         </h4>
                     )}
                     {element.description && (
