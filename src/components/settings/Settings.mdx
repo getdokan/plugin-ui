@@ -1,0 +1,972 @@
+{/* Settings — Developer Documentation */}
+
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Components/Settings/Documentation" />
+
+# Settings Component
+
+A reusable, schema-driven settings page that renders a full UI from a JSON structure.
+Designed for WordPress plugin settings with built-in extensibility.
+
+---
+
+## Installation
+
+```tsx
+import {
+  Settings,
+  formatSettingsData,
+  extractValues,
+  type SettingsElement,
+  type SettingsProps,
+  type SaveButtonRenderProps,
+} from "@wedevs/plugin-ui";
+```
+
+---
+
+## Quick Start
+
+```tsx
+import { Settings, type SettingsElement } from "@wedevs/plugin-ui";
+import { Button } from "@wedevs/plugin-ui";
+import { __ } from "@wordpress/i18n";
+
+const schema: SettingsElement[] = [
+  {
+    id: "general",
+    type: "page",
+    label: "General",
+    children: [
+      {
+        id: "basic",
+        type: "subpage",
+        label: "Basic Settings",
+        icon: "Settings",
+        children: [
+          {
+            id: "main_section",
+            type: "section",
+            label: "Main",
+            children: [
+              {
+                id: "site_name_field",
+                type: "field",
+                variant: "text",
+                label: "Site Name",
+                dependency_key: "site_name",
+                default: "",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+];
+
+function MySettingsPage() {
+  const [values, setValues] = useState({});
+
+  return (
+    <Settings
+      schema={schema}
+      values={values}
+      title="My Plugin"
+      onChange={(scopeId, key, value) => {
+        setValues((prev) => ({ ...prev, [key]: value }));
+      }}
+      onSave={(scopeId, pageValues) => {
+        // POST pageValues to your REST API
+        console.log("Saving", scopeId, pageValues);
+      }}
+      renderSaveButton={({ dirty, onSave }) => (
+        <Button onClick={onSave} disabled={!dirty}>
+          {__("Save Changes", "my-plugin")}
+        </Button>
+      )}
+    />
+  );
+}
+```
+
+---
+
+## Schema Structure
+
+The schema is a tree of `SettingsElement` objects. Each element has a `type` that determines
+its role in the hierarchy.
+
+### Hierarchy
+
+```
+page
+├── subpage
+│   ├── tab (optional)
+│   │   ├── section
+│   │   │   ├── subsection (optional)
+│   │   │   ├── fieldgroup (optional)
+│   │   │   └── field
+│   │   └── field (direct under tab)
+│   ├── section (direct under subpage, no tabs)
+│   └── field (direct under subpage)
+└── section (page without subpages)
+```
+
+### Element Types
+
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Role</th>
+      <th>Parent(s)</th>
+      <th>Has children?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>page</code></td>
+      <td>Top-level navigation group</td>
+      <td>Root</td>
+      <td>subpage, tab, section, field</td>
+    </tr>
+    <tr>
+      <td><code>subpage</code></td>
+      <td>Navigable menu item</td>
+      <td>page</td>
+      <td>tab, section, field</td>
+    </tr>
+    <tr>
+      <td><code>tab</code></td>
+      <td>Horizontal tab within a subpage/page</td>
+      <td>subpage, page</td>
+      <td>section, field</td>
+    </tr>
+    <tr>
+      <td><code>section</code></td>
+      <td>Visual card grouping fields</td>
+      <td>tab, subpage, page</td>
+      <td>subsection, fieldgroup, field</td>
+    </tr>
+    <tr>
+      <td><code>subsection</code></td>
+      <td>Nested group inside a section</td>
+      <td>section</td>
+      <td>fieldgroup, field</td>
+    </tr>
+    <tr>
+      <td><code>fieldgroup</code></td>
+      <td>Inline group of fields</td>
+      <td>section, subsection</td>
+      <td>field</td>
+    </tr>
+    <tr>
+      <td><code>field</code></td>
+      <td>Individual form input</td>
+      <td>section, subsection, fieldgroup, tab, subpage</td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## Schema Definitions
+
+### Page
+
+The top-level container. Rendered as a parent menu item in the sidebar.
+
+```json
+{
+  "id": "general",
+  "type": "page",
+  "label": "General",
+  "icon": "Settings",
+  "children": []
+}
+```
+
+**Pages without subpages** are also supported — the page itself becomes a clickable
+leaf item in the sidebar:
+
+```json
+{
+  "id": "notifications",
+  "type": "page",
+  "label": "Notifications",
+  "icon": "Bell",
+  "children": [
+    { "id": "tab1", "type": "tab", "label": "Email", "children": [] },
+    { "id": "tab2", "type": "tab", "label": "SMS", "children": [] }
+  ]
+}
+```
+
+### Subpage
+
+A navigable child under a page. Appears as a submenu item in the sidebar.
+
+```json
+{
+  "id": "store",
+  "type": "subpage",
+  "label": "Store Settings",
+  "description": "Configure your store defaults.",
+  "icon": "Store",
+  "doc_link": "https://docs.example.com/store",
+  "children": []
+}
+```
+
+### Tab
+
+Horizontal tab navigation within a subpage or page.
+
+```json
+{
+  "id": "store_basic",
+  "type": "tab",
+  "label": "Basic",
+  "children": []
+}
+```
+
+### Section
+
+A bordered card grouping related fields. Has an optional heading and description.
+
+```json
+{
+  "id": "address_section",
+  "type": "section",
+  "label": "Address Information",
+  "description": "Default address for your store.",
+  "doc_link": "https://docs.example.com/address",
+  "children": []
+}
+```
+
+### Subsection
+
+A nested group inside a section with its own heading.
+
+```json
+{
+  "id": "shipping_rates",
+  "type": "subsection",
+  "label": "Shipping Rates",
+  "description": "Configure per-zone rates.",
+  "children": []
+}
+```
+
+### Field Group
+
+Groups multiple fields in a horizontal row (e.g. min/max pair).
+
+```json
+{
+  "id": "price_range",
+  "type": "fieldgroup",
+  "children": [
+    {
+      "id": "min_price",
+      "type": "field",
+      "variant": "number",
+      "label": "Min",
+      "dependency_key": "min_price"
+    },
+    {
+      "id": "max_price",
+      "type": "field",
+      "variant": "number",
+      "label": "Max",
+      "dependency_key": "max_price"
+    }
+  ]
+}
+```
+
+### Field
+
+An individual form input. The `variant` determines which UI control renders.
+
+```json
+{
+  "id": "store_name_field",
+  "type": "field",
+  "variant": "text",
+  "label": "Store Name",
+  "description": "The display name of your store.",
+  "tooltip": "Visible to customers.",
+  "dependency_key": "store_name",
+  "default": "My Store",
+  "placeholder": "Enter store name"
+}
+```
+
+---
+
+## Field Variants
+
+<table>
+  <thead>
+    <tr>
+      <th>Variant</th>
+      <th>Control</th>
+      <th>Key Props</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>text</code></td>
+      <td>Text input</td>
+      <td><code>placeholder</code>, <code>default</code></td>
+    </tr>
+    <tr>
+      <td><code>number</code></td>
+      <td>Number input</td>
+      <td><code>min</code>, <code>max</code>, <code>increment</code>, <code>prefix</code>, <code>postfix</code></td>
+    </tr>
+    <tr>
+      <td><code>textarea</code></td>
+      <td>Multi-line textarea</td>
+      <td><code>placeholder</code>, <code>default</code></td>
+    </tr>
+    <tr>
+      <td><code>select</code></td>
+      <td>Dropdown select</td>
+      <td><code>options[]</code>, <code>placeholder</code></td>
+    </tr>
+    <tr>
+      <td><code>switch</code></td>
+      <td>Toggle switch</td>
+      <td><code>enable_state</code>, <code>disable_state</code></td>
+    </tr>
+    <tr>
+      <td><code>radio_capsule</code></td>
+      <td>Segmented toggle</td>
+      <td><code>options[]</code></td>
+    </tr>
+    <tr>
+      <td><code>customize_radio</code></td>
+      <td>RadioCard grid</td>
+      <td><code>options[]</code> (with <code>description</code>)</td>
+    </tr>
+    <tr>
+      <td><code>multicheck</code> / <code>checkbox_group</code></td>
+      <td>Checkbox list</td>
+      <td><code>options[]</code></td>
+    </tr>
+    <tr>
+      <td><code>base_field_label</code></td>
+      <td>Label only (no input)</td>
+      <td><code>doc_link</code></td>
+    </tr>
+    <tr>
+      <td><code>html</code></td>
+      <td>Raw HTML content</td>
+      <td><code>html_content</code></td>
+    </tr>
+  </tbody>
+</table>
+
+### Options format
+
+Used by `select`, `radio_capsule`, `customize_radio`, and `multicheck`:
+
+```json
+{
+  "options": [
+    {
+      "value": "flat",
+      "label": "Flat Rate",
+      "description": "Single rate for all."
+    },
+    {
+      "value": "percent",
+      "label": "Percentage",
+      "description": "Based on order total."
+    }
+  ]
+}
+```
+
+### Switch with custom states
+
+```json
+{
+  "variant": "switch",
+  "dependency_key": "enable_feature",
+  "enable_state": { "value": "on", "title": "Enabled" },
+  "disable_state": { "value": "off", "title": "Disabled" }
+}
+```
+
+---
+
+## Flat Data Format
+
+If your backend returns a **flat array** of elements (each with parent pointer fields),
+use `formatSettingsData()` to convert it into the hierarchy the component expects.
+
+```tsx
+import { Settings, formatSettingsData, extractValues } from "@wedevs/plugin-ui";
+
+// Flat array from REST API
+const flatData = [
+  { id: "general", type: "page", label: "General" },
+  {
+    id: "store",
+    type: "subpage",
+    label: "Store",
+    page_id: "general",
+    icon: "Store",
+  },
+  { id: "basic_tab", type: "tab", label: "Basic", subpage_id: "store" },
+  { id: "main_section", type: "section", label: "Main", tab_id: "basic_tab" },
+  {
+    id: "name_field",
+    type: "field",
+    variant: "text",
+    label: "Store Name",
+    dependency_key: "store_name",
+    section_id: "main_section",
+  },
+];
+
+const schema = formatSettingsData(flatData);
+const initialValues = extractValues(schema);
+```
+
+### Parent pointer fields
+
+Each flat element can specify its parent using these pointer fields (checked in order):
+
+<table>
+  <thead>
+    <tr>
+      <th>Pointer field</th>
+      <th>Compatible parent types</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>field_group_id</code></td>
+      <td><code>fieldgroup</code></td>
+    </tr>
+    <tr>
+      <td><code>subsection_id</code></td>
+      <td><code>subsection</code>, <code>section</code></td>
+    </tr>
+    <tr>
+      <td><code>section_id</code></td>
+      <td><code>section</code>, <code>subsection</code></td>
+    </tr>
+    <tr>
+      <td><code>tab_id</code></td>
+      <td><code>tab</code></td>
+    </tr>
+    <tr>
+      <td><code>subpage_id</code></td>
+      <td><code>subpage</code>, <code>page</code></td>
+    </tr>
+    <tr>
+      <td><code>page_id</code></td>
+      <td><code>page</code>, <code>subpage</code></td>
+    </tr>
+  </tbody>
+</table>
+
+The formatter checks pointers from **most specific to least specific**. The first match wins.
+Pointers are **generic** — `page_id` can point to a `subpage`, and `section_id` can point to a `subsection`.
+
+---
+
+## Events
+
+### `onChange(scopeId, key, value)`
+
+Fired whenever a field value changes.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>scopeId</code></td>
+      <td><code>string</code></td>
+      <td>Active subpage ID, or page ID if no subpage</td>
+    </tr>
+    <tr>
+      <td><code>key</code></td>
+      <td><code>string</code></td>
+      <td>The field's <code>dependency_key</code></td>
+    </tr>
+    <tr>
+      <td><code>value</code></td>
+      <td><code>any</code></td>
+      <td>New value</td>
+    </tr>
+  </tbody>
+</table>
+
+```tsx
+<Settings
+  onChange={(scopeId, key, value) => {
+    console.log(`[${scopeId}] ${key} = ${JSON.stringify(value)}`);
+    setValues((prev) => ({ ...prev, [key]: value }));
+  }}
+/>
+```
+
+### `onSave(scopeId, values)`
+
+Fired when the save button is clicked. Only receives values **scoped to the active page/subpage**.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>scopeId</code></td>
+      <td><code>string</code></td>
+      <td>Active subpage ID, or page ID if no subpage</td>
+    </tr>
+    <tr>
+      <td><code>values</code></td>
+      <td><code>{'Record<string, any>'}</code></td>
+      <td>Key-value pairs for fields in this scope only</td>
+    </tr>
+  </tbody>
+</table>
+
+```tsx
+<Settings
+  onSave={async (scopeId, pageValues) => {
+    await fetch(`/wp-json/my-plugin/v1/settings/${scopeId}`, {
+      method: "POST",
+      body: JSON.stringify(pageValues),
+    });
+  }}
+/>
+```
+
+### Scope ID resolution
+
+The `scopeId` follows this logic:
+
+- If a **subpage** is active: `scopeId = subpage.id`
+- If a **page without subpages** is active: `scopeId = page.id`
+
+This lets you save settings on a per-page/subpage basis to different API endpoints.
+
+---
+
+## Custom Save Button
+
+Since settings may be consumed by third-party WordPress plugins, the save button
+must support i18n. Use `renderSaveButton` to inject your own button:
+
+```tsx
+import { __ } from "@wordpress/i18n";
+import { Settings, Button } from "@wedevs/plugin-ui";
+
+<Settings
+  renderSaveButton={({ scopeId, dirty, onSave }) => (
+    <Button onClick={onSave} disabled={!dirty}>
+      {__("Save Changes", "my-text-domain")}
+    </Button>
+  )}
+/>;
+```
+
+<table>
+  <thead>
+    <tr>
+      <th>Render prop</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>scopeId</code></td>
+      <td><code>string</code></td>
+      <td>Active scope (subpage or page ID)</td>
+    </tr>
+    <tr>
+      <td><code>dirty</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code> if any field in the scope has been modified</td>
+    </tr>
+    <tr>
+      <td><code>onSave</code></td>
+      <td><code>{'() => void'}</code></td>
+      <td>Call this to trigger <code>onSave(scopeId, scopeValues)</code></td>
+    </tr>
+  </tbody>
+</table>
+
+The save button area only renders when `onSave` is provided.
+
+---
+
+## Extensibility (applyFilters)
+
+For WordPress environments, pass `applyFilters` from `@wordpress/hooks` to enable
+other plugins to override or replace field components:
+
+```tsx
+import { applyFilters } from "@wordpress/hooks";
+
+<Settings applyFilters={applyFilters} hookPrefix="dokan" />;
+```
+
+Every field is wrapped with a filter hook:
+
+```
+{hookPrefix}_settings_{variant}_field
+```
+
+For example, `dokan_settings_text_field` receives `(ReactElement, mergedElement)`.
+
+### Registering a custom field type
+
+```tsx
+import { addFilter } from "@wordpress/hooks";
+
+// Override text fields to add a character counter
+addFilter("dokan_settings_text_field", "my-plugin", (element, fieldData) => {
+  if (fieldData.id === "special_field") {
+    return <MyCustomTextField data={fieldData} />;
+  }
+  return element; // pass through for other text fields
+});
+
+// Handle completely unknown variants
+addFilter("dokan_settings_default_field", "my-plugin", (element, fieldData) => {
+  if (fieldData.variant === "color_picker") {
+    return <ColorPickerField data={fieldData} />;
+  }
+  return element;
+});
+```
+
+---
+
+## Dependencies
+
+Fields can be conditionally shown/hidden based on other field values using the
+`dependencies` array:
+
+```json
+{
+  "id": "tax_rate_field",
+  "type": "field",
+  "variant": "number",
+  "label": "Tax Rate (%)",
+  "dependency_key": "tax_rate",
+  "dependencies": [
+    {
+      "key": "enable_tax",
+      "value": true,
+      "comparison": "="
+    }
+  ]
+}
+```
+
+This field only appears when `enable_tax` is `true`.
+
+### Dependency properties
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>key</code></td>
+      <td><code>string</code></td>
+      <td><code>dependency_key</code> of the field to watch</td>
+    </tr>
+    <tr>
+      <td><code>value</code></td>
+      <td><code>any</code></td>
+      <td>Expected value</td>
+    </tr>
+    <tr>
+      <td><code>comparison</code></td>
+      <td><code>string</code></td>
+      <td>Comparison operator (<code>=</code>, <code>!=</code>, etc.)</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## Validation
+
+Fields can declare validation rules via the `validations` array:
+
+```json
+{
+  "validations": [
+    { "rules": "required", "message": "This field is required." },
+    {
+      "rules": "min_value",
+      "message": "Must be at least 1.",
+      "params": { "min": 1 }
+    },
+    {
+      "rules": "max_value",
+      "message": "Must be at most 100.",
+      "params": { "max": 100 }
+    }
+  ]
+}
+```
+
+Supported rules: `required`, `not_empty`, `min` / `min_value`, `max` / `max_value`.
+
+---
+
+## Utility Functions
+
+### `formatSettingsData(data)`
+
+Converts a flat array of `SettingsElement` into a hierarchical tree.
+If the data is already hierarchical (pages with children), it passes through unchanged.
+
+```tsx
+import { formatSettingsData } from "@wedevs/plugin-ui";
+
+const schema = formatSettingsData(flatApiResponse);
+```
+
+### `extractValues(schema)`
+
+Walks a hierarchical schema and extracts all `dependency_key` to `value` pairs into a flat object.
+Useful for initializing the `values` prop.
+
+```tsx
+import { extractValues } from "@wedevs/plugin-ui";
+
+const initialValues = extractValues(schema);
+// { store_name: 'My Store', enable_tax: true, tax_rate: 10, ... }
+```
+
+---
+
+## Props Reference
+
+### Settings
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>schema</code></td>
+      <td><code>{'SettingsElement[]'}</code></td>
+      <td><em>required</em></td>
+      <td>JSON schema (flat or hierarchical)</td>
+    </tr>
+    <tr>
+      <td><code>values</code></td>
+      <td><code>{'Record<string, any>'}</code></td>
+      <td><code>{'{}'}</code></td>
+      <td>Current field values keyed by <code>dependency_key</code></td>
+    </tr>
+    <tr>
+      <td><code>onChange</code></td>
+      <td><code>{'(scopeId, key, value) => void'}</code></td>
+      <td>—</td>
+      <td>Called on every field change</td>
+    </tr>
+    <tr>
+      <td><code>onSave</code></td>
+      <td><code>{'(scopeId, values) => void'}</code></td>
+      <td>—</td>
+      <td>Called on save; enables save button area</td>
+    </tr>
+    <tr>
+      <td><code>renderSaveButton</code></td>
+      <td><code>{'(props: SaveButtonRenderProps) => ReactNode'}</code></td>
+      <td>—</td>
+      <td>Custom save button</td>
+    </tr>
+    <tr>
+      <td><code>loading</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>Show loading spinner</td>
+    </tr>
+    <tr>
+      <td><code>title</code></td>
+      <td><code>string</code></td>
+      <td>—</td>
+      <td>Title in sidebar header</td>
+    </tr>
+    <tr>
+      <td><code>hookPrefix</code></td>
+      <td><code>string</code></td>
+      <td><code>"plugin_ui"</code></td>
+      <td>Prefix for filter hook names</td>
+    </tr>
+    <tr>
+      <td><code>className</code></td>
+      <td><code>string</code></td>
+      <td>—</td>
+      <td>Class name on root element</td>
+    </tr>
+    <tr>
+      <td><code>applyFilters</code></td>
+      <td><code>{'(hook, value, ...args) => any'}</code></td>
+      <td>identity</td>
+      <td>Filter function for extensibility</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## E2E Test Selectors
+
+Every interactive element has a `data-testid` attribute, auto-generated from the schema `id`:
+
+<table>
+  <thead>
+    <tr>
+      <th>Selector</th>
+      <th>Element</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>settings-root</code></td>
+      <td>Root container</td>
+    </tr>
+    <tr>
+      <td><code>settings-sidebar</code></td>
+      <td>Sidebar wrapper</td>
+    </tr>
+    <tr>
+      <td><code>settings-search</code></td>
+      <td>Search input</td>
+    </tr>
+    <tr>
+      <td><code>{'settings-menu-{id}'}</code></td>
+      <td>Menu item</td>
+    </tr>
+    <tr>
+      <td><code>settings-mobile-open</code></td>
+      <td>Mobile hamburger button</td>
+    </tr>
+    <tr>
+      <td><code>settings-mobile-close</code></td>
+      <td>Mobile close button</td>
+    </tr>
+    <tr>
+      <td><code>settings-content</code></td>
+      <td>Content area</td>
+    </tr>
+    <tr>
+      <td><code>{'settings-heading-{id}'}</code></td>
+      <td>Page/subpage heading</td>
+    </tr>
+    <tr>
+      <td><code>settings-tabs</code></td>
+      <td>Tabs container</td>
+    </tr>
+    <tr>
+      <td><code>{'settings-tab-{id}'}</code></td>
+      <td>Tab button</td>
+    </tr>
+    <tr>
+      <td><code>{'settings-section-{id}'}</code></td>
+      <td>Section card</td>
+    </tr>
+    <tr>
+      <td><code>{'settings-subsection-{id}'}</code></td>
+      <td>Subsection card</td>
+    </tr>
+    <tr>
+      <td><code>{'settings-fieldgroup-{id}'}</code></td>
+      <td>Field group block</td>
+    </tr>
+    <tr>
+      <td><code>{'settings-field-{id}'}</code></td>
+      <td>Field wrapper</td>
+    </tr>
+    <tr>
+      <td><code>{'settings-field-block-{id}'}</code></td>
+      <td>Standalone field card</td>
+    </tr>
+    <tr>
+      <td><code>{'settings-save-{scopeId}'}</code></td>
+      <td>Save button area</td>
+    </tr>
+  </tbody>
+</table>
+
+### Example (Playwright)
+
+```typescript
+// Navigate to a subpage
+await page.getByTestId("settings-menu-store").click();
+
+// Change a text field
+await page
+  .getByTestId("settings-field-store_name_field")
+  .locator("input")
+  .fill("New Name");
+
+// Verify save button is enabled, then save
+const saveArea = page.getByTestId("settings-save-store");
+await expect(saveArea.locator("button")).toBeEnabled();
+await saveArea.locator("button").click();
+```
+
+---
+
+## Responsive Behavior
+
+- **Desktop**: Sidebar + content side by side
+- **Mobile**: Sidebar becomes a slide-in drawer with hamburger toggle
+- **Single page**: Sidebar auto-hides when there is only one navigable item
+
+---
+
+## Live Examples
+
+See the **Settings** stories in the sidebar for interactive demos:
+
+- **Default** — Full hierarchical schema with all field variants
+- **FlatData** — Flat array formatted with `formatSettingsData()`
+- **SinglePage** — Auto-hidden sidebar
+- **MixedPages** — Pages with and without subpages
