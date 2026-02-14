@@ -6,7 +6,7 @@ import { SettingsSidebar } from './settings-sidebar';
 import { SettingsContent } from './settings-content';
 import { useSettings } from './settings-context';
 import type { SettingsProps } from './settings-types';
-import { Menu, Save, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 // ============================================
 // Settings Root Component
@@ -28,12 +28,12 @@ export function Settings({
             schema={schema}
             values={values}
             onChange={onChange}
+            onSave={onSave}
             loading={loading}
             hookPrefix={hookPrefix}
             applyFilters={applyFilters}
         >
             <SettingsInner
-                onSave={onSave}
                 title={title}
                 className={className}
             />
@@ -46,20 +46,14 @@ export function Settings({
 // ============================================
 
 function SettingsInner({
-    onSave,
     title,
     className,
 }: {
-    onSave?: (values: Record<string, unknown>) => void;
     title?: string;
     className?: string;
 }) {
-    const { values, isDirty, loading, activeSubpage } = useSettings();
+    const { loading, activeSubpage } = useSettings();
     const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-
-    const handleSave = () => {
-        onSave?.(values);
-    };
 
     // Close mobile sidebar when a subpage is selected
     const prevSubpage = usePrevious(activeSubpage);
@@ -155,16 +149,6 @@ function SettingsInner({
                 </div>
 
                 <SettingsContent className="flex-1" />
-
-                {/* Save bar */}
-                {isDirty && onSave && (
-                    <div className="sticky bottom-0 border-t border-border bg-background px-6 py-3 flex justify-end">
-                        <Button onClick={handleSave} size="default">
-                            <Save className="size-4 mr-2" />
-                            Save Changes
-                        </Button>
-                    </div>
-                )}
             </div>
         </div>
     );

@@ -35,8 +35,6 @@ export interface SettingsContextValue {
     activeSubpage: string;
     /** Currently active tab ID (if subpage has tab children) */
     activeTab: string;
-    /** Whether any value has changed since initialization */
-    isDirty: boolean;
     /** Whether the component is in a loading state */
     loading: boolean;
     /** Prefix for WordPress filter hook names */
@@ -61,6 +59,12 @@ export interface SettingsContextValue {
     getActiveContent: () => SettingsElement[];
     /** Get tabs for the active subpage (if any) */
     getActiveTabs: () => SettingsElement[];
+    /** Check if any field on a specific page has been modified */
+    isPageDirty: (pageId: string) => boolean;
+    /** Get only the values that belong to a specific page */
+    getPageValues: (pageId: string) => Record<string, any>;
+    /** Consumer-provided save handler (exposed so SettingsContent can call it) */
+    onSave?: (pageId: string, values: Record<string, any>) => void;
 }
 
 const SettingsContext = createContext<SettingsContextValue | null>(null);
@@ -76,7 +80,8 @@ export interface SettingsProviderProps {
     children: ReactNode;
     schema: SettingsElement[];
     values?: Record<string, any>;
-    onChange?: (key: string, value: any) => void;
+    onChange?: (pageId: string, key: string, value: any) => void;
+    onSave?: (pageId: string, values: Record<string, any>) => void;
     loading?: boolean;
     hookPrefix?: string;
     /** Optional filter function for extensibility (e.g. @wordpress/hooks applyFilters) */
@@ -88,6 +93,7 @@ export function SettingsProvider({
     schema: rawSchema,
     values: externalValues,
     onChange,
+    onSave,
     loading = false,
     hookPrefix = 'plugin_ui',
     applyFilters: applyFiltersProp,
@@ -112,11 +118,64 @@ export function SettingsProvider({
     const [activeSubpage, setActiveSubpage] = useState<string>('');
     const [activeTab, setActiveTab] = useState<string>('');
 
-    // Sync when schema or external values change
+    // Build a memoized map of scopeId → [dependency_keys...] for per-subpage dirty tracking.
+    // The scope ID is the subpage ID when a subpage exists, otherwise the page ID itself.
+    const scopeFieldKeysMap = useMemo(() => {
+        const map = new Map<string, string[]>();
+        const collectKeys = (elements: SettingsElement[]): string[] => {
+            const keys: string[] = [];
+            for (const el of elements) {
+                if (el.type === 'field' && el.dependency_key) {
+                    keys.push(el.dependency_key);
+                }
+                if (el.children?.length) {
+                    keys.push(...collectKeys(el.children));
+                }
+            }
+            return keys;
+        };
+        const walkSubpages = (elements: SettingsElement[]) => {
+            for (const el of elements) {
+                if (el.type === 'subpage') {
+                    map.set(el.id, collectKeys(el.children || []));
+                }
+                // Recurse to find nested subpages
+                if (el.children?.length) {
+                    walkSubpages(el.children);
+                }
+            }
+        };
+        for (const page of schema) {
+            const hasSubpages = page.children?.some((c) => c.type === 'subpage');
+            if (hasSubpages) {
+                walkSubpages(page.children || []);
+            } else {
+                // No subpages — scope to page itself
+                map.set(page.id, collectKeys(page.children || []));
+            }
+        }
+        return map;
+    }, [schema]);
+
+    // Reverse lookup: dependency_key → scopeId (subpage ID or page ID)
+    const keyToScopeMap = useMemo(() => {
+        const map = new Map<string, string>();
+        for (const [scopeId, keys] of scopeFieldKeysMap.entries()) {
+            for (const key of keys) {
+                map.set(key, scopeId);
+            }
+        }
+        return map;
+    }, [scopeFieldKeysMap]);
+
+    // Sync internal values when external values change.
+    // NOTE: Do NOT reset initialValues here — that would break dirty tracking,
+    // because the consumer typically updates externalValues in their onChange handler
+    // (controlled component pattern). initialValues is captured once on mount
+    // and only reset after a save via resetPageDirty.
     useEffect(() => {
         const merged = { ...defaultValues, ...(externalValues || {}) };
         setInternalValues(merged);
-        setInitialValues(merged);
     }, [defaultValues, externalValues]);
 
     // Auto-select first page/subpage on schema load
@@ -143,9 +202,58 @@ export function SettingsProvider({
         [defaultValues, internalValues, externalValues]
     );
 
-    const isDirty = useMemo(() => {
-        return Object.keys(values).some((key) => values[key] !== initialValues[key]);
-    }, [values, initialValues]);
+    // Per-scope (subpage or page) dirty check
+    const isPageDirty = useCallback(
+        (scopeId: string): boolean => {
+            const keys = scopeFieldKeysMap.get(scopeId);
+            if (!keys) return false;
+            return keys.some((key) => values[key] !== initialValues[key]);
+        },
+        [scopeFieldKeysMap, values, initialValues]
+    );
+
+    // Per-scope values extraction
+    const getPageValues = useCallback(
+        (scopeId: string): Record<string, any> => {
+            const keys = scopeFieldKeysMap.get(scopeId);
+            if (!keys) return {};
+            const scopeValues: Record<string, any> = {};
+            for (const key of keys) {
+                if (key in values) {
+                    scopeValues[key] = values[key];
+                }
+            }
+            return scopeValues;
+        },
+        [scopeFieldKeysMap, values]
+    );
+
+    // Reset per-scope dirty state after save
+    const resetPageDirty = useCallback(
+        (scopeId: string) => {
+            const keys = scopeFieldKeysMap.get(scopeId);
+            if (!keys) return;
+            setInitialValues((prev) => {
+                const next = { ...prev };
+                for (const key of keys) {
+                    if (key in values) {
+                        next[key] = values[key];
+                    }
+                }
+                return next;
+            });
+        },
+        [scopeFieldKeysMap, values]
+    );
+
+    // Wrapped onSave that also resets dirty state for the page
+    const handleOnSave = useCallback(
+        (pageId: string, pageValues: Record<string, any>) => {
+            onSave?.(pageId, pageValues);
+            resetPageDirty(pageId);
+        },
+        [onSave, resetPageDirty]
+    );
 
     // Update a field value
     const updateValue = useCallback(
@@ -178,9 +286,11 @@ export function SettingsProvider({
                 });
             }
 
-            onChange?.(key, value);
+            // Pass scopeId (subpage ID if exists, otherwise page ID) along with key and value
+            const scopeId = keyToScopeMap.get(key) || activeSubpage || activePage;
+            onChange?.(scopeId, key, value);
         },
-        [schema, onChange]
+        [schema, onChange, keyToScopeMap, activeSubpage, activePage]
     );
 
     // Dependency evaluation
@@ -295,7 +405,6 @@ export function SettingsProvider({
             activePage,
             activeSubpage,
             activeTab,
-            isDirty,
             loading,
             hookPrefix,
             applyFilters: filterFn,
@@ -308,6 +417,9 @@ export function SettingsProvider({
             getActiveSubpage,
             getActiveContent,
             getActiveTabs,
+            isPageDirty,
+            getPageValues,
+            onSave: handleOnSave,
         }),
         [
             schema,
@@ -316,7 +428,6 @@ export function SettingsProvider({
             activePage,
             activeSubpage,
             activeTab,
-            isDirty,
             loading,
             hookPrefix,
             filterFn,
@@ -328,6 +439,9 @@ export function SettingsProvider({
             getActiveSubpage,
             getActiveContent,
             getActiveTabs,
+            isPageDirty,
+            getPageValues,
+            handleOnSave,
         ]
     );
 

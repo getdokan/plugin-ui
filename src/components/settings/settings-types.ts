@@ -118,10 +118,10 @@ export interface SettingsProps {
     schema: SettingsElement[];
     /** Current values, keyed by dependency_key */
     values?: Record<string, any>;
-    /** Called when a field value changes */
-    onChange?: (key: string, value: any) => void;
-    /** Called when the save button is clicked, with all current values */
-    onSave?: (values: Record<string, any>) => void;
+    /** Called when a field value changes. Receives the page ID, field key, and new value. */
+    onChange?: (pageId: string, key: string, value: any) => void;
+    /** Called when the page save button is clicked. Receives the page ID and that page's values only. */
+    onSave?: (pageId: string, values: Record<string, any>) => void;
     /** Whether settings are loading */
     loading?: boolean;
     /** Title displayed above the settings */

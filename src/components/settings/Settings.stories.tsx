@@ -1,7 +1,81 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Settings } from './index';
-import type { SettingsElement } from './settings-types';
+import type { SettingsElement, SettingsProps } from './settings-types';
+
+// ============================================
+// Event Log — shows onChange / onSave events
+// ============================================
+
+type LogEntry = {
+    id: number;
+    time: string;
+    type: 'change' | 'save';
+    pageId: string;
+    key?: string;
+    value?: any;
+    values?: Record<string, any>;
+};
+
+function EventLog({ entries }: { entries: LogEntry[] }) {
+    if (entries.length === 0) return null;
+    return (
+        <div className="mt-4 rounded-lg border border-border bg-muted/40 max-h-64 overflow-y-auto">
+            <div className="px-3 py-2 border-b border-border bg-muted/60 flex justify-between items-center">
+                <span className="text-xs font-semibold text-foreground">Event Log</span>
+                <span className="text-xs text-muted-foreground">{entries.length} events</span>
+            </div>
+            <div className="divide-y divide-border">
+                {entries.map((entry) => (
+                    <div key={entry.id} className="px-3 py-2 text-xs font-mono">
+                        <span className="text-muted-foreground">{entry.time}</span>{' '}
+                        <span className={entry.type === 'save' ? 'text-green-600 font-bold' : 'text-blue-600 font-bold'}>
+                            {entry.type === 'save' ? 'onSave' : 'onChange'}
+                        </span>{' '}
+                        <span className="text-orange-600">{`pageId="${entry.pageId}"`}</span>
+                        {entry.type === 'change' && (
+                            <>
+                                {' '}
+                                <span className="text-foreground">{`key="${entry.key}"`}</span>{' '}
+                                <span className="text-purple-600">
+                                    {`value=${JSON.stringify(entry.value)}`}
+                                </span>
+                            </>
+                        )}
+                        {entry.type === 'save' && (
+                            <>
+                                {' '}
+                                <span className="text-foreground">
+                                    values={JSON.stringify(entry.values, null, 0).slice(0, 120)}
+                                    {JSON.stringify(entry.values).length > 120 ? '…' : ''}
+                                </span>
+                            </>
+                        )}
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+function useEventLog() {
+    const [entries, setEntries] = useState<LogEntry[]>([]);
+    const counter = useRef(0);
+
+    const log = (entry: Omit<LogEntry, 'id' | 'time'>) => {
+        counter.current += 1;
+        setEntries((prev) => [
+            {
+                ...entry,
+                id: counter.current,
+                time: new Date().toLocaleTimeString(),
+            },
+            ...prev.slice(0, 49), // keep last 50
+        ]);
+    };
+
+    return { entries, log };
+}
 
 // ============================================
 // Sample Schema — exercises all field variants
@@ -940,6 +1014,39 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // ============================================
+// Story wrapper components (proper React components for hooks)
+// ============================================
+
+function SettingsStoryWrapper({
+    initialValues = {},
+    ...args
+}: SettingsProps & { initialValues?: Record<string, unknown> }) {
+    const [values, setValues] = useState<Record<string, unknown>>(initialValues);
+    const { entries, log } = useEventLog();
+
+    return (
+        <div>
+            <div className="h-[700px]">
+                <Settings
+                    {...args}
+                    values={values}
+                    onChange={(pageId, key, value) => {
+                        setValues((prev) => ({ ...prev, [key]: value }));
+                        log({ type: 'change', pageId, key, value });
+                    }}
+                    onSave={(pageId, pageValues) => {
+                        // eslint-disable-next-line no-console
+                        console.log(`Save page "${pageId}":`, pageValues);
+                        log({ type: 'save', pageId, values: pageValues });
+                    }}
+                />
+            </div>
+            <EventLog entries={entries} />
+        </div>
+    );
+}
+
+// ============================================
 // Stories
 // ============================================
 
@@ -951,27 +1058,7 @@ export const Default: Story = {
         loading: false,
         hookPrefix: 'my_plugin',
     },
-    render: (args) => {
-        const [values, setValues] = useState<Record<string, any>>({});
-
-        return (
-            <div className="h-[700px]">
-                <Settings
-                    {...args}
-                    values={values}
-                    onChange={(key, value) => {
-                        setValues((prev) => ({ ...prev, [key]: value }));
-                        args.onChange?.(key, value);
-                    }}
-                    onSave={(vals) => {
-                        // eslint-disable-next-line no-console
-                        console.log('Save:', vals);
-                        args.onSave?.(vals);
-                    }}
-                />
-            </div>
-        );
-    },
+    render: (args) => <SettingsStoryWrapper {...args} />,
 };
 
 /** Loading state. */
@@ -989,40 +1076,26 @@ export const WithValues: Story = {
         schema: sampleSchema,
         title: 'Acme Store Settings',
     },
-    render: (args) => {
-        const [values, setValues] = useState<Record<string, any>>({
-            store_name: 'Acme Store',
-            store_city: 'San Francisco',
-            store_country: 'us',
-            enable_store_listing: true,
-            products_per_page: 24,
-            layout_mode: 'list',
-            commission_type: 'percentage',
-            commission_rate: 15,
-            allowed_categories: ['electronics', 'clothing', 'books'],
-            enable_paypal: true,
-            paypal_email: 'acme@example.com',
-            enable_stripe: true,
-            'location.map_zoom_level': 14,
-        });
-
-        return (
-            <div className="h-[700px]">
-                <Settings
-                    {...args}
-                    values={values}
-                    onChange={(key, value) => {
-                        setValues((prev) => ({ ...prev, [key]: value }));
-                    }}
-                    onSave={(vals) => {
-                        // eslint-disable-next-line no-console
-                        console.log('Save:', vals);
-                        alert('Settings saved! Check console for values.');
-                    }}
-                />
-            </div>
-        );
-    },
+    render: (args) => (
+        <SettingsStoryWrapper
+            {...args}
+            initialValues={{
+                store_name: 'Acme Store',
+                store_city: 'San Francisco',
+                store_country: 'us',
+                enable_store_listing: true,
+                products_per_page: 24,
+                layout_mode: 'list',
+                commission_type: 'percentage',
+                commission_rate: 15,
+                allowed_categories: ['electronics', 'clothing', 'books'],
+                enable_paypal: true,
+                paypal_email: 'acme@example.com',
+                enable_stripe: true,
+                'location.map_zoom_level': 14,
+            }}
+        />
+    ),
 };
 
 /** Dependency demo — toggle the switch to show/hide dependent fields. */
@@ -1031,23 +1104,12 @@ export const DependencyDemo: Story = {
         schema: sampleSchema,
         title: 'Dependency Demo',
     },
-    render: (args) => {
-        const [values, setValues] = useState<Record<string, any>>({
-            enable_store_listing: false,
-        });
-
-        return (
-            <div className="h-[700px]">
-                <Settings
-                    {...args}
-                    values={values}
-                    onChange={(key, value) => {
-                        setValues((prev) => ({ ...prev, [key]: value }));
-                    }}
-                />
-            </div>
-        );
-    },
+    render: (args) => (
+        <SettingsStoryWrapper
+            {...args}
+            initialValues={{ enable_store_listing: false }}
+        />
+    ),
 };
 
 // ============================================
@@ -1067,27 +1129,7 @@ export const FlatArray: Story = {
         title: 'Flat Array Settings',
         hookPrefix: 'flat_demo',
     },
-    render: (args) => {
-        const [values, setValues] = useState<Record<string, any>>({});
-
-        return (
-            <div className="h-[700px]">
-                <Settings
-                    {...args}
-                    values={values}
-                    onChange={(key, value) => {
-                        setValues((prev) => ({ ...prev, [key]: value }));
-                        args.onChange?.(key, value);
-                    }}
-                    onSave={(vals) => {
-                        // eslint-disable-next-line no-console
-                        console.log('Save:', vals);
-                        args.onSave?.(vals);
-                    }}
-                />
-            </div>
-        );
-    },
+    render: (args) => <SettingsStoryWrapper {...args} />,
 };
 
 /** Flat array with pre-populated values. */
@@ -1096,40 +1138,26 @@ export const FlatArrayWithValues: Story = {
         schema: flatSampleSchema,
         title: 'Flat Array (Pre-populated)',
     },
-    render: (args) => {
-        const [values, setValues] = useState<Record<string, any>>({
-            'store.store_basic.address_section.store_name': 'Acme Store',
-            'store.store_basic.address_section.store_city': 'San Francisco',
-            'store.store_basic.address_section.store_country': 'us',
-            'store.store_basic.display_section.enable_store_listing': true,
-            'store.store_basic.display_section.products_per_page': 24,
-            'store.store_basic.display_section.layout_mode': 'list',
-            'selling.selling_section.commission_type': 'percentage',
-            'selling.selling_section.commission_rate': 15,
-            'selling.selling_section.allowed_categories': ['electronics', 'clothing', 'books'],
-            'payment_methods.payments_section.enable_paypal': true,
-            'payment_methods.payments_section.paypal_email': 'acme@example.com',
-            'withdraw.withdraw_options_section.withdraw_frequency': 'weekly',
-            'withdraw.withdraw_options_section.weekly_schedule.weekly_timing_group.weekly_day': 'monday',
-            'theme.color_scheme': 'dark',
-            'theme.font_size': 18,
-        });
-
-        return (
-            <div className="h-[700px]">
-                <Settings
-                    {...args}
-                    values={values}
-                    onChange={(key, value) => {
-                        setValues((prev) => ({ ...prev, [key]: value }));
-                    }}
-                    onSave={(vals) => {
-                        // eslint-disable-next-line no-console
-                        console.log('Save:', vals);
-                        alert('Settings saved! Check console for values.');
-                    }}
-                />
-            </div>
-        );
-    },
+    render: (args) => (
+        <SettingsStoryWrapper
+            {...args}
+            initialValues={{
+                'store.store_basic.address_section.store_name': 'Acme Store',
+                'store.store_basic.address_section.store_city': 'San Francisco',
+                'store.store_basic.address_section.store_country': 'us',
+                'store.store_basic.display_section.enable_store_listing': true,
+                'store.store_basic.display_section.products_per_page': 24,
+                'store.store_basic.display_section.layout_mode': 'list',
+                'selling.selling_section.commission_type': 'percentage',
+                'selling.selling_section.commission_rate': 15,
+                'selling.selling_section.allowed_categories': ['electronics', 'clothing', 'books'],
+                'payment_methods.payments_section.enable_paypal': true,
+                'payment_methods.payments_section.paypal_email': 'acme@example.com',
+                'withdraw.withdraw_options_section.withdraw_frequency': 'weekly',
+                'withdraw.withdraw_options_section.weekly_schedule.weekly_timing_group.weekly_day': 'monday',
+                'theme.color_scheme': 'dark',
+                'theme.font_size': 18,
+            }}
+        />
+    ),
 };

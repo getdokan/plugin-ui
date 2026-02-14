@@ -2,7 +2,8 @@ import type { SettingsElement as SettingsElementType } from './settings-types';
 import { useSettings } from './settings-context';
 import { FieldRenderer } from './field-renderer';
 import { cn } from '@/lib/utils';
-import { FileText } from 'lucide-react';
+import { FileText, Save } from 'lucide-react';
+import { Button } from '../ui/button';
 
 // ============================================
 // Settings Content — renders heading, tabs, sections
@@ -10,16 +11,31 @@ import { FileText } from 'lucide-react';
 
 export function SettingsContent({ className }: { className?: string }) {
     const {
+        activePage,
+        activeSubpage,
         getActiveSubpage,
         getActiveTabs,
         getActiveContent,
         activeTab,
         setActiveTab,
+        isPageDirty,
+        getPageValues,
+        onSave,
     } = useSettings();
 
     const subpage = getActiveSubpage();
     const tabs = getActiveTabs();
     const content = getActiveContent();
+
+    // Scope ID: subpage ID if a subpage is active, otherwise page ID
+    const scopeId = activeSubpage || activePage;
+    const dirty = isPageDirty(scopeId);
+
+    const handleSave = () => {
+        if (!onSave) return;
+        const scopeValues = getPageValues(scopeId);
+        onSave(scopeId, scopeValues);
+    };
 
     if (!subpage) {
         return (
@@ -30,66 +46,82 @@ export function SettingsContent({ className }: { className?: string }) {
     }
 
     return (
-        <div className={cn('flex-1 overflow-y-auto', className)}>
-            {/* Page heading */}
-            <div className="px-6 pt-6 pb-4">
-                <div className="flex justify-between items-start">
-                    <div className="flex flex-col gap-2">
-                        {(subpage.label || subpage.title) && (
-                            <h2 className="text-2xl font-bold text-foreground leading-tight">
-                                {subpage.label || subpage.title}
-                            </h2>
-                        )}
-                        {subpage.description && (
-                            <p className="text-sm text-muted-foreground">
-                                {subpage.description}
-                            </p>
+        <div className={cn('flex flex-col', className)}>
+            <div className="flex-1 overflow-y-auto">
+                {/* Page heading */}
+                <div className="px-6 pt-6 pb-4">
+                    <div className="flex justify-between items-start">
+                        <div className="flex flex-col gap-2">
+                            {(subpage.label || subpage.title) && (
+                                <h2 className="text-2xl font-bold text-foreground leading-tight">
+                                    {subpage.label || subpage.title}
+                                </h2>
+                            )}
+                            {subpage.description && (
+                                <p className="text-sm text-muted-foreground">
+                                    {subpage.description}
+                                </p>
+                            )}
+                        </div>
+                        {subpage.doc_link && (
+                            <a
+                                href={subpage.doc_link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-muted-foreground flex gap-1 items-center text-sm hover:text-foreground transition-colors shrink-0"
+                            >
+                                <FileText className="size-4" />
+                                Doc
+                            </a>
                         )}
                     </div>
-                    {subpage.doc_link && (
-                        <a
-                            href={subpage.doc_link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-muted-foreground flex gap-1 items-center text-sm hover:text-foreground transition-colors shrink-0"
-                        >
-                            <FileText className="size-4" />
-                            Doc
-                        </a>
-                    )}
+                </div>
+
+                {/* Tabs */}
+                {tabs.length > 0 && (
+                    <div className="px-6 border-b border-border">
+                        <nav className="flex gap-4 -mb-px">
+                            {tabs
+                                .filter((tab) => tab.display !== false)
+                                .map((tab) => (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => setActiveTab(tab.id)}
+                                        className={cn(
+                                            'px-1 py-2.5 text-sm font-medium border-b-2 transition-colors',
+                                            activeTab === tab.id
+                                                ? 'border-primary text-primary'
+                                                : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
+                                        )}
+                                    >
+                                        {tab.label || tab.title}
+                                    </button>
+                                ))}
+                        </nav>
+                    </div>
+                )}
+
+                {/* Content — sections, fields, fieldgroups, subsections */}
+                <div className="p-6 space-y-6">
+                    {content.map((item) => (
+                        <ContentBlock key={item.id} element={item} />
+                    ))}
                 </div>
             </div>
 
-            {/* Tabs */}
-            {tabs.length > 0 && (
-                <div className="px-6 border-b border-border">
-                    <nav className="flex gap-4 -mb-px">
-                        {tabs
-                            .filter((tab) => tab.display !== false)
-                            .map((tab) => (
-                                <button
-                                    key={tab.id}
-                                    onClick={() => setActiveTab(tab.id)}
-                                    className={cn(
-                                        'px-1 py-2.5 text-sm font-medium border-b-2 transition-colors',
-                                        activeTab === tab.id
-                                            ? 'border-primary text-primary'
-                                            : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
-                                    )}
-                                >
-                                    {tab.label || tab.title}
-                                </button>
-                            ))}
-                    </nav>
+            {/* Per-page save button — sticky at the bottom */}
+            {onSave && (
+                <div className="sticky bottom-0 border-t border-border bg-background px-6 py-3 flex justify-end">
+                    <Button
+                        onClick={handleSave}
+                        size="default"
+                        disabled={!dirty}
+                    >
+                        <Save className="size-4 mr-2" />
+                        Save Changes
+                    </Button>
                 </div>
             )}
-
-            {/* Content — sections, fields, fieldgroups, subsections */}
-            <div className="p-6 space-y-6">
-                {content.map((item) => (
-                    <ContentBlock key={item.id} element={item} />
-                ))}
-            </div>
         </div>
     );
 }
