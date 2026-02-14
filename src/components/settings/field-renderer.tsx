@@ -1,0 +1,131 @@
+import type { SettingsElement, FieldComponentProps } from './settings-types';
+import { useSettings } from './settings-context';
+import {
+    TextField,
+    NumberField,
+    TextareaField,
+    SelectField,
+    SwitchField,
+    RadioCapsuleField,
+    MulticheckField,
+    LabelField,
+    HtmlField,
+    FallbackField,
+} from './fields';
+
+// ============================================
+// Field Renderer — dispatches by variant
+// Wraps each variant with applyFilters if @wordpress/hooks is available
+// ============================================
+
+/**
+ * Try to use @wordpress/hooks if available (peer dependency).
+ * Falls back to identity function if not installed.
+ */
+let applyFilters: (hookName: string, value: any, ...args: any[]) => any;
+try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const hooks = require('@wordpress/hooks');
+    applyFilters = hooks.applyFilters;
+} catch {
+    // Fallback: no filtering, return value as-is
+    applyFilters = (hookName: string, value: any) => value;
+}
+
+export function FieldRenderer({ element }: { element: SettingsElement }) {
+    const { values, updateValue, shouldDisplay, hookPrefix, errors } = useSettings();
+
+    // Check display status (dependency evaluation)
+    if (!shouldDisplay(element)) {
+        return null;
+    }
+
+    // Merge current value from context
+    const mergedElement: SettingsElement = {
+        ...element,
+        value: element.dependency_key ? (values[element.dependency_key] ?? element.value) : element.value,
+        validationError: element.dependency_key ? errors[element.dependency_key] : undefined,
+    };
+
+    const fieldProps: FieldComponentProps = {
+        element: mergedElement,
+        onChange: updateValue,
+    };
+
+    const variant = element.variant || '';
+    const filterPrefix = hookPrefix || 'plugin_ui';
+
+    // Dispatch by variant — each wrapped with applyFilters
+    switch (variant) {
+        case 'text':
+            return applyFilters(
+                `${filterPrefix}_settings_text_field`,
+                <TextField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'number':
+            return applyFilters(
+                `${filterPrefix}_settings_number_field`,
+                <NumberField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'textarea':
+            return applyFilters(
+                `${filterPrefix}_settings_textarea_field`,
+                <TextareaField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'select':
+            return applyFilters(
+                `${filterPrefix}_settings_select_field`,
+                <SelectField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'switch':
+            return applyFilters(
+                `${filterPrefix}_settings_switch_field`,
+                <SwitchField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'radio_capsule':
+            return applyFilters(
+                `${filterPrefix}_settings_radio_capsule_field`,
+                <RadioCapsuleField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'multicheck':
+            return applyFilters(
+                `${filterPrefix}_settings_multicheck_field`,
+                <MulticheckField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'base_field_label':
+            return applyFilters(
+                `${filterPrefix}_settings_label_field`,
+                <LabelField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'html':
+            return applyFilters(
+                `${filterPrefix}_settings_html_field`,
+                <HtmlField {...fieldProps} />,
+                mergedElement
+            );
+
+        default:
+            // Unknown variant — consumer must handle via applyFilters
+            return applyFilters(
+                `${filterPrefix}_settings_default_field`,
+                <FallbackField {...fieldProps} />,
+                mergedElement
+            );
+    }
+}
