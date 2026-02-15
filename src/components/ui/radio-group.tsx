@@ -96,7 +96,7 @@ function RadioCard({
   return (
     <FieldGroup className={cn(disabled && "opacity-50")}>
       <FieldLabel className={cn(
-        "transition-colors has-data-checked:bg-transparent dark:has-data-checked:bg-transparent has-data-checked:border-primary", 
+        "border-muted transition-colors has-data-checked:bg-transparent dark:has-data-checked:bg-transparent has-data-checked:border-primary", 
         !disabled && "hover:border-primary"
       )}>
         <Field 
@@ -142,7 +142,8 @@ function RadioImageCard({
   return (
     <FieldGroup className={cn(disabled && "opacity-50")}>
       <FieldLabel className={cn(
-        "transition-colors has-data-checked:bg-transparent dark:has-data-checked:bg-transparent has-data-checked:border-primary p-0 group cursor-pointer",
+        "transition-colors has-data-checked:bg-transparent dark:has-data-checked:bg-transparent p-0 group cursor-pointer group",
+        currentValue === props.value && 'border-primary!',
         !disabled && "hover:border-primary"
       )}>
         <Field
@@ -150,7 +151,7 @@ function RadioImageCard({
           data-disabled={disabled}
           className="flex flex-col p-0!"
         >
-          <div className={cn( 'w-full flex flex-row items-center justify-between border-b border-border p-3', position === "right" && "flex-row-reverse")}>
+          <div className={cn( 'w-full flex flex-row items-center justify-between border-b border-border group-hover:border-primary p-3', position === "right" && "flex-row-reverse", currentValue === props.value && 'border-primary!')}>
             <RadioGroupItem
               className={cn("disabled:opacity-100", className)}
               disabled={disabled}
