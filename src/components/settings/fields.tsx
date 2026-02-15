@@ -95,38 +95,40 @@ function FieldLabel({ element }: { element: SettingsElement }) {
   const displayLabel = element.label || element.title || '';
 
   return (
-    <div className="flex flex-col gap-1 w-full">
-      <div className="flex items-center gap-2">
-        {element.image_url && (
-          <img
-            src={element.image_url}
-            alt=""
-            className="w-11 h-11 object-contain border border-border rounded-md"
-          />
-        )}
+    <div className="flex items-start gap-3">
+      {element.image_url && (
+        <img
+          src={element.image_url}
+          alt=""
+          className="w-11 h-11 object-contain border border-border rounded-md"
+        />
+      )}
+      <div className="flex flex-col gap-1 w-full">
+        <div className="flex items-center gap-2">
         <span className="text-sm font-semibold text-foreground">
           {displayLabel}
         </span>
-        {element.tooltip && (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <button type="button" className="inline-flex">
-                  <Info className="size-3.5 text-muted-foreground cursor-help" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className="max-w-xs text-xs">{element.tooltip}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          {element.tooltip && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <button type="button" className="inline-flex">
+                    <Info className="size-3.5 text-muted-foreground cursor-help" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="max-w-xs text-xs">{element.tooltip}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+        </div>
+        {element.description && (
+          <div className="text-xs text-muted-foreground leading-relaxed">
+            <RawHTML>{element.description}</RawHTML>
+          </div>
         )}
       </div>
-      {element.description && (
-        <div className="text-xs text-muted-foreground leading-relaxed">
-          <RawHTML>{element.description}</RawHTML>
-        </div>
-      )}
     </div>
   );
 }

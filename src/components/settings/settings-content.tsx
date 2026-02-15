@@ -312,12 +312,10 @@ function SettingsSubSection({ element }: { element: SettingsElementType }) {
 
 function SettingsFieldGroup({ element }: { element: SettingsElementType }) {
     return (
-        <div className="p-4">
-            <div className="flex flex-wrap gap-4">
-                {element.children?.map((child) => (
-                    <FieldRenderer key={child.id} element={child} />
-                ))}
-            </div>
-        </div>
+      <div className="flex flex-wrap gap-4">
+          {element.children?.map((child) => (
+            <FieldRenderer key={child.id} element={child} />
+          ))}
+      </div>
     );
 }
