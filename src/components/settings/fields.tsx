@@ -1,24 +1,27 @@
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { FileText, Info, Eye, EyeOff } from "lucide-react";
-import { Checkbox } from "../ui/checkbox";
-import { Input } from "../ui/input";
-import { RadioGroup, RadioImageCard } from "../ui/radio-group";
 import {
+  Checkbox,
+  Input,
+  RadioGroup,
+  RadioImageCard,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import { Switch } from "../ui/switch";
-import { Textarea } from "../ui/textarea";
-import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Switch,
+  Textarea,
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../ui/tooltip";
+  ColorPicker,
+} from "../ui";
 import { ButtonToggleGroup } from "../button-toggle-group";
 import type { FieldComponentProps, SettingsElement } from "./settings-types";
 import { RawHTML } from '@wordpress/element';
@@ -282,6 +285,25 @@ export function SelectField({ element, onChange }: FieldComponentProps) {
           ))}
         </SelectContent>
       </Select>
+    </FieldWrapper>
+  );
+}
+
+// ============================================
+// Color Picker Field
+// ============================================
+
+export function ColorPickerField({ element, onChange }: FieldComponentProps) {
+  const value = String(element.value ?? element.default ?? "#000000");
+
+  return (
+    <FieldWrapper element={element} layout={element.layout ?? "horizontal"}>
+      <ColorPicker
+        value={value}
+        onChange={(newColor) => onChange(element.dependency_key!, newColor)}
+        disabled={element.disabled}
+        aria-label={element.label || element.title}
+      />
     </FieldWrapper>
   );
 }

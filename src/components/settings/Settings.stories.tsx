@@ -198,6 +198,17 @@ const sampleSchema: SettingsElement[] = [
                                         priority: 20,
                                     },
                                     {
+                                        id: 'store_color',
+                                        type: 'field',
+                                        variant: 'color_picker',
+                                        label: 'Store Brand Color',
+                                        description: 'Choose your primary brand color.',
+                                        dependency_key: 'store_color',
+                                        default: '#3b82f6',
+                                        section_id: 'address_section',
+                                        priority: 25,
+                                    },
+                                    {
                                         id: 'store_country',
                                         type: 'field',
                                         variant: 'select',

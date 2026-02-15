@@ -134,6 +134,9 @@ export {
   PopoverArrow,
 } from "./popover";
 
+// ColorPicker component
+export { ColorPicker, type ColorPickerProps } from "./color-picker";
+
 // Skeleton component
 export { Skeleton } from "./skeleton";
 
@@ -157,7 +160,7 @@ export {
 } from "./alert-dialog";
 
 export { Checkbox, LabeledCheckbox, CheckboxCard, type CheckboxProps, type LabeledCheckboxProps, type CheckboxCardProps } from "./checkbox";
-export { RadioGroup, RadioGroupItem, LabeledRadio, RadioCard, type RadioGroupItemProps, type LabeledRadioProps, type RadioCardProps } from "./radio-group";
+export { RadioGroup, RadioGroupItem, LabeledRadio, RadioCard, RadioImageCard, type RadioGroupItemProps, type LabeledRadioProps, type RadioCardProps, type RadioImageCardProps } from "./radio-group";
 export {
   Field,
   FieldLabel,

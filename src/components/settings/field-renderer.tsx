@@ -11,6 +11,7 @@ import {
     MulticheckField,
     LabelField,
     ShowHideField,
+    ColorPickerField,
     HtmlField,
     FallbackField,
 } from './fields';
@@ -115,6 +116,14 @@ export function FieldRenderer({ element }: { element: SettingsElement }) {
             return applyFilters(
                 `${filterPrefix}_settings_show_hide_field`,
                 <ShowHideField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'color_picker':
+        case 'select_color_picker':
+            return applyFilters(
+                `${filterPrefix}_settings_color_picker_field`,
+                <ColorPickerField {...fieldProps} />,
                 mergedElement
             );
 

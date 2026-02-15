@@ -84,6 +84,20 @@ function PopoverDescription({
   )
 }
 
+function PopoverClose({ ...props }: PopoverPrimitive.Close.Props) {
+  return <PopoverPrimitive.Close data-slot="popover-close" {...props} />;
+}
+
+function PopoverArrow({ className, ...props }: PopoverPrimitive.Arrow.Props) {
+  return (
+    <PopoverPrimitive.Arrow
+      data-slot="popover-arrow"
+      className={cn("bg-popover size-2.5 rotate-45 border-b border-r", className)}
+      {...props}
+    />
+  );
+}
+
 export {
   Popover,
   PopoverContent,
@@ -91,4 +105,7 @@ export {
   PopoverHeader,
   PopoverTitle,
   PopoverTrigger,
+  PopoverPortal,
+  PopoverClose,
+  PopoverArrow,
 }
