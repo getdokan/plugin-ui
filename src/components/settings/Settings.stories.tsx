@@ -1695,7 +1695,8 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "title": "Search with Suggestion Box",
                                         "value": "suggestion_box",
                                         "image": image,
-                                        "preview": true
+                                        "preview": true,
+                                        "description": ""
                                     },
                                     {
                                         "title": "Autoload Replace Current Content",
@@ -3277,7 +3278,8 @@ const dokanSettingsSchema: SettingsElement[] = [
                 "dependencies": [],
                 "validations": [],
                 "priority": 300,
-                "doc_link": "https://dokan.co/docs/wordpress/modules/dokan-request-for-quotation-module/"
+                "doc_link": "https://dokan.co/docs/wordpress/modules/dokan-request-for-quotation-module/",
+                "doc_link_text": "Doc"
             },
             {
                 "id": "wholesale",
@@ -3416,7 +3418,8 @@ const dokanSettingsSchema: SettingsElement[] = [
                 "dependencies": [],
                 "validations": [],
                 "priority": 400,
-                "doc_link": "https://dokan.co/docs/wordpress/modules/dokan-wholesale/"
+                "doc_link": "https://dokan.co/docs/wordpress/modules/dokan-wholesale/",
+                "doc_link_text": "Doc"
             },
             {
                 "id": "printful_integration",
@@ -3502,7 +3505,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "display": true,
                                         "hook_key": "dokan_settings_product_printful_integration_printful_api_settings_printful_api_settings_group_printful_enable",
                                         "children": [],
-                                        "description": "Connect to your Printful account with your website. <a href=\"https://www.printful.com/docs\" target=\"_blank\" rel=\"noopener noreferrer\">Get Help</a>",
+                                        "description": "Connect to your Printful account with your website. <a href=\"https://www.printful.com/docs\" class=\"text-primary underline\" target=\"_blank\" rel=\"noopener noreferrer\">Get Help</a>",
                                         "dependency_key": "printful_integration.printful_api_settings.printful_api_settings_group.printful_enable",
                                         "dependencies": [],
                                         "validations": [],
@@ -3516,7 +3519,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "helper_text": "",
                                         "postfix": "",
                                         "prefix": "",
-                                        "image_url": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/product/printful-thumb.svg",
+                                        "image_url": "https://play-lh.googleusercontent.com/EYQl0LgcDlhvcIbdk13hXyEOjWzIft2Olnkt2YgBZdKlH0VBpqDsRUm3G0dhFSwDCcnD",
                                         "options": [],
                                         "enable_state": {
                                             "value": "on",
@@ -3998,7 +4001,8 @@ const dokanSettingsSchema: SettingsElement[] = [
                         "dependency_key": "printful_integration.size_guide_settings",
                         "dependencies": [],
                         "validations": [],
-                        "doc_link": "https://wedevs.com/docs/dokan-lite/printful-integration/"
+                        "doc_link": "https://wedevs.com/docs/dokan-lite/printful-integration/",
+                        "doc_link_text": "Doc"
                     }
                 ],
                 "description": "Configure Dokan to give vendors the ability to connect with Printful.",
@@ -4006,7 +4010,8 @@ const dokanSettingsSchema: SettingsElement[] = [
                 "dependencies": [],
                 "validations": [],
                 "priority": 200,
-                "doc_link": "https://dokan.co/docs/wordpress/modules/printful/"
+                "doc_link": "https://dokan.co/docs/wordpress/modules/printful/",
+                "doc_link_text": "Doc"
             }
         ],
         "description": "Configure product-related settings for your marketplace.",

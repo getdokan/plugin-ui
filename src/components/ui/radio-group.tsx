@@ -150,8 +150,9 @@ function RadioImageCard({
           orientation={orientation}
           data-disabled={disabled}
           className="flex flex-col p-0!"
+          data-testid={`settings-field-${props.id}`}
         >
-          <div className={cn( 'w-full flex flex-row items-center justify-between border-b border-border group-hover:border-primary p-3', position === "right" && "flex-row-reverse", currentValue === props.value && 'border-primary!')}>
+          <div className={cn( 'w-full flex flex-row items-center justify-between gap-3 border-b border-border group-hover:border-primary p-3', position === "right" && "flex-row-reverse", currentValue === props.value && 'border-primary!')}>
             <RadioGroupItem
               className={cn("disabled:opacity-100", className)}
               disabled={disabled}
@@ -159,15 +160,15 @@ function RadioImageCard({
             />
             <FieldTitle className="font-bold">{label}</FieldTitle>
           </div>
-          <FieldContent className={cn('p-3 flex items-center justify-center')}>
-            <div className="flex flex-col items-center gap-2 w-full">
-              {image && (
-                <img src={image} alt={typeof label === 'string' ? label : 'Option image'} className="w-full h-auto object-contain" />
-              )}
+          <FieldContent className={cn('p-3 flex items-center justify-center')} >
+            <div className="flex flex-col items-start gap-3 w-full">
               {description && (
                 <FieldDescription className="text-center">
                   {description}
                 </FieldDescription>
+              )}
+              {image && (
+                <img src={image} alt={typeof label === 'string' ? label : 'Option image'} className="w-full h-auto object-contain" />
               )}
             </div>
           </FieldContent>

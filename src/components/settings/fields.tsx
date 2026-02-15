@@ -101,7 +101,7 @@ function FieldLabel({ element }: { element: SettingsElement }) {
           <img
             src={element.image_url}
             alt=""
-            className="w-5 h-5 object-contain"
+            className="w-11 h-11 object-contain border border-border rounded-md"
           />
         )}
         <span className="text-sm font-semibold text-foreground">
