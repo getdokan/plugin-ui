@@ -49,8 +49,8 @@ export function SettingsContent({ className }: { className?: string }) {
     }
 
     return (
-        <div className={cn('flex flex-col', className)} data-testid="settings-content">
-            <div className="flex-1 overflow-y-auto">
+        <div className={cn('flex flex-col overflow-y-auto', className)} data-testid="settings-content">
+            <div className="flex-1">
                 {/* Heading */}
                 <div className="px-6 pt-6 pb-4" data-testid={`settings-heading-${contentSource.id}`}>
                     <div className="flex justify-between items-start">
