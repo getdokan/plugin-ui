@@ -159,8 +159,8 @@ export function ShowHideField({ element, onChange }: FieldComponentProps) {
   const [show, setShow] = useState(false);
 
   return (
-    <FieldWrapper element={element}>
-      <div className="relative sm:max-w-56 w-full">
+    <FieldWrapper element={element} layout={ element.layout ?? "horizontal" }>
+      <div className="relative max-w-56 md:max-w-full w-full">
         <Input
           type={show ? "text" : "password"}
           value={String(element.value ?? element.default ?? "")}

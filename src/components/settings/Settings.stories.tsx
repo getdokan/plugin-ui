@@ -2279,7 +2279,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "display": true,
                                 "hook_key": "dokan_settings_general_location_map_api_configuration_google_map_api_key",
                                 "children": [],
-                                "description": "<a href=\"https://developers.google.com/maps/documentation/javascript/\" target=\"_blank\" rel=\"noopener noreferrer\">API Key</a> is needed to display map on store page.",
+                                "description": "<a href=\"https://developers.google.com/maps/documentation/javascript/\" class=\"text-primary underline\" target=\"_blank\" rel=\"noopener noreferrer\">API Key</a> is needed to display map on store page.",
                                 "dependency_key": "location.map_api_configuration.google_map_api_key",
                                 "dependencies": [
                                     {
@@ -2311,7 +2311,8 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "helper_text": "",
                                 "postfix": "",
                                 "prefix": "",
-                                "image_url": ""
+                                "image_url": "",
+                                "layout": "full-width"
                             },
                             {
                                 "id": "mapbox_api_key",
@@ -2355,7 +2356,8 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "helper_text": "",
                                 "postfix": "",
                                 "prefix": "",
-                                "image_url": ""
+                                "image_url": "",
+                                "layout": "full-width"
                             }
                         ],
                         "description": "",
