@@ -2,7 +2,9 @@ import type { SettingsElement as SettingsElementType } from './settings-types';
 import { useSettings } from './settings-context';
 import { FieldRenderer } from './field-renderer';
 import { cn } from '@/lib/utils';
-import { FileText } from 'lucide-react';
+import { FileText, Info } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui";
+import { RawHTML } from "@wordpress/element";
 
 // ============================================
 // Settings Content — renders heading, tabs, sections
@@ -72,6 +74,7 @@ export function SettingsContent({ className }: { className?: string }) {
                                 className="text-muted-foreground flex gap-1 items-center text-sm hover:text-foreground transition-colors shrink-0"
                             >
                                 <FileText className="size-4" />
+                                Doc
                             </a>
                         )}
                     </div>
@@ -181,17 +184,36 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
 
     const sectionLabel = section.label || section.title || '';
     const hasHeading = Boolean(sectionLabel || section.description);
+    const tooltip = section?.tooltip || '';
 
     return (
         <div className="rounded-lg border border-border bg-card overflow-hidden" data-testid={`settings-section-${section.id}`}>
             {hasHeading && (
                 <div className="px-5 pt-5 pb-3 flex justify-between items-start">
                     <div className="flex flex-col gap-1">
-                        {sectionLabel && (
-                            <h3 className="text-lg font-semibold text-foreground">
-                                {sectionLabel}
-                            </h3>
-                        )}
+                        <div className="flex items-center gap-2">
+                            {sectionLabel && (
+                              <h3 className="text-lg font-semibold text-foreground">
+                                  {sectionLabel}
+                              </h3>
+                            )}
+
+                            {tooltip && (
+                              <TooltipProvider>
+                                  <Tooltip>
+                                      <TooltipTrigger>
+                                          <button type="button" className="inline-flex">
+                                              <Info className="size-3.5 text-muted-foreground cursor-help" />
+                                          </button>
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                          <p className="max-w-xs text-xs">{tooltip}</p>
+                                      </TooltipContent>
+                                  </Tooltip>
+                              </TooltipProvider>
+                            )}
+                        </div>
+
                         {section.description && (
                             <p className="text-sm text-muted-foreground">
                                 {section.description}
@@ -269,9 +291,9 @@ function SettingsSubSection({ element }: { element: SettingsElementType }) {
                         </h4>
                     )}
                     {element.description && (
-                        <p className="text-xs text-muted-foreground leading-relaxed">
-                            {element.description}
-                        </p>
+                        <div className="text-xs text-muted-foreground leading-relaxed">
+                            <RawHTML>{element.description}</RawHTML>
+                        </div>
                     )}
                 </div>
             )}

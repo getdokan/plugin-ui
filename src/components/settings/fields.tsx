@@ -1,5 +1,6 @@
+import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import { FileText, Info } from "lucide-react";
+import { FileText, Info, Eye, EyeOff } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
 import { RadioCard, RadioGroup } from "../ui/radio-group";
@@ -12,14 +13,15 @@ import {
 } from "../ui/select";
 import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
-import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import { ButtonToggleGroup } from "../button-toggle-group";
 import type { FieldComponentProps, SettingsElement } from "./settings-types";
+import { RawHTML } from '@wordpress/element';
 
 // ============================================
 // Shared Field Wrapper (label + description + tooltip + error)
@@ -121,9 +123,9 @@ function FieldLabel({ element }: { element: SettingsElement }) {
         )}
       </div>
       {element.description && (
-        <p className="text-xs text-muted-foreground leading-relaxed">
-          {element.description}
-        </p>
+        <div className="text-xs text-muted-foreground leading-relaxed">
+          <RawHTML>{element.description}</RawHTML>
+        </div>
       )}
     </div>
   );
@@ -145,6 +147,39 @@ export function TextField({ element, onChange }: FieldComponentProps) {
         disabled={element.disabled}
         className="sm:max-w-56"
       />
+    </FieldWrapper>
+  );
+}
+
+// ============================================
+// Show/Hide Field (Password-like)
+// ============================================
+
+export function ShowHideField({ element, onChange }: FieldComponentProps) {
+  const [show, setShow] = useState(false);
+
+  return (
+    <FieldWrapper element={element}>
+      <div className="relative sm:max-w-56 w-full">
+        <Input
+          type={show ? "text" : "password"}
+          value={String(element.value ?? element.default ?? "")}
+          onChange={(e) => onChange(element.dependency_key!, e.target.value)}
+          placeholder={
+            element.placeholder ? String(element.placeholder) : undefined
+          }
+          disabled={element.disabled}
+          className="pr-10"
+        />
+        <button
+          type="button"
+          onClick={() => setShow(!show)}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+          aria-label={show ? "Hide" : "Show"}
+        >
+          {show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+        </button>
+      </div>
     </FieldWrapper>
   );
 }
@@ -280,31 +315,26 @@ export function SwitchField({ element, onChange }: FieldComponentProps) {
 }
 
 // ============================================
-// Radio Capsule Field (using ToggleGroup)
+// Radio Capsule Field (using ButtonToggleGroup)
 // ============================================
 
 export function RadioCapsuleField({ element, onChange }: FieldComponentProps) {
   const currentValue = String(element.value ?? element.default ?? "");
 
+  const items =
+    element.options?.map((option) => ({
+      value: String(option.value),
+      label: String(option.label ?? option.title ?? ""),
+    })) ?? [];
+
   return (
     <FieldWrapper element={element}>
-      <ToggleGroup
-        value={[currentValue]}
-        onValueChange={(val: any) => {
-          const selected = Array.isArray(val) ? val[0] : val;
-          if (selected) onChange(element.dependency_key!, selected);
-        }}
-      >
-        {element.options?.map((option) => (
-          <ToggleGroupItem
-            key={String(option.value)}
-            value={String(option.value)}
-            className="text-xs px-3"
-          >
-            {option.label ?? option.title}
-          </ToggleGroupItem>
-        ))}
-      </ToggleGroup>
+      <ButtonToggleGroup
+        items={items}
+        value={currentValue}
+        onChange={(val) => onChange(element.dependency_key!, val)}
+        variant="outline"
+      />
     </FieldWrapper>
   );
 }
@@ -391,9 +421,9 @@ export function HtmlField({ element }: FieldComponentProps) {
             </h3>
           )}
           {element.description && (
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              {element.description}
-            </p>
+            <div className="text-xs text-muted-foreground leading-relaxed">
+              <RawHTML>{element.description}</RawHTML>
+            </div>
           )}
         </div>
       )}

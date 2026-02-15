@@ -20,42 +20,47 @@ type LogEntry = {
 };
 
 function EventLog({ entries }: { entries: LogEntry[] }) {
-    if (entries.length === 0) return null;
     return (
         <div className="mt-4 rounded-lg border border-border bg-muted/40 max-h-64 overflow-y-auto">
             <div className="px-3 py-2 border-b border-border bg-muted/60 flex justify-between items-center">
                 <span className="text-xs font-semibold text-foreground">Event Log</span>
                 <span className="text-xs text-muted-foreground">{entries.length} events</span>
             </div>
-            <div className="divide-y divide-border">
-                {entries.map((entry) => (
-                    <div key={entry.id} className="px-3 py-2 text-xs font-mono">
-                        <span className="text-muted-foreground">{entry.time}</span>{' '}
-                        <span className={entry.type === 'save' ? 'text-green-600 font-bold' : 'text-blue-600 font-bold'}>
-                            {entry.type === 'save' ? 'onSave' : 'onChange'}
-                        </span>{' '}
-                        <span className="text-orange-600">{`pageId="${entry.pageId}"`}</span>
-                        {entry.type === 'change' && (
-                            <>
-                                {' '}
-                                <span className="text-foreground">{`key="${entry.key}"`}</span>{' '}
-                                <span className="text-purple-600">
-                                    {`value=${JSON.stringify(entry.value)}`}
-                                </span>
-                            </>
-                        )}
-                        {entry.type === 'save' && (
-                            <>
-                                {' '}
-                                <span className="text-foreground">
-                                    values={JSON.stringify(entry.values, null, 0).slice(0, 120)}
-                                    {JSON.stringify(entry.values).length > 120 ? '…' : ''}
-                                </span>
-                            </>
-                        )}
-                    </div>
-                ))}
-            </div>
+            {entries.length > 0 ? (
+                <div className="divide-y divide-border">
+                    {entries.map((entry) => (
+                        <div key={entry.id} className="px-3 py-2 text-xs font-mono">
+                            <span className="text-muted-foreground">{entry.time}</span>{' '}
+                            <span className={entry.type === 'save' ? 'text-green-600 font-bold' : 'text-blue-600 font-bold'}>
+                                {entry.type === 'save' ? 'onSave' : 'onChange'}
+                            </span>{' '}
+                            <span className="text-orange-600">{`pageId="${entry.pageId}"`}</span>
+                            {entry.type === 'change' && (
+                                <>
+                                    {' '}
+                                    <span className="text-foreground">{`key="${entry.key}"`}</span>{' '}
+                                    <span className="text-purple-600">
+                                        {`value=${JSON.stringify(entry.value)}`}
+                                    </span>
+                                </>
+                            )}
+                            {entry.type === 'save' && (
+                                <>
+                                    {' '}
+                                    <span className="text-foreground">
+                                        values={JSON.stringify(entry.values, null, 0).slice(0, 120)}
+                                        {JSON.stringify(entry.values).length > 120 ? '…' : ''}
+                                    </span>
+                                </>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div className="px-3 py-4 text-center text-xs text-muted-foreground italic">
+                    No events yet. Interact with the settings to see events logged here.
+                </div>
+            )}
         </div>
     );
 }
@@ -1027,10 +1032,11 @@ function SettingsStoryWrapper({
     const { entries, log } = useEventLog();
 
     return (
-        <div>
-            <div className="h-[700px]">
+        <div className="flex flex-col gap-4">
+            <div className="h-[700px] flex flex-col">
                 <Settings
                     {...args}
+                    className="flex-1"
                     values={values}
                     onChange={(scopeId, key, value) => {
                         setValues((prev) => ({ ...prev, [key]: value }));
@@ -1336,6 +1342,1344 @@ export const MixedPages: Story = {
     args: {
         schema: mixedSchema,
         title: 'Plugin Settings',
+    },
+    render: (args) => <SettingsStoryWrapper {...args} />,
+};
+
+const dokanSettingsSchema: SettingsElement[] = [
+    {
+        "id": "general",
+        "type": "page",
+        "title": "General",
+        "icon": "Settings",
+        "tooltip": "",
+        "display": true,
+        "hook_key": "dokan_settings_general",
+        "children": [
+            {
+                "id": "marketplace",
+                "type": "subpage",
+                "title": "Marketplace",
+                "icon": "",
+                "tooltip": "",
+                "display": true,
+                "hook_key": "dokan_settings_general_marketplace",
+                "children": [
+                    {
+                        "id": "marketplace_settings",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_general_marketplace_marketplace_settings",
+                        "children": [
+                            {
+                                "id": "vendor_store_url",
+                                "type": "field",
+                                "title": "Vendor Store URL",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_marketplace_marketplace_settings_vendor_store_url",
+                                "children": [],
+                                "description": "Define the vendor store URL (https://core-dokan.test/[this-text]/[vendor-name])",
+                                "dependency_key": "marketplace.marketplace_settings.vendor_store_url",
+                                "dependencies": [],
+                                "validations": [
+                                    {
+                                        "rules": "not_in",
+                                        "message": "The store URL &quot;%s&quot; is reserved by WordPress and cannot be used. Please choose a different value like &quot;store&quot;.",
+                                        "params": {
+                                            "values": [
+                                                "s",
+                                                "p",
+                                                "page",
+                                                "paged",
+                                                "author",
+                                                "feed",
+                                                "search",
+                                                "post",
+                                                "tag",
+                                                "category",
+                                                "attachment",
+                                                "name",
+                                                "order",
+                                                "orderby",
+                                                "rest",
+                                                "rest_route",
+                                                "wp-json",
+                                                "shop",
+                                                "cart",
+                                                "checkout"
+                                            ]
+                                        },
+                                        "self": "marketplace.marketplace_settings.vendor_store_url"
+                                    }
+                                ],
+                                "variant": "text",
+                                "value": "store",
+                                "default": "store",
+                                "placeholder": "Store",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": ""
+                            },
+                            {
+                                "id": "enable_single_seller_mode",
+                                "type": "field",
+                                "title": "Single Seller Mode",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_marketplace_marketplace_settings_enable_single_seller_mode",
+                                "children": [],
+                                "description": "Restrict customers from purchasing products from multiple vendors in a single order.",
+                                "dependency_key": "marketplace.marketplace_settings.enable_single_seller_mode",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "off",
+                                "default": "on",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "store_category_mode",
+                                "type": "field",
+                                "title": "Store Category",
+                                "icon": "",
+                                "tooltip": "Only admin can create store categories from Dashboard -&gt; Vendors -&gt; Store Categories to assign categories from vendor listing page. If you select single, vendor will only have one category available during store setup or when navigating to vendor Dashboard -&gt; Store -&gt; Store categories. If you select multiple, multiple categories will be available. Select none if you don&#039;t want either.",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_marketplace_marketplace_settings_store_category_mode",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "marketplace.marketplace_settings.store_category_mode",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "radio_capsule",
+                                "value": "none",
+                                "default": "single",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "value": "none",
+                                        "title": "None",
+                                        "icon": ""
+                                    },
+                                    {
+                                        "value": "single",
+                                        "title": "Single",
+                                        "icon": ""
+                                    },
+                                    {
+                                        "value": "multiple",
+                                        "title": "Multiple",
+                                        "icon": ""
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "show_customer_details_to_vendors",
+                                "type": "field",
+                                "title": "Show Customer Details to Vendors",
+                                "icon": "",
+                                "tooltip": "It will show customer information from the &quot;General Details&quot; section of the single order details page.",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_marketplace_marketplace_settings_show_customer_details_to_vendors",
+                                "children": [],
+                                "description": "Allow vendors to view customer shipping and contact information for orders.",
+                                "dependency_key": "marketplace.marketplace_settings.show_customer_details_to_vendors",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "on",
+                                "default": "on",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "guest_product_enquiry",
+                                "type": "field",
+                                "title": "Guest Product Enquiry",
+                                "icon": "",
+                                "tooltip": "When checked, user can inquire about products from the product page without signing in.",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_marketplace_marketplace_settings_guest_product_enquiry",
+                                "children": [],
+                                "description": "Guest customers can submit product enquiries without logging in.",
+                                "dependency_key": "marketplace.marketplace_settings.guest_product_enquiry",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "on",
+                                "default": "on",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "add_to_cart_button_visibility",
+                                "type": "field",
+                                "title": "Add to Cart Button Visibility",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_marketplace_marketplace_settings_add_to_cart_button_visibility",
+                                "children": [],
+                                "description": "Control &#039;Add to Cart&#039; button visibility based on your marketplace model.",
+                                "dependency_key": "marketplace.marketplace_settings.add_to_cart_button_visibility",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "off",
+                                "default": "on",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "marketplace.marketplace_settings",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "live_search",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_general_marketplace_live_search",
+                        "children": [
+                            {
+                                "id": "live_search_base",
+                                "type": "field",
+                                "title": "Live Search Options",
+                                "icon": "",
+                                "tooltip": "Select one option which one will apply on search box.",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_marketplace_live_search_live_search_base",
+                                "children": [],
+                                "description": "Choose how search results should be displayed to users",
+                                "dependency_key": "marketplace.live_search.live_search_base",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "base_field_label",
+                                "value": "",
+                                "default": "",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "suffix": "",
+                                "doc_link": "https://wedevs.com/docs/dokan/developers/live-search/"
+                            },
+                            {
+                                "id": "search_box_radio",
+                                "type": "field",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_marketplace_live_search_search_box_radio",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "marketplace.live_search.search_box_radio",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "customize_radio",
+                                "value": "old_live_search",
+                                "default": "suggestion_box",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "title": "Search with Suggestion Box",
+                                        "value": "suggestion_box",
+                                        "description": "Traditional search box with basic functionality",
+                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/General/suggestion-box.svg",
+                                        "preview": true
+                                    },
+                                    {
+                                        "title": "Autoload Replace Current Content",
+                                        "value": "old_live_search",
+                                        "description": "Advanced search with additional features",
+                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/General/live-search-content.svg",
+                                        "preview": true
+                                    }
+                                ],
+                                "radio_variant": "card",
+                                "css_class": "!mt-0",
+                                "grid_config": []
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "marketplace.live_search",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    }
+                ],
+                "description": "Configure core marketplace functionalities and customer shopping experience.",
+                "dependency_key": "marketplace",
+                "dependencies": [],
+                "validations": [],
+                "priority": 100,
+                "doc_link": "https://wedevs.com/docs/dokan/developers/marketplace/"
+            },
+            {
+                "id": "dokan_pages",
+                "type": "subpage",
+                "title": "Page Setup",
+                "icon": "",
+                "tooltip": "",
+                "display": true,
+                "hook_key": "dokan_settings_general_dokan_pages",
+                "children": [
+                    {
+                        "id": "dashboard_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_general_dokan_pages_dashboard_section",
+                        "children": [
+                            {
+                                "id": "dashboard",
+                                "type": "field",
+                                "title": "Dashboard",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_dokan_pages_dashboard_section_dashboard",
+                                "children": [],
+                                "description": "Select a page to show vendor dashboard.",
+                                "dependency_key": "dokan_pages.dashboard_section.dashboard",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "select",
+                                "value": "6",
+                                "default": "",
+                                "placeholder": "Select page",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "value": 582,
+                                        "title": "Classic Cart"
+                                    },
+                                    {
+                                        "value": 329,
+                                        "title": ""
+                                    },
+                                    {
+                                        "value": 320,
+                                        "title": "Single Product"
+                                    },
+                                    {
+                                        "value": 316,
+                                        "title": "Block Shop"
+                                    },
+                                    {
+                                        "value": 106,
+                                        "title": "Vendor registration"
+                                    },
+                                    {
+                                        "value": 61,
+                                        "title": "Product Subscription"
+                                    },
+                                    {
+                                        "value": 60,
+                                        "title": "Request for Quote"
+                                    },
+                                    {
+                                        "value": 54,
+                                        "title": "Checkout 2"
+                                    },
+                                    {
+                                        "value": 222,
+                                        "title": "My account Bn"
+                                    },
+                                    {
+                                        "value": 219,
+                                        "title": "My account"
+                                    },
+                                    {
+                                        "value": 13,
+                                        "title": "My account"
+                                    },
+                                    {
+                                        "value": 12,
+                                        "title": "Checkout"
+                                    },
+                                    {
+                                        "value": 11,
+                                        "title": "Cart"
+                                    },
+                                    {
+                                        "value": 10,
+                                        "title": "Shop"
+                                    },
+                                    {
+                                        "value": 194,
+                                        "title": "test-board"
+                                    },
+                                    {
+                                        "value": 8,
+                                        "title": "My Orders"
+                                    },
+                                    {
+                                        "value": 7,
+                                        "title": "Store List"
+                                    },
+                                    {
+                                        "value": 6,
+                                        "title": "Dashboard"
+                                    },
+                                    {
+                                        "value": 2,
+                                        "title": "Sample Page"
+                                    }
+                                ]
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "dokan_pages.dashboard_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "my_orders_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_general_dokan_pages_my_orders_section",
+                        "children": [
+                            {
+                                "id": "my_orders",
+                                "type": "field",
+                                "title": "My Orders",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_dokan_pages_my_orders_section_my_orders",
+                                "children": [],
+                                "description": "Select a page to show my orders",
+                                "dependency_key": "dokan_pages.my_orders_section.my_orders",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "select",
+                                "value": "8",
+                                "default": "",
+                                "placeholder": "Select page",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "value": 582,
+                                        "title": "Classic Cart"
+                                    },
+                                    {
+                                        "value": 329,
+                                        "title": ""
+                                    },
+                                    {
+                                        "value": 320,
+                                        "title": "Single Product"
+                                    },
+                                    {
+                                        "value": 316,
+                                        "title": "Block Shop"
+                                    },
+                                    {
+                                        "value": 106,
+                                        "title": "Vendor registration"
+                                    },
+                                    {
+                                        "value": 61,
+                                        "title": "Product Subscription"
+                                    },
+                                    {
+                                        "value": 60,
+                                        "title": "Request for Quote"
+                                    },
+                                    {
+                                        "value": 54,
+                                        "title": "Checkout 2"
+                                    },
+                                    {
+                                        "value": 222,
+                                        "title": "My account Bn"
+                                    },
+                                    {
+                                        "value": 219,
+                                        "title": "My account"
+                                    },
+                                    {
+                                        "value": 13,
+                                        "title": "My account"
+                                    },
+                                    {
+                                        "value": 12,
+                                        "title": "Checkout"
+                                    },
+                                    {
+                                        "value": 11,
+                                        "title": "Cart"
+                                    },
+                                    {
+                                        "value": 10,
+                                        "title": "Shop"
+                                    },
+                                    {
+                                        "value": 194,
+                                        "title": "test-board"
+                                    },
+                                    {
+                                        "value": 8,
+                                        "title": "My Orders"
+                                    },
+                                    {
+                                        "value": 7,
+                                        "title": "Store List"
+                                    },
+                                    {
+                                        "value": 6,
+                                        "title": "Dashboard"
+                                    },
+                                    {
+                                        "value": 2,
+                                        "title": "Sample Page"
+                                    }
+                                ]
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "dokan_pages.my_orders_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "store_listing_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_general_dokan_pages_store_listing_section",
+                        "children": [
+                            {
+                                "id": "store_listing",
+                                "type": "field",
+                                "title": "Store Listing",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_dokan_pages_store_listing_section_store_listing",
+                                "children": [],
+                                "description": "Select a page to show all stores",
+                                "dependency_key": "dokan_pages.store_listing_section.store_listing",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "select",
+                                "value": "7",
+                                "default": "",
+                                "placeholder": "Select page",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "value": 582,
+                                        "title": "Classic Cart"
+                                    },
+                                    {
+                                        "value": 329,
+                                        "title": ""
+                                    },
+                                    {
+                                        "value": 320,
+                                        "title": "Single Product"
+                                    },
+                                    {
+                                        "value": 316,
+                                        "title": "Block Shop"
+                                    },
+                                    {
+                                        "value": 106,
+                                        "title": "Vendor registration"
+                                    },
+                                    {
+                                        "value": 61,
+                                        "title": "Product Subscription"
+                                    },
+                                    {
+                                        "value": 60,
+                                        "title": "Request for Quote"
+                                    },
+                                    {
+                                        "value": 54,
+                                        "title": "Checkout 2"
+                                    },
+                                    {
+                                        "value": 222,
+                                        "title": "My account Bn"
+                                    },
+                                    {
+                                        "value": 219,
+                                        "title": "My account"
+                                    },
+                                    {
+                                        "value": 13,
+                                        "title": "My account"
+                                    },
+                                    {
+                                        "value": 12,
+                                        "title": "Checkout"
+                                    },
+                                    {
+                                        "value": 11,
+                                        "title": "Cart"
+                                    },
+                                    {
+                                        "value": 10,
+                                        "title": "Shop"
+                                    },
+                                    {
+                                        "value": 194,
+                                        "title": "test-board"
+                                    },
+                                    {
+                                        "value": 8,
+                                        "title": "My Orders"
+                                    },
+                                    {
+                                        "value": 7,
+                                        "title": "Store List"
+                                    },
+                                    {
+                                        "value": 6,
+                                        "title": "Dashboard"
+                                    },
+                                    {
+                                        "value": 2,
+                                        "title": "Sample Page"
+                                    }
+                                ]
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "dokan_pages.store_listing_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "reg_tc_page_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_general_dokan_pages_reg_tc_page_section",
+                        "children": [
+                            {
+                                "id": "reg_tc_page",
+                                "type": "field",
+                                "title": "Terms and Conditions Page",
+                                "icon": "",
+                                "tooltip": "Select a page to display the Terms and Conditions of your store for Vendors.",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_dokan_pages_reg_tc_page_section_reg_tc_page",
+                                "children": [],
+                                "description": "Select where you want to add Dokan pages.",
+                                "dependency_key": "dokan_pages.reg_tc_page_section.reg_tc_page",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "select",
+                                "value": "",
+                                "default": "",
+                                "placeholder": "Select page",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "value": 582,
+                                        "title": "Classic Cart"
+                                    },
+                                    {
+                                        "value": 329,
+                                        "title": ""
+                                    },
+                                    {
+                                        "value": 320,
+                                        "title": "Single Product"
+                                    },
+                                    {
+                                        "value": 316,
+                                        "title": "Block Shop"
+                                    },
+                                    {
+                                        "value": 106,
+                                        "title": "Vendor registration"
+                                    },
+                                    {
+                                        "value": 61,
+                                        "title": "Product Subscription"
+                                    },
+                                    {
+                                        "value": 60,
+                                        "title": "Request for Quote"
+                                    },
+                                    {
+                                        "value": 54,
+                                        "title": "Checkout 2"
+                                    },
+                                    {
+                                        "value": 222,
+                                        "title": "My account Bn"
+                                    },
+                                    {
+                                        "value": 219,
+                                        "title": "My account"
+                                    },
+                                    {
+                                        "value": 13,
+                                        "title": "My account"
+                                    },
+                                    {
+                                        "value": 12,
+                                        "title": "Checkout"
+                                    },
+                                    {
+                                        "value": 11,
+                                        "title": "Cart"
+                                    },
+                                    {
+                                        "value": 10,
+                                        "title": "Shop"
+                                    },
+                                    {
+                                        "value": 194,
+                                        "title": "test-board"
+                                    },
+                                    {
+                                        "value": 8,
+                                        "title": "My Orders"
+                                    },
+                                    {
+                                        "value": 7,
+                                        "title": "Store List"
+                                    },
+                                    {
+                                        "value": 6,
+                                        "title": "Dashboard"
+                                    },
+                                    {
+                                        "value": 2,
+                                        "title": "Sample Page"
+                                    }
+                                ]
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "dokan_pages.reg_tc_page_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    }
+                ],
+                "description": "Link your WordPress pages to essential Dokan marketplace functions and features.",
+                "dependency_key": "dokan_pages",
+                "dependencies": [],
+                "validations": [],
+                "priority": 200,
+                "doc_link": "https://wedevs.com/docs/dokan/settings/page-settings-2/"
+            },
+            {
+                "id": "location",
+                "type": "subpage",
+                "title": "Location",
+                "icon": "",
+                "tooltip": "",
+                "display": true,
+                "hook_key": "dokan_settings_general_location",
+                "children": [
+                    {
+                        "id": "map_api_configuration",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_general_location_map_api_configuration",
+                        "children": [
+                            {
+                                "id": "map_api_source",
+                                "type": "field",
+                                "title": "Map API Source",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_location_map_api_configuration_map_api_source",
+                                "children": [],
+                                "description": "Which map API source you want to use in your site?",
+                                "dependency_key": "location.map_api_configuration.map_api_source",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "radio_capsule",
+                                "value": "google_maps",
+                                "default": "google_maps",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "value": "google_maps",
+                                        "title": "Google Maps",
+                                        "icon": ""
+                                    },
+                                    {
+                                        "value": "mapbox",
+                                        "title": "Mapbox",
+                                        "icon": ""
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "google_map_api_key",
+                                "type": "field",
+                                "variant": "show_hide",
+                                "title": "Google Map API Key",
+                                "icon": "",
+                                "tooltip": "Insert Google API Key (with hyperlink) to display store map.",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_location_map_api_configuration_google_map_api_key",
+                                "children": [],
+                                "description": "<a href=\"https://developers.google.com/maps/documentation/javascript/\" target=\"_blank\" rel=\"noopener noreferrer\">API Key</a> is needed to display map on store page.",
+                                "dependency_key": "location.map_api_configuration.google_map_api_key",
+                                "dependencies": [
+                                    {
+                                        "key": "location.map_api_configuration.map_api_source",
+                                        "value": "google_maps",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "==",
+                                        "self": "location.map_api_configuration.google_map_api_key"
+                                    },
+                                    {
+                                        "key": "location.map_api_configuration.map_api_source",
+                                        "value": "mapbox",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "==",
+                                        "self": "location.map_api_configuration.google_map_api_key"
+                                    }
+                                ],
+                                "validations": [],
+                                "value": "AIzaSyD9N67E6zpGuZqT-o_EI8da5qLbWonLOWw",
+                                "default": "",
+                                "placeholder": "Enter your Google Maps API key",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": ""
+                            },
+                            {
+                                "id": "mapbox_api_key",
+                                "type": "field",
+                                "variant": "show_hide",
+                                "title": "Mapbox API Key",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_location_map_api_configuration_mapbox_api_key",
+                                "children": [],
+                                "description": "Enter your Mapbox API key to enable map functionality.",
+                                "dependency_key": "location.map_api_configuration.mapbox_api_key",
+                                "dependencies": [
+                                    {
+                                        "key": "location.map_api_configuration.map_api_source",
+                                        "value": "mapbox",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "==",
+                                        "self": "location.map_api_configuration.mapbox_api_key"
+                                    },
+                                    {
+                                        "key": "location.map_api_configuration.map_api_source",
+                                        "value": "google_maps",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "==",
+                                        "self": "location.map_api_configuration.mapbox_api_key"
+                                    }
+                                ],
+                                "validations": [],
+                                "value": "",
+                                "default": "",
+                                "placeholder": "Enter your Mapbox API key",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": ""
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "location.map_api_configuration",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "map_display_settings",
+                        "type": "section",
+                        "title": "Map Display",
+                        "icon": "",
+                        "tooltip": "Control the visibility of location maps site-wide.",
+                        "display": true,
+                        "hook_key": "dokan_settings_general_location_map_display_settings",
+                        "children": [
+                            {
+                                "id": "location_map_position",
+                                "type": "field",
+                                "title": "Location Map Position",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_location_map_display_settings_location_map_position",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "location.map_display_settings.location_map_position",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "radio_capsule",
+                                "value": "top",
+                                "default": "top",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "value": "top",
+                                        "title": "Top",
+                                        "icon": ""
+                                    },
+                                    {
+                                        "value": "left",
+                                        "title": "Left",
+                                        "icon": ""
+                                    },
+                                    {
+                                        "value": "right",
+                                        "title": "Right",
+                                        "icon": ""
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "show_filters_before_map",
+                                "type": "field",
+                                "title": "Show Filters Before Location Map",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_location_map_display_settings_show_filters_before_map",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "location.map_display_settings.show_filters_before_map",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "on",
+                                "default": "on",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "radius_search_unit",
+                                "type": "field",
+                                "title": "Radius Search Unit",
+                                "icon": "",
+                                "tooltip": "Choose the unit for radius search distance.",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_location_map_display_settings_radius_search_unit",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "location.map_display_settings.radius_search_unit",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "radio_capsule",
+                                "value": "km",
+                                "default": "km",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "value": "km",
+                                        "title": "Kilometers",
+                                        "icon": ""
+                                    },
+                                    {
+                                        "value": "miles",
+                                        "title": "Miles",
+                                        "icon": ""
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "radius_search_min_distance",
+                                "type": "field",
+                                "title": "Radius Search - Minimum Distance",
+                                "icon": "",
+                                "tooltip": "Set the minimum unit distance of the radius.",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_location_map_display_settings_radius_search_min_distance",
+                                "children": [],
+                                "description": "Set minimum distance for radius search.",
+                                "dependency_key": "location.map_display_settings.radius_search_min_distance",
+                                "dependencies": [],
+                                "validations": [
+                                    {
+                                        "rules": "not_empty|min_value",
+                                        "message": "",
+                                        "params": [],
+                                        "self": "location.map_display_settings.radius_search_min_distance"
+                                    }
+                                ],
+                                "variant": "number",
+                                "value": 0,
+                                "default": "0",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "km",
+                                "prefix": "",
+                                "image_url": "",
+                                "minimum": null,
+                                "maximum": null,
+                                "step": 0.1,
+                                "addon_icon": false
+                            },
+                            {
+                                "id": "radius_search_max_distance",
+                                "type": "field",
+                                "title": "Radius Search - Maximum Distance",
+                                "icon": "",
+                                "tooltip": "Set the maximum unit distance of the radius.",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_location_map_display_settings_radius_search_max_distance",
+                                "children": [],
+                                "description": "Set maximum distance for radius search.",
+                                "dependency_key": "location.map_display_settings.radius_search_max_distance",
+                                "dependencies": [],
+                                "validations": [
+                                    {
+                                        "rules": "not_empty|min_value",
+                                        "message": "",
+                                        "params": {
+                                            "min": 1
+                                        },
+                                        "self": "location.map_display_settings.radius_search_max_distance"
+                                    }
+                                ],
+                                "variant": "number",
+                                "value": 10,
+                                "default": "10",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "km",
+                                "prefix": "",
+                                "image_url": "",
+                                "minimum": null,
+                                "maximum": null,
+                                "step": 0.1,
+                                "addon_icon": false
+                            },
+                            {
+                                "id": "map_zoom_level",
+                                "type": "field",
+                                "title": "Map Zoom Level",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_location_map_display_settings_map_zoom_level",
+                                "children": [],
+                                "description": "To zoom in, increase the number. To zoom out, decrease the number.",
+                                "dependency_key": "location.map_display_settings.map_zoom_level",
+                                "dependencies": [],
+                                "validations": [
+                                    {
+                                        "rules": "not_empty|min_value|max_value",
+                                        "message": "",
+                                        "params": {
+                                            "min": 1,
+                                            "max": 18
+                                        },
+                                        "self": "location.map_display_settings.map_zoom_level"
+                                    }
+                                ],
+                                "variant": "number",
+                                "value": 11,
+                                "default": "11",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "minimum": null,
+                                "maximum": null,
+                                "step": 0.1,
+                                "addon_icon": false
+                            }
+                        ],
+                        "description": "Control the visibility of location maps site-wide.",
+                        "dependency_key": "location.map_display_settings",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "map_placement",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_general_location_map_placement",
+                        "children": [
+                            {
+                                "id": "map_placement_locations",
+                                "type": "field",
+                                "title": "Map Placement Locations",
+                                "icon": "",
+                                "tooltip": "Select the pages where you want to display the store location map.",
+                                "display": true,
+                                "hook_key": "dokan_settings_general_location_map_placement_map_placement_locations",
+                                "children": [],
+                                "description": "Choose where the store location map appears",
+                                "dependency_key": "location.map_placement.map_placement_locations",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "multicheck",
+                                "value": [ "store_listing", "shop_page" ],
+                                "default": [ "store_listing", "shop_page" ],
+                                "options": [
+                                    {
+                                        "value": "store_listing",
+                                        "title": "Store Listing"
+                                    },
+                                    {
+                                        "value": "shop_page",
+                                        "title": "Shop Page"
+                                    },
+                                    {
+                                        "value": "single_product_location_tab",
+                                        "title": "Location tab in single product page."
+                                    }
+                                ],
+                                "helper_text": ""
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "location.map_placement",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    }
+                ],
+                "description": "Configure how map locations are displayed throughout your marketplace.",
+                "dependency_key": "location",
+                "dependencies": [],
+                "validations": [],
+                "priority": 300,
+                "doc_link": "https://wedevs.com/docs/dokan/settings/page-settings-2/"
+            }
+        ],
+        "description": "Configure the general settings for your marketplace.",
+        "dependency_key": "",
+        "dependencies": [],
+        "validations": []
+    },
+];
+
+/**
+ * Dokan settings
+ */
+export const DokanSettings: Story = {
+    args: {
+        schema: dokanSettingsSchema,
+        title: 'Dokan Settings',
     },
     render: (args) => <SettingsStoryWrapper {...args} />,
 };

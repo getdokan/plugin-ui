@@ -10,6 +10,7 @@ import {
     CustomizeRadioField,
     MulticheckField,
     LabelField,
+    ShowHideField,
     HtmlField,
     FallbackField,
 } from './fields';
@@ -107,6 +108,13 @@ export function FieldRenderer({ element }: { element: SettingsElement }) {
             return applyFilters(
                 `${filterPrefix}_settings_label_field`,
                 <LabelField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'show_hide':
+            return applyFilters(
+                `${filterPrefix}_settings_show_hide_field`,
+                <ShowHideField {...fieldProps} />,
                 mergedElement
             );
 
