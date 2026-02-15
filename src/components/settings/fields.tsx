@@ -194,7 +194,7 @@ export function NumberField({ element, onChange }: FieldComponentProps) {
       <div className="flex items-center gap-1 relative max-w-56 md:max-w-full w-full">
         {element.prefix && (
           <span className="text-sm text-muted-foreground shrink-0 absolute left-3 top-1/2 -translate-y-1/2 hover:text-foreground transition-colors">
-            {element.prefix}
+            <RawHTML>{element.prefix}</RawHTML>
           </span>
         )}
         <Input
@@ -217,7 +217,7 @@ export function NumberField({ element, onChange }: FieldComponentProps) {
         />
         {element.postfix && (
           <span className="text-sm text-muted-foreground shrink-0 absolute right-3 top-1/2 -translate-y-1/2 hover:text-foreground transition-colors">
-            {element.postfix}
+            <RawHTML>{element.postfix}</RawHTML>
           </span>
         )}
       </div>
