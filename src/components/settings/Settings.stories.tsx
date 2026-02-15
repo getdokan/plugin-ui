@@ -1427,7 +1427,8 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "helper_text": "",
                                 "postfix": "",
                                 "prefix": "",
-                                "image_url": ""
+                                "image_url": "",
+                                "layout": "full-width"
                             },
                             {
                                 "id": "enable_single_seller_mode",
@@ -1660,7 +1661,8 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "prefix": "",
                                 "image_url": "",
                                 "suffix": "",
-                                "doc_link": "https://wedevs.com/docs/dokan/developers/live-search/"
+                                "doc_link": "https://wedevs.com/docs/dokan/developers/live-search/",
+                                "doc_link_text": "Doc"
                             },
                             {
                                 "id": "search_box_radio",
@@ -1719,7 +1721,8 @@ const dokanSettingsSchema: SettingsElement[] = [
                 "dependencies": [],
                 "validations": [],
                 "priority": 100,
-                "doc_link": "https://wedevs.com/docs/dokan/developers/marketplace/"
+                "doc_link": "https://wedevs.com/docs/dokan/developers/marketplace/",
+                "doc_link_text": "Doc",
             },
             {
                 "id": "dokan_pages",
@@ -2212,7 +2215,8 @@ const dokanSettingsSchema: SettingsElement[] = [
                 "dependencies": [],
                 "validations": [],
                 "priority": 200,
-                "doc_link": "https://wedevs.com/docs/dokan/settings/page-settings-2/"
+                "doc_link": "https://wedevs.com/docs/dokan/settings/page-settings-2/",
+                "doc_link_text": "Doc",
             },
             {
                 "id": "location",
@@ -2665,7 +2669,8 @@ const dokanSettingsSchema: SettingsElement[] = [
                 "dependencies": [],
                 "validations": [],
                 "priority": 300,
-                "doc_link": "https://wedevs.com/docs/dokan/settings/page-settings-2/"
+                "doc_link": "https://wedevs.com/docs/dokan/settings/page-settings-2/",
+                "doc_link_text": "Doc",
             }
         ],
         "description": "Configure the general settings for your marketplace.",

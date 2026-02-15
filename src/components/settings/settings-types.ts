@@ -65,10 +65,12 @@ export type SettingsElement = {
     suffix?: string;
     image_url?: string;
     doc_link?: string;
+    doc_link_text?: string;
     css_class?: string;
     wrapper_class?: string;
     content_class?: string;
     divider?: boolean;
+    layout?: 'horizontal' | 'full-width';
 
     // Switch-specific
     enable_state?: { value: string | number; title: string };

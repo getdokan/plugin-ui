@@ -137,7 +137,7 @@ function FieldLabel({ element }: { element: SettingsElement }) {
 
 export function TextField({ element, onChange }: FieldComponentProps) {
   return (
-    <FieldWrapper element={element}>
+    <FieldWrapper element={element} layout={ element.layout ?? "horizontal" }>
       <Input
         value={String(element.value ?? element.default ?? "")}
         onChange={(e) => onChange(element.dependency_key!, e.target.value)}
@@ -145,7 +145,7 @@ export function TextField({ element, onChange }: FieldComponentProps) {
           element.placeholder ? String(element.placeholder) : undefined
         }
         disabled={element.disabled}
-        className="sm:max-w-56"
+        className="max-w-56 md:max-w-full"
       />
     </FieldWrapper>
   );
@@ -191,9 +191,9 @@ export function ShowHideField({ element, onChange }: FieldComponentProps) {
 export function NumberField({ element, onChange }: FieldComponentProps) {
   return (
     <FieldWrapper element={element}>
-      <div className="flex items-center gap-1 sm:max-w-56">
+      <div className="flex items-center gap-1 relative max-w-56 md:max-w-full w-full">
         {element.prefix && (
-          <span className="text-sm text-muted-foreground shrink-0">
+          <span className="text-sm text-muted-foreground shrink-0 absolute left-3 top-1/2 -translate-y-1/2 hover:text-foreground transition-colors">
             {element.prefix}
           </span>
         )}
@@ -213,9 +213,10 @@ export function NumberField({ element, onChange }: FieldComponentProps) {
           min={element.min}
           max={element.max}
           step={element.increment}
+          className={ cn(  element?.postfix && 'pr-10', element?.prefix && 'pl-10' ) }
         />
         {element.postfix && (
-          <span className="text-sm text-muted-foreground shrink-0">
+          <span className="text-sm text-muted-foreground shrink-0 absolute right-3 top-1/2 -translate-y-1/2 hover:text-foreground transition-colors">
             {element.postfix}
           </span>
         )}
@@ -399,7 +400,7 @@ export function LabelField({ element }: FieldComponentProps) {
           className="text-muted-foreground flex gap-1 items-center text-sm hover:text-foreground transition-colors shrink-0"
         >
           <FileText className="size-4" />
-          Doc
+          { element?.doc_link_text ?? '' }
         </a>
       )}
     </div>

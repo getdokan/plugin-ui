@@ -74,7 +74,7 @@ export function SettingsContent({ className }: { className?: string }) {
                                 className="text-muted-foreground flex gap-1 items-center text-sm hover:text-foreground transition-colors shrink-0"
                             >
                                 <FileText className="size-4" />
-                                Doc
+                                { contentSource.doc_link_text ?? '' }
                             </a>
                         )}
                     </div>
@@ -189,7 +189,7 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
     return (
         <div className="rounded-lg border border-border bg-card overflow-hidden" data-testid={`settings-section-${section.id}`}>
             {hasHeading && (
-                <div className="px-5 pt-5 pb-3 flex justify-between items-start">
+                <div className={ cn( 'px-5 pt-5 pb-3 flex justify-between items-start', section?.children?.length > 0 && 'border-b border-border' ) }>
                     <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2">
                             {sectionLabel && (
@@ -228,7 +228,7 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
                             className="text-muted-foreground flex gap-1 items-center text-sm hover:text-foreground transition-colors shrink-0"
                         >
                             <FileText className="size-4" />
-                            Doc
+                            { section.doc_link_text ?? '' }
                         </a>
                     )}
                 </div>
