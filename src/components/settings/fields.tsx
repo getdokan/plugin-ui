@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { FileText, Info, Eye, EyeOff } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
-import { RadioCard, RadioGroup } from "../ui/radio-group";
+import { RadioGroup, RadioImageCard } from "../ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -461,12 +461,15 @@ export function CustomizeRadioField({
         )}
       >
         {element.options?.map((option) => (
-          <RadioCard
+          <RadioImageCard
             key={String(option.value)}
             value={String(option.value)}
+            currentValue={currentValue}
             label={option.label ?? option.title ?? ''}
+            image={option.image}
             description={option.description}
             disabled={element.disabled}
+            position="right"
           />
         ))}
       </RadioGroup>

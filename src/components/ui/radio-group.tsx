@@ -123,5 +123,58 @@ function RadioCard({
   )
 }
 
-export { RadioGroup, RadioGroupItem, LabeledRadio, RadioCard }
-export type { RadioGroupItemProps, LabeledRadioProps, RadioCardProps }
+interface RadioImageCardProps extends LabeledRadioProps {
+  currentValue: any;
+  image: any;
+}
+
+function RadioImageCard({
+  label,
+  description,
+  className,
+  orientation = "horizontal",
+  position = "left",
+  disabled,
+  currentValue = '',
+  image = '',
+  ...props
+  }: RadioImageCardProps) {
+  return (
+    <FieldGroup className={cn(disabled && "opacity-50")}>
+      <FieldLabel className={cn(
+        "transition-colors has-data-checked:bg-transparent dark:has-data-checked:bg-transparent has-data-checked:border-primary p-0 group cursor-pointer",
+        !disabled && "hover:border-primary"
+      )}>
+        <Field
+          orientation={orientation}
+          data-disabled={disabled}
+          className="flex flex-col p-0!"
+        >
+          <div className={cn( 'w-full flex flex-row items-center justify-between border-b border-border p-3', position === "right" && "flex-row-reverse")}>
+            <RadioGroupItem
+              className={cn("disabled:opacity-100", className)}
+              disabled={disabled}
+              {...props}
+            />
+            <FieldTitle className="font-bold">{label}</FieldTitle>
+          </div>
+          <FieldContent className={cn('p-3 flex items-center justify-center')}>
+            <div className="flex flex-col items-center gap-2 w-full">
+              {image && (
+                <img src={image} alt={typeof label === 'string' ? label : 'Option image'} className="w-full h-auto object-contain" />
+              )}
+              {description && (
+                <FieldDescription className="text-center">
+                  {description}
+                </FieldDescription>
+              )}
+            </div>
+          </FieldContent>
+        </Field>
+      </FieldLabel>
+    </FieldGroup>
+  )
+}
+
+export { RadioGroup, RadioGroupItem, LabeledRadio, RadioCard, RadioImageCard }
+export type { RadioGroupItemProps, LabeledRadioProps, RadioCardProps, RadioImageCardProps }

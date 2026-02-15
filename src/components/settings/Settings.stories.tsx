@@ -4,6 +4,8 @@ import { Save } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Settings } from './index';
 import type { SettingsElement, SettingsProps } from './settings-types';
+import image from './image.svg';
+import image2 from './image2.svg';
 
 // ============================================
 // Event Log — shows onChange / onSave events
@@ -1692,15 +1694,13 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     {
                                         "title": "Search with Suggestion Box",
                                         "value": "suggestion_box",
-                                        "description": "Traditional search box with basic functionality",
-                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/General/suggestion-box.svg",
+                                        "image": image,
                                         "preview": true
                                     },
                                     {
                                         "title": "Autoload Replace Current Content",
                                         "value": "old_live_search",
-                                        "description": "Advanced search with additional features",
-                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/General/live-search-content.svg",
+                                        "image": image2,
                                         "preview": true
                                     }
                                 ],
