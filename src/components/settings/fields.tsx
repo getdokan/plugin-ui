@@ -10,6 +10,7 @@ import {
   CopyInput,
   RadioGroup,
   RadioImageCard,
+  RadioIconCard,
   Select,
   SelectContent,
   SelectItem,
@@ -625,6 +626,7 @@ export function CustomizeRadioField({
   ...rest
 }: FieldComponentProps) {
   const currentValue = String(element.value ?? element.default ?? "");
+  const radioVariant = element.radio_variant || 'radio_box';
 
   return (
     <FieldWrapper element={element} layout="full-width" {...rest}>
@@ -636,20 +638,36 @@ export function CustomizeRadioField({
           "[&>[data-slot=field-group]]:h-full",
           "[&_[data-slot=field-label]]:h-full [&_[data-slot=field-label]]:w-full",
           "[&_[data-slot=field]]:h-full",
+          radioVariant === 'radio_box' && "lg:grid-cols-4",
         )}
       >
-        {element.options?.map((option) => (
-          <RadioImageCard
-            key={String(option.value)}
-            value={String(option.value)}
-            currentValue={currentValue}
-            label={option.label ?? option.title ?? ''}
-            image={option.image}
-            description={option.description}
-            disabled={element.disabled}
-            position="right"
-          />
-        ))}
+        {element.options?.map((option) => {
+          const commonProps = {
+            key: String(option.value),
+            value: String(option.value),
+            currentValue,
+            label: option.label ?? option.title ?? '',
+            description: option.description,
+            disabled: element.disabled,
+          };
+
+          if (radioVariant === 'radio_box') {
+            return (
+              <RadioIconCard
+                {...commonProps}
+                icon={option.icon || option.image}
+              />
+            );
+          }
+
+          return (
+            <RadioImageCard
+              {...commonProps}
+              image={option.image || option.icon}
+              position="right"
+            />
+          );
+        })}
       </RadioGroup>
     </FieldWrapper>
   );

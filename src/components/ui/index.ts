@@ -162,7 +162,7 @@ export {
 } from "./alert-dialog";
 
 export { Checkbox, LabeledCheckbox, CheckboxCard, type CheckboxProps, type LabeledCheckboxProps, type CheckboxCardProps } from "./checkbox";
-export { RadioGroup, RadioGroupItem, LabeledRadio, RadioCard, RadioImageCard, type RadioGroupItemProps, type LabeledRadioProps, type RadioCardProps, type RadioImageCardProps } from "./radio-group";
+export { RadioGroup, RadioGroupItem, LabeledRadio, RadioCard, RadioImageCard, RadioIconCard, type RadioGroupItemProps, type LabeledRadioProps, type RadioCardProps, type RadioImageCardProps, type RadioIconCardProps } from "./radio-group";
 export {
   Field,
   FieldLabel,

@@ -14076,6 +14076,983 @@ const dokanSettingsSchema: SettingsElement[] = [
         "dependencies": [],
         "validations": []
     },
+    {
+        "id": "moderation",
+        "type": "page",
+        "title": "Moderation",
+        "icon": "Settings2",
+        "tooltip": "",
+        "display": true,
+        "hook_key": "dokan_settings_moderation",
+        "children": [
+            {
+                "id": "rma",
+                "type": "subpage",
+                "title": "RMA",
+                "icon": "",
+                "tooltip": "",
+                "display": true,
+                "hook_key": "dokan_settings_moderation_rma",
+                "children": [
+                    {
+                        "id": "rma_settings",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_moderation_rma_rma_settings",
+                        "children": [
+                            {
+                                "id": "rma_order_status",
+                                "type": "field",
+                                "title": "Order Status",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_moderation_rma_rma_settings_rma_order_status",
+                                "children": [],
+                                "description": "Choose which order status allows customers to start the return process.",
+                                "dependency_key": "rma.rma_settings.rma_order_status",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "select",
+                                "value": "wc-completed",
+                                "default": "wc-completed",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "title": "Pending payment",
+                                        "value": "wc-pending"
+                                    },
+                                    {
+                                        "title": "Processing",
+                                        "value": "wc-processing"
+                                    },
+                                    {
+                                        "title": "On hold",
+                                        "value": "wc-on-hold"
+                                    },
+                                    {
+                                        "title": "Completed",
+                                        "value": "wc-completed"
+                                    },
+                                    {
+                                        "title": "Cancelled",
+                                        "value": "wc-cancelled"
+                                    },
+                                    {
+                                        "title": "Refunded",
+                                        "value": "wc-refunded"
+                                    },
+                                    {
+                                        "title": "Failed",
+                                        "value": "wc-failed"
+                                    },
+                                    {
+                                        "title": "Draft",
+                                        "value": "wc-checkout-draft"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "rma_refund_requests",
+                                "type": "field",
+                                "title": "Refund Requests",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_moderation_rma_rma_settings_rma_refund_requests",
+                                "children": [],
+                                "description": "Let customers submit refund requests directly through vendor stores.",
+                                "dependency_key": "rma.rma_settings.rma_refund_requests",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "on",
+                                "default": "on",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "rma_coupon_requests",
+                                "type": "field",
+                                "title": "Coupon Requests",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_moderation_rma_rma_settings_rma_coupon_requests",
+                                "children": [],
+                                "description": "Allow customers to request for coupons as store credit.",
+                                "dependency_key": "rma.rma_settings.rma_coupon_requests",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "on",
+                                "default": "on",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "rma.rma_settings",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "reasons_of_rma_settings",
+                        "type": "section",
+                        "title": "Reasons for RMA",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_moderation_rma_reasons_of_rma_settings",
+                        "children": [
+                            {
+                                "id": "rma_reasons",
+                                "type": "field",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_moderation_rma_reasons_of_rma_settings_rma_reasons",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "rma.reasons_of_rma_settings.rma_reasons",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "repeater",
+                                "value": [
+                                    {
+                                        "id": "broken",
+                                        "value": "Broken",
+                                        "order": 1,
+                                        "title": "Broken"
+                                    },
+                                    {
+                                        "id": "not_working",
+                                        "value": "Not working",
+                                        "order": 2,
+                                        "title": "Not working"
+                                    },
+                                    {
+                                        "id": "duplicate/clone_copy",
+                                        "value": "Duplicate/clone copy",
+                                        "order": 3,
+                                        "title": "Duplicate/clone copy"
+                                    }
+                                ],
+                                "items": [],
+                                "default": [
+                                    {
+                                        "id": "broken",
+                                        "value": "Broken",
+                                        "order": 1,
+                                        "title": "Broken"
+                                    },
+                                    {
+                                        "id": "not_working",
+                                        "value": "Not working",
+                                        "order": 2,
+                                        "title": "Not working"
+                                    },
+                                    {
+                                        "id": "duplicate/clone_copy",
+                                        "value": "Duplicate/clone copy",
+                                        "order": 3,
+                                        "title": "Duplicate/clone copy"
+                                    }
+                                ],
+                                "new_title": "Add Reasons for RMA"
+                            }
+                        ],
+                        "description": "Set up return reasons for customers to choose from.",
+                        "dependency_key": "rma.reasons_of_rma_settings",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "refund_policy_settings",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_moderation_rma_refund_policy_settings",
+                        "children": [
+                            {
+                                "id": "rma_refund_policy",
+                                "type": "field",
+                                "title": "Refund Policy",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_moderation_rma_refund_policy_settings_rma_refund_policy",
+                                "children": [],
+                                "description": "Create a standard refund policy for all vendors. Vendors can customize this policy for their specific needs.",
+                                "dependency_key": "rma.refund_policy_settings.rma_refund_policy",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "rich_text",
+                                "value": "",
+                                "default": "",
+                                "placeholder": "Enter your refund policy here...",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": ""
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "rma.refund_policy_settings",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    }
+                ],
+                "description": "Allow vendors to offer customize return and warranty facility on their sold products and Configure customer return options.",
+                "dependency_key": "rma",
+                "dependencies": [],
+                "validations": [],
+                "priority": 100,
+                "doc_link": "https://wedevs.com/docs/dokan-lite/moderation/rma/",
+                "doc_link_text": "Doc"
+            },
+            {
+                "id": "livechat",
+                "type": "subpage",
+                "title": "Live Chat",
+                "icon": "",
+                "tooltip": "",
+                "display": true,
+                "hook_key": "dokan_settings_moderation_livechat",
+                "children": [
+                    {
+                        "id": "livechat_settings",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_moderation_livechat_livechat_settings",
+                        "children": [
+                            {
+                                "id": "livechat_enabled",
+                                "type": "field",
+                                "title": "Live Chat",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_moderation_livechat_livechat_settings_livechat_enabled",
+                                "children": [],
+                                "description": "Enable live chat between vendor and customer",
+                                "dependency_key": "livechat.livechat_settings.livechat_enabled",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "on",
+                                "default": "on",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "livechat_provider",
+                                "type": "field",
+                                "title": "Chat Provider",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_moderation_livechat_livechat_settings_livechat_provider",
+                                "children": [],
+                                "description": "Select which chat platform to use.",
+                                "dependency_key": "livechat.livechat_settings.livechat_provider",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "customize_radio",
+                                "value": "messenger",
+                                "default": "talkjs",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "title": "Messenger",
+                                        "value": "messenger",
+                                        "description": "Connect with customers via Facebook Messenger",
+                                        "icon": "https://picsum.photos/100"
+                                    },
+                                    {
+                                        "title": "Talk JS",
+                                        "value": "talkjs",
+                                        "description": "Real-time chat with TalkJS integration",
+                                        "icon": "https://picsum.photos/100"
+                                    },
+                                    {
+                                        "title": "Tawk.to",
+                                        "value": "tawkto",
+                                        "description": "Live chat support with Tawk.to platform",
+                                        "icon": "https://picsum.photos/100"
+                                    },
+                                    {
+                                        "title": "WhatsApp",
+                                        "value": "whatsapp",
+                                        "description": "Connect with customers via WhatsApp Business",
+                                        "icon": "https://picsum.photos/100"
+                                    }
+                                ],
+                                "radio_variant": "radio_box",
+                                "css_class": "",
+                                "grid_config": []
+                            },
+                            {
+                                "id": "livechat_app_id",
+                                "type": "field",
+                                "title": "App ID",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_moderation_livechat_livechat_settings_livechat_app_id",
+                                "children": [],
+                                "description": "Insert App ID <a target=\"_blank\" class=\"block w-full leading-7\" href=\"https://talkjs.com/dashboard/signup/standard/\">Get your App ID \u2197</a>",
+                                "dependency_key": "livechat.livechat_settings.livechat_app_id",
+                                "dependencies": [
+                                    {
+                                        "key": "livechat.livechat_settings.livechat_provider",
+                                        "value": "talkjs",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "===",
+                                        "self": "livechat.livechat_settings.livechat_app_id"
+                                    },
+                                    {
+                                        "key": "livechat.livechat_settings.livechat_provider",
+                                        "value": "talkjs",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "!==",
+                                        "self": "livechat.livechat_settings.livechat_app_id"
+                                    }
+                                ],
+                                "validations": [],
+                                "variant": "show_hide",
+                                "value": "",
+                                "default": "",
+                                "placeholder": "Enter your App ID",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": ""
+                            },
+                            {
+                                "id": "livechat_app_secret",
+                                "type": "field",
+                                "title": "App Secret",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_moderation_livechat_livechat_settings_livechat_app_secret",
+                                "children": [],
+                                "description": "Insert App Secret <a target=\"_blank\" class=\"block w-full leading-7\" href=\"https://talkjs.com/dashboard/signup/standard/\">Get your App Secret \u2197</a>",
+                                "dependency_key": "livechat.livechat_settings.livechat_app_secret",
+                                "dependencies": [
+                                    {
+                                        "key": "livechat.livechat_settings.livechat_provider",
+                                        "value": "talkjs",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "===",
+                                        "self": "livechat.livechat_settings.livechat_app_secret"
+                                    },
+                                    {
+                                        "key": "livechat.livechat_settings.livechat_provider",
+                                        "value": "talkjs",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "!==",
+                                        "self": "livechat.livechat_settings.livechat_app_secret"
+                                    }
+                                ],
+                                "validations": [],
+                                "variant": "show_hide",
+                                "value": "",
+                                "default": "",
+                                "placeholder": "Enter your App Secret",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": ""
+                            },
+                            {
+                                "id": "wa_opening_method",
+                                "type": "field",
+                                "title": "Opening Pattern",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_moderation_livechat_livechat_settings_wa_opening_method",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "livechat.livechat_settings.wa_opening_method",
+                                "dependencies": [
+                                    {
+                                        "key": "livechat.livechat_settings.livechat_provider",
+                                        "value": "whatsapp",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "===",
+                                        "self": "livechat.livechat_settings.wa_opening_method"
+                                    },
+                                    {
+                                        "key": "livechat.livechat_settings.livechat_provider",
+                                        "value": "whatsapp",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "!==",
+                                        "self": "livechat.livechat_settings.wa_opening_method"
+                                    }
+                                ],
+                                "validations": [],
+                                "variant": "select",
+                                "value": "in_app",
+                                "default": "in_app",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "value": "in_browser",
+                                        "title": "Browser"
+                                    },
+                                    {
+                                        "value": "in_app",
+                                        "title": "App"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "wa_pre_filled_message",
+                                "type": "field",
+                                "title": "Pre-filled Message",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_moderation_livechat_livechat_settings_wa_pre_filled_message",
+                                "children": [],
+                                "description": "Text that appears in the WhatsApp Chat window. Add variables {store_name}, {store_url} to replace with store name, store url",
+                                "dependency_key": "livechat.livechat_settings.wa_pre_filled_message",
+                                "dependencies": [
+                                    {
+                                        "key": "livechat.livechat_settings.livechat_provider",
+                                        "value": "whatsapp",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "===",
+                                        "self": "livechat.livechat_settings.wa_pre_filled_message"
+                                    },
+                                    {
+                                        "key": "livechat.livechat_settings.livechat_provider",
+                                        "value": "whatsapp",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "!==",
+                                        "self": "livechat.livechat_settings.wa_pre_filled_message"
+                                    }
+                                ],
+                                "validations": [],
+                                "variant": "textarea",
+                                "value": "Hello {store_name}, I have an enquiry regarding your store at {store_url}",
+                                "default": "Hello {store_name}, I have an enquiry regarding your store at {store_url}",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": ""
+                            },
+                            {
+                                "id": "livechat_vendor_page_button",
+                                "type": "field",
+                                "title": "Chat Button on Vendor Page",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_moderation_livechat_livechat_settings_livechat_vendor_page_button",
+                                "children": [],
+                                "description": "Display a chat button on vendor store pages",
+                                "dependency_key": "livechat.livechat_settings.livechat_vendor_page_button",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "on",
+                                "default": "on",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "livechat_product_page_button",
+                                "type": "field",
+                                "title": "Chat Button on Product Page",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_moderation_livechat_livechat_settings_livechat_product_page_button",
+                                "children": [],
+                                "description": "Choose where to show the chat button on product pages.",
+                                "dependency_key": "livechat.livechat_settings.livechat_product_page_button",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "customize_radio",
+                                "value": "above_tab",
+                                "default": "above_tab",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "title": "Above Product Tab",
+                                        "value": "above_tab",
+                                        "description": "",
+                                        "image": image
+                                    },
+                                    {
+                                        "title": "Inside Product Tab",
+                                        "value": "inside_tab",
+                                        "description": "",
+                                        "image": image2
+                                    },
+                                    {
+                                        "title": "Don&#039;t Show",
+                                        "value": "dont_show",
+                                        "description": "",
+                                        "image": image
+                                    }
+                                ],
+                                "radio_variant": "template",
+                                "css_class": "md:!grid-cols-3",
+                                "grid_config": []
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "livechat.livechat_settings",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    }
+                ],
+                "description": "Configure live chat settings for vendor-customer communication.",
+                "dependency_key": "livechat",
+                "dependencies": [],
+                "validations": [],
+                "priority": 300,
+                "doc_link": "https://wedevs.com/docs/dokan-lite/moderation/livechat/",
+                "doc_link_text": "Doc"
+            },
+            {
+                "id": "report_abuse",
+                "type": "subpage",
+                "title": "Report Abuse",
+                "icon": "",
+                "tooltip": "",
+                "display": true,
+                "hook_key": "dokan_settings_moderation_report_abuse",
+                "children": [
+                    {
+                        "id": "report_abuse_settings",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_moderation_report_abuse_report_abuse_settings",
+                        "children": [
+                            {
+                                "id": "report_abuse_reported_by",
+                                "type": "field",
+                                "title": "Reported by",
+                                "icon": "",
+                                "tooltip": "Restrict Product Abuse feature for logged-In users only.",
+                                "display": true,
+                                "hook_key": "dokan_settings_moderation_report_abuse_report_abuse_settings_report_abuse_reported_by",
+                                "children": [],
+                                "description": "Choose who has permission to report products.",
+                                "dependency_key": "report_abuse.report_abuse_settings.report_abuse_reported_by",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "radio_capsule",
+                                "value": "logged_in_users",
+                                "default": "logged_in_users",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "value": "logged_in_users",
+                                        "title": "Logged-in Users",
+                                        "icon": ""
+                                    },
+                                    {
+                                        "value": "all_users",
+                                        "title": "All Users",
+                                        "icon": ""
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "report_abuse_reasons",
+                                "type": "field",
+                                "title": "Reasons for Abuse Reports",
+                                "icon": "",
+                                "tooltip": "Add multiple customized reasons.",
+                                "display": true,
+                                "hook_key": "dokan_settings_moderation_report_abuse_report_abuse_settings_report_abuse_reasons",
+                                "children": [],
+                                "description": "Create a list of reasons users can select when reporting products.",
+                                "dependency_key": "report_abuse.report_abuse_settings.report_abuse_reasons",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "repeater",
+                                "value": [
+                                    {
+                                        "id": "spam_content",
+                                        "title": "This content is spam",
+                                        "order": 1
+                                    },
+                                    {
+                                        "id": "adult_content",
+                                        "title": "This content should marked as adult",
+                                        "order": 2
+                                    },
+                                    {
+                                        "id": "abusive_content",
+                                        "title": "This content is abusive",
+                                        "order": 3
+                                    },
+                                    {
+                                        "id": "violent_content",
+                                        "title": "This content is violent",
+                                        "order": 4
+                                    },
+                                    {
+                                        "id": "nudity_content",
+                                        "title": "This content contains nudity",
+                                        "order": 5
+                                    }
+                                ],
+                                "items": [],
+                                "default": [
+                                    {
+                                        "id": "spam_content",
+                                        "title": "This content is spam",
+                                        "order": 1
+                                    },
+                                    {
+                                        "id": "adult_content",
+                                        "title": "This content should marked as adult",
+                                        "order": 2
+                                    },
+                                    {
+                                        "id": "abusive_content",
+                                        "title": "This content is abusive",
+                                        "order": 3
+                                    },
+                                    {
+                                        "id": "violent_content",
+                                        "title": "This content is violent",
+                                        "order": 4
+                                    },
+                                    {
+                                        "id": "nudity_content",
+                                        "title": "This content contains nudity",
+                                        "order": 5
+                                    }
+                                ],
+                                "new_title": "Add Reasons for Report Abuse"
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "report_abuse.report_abuse_settings",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    }
+                ],
+                "description": "Configure your marketplace to ensure safety and honesty by allowing customers to report fraudulent products.",
+                "dependency_key": "report_abuse",
+                "dependencies": [],
+                "validations": [],
+                "priority": 400,
+                "doc_link": "https://dokan.co/docs/wordpress/modules/dokan-report-abuse/"
+            },
+            {
+                "id": "store_support",
+                "type": "subpage",
+                "title": "Store Support",
+                "icon": "",
+                "tooltip": "",
+                "display": true,
+                "hook_key": "dokan_settings_moderation_store_support",
+                "children": [
+                    {
+                        "id": "store_support_settings",
+                        "type": "section",
+                        "title": "Store Support Settings",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_moderation_store_support_store_support_settings",
+                        "children": [
+                            {
+                                "id": "store_support_order_details",
+                                "type": "field",
+                                "title": "Display on Order Details",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_moderation_store_support_store_support_settings_store_support_order_details",
+                                "children": [],
+                                "description": "Add a support button to order details pages for customers to easily contact vendors about their orders.",
+                                "dependency_key": "store_support.store_support_settings.store_support_order_details",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "on",
+                                "default": "on",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "store_support_button_label",
+                                "type": "field",
+                                "title": "Support Button Label",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_moderation_store_support_store_support_settings_store_support_button_label",
+                                "children": [],
+                                "description": "Customize the text that appears on the support button.",
+                                "dependency_key": "store_support.store_support_settings.store_support_button_label",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "text",
+                                "value": "Get Support",
+                                "default": "Get Support",
+                                "placeholder": "Get Support",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": ""
+                            },
+                            {
+                                "id": "store_support_product_page",
+                                "type": "field",
+                                "title": "Display on Single Product Page",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_moderation_store_support_store_support_settings_store_support_product_page",
+                                "children": [],
+                                "description": "Choose where to show the support button on individual product pages for customer support.",
+                                "dependency_key": "store_support.store_support_settings.store_support_product_page",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "customize_radio",
+                                "value": "above_tab",
+                                "default": "above_tab",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "title": "Above Product Tab",
+                                        "value": "above_tab",
+                                        "description": "",
+                                        "image": image
+                                    },
+                                    {
+                                        "title": "Inside Product Tab",
+                                        "value": "inside_tab",
+                                        "description": "",
+                                        "image": image2
+                                    },
+                                    {
+                                        "title": "Don&#039;t Show",
+                                        "value": "dont_show",
+                                        "description": "",
+                                        "image": image
+                                    }
+                                ],
+                                "radio_variant": "template",
+                                "css_class": "md:!grid-cols-3",
+                                "grid_config": []
+                            }
+                        ],
+                        "description": "Configure store support button display and customization.",
+                        "dependency_key": "store_support.store_support_settings",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    }
+                ],
+                "description": "Configure store support settings for vendor-customer communication.",
+                "dependency_key": "store_support",
+                "dependencies": [],
+                "validations": [],
+                "priority": 200,
+                "doc_link": "https://wedevs.com/docs/dokan-lite/moderation/store-support/",
+                "doc_link_text": "Doc"
+            }
+        ],
+        "description": "Configure moderation settings, return policies, and customer request management.",
+        "dependency_key": "",
+        "dependencies": [],
+        "validations": []
+    },
 ];
 
 /**
