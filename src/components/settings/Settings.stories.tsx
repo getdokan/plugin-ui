@@ -14484,7 +14484,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "display": true,
                                 "hook_key": "dokan_settings_moderation_livechat_livechat_settings_livechat_app_id",
                                 "children": [],
-                                "description": "Insert App ID <a target=\"_blank\" class=\"block w-full leading-7\" href=\"https://talkjs.com/dashboard/signup/standard/\">Get your App ID \u2197</a>",
+                                "description": "Insert App ID <a target=\"_blank\" class=\"block w-full leading-7 text-primary underline\" href=\"https://talkjs.com/dashboard/signup/standard/\">Get your App ID \u2197</a>",
                                 "dependency_key": "livechat.livechat_settings.livechat_app_id",
                                 "dependencies": [
                                     {
@@ -14528,7 +14528,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "display": true,
                                 "hook_key": "dokan_settings_moderation_livechat_livechat_settings_livechat_app_secret",
                                 "children": [],
-                                "description": "Insert App Secret <a target=\"_blank\" class=\"block w-full leading-7\" href=\"https://talkjs.com/dashboard/signup/standard/\">Get your App Secret \u2197</a>",
+                                "description": "Insert App Secret <a target=\"_blank\" class=\"block w-full leading-7 text-primary underline\" href=\"https://talkjs.com/dashboard/signup/standard/\">Get your App Secret \u2197</a>",
                                 "dependency_key": "livechat.livechat_settings.livechat_app_secret",
                                 "dependencies": [
                                     {
