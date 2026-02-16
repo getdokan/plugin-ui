@@ -18,6 +18,7 @@ import {
     CopyField,
     InfoField,
     RichTextField,
+    GoogleAnalyticsField,
 } from './fields';
 
 // ============================================
@@ -105,6 +106,13 @@ export function FieldRenderer({ element }: { element: SettingsElement }) {
             return applyFilters(
                 `${filterPrefix}_settings_customize_radio_field`,
                 <CustomizeRadioField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'google_analytics':
+            return applyFilters(
+                `${filterPrefix}_settings_google_analytics_field`,
+                <GoogleAnalyticsField {...fieldProps} />,
                 mergedElement
             );
 

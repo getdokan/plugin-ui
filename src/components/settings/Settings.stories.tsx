@@ -5993,20 +5993,20 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     {
                                         "title": "Top of Product Tab",
                                         "value": "below_tabs",
-                                        "description": "Display the available vendor section at the top of the product tab.",
-                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/spmv/top-product-tab.svg"
+                                        "description": "",
+                                        "image": image
                                     },
                                     {
                                         "title": "Inside Product Tab",
                                         "value": "inside_tabs",
-                                        "description": "Display the available vendor section inside the product tab.",
-                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/spmv/inside-product-tab.svg"
+                                        "description": "",
+                                        "image": image2
                                     },
                                     {
                                         "title": "Bottom of Product Tab",
                                         "value": "after_tabs",
-                                        "description": "Display the available vendor section at the bottom of the product tab.",
-                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/spmv/bottom-product-tab.svg"
+                                        "description": "",
+                                        "image": image
                                     }
                                 ],
                                 "radio_variant": "card",
@@ -6103,12 +6103,43 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "dependency_key": "store_state.store_stats_section.analytics_authenticate_user",
                                 "dependencies": [],
                                 "validations": [],
-                                "variant": "html",
-                                "value": null,
-                                "html_content": "<div class=\"dokan-analytics-auth\">\n                <a href=\"https://accounts.google.com/o/oauth2/auth?next=https%3A%2F%2Fcore-dokan.test%2F%3Fwc-api%3Ddokan_vendor_analytics&#038;scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.readonly&#038;response_type=code&#038;access_type=offline&#038;approval_prompt=force&#038;redirect_uri=https%3A%2F%2Fapi.getdokan.com%2Fvendor-analytics%2Fredirect&#038;client_id=171309425925-gv18udnrkk3jtquoivn98867q25o75eu.apps.googleusercontent.com&#038;state=https%3A%2F%2Fcore-dokan.test%2F%3Fwc-api%3Ddokan_vendor_analytics\" class=\"dokan-analytics-auth-btn border rounded divide-x flex \">\n                   <div class=\"dokan-analytics-auth-btn-icon px-4 py-2\">\n                    <img alt=\"Sign in with Google\" src=\"https://core-dokan.test/wp-content/plugins/dokan-pro/modules/vendor-analytics/assets/images/google_icon_logo_svgrepo_com.svg\" style=\"max-height: 46px; max-width: 46px;\">\n                   </div>\n                   <div class=\"dokan-analytics-auth-btn-text px-3 py-2 flex items-center\">\n                    <span class=\"text-sm font-light text-black\">Connect with Google</span>\n                   </div>\n                </a>\n            </div>",
-                                "css_classes": "dokan-analytics-auth-field",
-                                "escape_html": false,
-                                "allow_shortcodes": false
+                                "variant": "google_analytics",
+                                "value": {
+                                    "connected": false,
+                                    "profile_id": "profile_1",
+                                    "profiles": [
+                                        { "value": "profile_1", "label": "All Web Site Data" },
+                                        { "value": "profile_2", "label": "Test Profile" }
+                                    ],
+                                    "disconnect_url": "#",
+                                    "auth_url": "#"
+                                },
+                                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/500px-Google_%22G%22_logo.svg.png"
+                            },
+                            {
+                                "id": "google_analytics_add_tracking_code",
+                                "type": "field",
+                                "title": "Add Tracking Code",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_vendor_store_state_store_stats_section_add_tracking_code",
+                                "children": [],
+                                "description": "This is an optional settings that will add Analytics Global Site Tag in you site header. If you use any SEO plugin or add your tracking code by other means, then choose `no` in the settings.",
+                                "dependency_key": "store_state.store_stats_section.add_tracking_code",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "on",
+                                "default": "on",
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                }
                             }
                         ],
                         "description": "",
@@ -6118,7 +6149,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                         "doc_link": ""
                     }
                 ],
-                "description": "Configure store state settings.",
+                "description": "Set up Google Analytics tracking for vendor stores in your marketplace.",
                 "dependency_key": "store_state",
                 "dependencies": [],
                 "validations": [],

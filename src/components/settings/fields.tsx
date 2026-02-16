@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import * as LucideIcons from "lucide-react";
-import { FileText, Info, Eye, EyeOff, ArrowUpRight } from "lucide-react";
+import { FileText, Info, Eye, EyeOff, ArrowUpRight, RefreshCcw, CircleCheck } from "lucide-react";
 import {
+  Button,
   Checkbox,
   Input,
   CopyInput,
@@ -26,6 +27,7 @@ import {
   Notice,
   NoticeTitle,
   RichTextEditor,
+  Separator,
 } from "../ui";
 import { ButtonToggleGroup } from "../button-toggle-group";
 import type { FieldComponentProps, SettingsElement } from "./settings-types";
@@ -276,6 +278,102 @@ export function RichTextField({ element, onChange }: FieldComponentProps) {
         }
       />
     </FieldWrapper>
+  );
+}
+
+// ============================================
+// Google Analytics Field
+// ============================================
+
+export function GoogleAnalyticsField({ element, onChange }: FieldComponentProps) {
+  const value = element.value as any;
+  const isConnected = value?.connected;
+
+  if (!isConnected) {
+    return (
+      <FieldWrapper element={element}>
+        <a
+          href={value?.auth_url || "#"}
+          className="flex border border-border rounded-md overflow-hidden hover:border-primary transition-colors group h-10"
+        >
+          <div className="bg-muted/30 px-3 flex items-center justify-center border-r border-border group-hover:border-primary">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/500px-Google_%22G%22_logo.svg.png"
+              alt="Google"
+              className="size-4"
+            />
+          </div>
+          <div className="px-3 flex items-center whitespace-nowrap">
+            <span className="text-sm font-semibold text-foreground">Connect with Google</span>
+          </div>
+        </a>
+      </FieldWrapper>
+    );
+  }
+
+  const selectedProfile = (value?.profiles || []).find(
+    (p: any) => String(p.value) === String(value?.profile_id)
+  );
+
+  return (
+    <div className="w-full divide-y divide-border">
+      <FieldWrapper
+        element={{
+          ...element,
+          icon: "CircleCheck",
+          description: `Successfully connected but you can disconnect and reconnect anytime if needed. <a href="${value?.disconnect_url || "#"}" class="text-primary hover:underline inline-flex items-center gap-1">Disconnect <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></a>`,
+        }}
+      >
+        <div />
+      </FieldWrapper>
+
+      <div className="grid grid-cols-12 gap-2 items-center w-full p-4">
+        <div className="sm:col-span-8 col-span-12">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-semibold text-foreground">
+              Analytics Profile
+            </span>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <button type="button" className="inline-flex">
+                    <Info className="size-3.5 text-muted-foreground cursor-help" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="max-w-xs text-xs">Select your profile</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        </div>
+        <div className="sm:col-span-4 col-span-12 flex sm:justify-end gap-2">
+          <Select
+            value={String(value?.profile_id || "")}
+            onValueChange={(val) =>
+              onChange(element.dependency_key!, { ...value, profile_id: val })
+            }
+          >
+            <SelectTrigger className="w-full sm:w-[200px]">
+              <SelectValue placeholder="Select your profile">
+                {selectedProfile?.label}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {(value?.profiles || []).map((p: any) => (
+                <SelectItem key={p.value} value={String(p.value)}>
+                  {p.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button variant="outline" className="shrink-0 flex gap-2">
+            <RefreshCcw className="size-4" />
+            <span className="hidden sm:inline">Refresh</span>
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 }
 
