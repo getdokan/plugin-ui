@@ -12311,12 +12311,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     {
                                         "value": "by_amount",
                                         "title": "By Amount Limit",
-                                        "icon": "DollarSign"
+                                        "startIcon": "DollarSign"
                                     },
                                     {
                                         "value": "by_month",
                                         "title": "Monthly",
-                                        "icon": "Calendar"
+                                        "startIcon": "Calendar"
                                     }
                                 ]
                             },
@@ -12568,6 +12568,1510 @@ const dokanSettingsSchema: SettingsElement[] = [
             }
         ],
         "description": "Configure transaction-related settings including commissions and fees.",
+        "dependency_key": "",
+        "dependencies": [],
+        "validations": []
+    },
+    {
+        "id": "shipment",
+        "type": "page",
+        "title": "Shipment",
+        "icon": "Truck",
+        "tooltip": "",
+        "display": true,
+        "hook_key": "dokan_settings_shipment",
+        "children": [
+            {
+                "id": "shipment-setting-page",
+                "type": "subpage",
+                "title": "Shipment Settings",
+                "icon": "",
+                "tooltip": "",
+                "display": true,
+                "hook_key": "dokan_settings_shipment_shipment-setting-page",
+                "children": [
+                    {
+                        "id": "shipment-settings",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-settings",
+                        "children": [
+                            {
+                                "id": "allows_shipment_tracking",
+                                "type": "field",
+                                "title": "Allow Shipment Tracking",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-settings_allows_shipment_tracking",
+                                "children": [],
+                                "description": "Allow vendors to provide tracking information for customer orders.",
+                                "dependency_key": "shipment-setting-page.shipment-settings.allows_shipment_tracking",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "off",
+                                "default": "off",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "enable_shipstation_logging",
+                                "type": "field",
+                                "title": "Log ShipStation API Request",
+                                "icon": "",
+                                "tooltip": "Log all ShipStation API interactions.",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-settings_enable_shipstation_logging",
+                                "children": [],
+                                "description": "Record all API requests and responses from ShipStation integration.",
+                                "dependency_key": "shipment-setting-page.shipment-settings.enable_shipstation_logging",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "off",
+                                "default": "off",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "allow_mark_received",
+                                "type": "field",
+                                "title": "Allow Mark as Received",
+                                "icon": "",
+                                "tooltip": "Allow customers to mark order as received.",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-settings_allow_mark_received",
+                                "children": [],
+                                "description": "Permit customers to confirm delivery completion.",
+                                "dependency_key": "shipment-setting-page.shipment-settings.allow_mark_received",
+                                "dependencies": [
+                                    {
+                                        "key": "shipment-setting-page.shipment-settings.allows_shipment_tracking",
+                                        "value": "on",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "!==",
+                                        "self": "shipment-setting-page.shipment-settings.allow_mark_received"
+                                    },
+                                    {
+                                        "key": "shipment-setting-page.shipment-settings.allows_shipment_tracking",
+                                        "value": "on",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "===",
+                                        "self": "shipment-setting-page.shipment-settings.allow_mark_received"
+                                    }
+                                ],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "off",
+                                "default": "off",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "shipment-setting-page.shipment-settings",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "shipment-provider",
+                        "type": "section",
+                        "title": "Shipment Providers",
+                        "icon": "",
+                        "tooltip": "Choose the 3rd party shipping providers.",
+                        "display": true,
+                        "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider",
+                        "children": [
+                            {
+                                "id": "sp-australia-post",
+                                "type": "field",
+                                "title": "Australia Post",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-australia-post",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "shipment-setting-page.shipment-provider.sp-australia-post",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "",
+                                "default": "",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "https://picsum.photos/100",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "sp-australia-post",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "sp-canada-post",
+                                "type": "field",
+                                "title": "Canada Post",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-canada-post",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "shipment-setting-page.shipment-provider.sp-canada-post",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "",
+                                "default": "",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "https://picsum.photos/100",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "sp-canada-post",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "sp-city-link",
+                                "type": "field",
+                                "title": "City Link",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-city-link",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "shipment-setting-page.shipment-provider.sp-city-link",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "",
+                                "default": "",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "https://picsum.photos/100",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "sp-city-link",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "sp-dhl",
+                                "type": "field",
+                                "title": "DHL",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-dhl",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "shipment-setting-page.shipment-provider.sp-dhl",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "sp-dhl",
+                                "default": "sp-dhl",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "options": [],
+                                "image_url": "https://picsum.photos/100",
+                                "enable_state": {
+                                    "value": "sp-dhl",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "sp-dpd",
+                                "type": "field",
+                                "title": "DPD",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-dpd",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "shipment-setting-page.shipment-provider.sp-dpd",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "sp-dpd",
+                                "default": "sp-dpd",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "https://picsum.photos/100",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "sp-dpd",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "sp-fastway-south-africa",
+                                "type": "field",
+                                "title": "Fastway South Africa",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-fastway-south-africa",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "shipment-setting-page.shipment-provider.sp-fastway-south-africa",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "",
+                                "default": "",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "https://picsum.photos/100",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "sp-fastway-south-africa",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "sp-fedex",
+                                "type": "field",
+                                "title": "Fedex",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-fedex",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "shipment-setting-page.shipment-provider.sp-fedex",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "sp-fedex",
+                                "default": "sp-fedex",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "https://picsum.photos/100",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "sp-fedex",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "sp-ontrac",
+                                "type": "field",
+                                "title": "OnTrac",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-ontrac",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "shipment-setting-page.shipment-provider.sp-ontrac",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "",
+                                "default": "",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "https://picsum.photos/100",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "sp-ontrac",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "sp-parcelforce",
+                                "type": "field",
+                                "title": "ParcelForce",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-parcelforce",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "shipment-setting-page.shipment-provider.sp-parcelforce",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "",
+                                "default": "",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "https://picsum.photos/100",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "sp-parcelforce",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "sp-polish-shipping-providers",
+                                "type": "field",
+                                "title": "Polish shipping providers",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-polish-shipping-providers",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "shipment-setting-page.shipment-provider.sp-polish-shipping-providers",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "sp-polish-shipping-providers",
+                                "default": "sp-polish-shipping-providers",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "https://picsum.photos/100",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "sp-polish-shipping-providers",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "sp-royal-mail",
+                                "type": "field",
+                                "title": "Royal Mail",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-royal-mail",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "shipment-setting-page.shipment-provider.sp-royal-mail",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "",
+                                "default": "",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "https://picsum.photos/100",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "sp-royal-mail",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "sp-tnt-express-consignment",
+                                "type": "field",
+                                "title": "TNT Express (consignment)",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-tnt-express-consignment",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "shipment-setting-page.shipment-provider.sp-tnt-express-consignment",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "",
+                                "default": "",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "https://picsum.photos/100",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "sp-tnt-express-consignment",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "sp-tnt-express-reference",
+                                "type": "field",
+                                "title": "TNT Express (reference)",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-tnt-express-reference",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "shipment-setting-page.shipment-provider.sp-tnt-express-reference",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "",
+                                "default": "",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "https://picsum.photos/100",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "sp-tnt-express-reference",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "sp-fedex-sameday",
+                                "type": "field",
+                                "title": "FedEx Sameday",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-fedex-sameday",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "shipment-setting-page.shipment-provider.sp-fedex-sameday",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "",
+                                "default": "",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "https://picsum.photos/100",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "sp-fedex-sameday",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "sp-ups",
+                                "type": "field",
+                                "title": "UPS",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-ups",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "shipment-setting-page.shipment-provider.sp-ups",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "sp-ups",
+                                "default": "sp-ups",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "https://picsum.photos/100",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "sp-ups",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "sp-usps",
+                                "type": "field",
+                                "title": "USPS",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-usps",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "shipment-setting-page.shipment-provider.sp-usps",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "sp-usps",
+                                "default": "sp-usps",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "https://picsum.photos/100",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "sp-usps",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "sp-dhl-us",
+                                "type": "field",
+                                "title": "DHL US",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-dhl-us",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "shipment-setting-page.shipment-provider.sp-dhl-us",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "",
+                                "default": "",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "https://picsum.photos/100",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "sp-dhl-us",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "sp-other",
+                                "type": "field",
+                                "title": "Other",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-other",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "shipment-setting-page.shipment-provider.sp-other",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "sp-other",
+                                "default": "sp-other",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "https://picsum.photos/100",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "sp-other",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            }
+                        ],
+                        "description": "Select shipping providers that vendors can offer to customers.",
+                        "dependency_key": "shipment-setting-page.shipment-provider",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "shipment-status",
+                        "type": "section",
+                        "title": "Shipment Status",
+                        "icon": "",
+                        "tooltip": "Add custom shipping status",
+                        "display": true,
+                        "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-status",
+                        "children": [
+                            {
+                                "id": "shipping_status_list",
+                                "type": "field",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-status_shipping_status_list",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "shipment-setting-page.shipment-status.shipping_status_list",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "repeater",
+                                "value": [
+                                    {
+                                        "id": "ss_delivered",
+                                        "order": 0,
+                                        "title": "Delivered",
+                                        "required": true
+                                    },
+                                    {
+                                        "id": "ss_cancelled",
+                                        "order": 1,
+                                        "title": "Cancelled",
+                                        "required": true
+                                    },
+                                    {
+                                        "id": "ss_proceccing",
+                                        "order": 2,
+                                        "title": "Processing"
+                                    },
+                                    {
+                                        "id": "ss_ready_for_pickup",
+                                        "order": 3,
+                                        "title": "Ready for pickup"
+                                    },
+                                    {
+                                        "id": "ss_pickedup",
+                                        "order": 4,
+                                        "title": "Pickedup"
+                                    },
+                                    {
+                                        "id": "ss_on_the_way",
+                                        "order": 5,
+                                        "title": "On the way"
+                                    }
+                                ],
+                                "items": [
+                                    {
+                                        "id": "ss_delivered",
+                                        "title": "Delivered",
+                                        "order": 0,
+                                        "required": true
+                                    },
+                                    {
+                                        "id": "ss_cancelled",
+                                        "title": "Cancelled",
+                                        "order": 1,
+                                        "required": true
+                                    },
+                                    {
+                                        "id": "ss_proceccing",
+                                        "title": "Processing",
+                                        "order": 2,
+                                        "required": false
+                                    },
+                                    {
+                                        "id": "ss_ready_for_pickup",
+                                        "title": "Ready for Pickup",
+                                        "order": 3,
+                                        "required": false
+                                    },
+                                    {
+                                        "id": "ss_pickedup",
+                                        "title": "Picked Up",
+                                        "order": 4,
+                                        "required": false
+                                    },
+                                    {
+                                        "id": "ss_on_the_way",
+                                        "title": "On the way",
+                                        "order": 5,
+                                        "required": false
+                                    }
+                                ],
+                                "default": [],
+                                "new_title": "Add New Shipping Status"
+                            }
+                        ],
+                        "description": "Define shipping statuses that vendors can use to update customers.",
+                        "dependency_key": "shipment-setting-page.shipment-status",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    }
+                ],
+                "description": "Configure shipment tracking, integrations, and delivery options for your marketplace.",
+                "dependency_key": "shipment-setting-page",
+                "dependencies": [],
+                "validations": [],
+                "priority": 100,
+                "doc_link": "https://picsum.photos/100",
+                "doc_link_text": "Doc"
+            },
+            {
+                "id": "dashboard-delivery-days-page",
+                "type": "subpage",
+                "title": "Delivery Time",
+                "icon": "",
+                "tooltip": "",
+                "display": true,
+                "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page",
+                "children": [
+                    {
+                        "id": "dokan_delivery_time",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time",
+                        "children": [
+                            {
+                                "id": "allow_vendor_override_settings",
+                                "type": "field",
+                                "title": "Allow Vendor Customization",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_allow_vendor_override_settings",
+                                "children": [],
+                                "description": "Allow vendors to customize their own delivery time settings.",
+                                "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time.allow_vendor_override_settings",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "off",
+                                "default": "off",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "selection_required",
+                                "type": "field",
+                                "title": "Require Delivery Date and Time",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_selection_required",
+                                "children": [],
+                                "description": "Make delivery date and time selection required for all orders.",
+                                "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time.selection_required",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "on",
+                                "default": "on",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "delivery_support",
+                                "type": "field",
+                                "title": "Delivery Support",
+                                "icon": "",
+                                "tooltip": "Home delivery refers to that you will deliver to users set location. Store pickup refers to that customers will come to your location and pickup the order.",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_delivery_support",
+                                "children": [],
+                                "description": "Select the types of delivery services offered.",
+                                "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time.delivery_support",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "multicheck",
+                                "value": [ "delivery", "store-pickup" ],
+                                "default": [ "delivery", "store-pickup" ],
+                                "options": [
+                                    {
+                                        "value": "delivery",
+                                        "title": "Home Delivery"
+                                    },
+                                    {
+                                        "value": "store-pickup",
+                                        "title": "Store Pickup"
+                                    }
+                                ],
+                                "helper_text": ""
+                            },
+                            {
+                                "id": "delivery_date_label",
+                                "type": "field",
+                                "title": "Delivery Date Label",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_delivery_date_label",
+                                "children": [],
+                                "description": "This label will show on checkout page",
+                                "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time.delivery_date_label",
+                                "dependencies": [],
+                                "validations": [
+                                    {
+                                        "rules": "required|not_empty",
+                                        "message": "Delivery date label can not be empty",
+                                        "params": [],
+                                        "self": "dashboard-delivery-days-page.dokan_delivery_time.delivery_date_label"
+                                    }
+                                ],
+                                "variant": "text",
+                                "value": "Delivery Date",
+                                "default": "Delivery Date",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": ""
+                            },
+                            {
+                                "id": "delivery_buffer_unit",
+                                "type": "field",
+                                "title": "Delivery Blocked Buffer Units",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_delivery_buffer_unit",
+                                "children": [],
+                                "description": "Select the time unit for the delivery buffer. Choose &quot;Days&quot; for full calendar days or &quot;Hours&quot; for more precise same-day delivery control.",
+                                "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time.delivery_buffer_unit",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "select",
+                                "value": "days",
+                                "default": "days",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "value": "days",
+                                        "title": "Days"
+                                    },
+                                    {
+                                        "value": "hours",
+                                        "title": "Hours"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "preorder_date",
+                                "type": "field",
+                                "title": "Buffer Duration",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_preorder_date",
+                                "children": [],
+                                "description": "Minimum number of days between order and delivery. Set to 0 for same-day delivery, 1 for next-day delivery, etc.",
+                                "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time.preorder_date",
+                                "dependencies": [
+                                    {
+                                        "key": "dashboard-delivery-days-page.dokan_delivery_time.delivery_buffer_unit",
+                                        "value": "days",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "===",
+                                        "self": "dashboard-delivery-days-page.dokan_delivery_time.preorder_date"
+                                    },
+                                    {
+                                        "key": "dashboard-delivery-days-page.dokan_delivery_time.delivery_buffer_unit",
+                                        "value": "hours",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "===",
+                                        "self": "dashboard-delivery-days-page.dokan_delivery_time.preorder_date"
+                                    }
+                                ],
+                                "validations": [
+                                    {
+                                        "rules": "min_value",
+                                        "message": "Delivery blocked buffer can not be empty or less than 0",
+                                        "params": {
+                                            "min": 0
+                                        },
+                                        "self": "dashboard-delivery-days-page.dokan_delivery_time.preorder_date"
+                                    }
+                                ],
+                                "variant": "number",
+                                "value": 0,
+                                "default": "0",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "days",
+                                "prefix": "",
+                                "image_url": "",
+                                "minimum": 0,
+                                "maximum": null,
+                                "step": 0.1,
+                                "addon_icon": false
+                            },
+                            {
+                                "id": "delivery_buffer_value",
+                                "type": "field",
+                                "title": "Buffer Duration",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_delivery_buffer_value",
+                                "children": [],
+                                "description": "Minimum number of hours between order and delivery. If the time exceeds today&#039;s store hours, delivery starts from the next business day.",
+                                "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time.delivery_buffer_value",
+                                "dependencies": [
+                                    {
+                                        "key": "dashboard-delivery-days-page.dokan_delivery_time.delivery_buffer_unit",
+                                        "value": "hours",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "===",
+                                        "self": "dashboard-delivery-days-page.dokan_delivery_time.delivery_buffer_value"
+                                    },
+                                    {
+                                        "key": "dashboard-delivery-days-page.dokan_delivery_time.delivery_buffer_unit",
+                                        "value": "days",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "===",
+                                        "self": "dashboard-delivery-days-page.dokan_delivery_time.delivery_buffer_value"
+                                    }
+                                ],
+                                "validations": [
+                                    {
+                                        "rules": "min_value",
+                                        "message": "Delivery buffer hours can not be empty or less than 0",
+                                        "params": {
+                                            "min": 0
+                                        },
+                                        "self": "dashboard-delivery-days-page.dokan_delivery_time.delivery_buffer_value"
+                                    }
+                                ],
+                                "variant": "number",
+                                "value": 0,
+                                "default": "0",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "hours",
+                                "prefix": "",
+                                "image_url": "",
+                                "minimum": 0,
+                                "maximum": null,
+                                "step": 0.1,
+                                "addon_icon": false
+                            },
+                            {
+                                "id": "time_slot_minutes",
+                                "type": "field",
+                                "title": "Time Slot",
+                                "icon": "",
+                                "tooltip": "Check this to allow vendors to override &amp; customize the delivery settings. Otherwise, admin configured settings will be applied.",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_time_slot_minutes",
+                                "children": [],
+                                "description": "Time slot in minutes. Please keep opening and closing time divisible by slot minutes. E.g ( 30, 60, 120 ). Also this cannot be empty, less then 10 or greater then 1440 minutes.",
+                                "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time.time_slot_minutes",
+                                "dependencies": [],
+                                "validations": [
+                                    {
+                                        "rules": "not_empty|min_value|max_value",
+                                        "message": "Time slot minutes can not be empty, less than 10 minutes or greater than 1440 minutes",
+                                        "params": {
+                                            "min": 10,
+                                            "max": 1440
+                                        },
+                                        "self": "dashboard-delivery-days-page.dokan_delivery_time.time_slot_minutes"
+                                    }
+                                ],
+                                "variant": "number",
+                                "value": 30,
+                                "default": "30",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "Minutes",
+                                "prefix": "",
+                                "image_url": "",
+                                "minimum": null,
+                                "maximum": 1440,
+                                "step": 30,
+                                "addon_icon": false
+                            },
+                            {
+                                "id": "order_per_slot",
+                                "type": "field",
+                                "title": "Order Per Slot",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_order_per_slot",
+                                "children": [],
+                                "description": "Maximum number of orders that can be scheduled for each time slot. Set to 0 for unlimited capacity.",
+                                "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time.order_per_slot",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "number",
+                                "value": 0,
+                                "default": "0",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "minimum": null,
+                                "maximum": null,
+                                "step": 0.1,
+                                "addon_icon": false
+                            },
+                            {
+                                "id": "delivery_box_info",
+                                "type": "field",
+                                "title": "Delivery Box Info",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_delivery_box_info",
+                                "children": [],
+                                "description": "Message shown on checkout page about delivery timing. %DAY% will show the blocked buffer days.",
+                                "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time.delivery_box_info",
+                                "dependencies": [],
+                                "validations": [
+                                    {
+                                        "rules": "required|not_empty",
+                                        "message": "Delivery box information can not be empty",
+                                        "params": [],
+                                        "self": "dashboard-delivery-days-page.dokan_delivery_time.delivery_box_info"
+                                    }
+                                ],
+                                "variant": "textarea",
+                                "value": "This store needs Y% day(s) to process your delivery request",
+                                "default": "This store needs %DAY% day(s) to process your delivery request",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": ""
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "dashboard-delivery-days-page",
+                        "type": "section",
+                        "title": "Delivery Days",
+                        "icon": "",
+                        "tooltip": "Configure delivery schedule and operating hours for each day of the week. At least one delivery date should be selected.",
+                        "display": true,
+                        "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dashboard-delivery-days-page",
+                        "children": [
+                            {
+                                "id": "delivery_days_schedule",
+                                "type": "field",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dashboard-delivery-days-page_delivery_days_schedule",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "delivery_days",
+                                "value": {
+                                    "monday": {
+                                        "delivery_status": "",
+                                        "opening_time": "",
+                                        "closing_time": ""
+                                    },
+                                    "tuesday": {
+                                        "delivery_status": "",
+                                        "opening_time": "",
+                                        "closing_time": ""
+                                    },
+                                    "wednesday": {
+                                        "delivery_status": "",
+                                        "opening_time": "",
+                                        "closing_time": ""
+                                    },
+                                    "thursday": {
+                                        "delivery_status": "",
+                                        "opening_time": "",
+                                        "closing_time": ""
+                                    },
+                                    "friday": {
+                                        "delivery_status": "",
+                                        "opening_time": "",
+                                        "closing_time": ""
+                                    },
+                                    "saturday": {
+                                        "delivery_status": "",
+                                        "opening_time": "",
+                                        "closing_time": ""
+                                    },
+                                    "sunday": {
+                                        "delivery_status": "",
+                                        "opening_time": "",
+                                        "closing_time": ""
+                                    }
+                                },
+                                "default": {
+                                    "monday": {
+                                        "day_name": "Monday",
+                                        "delivery_status": "",
+                                        "opening_time": "",
+                                        "closing_time": ""
+                                    },
+                                    "tuesday": {
+                                        "day_name": "Tuesday",
+                                        "delivery_status": "",
+                                        "opening_time": "",
+                                        "closing_time": ""
+                                    },
+                                    "wednesday": {
+                                        "day_name": "Wednesday",
+                                        "delivery_status": "",
+                                        "opening_time": "",
+                                        "closing_time": ""
+                                    },
+                                    "thursday": {
+                                        "day_name": "Thursday",
+                                        "delivery_status": "",
+                                        "opening_time": "",
+                                        "closing_time": ""
+                                    },
+                                    "friday": {
+                                        "day_name": "Friday",
+                                        "delivery_status": "",
+                                        "opening_time": "",
+                                        "closing_time": ""
+                                    },
+                                    "saturday": {
+                                        "day_name": "Saturday",
+                                        "delivery_status": "",
+                                        "opening_time": "",
+                                        "closing_time": ""
+                                    },
+                                    "sunday": {
+                                        "day_name": "Sunday",
+                                        "delivery_status": "",
+                                        "opening_time": "",
+                                        "closing_time": ""
+                                    }
+                                },
+                                "days": {
+                                    "monday": "Monday",
+                                    "tuesday": "Tuesday",
+                                    "wednesday": "Wednesday",
+                                    "thursday": "Thursday",
+                                    "friday": "Friday",
+                                    "saturday": "Saturday",
+                                    "sunday": "Sunday"
+                                },
+                                "is12Hour": true
+                            }
+                        ],
+                        "description": "Configure delivery schedule and operating hours for each day of the week. At least one delivery date should be selected.",
+                        "dependency_key": "dashboard-delivery-days-page.dashboard-delivery-days-page",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    }
+                ],
+                "description": "Set up delivery scheduling options and time slots for customer orders.",
+                "dependency_key": "dashboard-delivery-days-page",
+                "dependencies": [],
+                "validations": [],
+                "priority": 200,
+                "doc_link": "https://dokan.co/docs/wordpress/modules/dokan-delivery-time/"
+            }
+        ],
+        "description": "",
         "dependency_key": "",
         "dependencies": [],
         "validations": []
