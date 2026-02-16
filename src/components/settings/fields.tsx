@@ -28,6 +28,8 @@ import {
   NoticeTitle,
   RichTextEditor,
   Separator,
+  CombineInput,
+  Badge,
 } from "../ui";
 import { ButtonToggleGroup } from "../button-toggle-group";
 import type { FieldComponentProps, SettingsElement } from "./settings-types";
@@ -737,6 +739,57 @@ export function InfoField({ element }: FieldComponentProps) {
         </div>
       )}
     </Notice>
+  );
+}
+
+// ============================================
+// Combine Input Field
+// ============================================
+
+export function CombineInputField({ element, onChange }: FieldComponentProps) {
+  const value = (element.value as any) || {};
+
+  // If the field is automated, show a badge instead of the inputs
+  if (element.is_automated) {
+    return (
+      <FieldWrapper element={element}>
+        <Badge variant="secondary" className="px-3 h-6 rounded-full font-medium">
+          Automated
+        </Badge>
+      </FieldWrapper>
+    );
+  }
+
+  // Find keys in the value object. Fallback to common Dokan keys if not found.
+  const keys = Object.keys(value);
+  const percentageKey =
+    keys.find((k) => k.toLowerCase().includes("percentage")) ||
+    "admin_percentage";
+  const numberKey =
+    keys.find(
+      (k) =>
+        k.toLowerCase().includes("fee") ||
+        k.toLowerCase().includes("number") ||
+        k.toLowerCase().includes("amount"),
+    ) || "additional_fee";
+
+  return (
+    <FieldWrapper element={element} layout={element.layout ?? "horizontal"}>
+      <CombineInput
+        percentageValue={value[percentageKey] ?? ""}
+        numberValue={value[numberKey] ?? ""}
+        moneySign={element.money_sign || "$"}
+        swapped={element.swapped || false}
+        percentagePlaceholder={element.percentage_placeholder}
+        numberPlaceholder={element.number_placeholder}
+        onPercentageChange={(val) =>
+          onChange(element.dependency_key!, { ...value, [percentageKey]: val })
+        }
+        onNumberChange={(val) =>
+          onChange(element.dependency_key!, { ...value, [numberKey]: val })
+        }
+      />
+    </FieldWrapper>
   );
 }
 

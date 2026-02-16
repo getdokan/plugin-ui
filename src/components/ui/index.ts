@@ -85,6 +85,7 @@ export {
 } from "./select";
 
 // Combobox component
+export { CombineInput, type CombineInputProps } from "./combine-input";
 export {
   Combobox,
   ComboboxChip,

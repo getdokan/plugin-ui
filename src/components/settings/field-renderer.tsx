@@ -19,6 +19,7 @@ import {
     InfoField,
     RichTextField,
     GoogleAnalyticsField,
+    CombineInputField,
 } from './fields';
 
 // ============================================
@@ -113,6 +114,13 @@ export function FieldRenderer({ element }: { element: SettingsElement }) {
             return applyFilters(
                 `${filterPrefix}_settings_google_analytics_field`,
                 <GoogleAnalyticsField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'combine_input':
+            return applyFilters(
+                `${filterPrefix}_settings_combine_input_field`,
+                <CombineInputField {...fieldProps} />,
                 mergedElement
             );
 
