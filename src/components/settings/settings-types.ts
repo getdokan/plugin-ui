@@ -28,6 +28,8 @@ export type SettingsElementOption = {
     value: string | number;
     description?: string;
     icon?: string;
+    startIcon?: string;
+    endIcon?: string;
     image?: string;
     preview?: boolean;
 };

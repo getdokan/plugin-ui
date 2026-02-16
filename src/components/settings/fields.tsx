@@ -376,10 +376,17 @@ export function RadioCapsuleField({ element, onChange }: FieldComponentProps) {
   const currentValue = String(element.value ?? element.default ?? "");
 
   const items =
-    element.options?.map((option) => ({
-      value: String(option.value),
-      label: String(option.label ?? option.title ?? ""),
-    })) ?? [];
+    element.options?.map((option) => {
+      const StartIcon = option.startIcon ? (LucideIcons as any)[option.startIcon] : null;
+      const EndIcon = option.endIcon ? (LucideIcons as any)[option.endIcon] : null;
+
+      return {
+        value: String(option.value),
+        label: String(option.label ?? option.title ?? ""),
+        startIcon: StartIcon ? <StartIcon className="size-4" /> : null,
+        endIcon: EndIcon ? <EndIcon className="size-4" /> : null,
+      };
+    }) ?? [];
 
   return (
     <FieldWrapper element={element}>

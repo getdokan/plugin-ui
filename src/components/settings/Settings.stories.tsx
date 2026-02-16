@@ -5232,7 +5232,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "id": "vendor_setup_wizard_message",
                                 "type": "field",
                                 "title": "Vendor Setup Wizard Message",
-                                "icon": "Info",
+                                "icon": "",
                                 "tooltip": "This is a tooltip for the rich text field.",
                                 "display": true,
                                 "hook_key": "dokan_settings_vendor_vendor_onboarding_vendor_setup_wizard_message",
@@ -5314,17 +5314,17 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     {
                                         "value": "sell_physical",
                                         "title": "Physical",
-                                        "icon": "Box"
+                                        "startIcon": "Box"
                                     },
                                     {
                                         "value": "sell_digital",
                                         "title": "Digital",
-                                        "icon": "Download"
+                                        "startIcon": "Download"
                                     },
                                     {
                                         "value": "sell_both",
                                         "title": "Both",
-                                        "icon": "Dices"
+                                        "startIcon": "Dices"
                                     }
                                 ]
                             },
@@ -5759,7 +5759,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "type": "field",
                                 "title": "Discount Editing",
                                 "icon": "",
-                                "tooltip": "",
+                                "tooltip": "Select the pages where you want to display the store location map.",
                                 "display": true,
                                 "hook_key": "dokan_settings_vendor_vendor_capabilities_vendor_capabilities_discount_order_settings",
                                 "children": [],
@@ -5857,7 +5857,8 @@ const dokanSettingsSchema: SettingsElement[] = [
                 "dependencies": [],
                 "validations": [],
                 "priority": 300,
-                "doc_link": ""
+                "doc_link": "http://localhost:6006/?path=/story/components-settings--dokan-settings&globals=theme:light",
+                "doc_link_text": "Doc"
             },
             {
                 "id": "single_product_multi_vendor",
@@ -6068,7 +6069,8 @@ const dokanSettingsSchema: SettingsElement[] = [
                 "dependencies": [],
                 "validations": [],
                 "priority": 600,
-                "doc_link": "https://wedevs.com/docs/dokan/vendor-settings/single-product-multi-vendor/"
+                "doc_link": "https://wedevs.com/docs/dokan/vendor-settings/single-product-multi-vendor/",
+                "doc_link_text": "Doc"
             },
             {
                 "id": "store_state",
@@ -6121,7 +6123,8 @@ const dokanSettingsSchema: SettingsElement[] = [
                 "dependencies": [],
                 "validations": [],
                 "priority": 500,
-                "doc_link": "https://wedevs.com/docs/dokan/vendor-settings/store-state/"
+                "doc_link": "https://wedevs.com/docs/dokan/vendor-settings/store-state/",
+                "doc_link_text": "Doc"
             },
             {
                 "id": "social_onboarding",
@@ -6196,7 +6199,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "display": true,
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_facebook_api_group_facebook_enabled",
                                         "children": [],
-                                        "description": "Configure your Facebook API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-facebook/\" target=\"_blank\">Get Help </a>",
+                                        "description": "Configure your Facebook API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-facebook/\" class=\"text-primary underline\" target=\"_blank\">Get Help </a>",
                                         "dependency_key": "social_onboarding.social_onboarding.facebook_api_group.facebook_enabled",
                                         "dependencies": [],
                                         "validations": [],
@@ -6210,7 +6213,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "helper_text": "",
                                         "postfix": "",
                                         "prefix": "",
-                                        "image_url": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/social-onboarding/facebook.svg",
+                                        "image_url": "https://cdn.pixabay.com/photo/2021/06/15/12/51/facebook-6338508_640.png",
                                         "options": [],
                                         "enable_state": {
                                             "value": "on",
@@ -6456,7 +6459,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "display": true,
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_x_api_group_x_enabled",
                                         "children": [],
-                                        "description": "Configure your X API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-twitter/\" target=\"_blank\">Get Help</a>",
+                                        "description": "Configure your X API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-twitter/\" class=\"text-primary underline\" target=\"_blank\">Get Help</a>",
                                         "dependency_key": "social_onboarding.social_onboarding.x_api_group.x_enabled",
                                         "dependencies": [],
                                         "validations": [],
@@ -6470,7 +6473,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "helper_text": "",
                                         "postfix": "",
                                         "prefix": "",
-                                        "image_url": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/social-onboarding/x-twitter.svg",
+                                        "image_url": "https://cdn.pixabay.com/photo/2021/06/15/12/51/facebook-6338508_640.png",
                                         "options": [],
                                         "enable_state": {
                                             "value": "on",
@@ -6707,7 +6710,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "display": true,
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_google_api_group_google_enabled",
                                         "children": [],
-                                        "description": "Configure your Google API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-google/\" target=\"_blank\">Get Help</a>",
+                                        "description": "Configure your Google API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-google/\" class=\"text-primary underline\" target=\"_blank\">Get Help</a>",
                                         "dependency_key": "social_onboarding.social_onboarding.google_api_group.google_enabled",
                                         "dependencies": [],
                                         "validations": [],
@@ -6721,7 +6724,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "helper_text": "",
                                         "postfix": "",
                                         "prefix": "",
-                                        "image_url": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/social-onboarding/google.svg",
+                                        "image_url": "https://cdn.pixabay.com/photo/2021/06/15/12/51/facebook-6338508_640.png",
                                         "options": [],
                                         "enable_state": {
                                             "value": "on",
@@ -6958,7 +6961,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "display": true,
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_linkedin_api_group_linkedin_enabled",
                                         "children": [],
-                                        "description": "Configure your LinkedIn API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-linkedin/\" target=\"_blank\">Get Help</a>",
+                                        "description": "Configure your LinkedIn API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-linkedin/\" class=\"text-primary underline\" target=\"_blank\">Get Help</a>",
                                         "dependency_key": "social_onboarding.social_onboarding.linkedin_api_group.linkedin_enabled",
                                         "dependencies": [],
                                         "validations": [],
@@ -6972,7 +6975,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "helper_text": "",
                                         "postfix": "",
                                         "prefix": "",
-                                        "image_url": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/social-onboarding/linkedin.svg",
+                                        "image_url": "https://cdn.pixabay.com/photo/2021/06/15/12/51/facebook-6338508_640.png",
                                         "options": [],
                                         "enable_state": {
                                             "value": "on",
@@ -7209,7 +7212,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "display": true,
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_apple_api_group_apple_enabled",
                                         "children": [],
-                                        "description": "Configure your Apple API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-apple/\" target=\"_blank\">Get Help</a>",
+                                        "description": "Configure your Apple API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-apple/\" class=\"text-primary underline\" target=\"_blank\">Get Help</a>",
                                         "dependency_key": "social_onboarding.social_onboarding.apple_api_group.apple_enabled",
                                         "dependencies": [],
                                         "validations": [],
@@ -7223,7 +7226,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "helper_text": "",
                                         "postfix": "",
                                         "prefix": "",
-                                        "image_url": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/social-onboarding/apple.svg",
+                                        "image_url": "https://cdn.pixabay.com/photo/2021/06/15/12/51/facebook-6338508_640.png",
                                         "options": [],
                                         "enable_state": {
                                             "value": "on",
@@ -7543,7 +7546,8 @@ const dokanSettingsSchema: SettingsElement[] = [
                 "dependencies": [],
                 "validations": [],
                 "priority": 200,
-                "doc_link": "https://dokan.co/docs/wordpress/settings/dokan-social-login/"
+                "doc_link": "https://dokan.co/docs/wordpress/settings/dokan-social-login/",
+                "doc_link_text": "Doc"
             },
             {
                 "id": "vendor_subscription",
@@ -7824,7 +7828,8 @@ const dokanSettingsSchema: SettingsElement[] = [
                 "dependencies": [],
                 "validations": [],
                 "priority": 400,
-                "doc_link": "https://wedevs.com/docs/dokan/vendor-settings/vendor-subscription/"
+                "doc_link": "https://wedevs.com/docs/dokan/vendor-settings/vendor-subscription/",
+                "doc_link_text": "Doc"
             }
         ],
         "description": "Configure vendor-related settings and capabilities.",
