@@ -3511,7 +3511,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "id": "printful_enable",
                                         "type": "field",
                                         "title": "Printful App",
-                                        "icon": "",
+                                        "icon": "CircleCheck",
                                         "tooltip": "",
                                         "display": true,
                                         "hook_key": "dokan_settings_product_printful_integration_printful_api_settings_printful_api_settings_group_printful_enable",

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
+import * as LucideIcons from "lucide-react";
 import { FileText, Info, Eye, EyeOff, ArrowUpRight } from "lucide-react";
 import {
   Checkbox,
@@ -99,6 +100,7 @@ function FieldWrapper({
 
 function FieldLabel({ element }: { element: SettingsElement }) {
   const displayLabel = element.label || element.title || '';
+  const IconComponent = element.icon ? (LucideIcons as any)[element.icon] : null;
 
   return (
     <div className="flex items-start gap-3">
@@ -111,9 +113,14 @@ function FieldLabel({ element }: { element: SettingsElement }) {
       )}
       <div className="flex flex-col gap-1 w-full">
         <div className="flex items-center gap-2">
-        <span className="text-sm font-semibold text-foreground">
-          {displayLabel}
-        </span>
+          <span className="text-sm font-semibold text-foreground">
+            {displayLabel}
+          </span>
+
+          {IconComponent && (
+            <IconComponent className="size-4 text-primary" />
+          )}
+
           {element.tooltip && (
             <TooltipProvider>
               <Tooltip>
