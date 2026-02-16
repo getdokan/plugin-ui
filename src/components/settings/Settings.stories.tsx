@@ -12573,6 +12573,2584 @@ const dokanSettingsSchema: SettingsElement[] = [
         "validations": []
     },
     {
+        "id": "appearance",
+        "type": "page",
+        "title": "Appearance",
+        "icon": "PanelsRightBottom",
+        "tooltip": "",
+        "display": true,
+        "hook_key": "dokan_settings_appearance",
+        "children": [
+            {
+                "id": "store",
+                "type": "subpage",
+                "title": "Store Page",
+                "icon": "",
+                "tooltip": "",
+                "display": true,
+                "hook_key": "dokan_settings_appearance_store",
+                "children": [
+                    {
+                        "id": "products_page",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_appearance_store_products_page",
+                        "children": [
+                            {
+                                "id": "store_product_per_page",
+                                "type": "field",
+                                "title": "Store Products Per Page",
+                                "icon": "",
+                                "tooltip": "Set the number of products to display per page on the vendor store page.",
+                                "display": true,
+                                "hook_key": "dokan_settings_appearance_store_products_page_store_product_per_page",
+                                "children": [],
+                                "description": "Set how many products to display per page on the\nvendor store page.",
+                                "dependency_key": "store.products_page.store_product_per_page",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "number",
+                                "value": 12,
+                                "default": "12",
+                                "placeholder": "Products Per Page",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "minimum": 1,
+                                "maximum": null,
+                                "step": 1,
+                                "addon_icon": false
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "store.products_page",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "google_recaptcha",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_appearance_store_google_recaptcha",
+                        "children": [
+                            {
+                                "id": "google_recaptcha_settings",
+                                "type": "fieldgroup",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_appearance_store_google_recaptcha_google_recaptcha_settings",
+                                "children": [
+                                    {
+                                        "id": "recaptcha",
+                                        "type": "field",
+                                        "title": "Google reCaptcha Validation",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_store_google_recaptcha_google_recaptcha_settings_recaptcha",
+                                        "children": [],
+                                        "description": "Connect to enable spam protection that works automatically in the background <a href=\"https://www.google.com/recaptcha/about/\" target=\"_blank\" rel=\"noopener noreferrer\">Get Help</a>",
+                                        "dependency_key": "store.google_recaptcha.google_recaptcha_settings.recaptcha",
+                                        "dependencies": [],
+                                        "validations": [],
+                                        "variant": "switch",
+                                        "value": "off",
+                                        "default": "off",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "https://picsum.photos/200",
+                                        "options": [],
+                                        "enable_state": {
+                                            "value": "on",
+                                            "title": "Enable"
+                                        },
+                                        "disable_state": {
+                                            "value": "off",
+                                            "title": "Disable"
+                                        },
+                                        "switcher_type": null,
+                                        "should_confirm": false,
+                                        "confirm_modal": []
+                                    },
+                                    {
+                                        "id": "recaptcha_info",
+                                        "type": "field",
+                                        "title": "Need Help?",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_store_google_recaptcha_google_recaptcha_settings_recaptcha_info",
+                                        "children": [],
+                                        "description": "If you don&#039;t have a Google reCaptcha account, <a href=\"https://www.google.com/recaptcha/admin/create\" class=\"text-primary underline\" target=\"_blank\" rel=\"noopener noreferrer\">+ Create Google reCaptcha</a>",
+                                        "dependency_key": "store.google_recaptcha.google_recaptcha_settings.recaptcha_info",
+                                        "dependencies": [
+                                            {
+                                                "key": "store.google_recaptcha.google_recaptcha_settings.recaptcha",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "store.google_recaptcha.google_recaptcha_settings.recaptcha_info"
+                                            },
+                                            {
+                                                "key": "store.google_recaptcha.google_recaptcha_settings.recaptcha",
+                                                "value": "off",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "===",
+                                                "self": "store.google_recaptcha.google_recaptcha_settings.recaptcha_info"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "info",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "",
+                                        "link_text": "",
+                                        "link_url": "",
+                                        "show_icon": true
+                                    },
+                                    {
+                                        "id": "recaptcha_site_key",
+                                        "type": "field",
+                                        "title": "Site Key",
+                                        "icon": "",
+                                        "tooltip": "Insert Google reCAPTCHA v3 site key.",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_store_google_recaptcha_google_recaptcha_settings_recaptcha_site_key",
+                                        "children": [],
+                                        "description": "Enter your Google reCaptcha site key here.",
+                                        "dependency_key": "store.google_recaptcha.google_recaptcha_settings.recaptcha_site_key",
+                                        "dependencies": [
+                                            {
+                                                "key": "store.google_recaptcha.google_recaptcha_settings.recaptcha",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "store.google_recaptcha.google_recaptcha_settings.recaptcha_site_key"
+                                            },
+                                            {
+                                                "key": "store.google_recaptcha.google_recaptcha_settings.recaptcha",
+                                                "value": "off",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "===",
+                                                "self": "store.google_recaptcha.google_recaptcha_settings.recaptcha_site_key"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "show_hide",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "Site Key",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "Get your site key from Google reCaptcha admin console.",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": ""
+                                    },
+                                    {
+                                        "id": "recaptcha_secret_key",
+                                        "type": "field",
+                                        "title": "Secret Key",
+                                        "icon": "",
+                                        "tooltip": "Insert Google reCAPTCHA v3 secret key.",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_store_google_recaptcha_google_recaptcha_settings_recaptcha_secret_key",
+                                        "children": [],
+                                        "description": "Enter your Google reCaptcha secret key here.",
+                                        "dependency_key": "store.google_recaptcha.google_recaptcha_settings.recaptcha_secret_key",
+                                        "dependencies": [
+                                            {
+                                                "key": "store.google_recaptcha.google_recaptcha_settings.recaptcha",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "store.google_recaptcha.google_recaptcha_settings.recaptcha_secret_key"
+                                            },
+                                            {
+                                                "key": "store.google_recaptcha.google_recaptcha_settings.recaptcha",
+                                                "value": "off",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "===",
+                                                "self": "store.google_recaptcha.google_recaptcha_settings.recaptcha_secret_key"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "show_hide",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "Secret Key",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "Get your secret key from Google reCaptcha admin console.",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": ""
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "store.google_recaptcha.google_recaptcha_settings",
+                                "dependencies": [],
+                                "validations": [],
+                                "content_class": ""
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "store.google_recaptcha",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "store_contact_form_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_appearance_store_store_contact_form_section",
+                        "children": [
+                            {
+                                "id": "store_clossing_time_widget",
+                                "type": "field",
+                                "title": "Show Contact Form on Store Page",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_appearance_store_store_contact_form_section_store_clossing_time_widget",
+                                "children": [],
+                                "description": "Display a vendor contact form in the store sidebar",
+                                "dependency_key": "store.store_contact_form_section.store_clossing_time_widget",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "on",
+                                "default": "on",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enable"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disable"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "store.store_contact_form_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "store_banner_dimension_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_appearance_store_store_banner_dimension_section",
+                        "children": [
+                            {
+                                "id": "store_banner_dimension",
+                                "type": "field",
+                                "title": "Store Banner Dimension",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_appearance_store_store_banner_dimension_section_store_banner_dimension",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "store.store_banner_dimension_section.store_banner_dimension",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "double_input",
+                                "value": "{\"first\":\"625\",\"second\":\"300\"}",
+                                "label": "",
+                                "firstLabel": "",
+                                "firstValue": "625",
+                                "firstPlaceholder": "",
+                                "firstPrefix": "Width",
+                                "firstSuffix": "",
+                                "firstRequired": false,
+                                "secondLabel": "",
+                                "secondValue": "300",
+                                "secondPlaceholder": "",
+                                "secondPrefix": "Height",
+                                "secondSuffix": "",
+                                "secondRequired": false,
+                                "firstValueType": "string|int|float",
+                                "secondValueType": "string|int|float"
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "store.store_banner_dimension_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "store_template",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_appearance_store_store_template",
+                        "children": [
+                            {
+                                "id": "store_template",
+                                "type": "field",
+                                "title": "Store Header Template",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_appearance_store_store_template_store_template",
+                                "children": [],
+                                "description": "Select a store header for your store.",
+                                "dependency_key": "store.store_template.store_template",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "customize_radio",
+                                "value": "default",
+                                "default": "default",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "title": "Template 1",
+                                        "value": "default",
+                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/store/store-page-template-one.svg"
+                                    },
+                                    {
+                                        "title": "Template 2",
+                                        "value": "layout1",
+                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/store/store-page-template-two.svg"
+                                    },
+                                    {
+                                        "title": "Template 3",
+                                        "value": "layout2",
+                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/store/store-page-template-three.svg"
+                                    },
+                                    {
+                                        "title": "Template 4",
+                                        "value": "layout3",
+                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/store/store-page-template-four.svg"
+                                    }
+                                ],
+                                "radio_variant": "template",
+                                "css_class": "",
+                                "grid_config": []
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "store.store_template",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "store_time_widget_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_appearance_store_store_time_widget_section",
+                        "children": [
+                            {
+                                "id": "store_time_widget",
+                                "type": "field",
+                                "title": "Store Opening Closing Time Widget",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_appearance_store_store_time_widget_section_store_time_widget",
+                                "children": [],
+                                "description": "Enable store opening &amp; closing time widget in the store sidebar",
+                                "dependency_key": "store.store_time_widget_section.store_time_widget",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "on",
+                                "default": "on",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "Note: This option works only if the theme supports WooCommerce single product page sidebar.",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enable"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disable"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "store.store_time_widget_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "store_sidebar_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_appearance_store_store_sidebar_section",
+                        "children": [
+                            {
+                                "id": "store_opening_time",
+                                "type": "field",
+                                "title": "Store Sidebar From Theme",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_appearance_store_store_sidebar_section_store_opening_time",
+                                "children": [],
+                                "description": "Apply main theme&#039;s sidebar styling to vendor stores for a consistent look",
+                                "dependency_key": "store.store_sidebar_section.store_opening_time",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "off",
+                                "default": "off",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "Note: This option works only if the theme supports WooCommerce single product page sidebar.",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enable"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disable"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "store.store_sidebar_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "vendor_info_visibility_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_appearance_store_vendor_info_visibility_section",
+                        "children": [
+                            {
+                                "id": "vendor_info_visibility",
+                                "type": "field",
+                                "title": "Vendor Info Visibility",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_appearance_store_vendor_info_visibility_section_vendor_info_visibility",
+                                "children": [],
+                                "description": "Choose what vendor details to show customers in single store page.",
+                                "dependency_key": "store.vendor_info_visibility_section.vendor_info_visibility",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "vendor_info_preview",
+                                "value": {
+                                    "email": "",
+                                    "phone": "",
+                                    "address": ""
+                                },
+                                "default": {
+                                    "store_address": true,
+                                    "store_phone": true,
+                                    "store_email": true
+                                },
+                                "options": [
+                                    {
+                                        "value": "store_email",
+                                        "title": "Email Address"
+                                    },
+                                    {
+                                        "value": "store_phone",
+                                        "title": "Phone Number"
+                                    },
+                                    {
+                                        "value": "store_address",
+                                        "title": "Store Address"
+                                    }
+                                ],
+                                "helper_text": "Note: This option works only if the theme supports WooCommerce single product page sidebar."
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "store.vendor_info_visibility_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "dokan_font_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_appearance_store_dokan_font_section",
+                        "children": [
+                            {
+                                "id": "dokan_font",
+                                "type": "field",
+                                "title": "Dokan font-awesome Functionality",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_appearance_store_dokan_font_section_dokan_font",
+                                "children": [],
+                                "description": "If disabled then Dokan font-awesome library won&#039;t be loaded in frontend.",
+                                "dependency_key": "store.dokan_font_section.dokan_font",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "off",
+                                "default": "off",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "Note: This option works only if the theme supports WooCommerce single product page sidebar.",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enable"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disable"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "store.dokan_font_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "single_product_preview_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_appearance_store_single_product_preview_section",
+                        "children": [
+                            {
+                                "id": "single_product_preview",
+                                "type": "field",
+                                "title": "Single Product Page Appearance ",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_appearance_store_single_product_preview_section_single_product_preview",
+                                "children": [],
+                                "description": "Choose which sections to show when customers view individual products.",
+                                "dependency_key": "store.single_product_preview_section.single_product_preview",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "single_product_preview",
+                                "value": {
+                                    "vendor_info": true,
+                                    "more_products_tab": true,
+                                    "shipping_tab": true
+                                },
+                                "default": {
+                                    "vendor_info": true,
+                                    "more_products_tab": true,
+                                    "shipping_tab": true
+                                },
+                                "options": [
+                                    {
+                                        "value": "vendor_info",
+                                        "title": "Vendor Info"
+                                    },
+                                    {
+                                        "value": "more_products_tab",
+                                        "title": "More products tab"
+                                    },
+                                    {
+                                        "value": "shipping_tab",
+                                        "title": "Shipping tab"
+                                    }
+                                ],
+                                "helper_text": "Note: This option works only if the theme supports WooCommerce single product page sidebar."
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "store.single_product_preview_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    }
+                ],
+                "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                "dependency_key": "store",
+                "dependencies": [],
+                "validations": [],
+                "priority": 100,
+                "doc_link": ""
+            },
+            {
+                "id": "dashboard-color-customizer-page",
+                "type": "subpage",
+                "title": "Color Customizer",
+                "icon": "",
+                "tooltip": "",
+                "display": true,
+                "hook_key": "dokan_settings_appearance_dashboard-color-customizer-page",
+                "children": [
+                    {
+                        "id": "dokan-store-colors",
+                        "type": "section",
+                        "title": "Store Colors",
+                        "icon": "",
+                        "tooltip": "Select a color palette for your store.",
+                        "display": true,
+                        "hook_key": "dokan_settings_appearance_dashboard-color-customizer-page_dokan-store-colors",
+                        "children": [
+                            {
+                                "id": "dashboard_color_customizer",
+                                "type": "field",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_appearance_dashboard-color-customizer-page_dokan-store-colors_dashboard_color_customizer",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "dashboard-color-customizer-page.dokan-store-colors.dashboard_color_customizer",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "color_customizer",
+                                "value": {
+                                    "value": "purple pulse",
+                                    "pallete_status": "template",
+                                    "btn_text": "#FFFFFF",
+                                    "btn_primary": "#7047EB",
+                                    "btn_primary_border": "#7047EB",
+                                    "btn_hover_text": "#FFFFFF",
+                                    "btn_hover": "#502BBF",
+                                    "btn_hover_border": "#370EB1",
+                                    "dash_nav_text": "#DACEFF",
+                                    "dash_nav_bg": "#322067",
+                                    "dash_nav_active_text": "#FFFFFF",
+                                    "dash_active_link": "#7047EB",
+                                    "color_options": {
+                                        "color-1": "#322067",
+                                        "color-2": "#7047EB",
+                                        "color-3": null,
+                                        "color-4": "#502BBF"
+                                    }
+                                },
+                                "default": {
+                                    "value": "purple pulse",
+                                    "btn_text": "#FFFFFF",
+                                    "btn_hover": "#502BBF",
+                                    "btn_primary": "#7047EB",
+                                    "dash_nav_bg": "#322067",
+                                    "dash_nav_text": "#DACEFF",
+                                    "pallete_status": "template",
+                                    "btn_hover_text": "#FFFFFF",
+                                    "dash_active_link": "#7047EB",
+                                    "btn_hover_border": "#370EB1",
+                                    "btn_primary_border": "#7047EB",
+                                    "dash_nav_active_text": "#FFFFFF",
+                                    "color_options": {
+                                        "color-1": "#322067",
+                                        "color-2": "#7047EB",
+                                        "color-3": "#DACEFF82",
+                                        "color-4": "#502BBF"
+                                    }
+                                },
+                                "options": [
+                                    {
+                                        "key": "purple_pulse",
+                                        "value": "purple pulse",
+                                        "title": "Purple Pulse",
+                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-pro/assets/images/admin-settings-icons/color-preview-img/purple-pulse.svg",
+                                        "color_options": {
+                                            "color-1": "#322067",
+                                            "color-2": "#7047EB",
+                                            "color-3": "#DACEFF82",
+                                            "color-4": "#502BBF"
+                                        },
+                                        "btn_text": "#FFFFFF",
+                                        "btn_primary": "#7047EB",
+                                        "btn_primary_border": "#7047EB",
+                                        "btn_hover_text": "#FFFFFF",
+                                        "btn_hover": "#502BBF",
+                                        "btn_hover_border": "#370EB1",
+                                        "dash_nav_text": "#DACEFF",
+                                        "dash_nav_bg": "#322067",
+                                        "dash_nav_active_text": "#FFFFFF",
+                                        "dash_active_link": "#7047EB"
+                                    },
+                                    {
+                                        "key": "majestic_orange",
+                                        "value": "majestic orange",
+                                        "title": "Majestic Orange",
+                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-pro/assets/images/admin-settings-icons/color-preview-img/majestic-orange.svg",
+                                        "color_options": {
+                                            "color-1": "#1B233B",
+                                            "color-2": "#F05025",
+                                            "color-3": "#ffcbbc",
+                                            "color-4": "#DD3B0F"
+                                        },
+                                        "btn_text": "#FFFFFF",
+                                        "btn_primary": "#F05025",
+                                        "btn_primary_border": "#F05025",
+                                        "btn_hover_text": "#FFFFFF",
+                                        "btn_hover": "#DD3B0F",
+                                        "btn_hover_border": "#C83811",
+                                        "dash_nav_text": "#CFCFCF",
+                                        "dash_nav_bg": "#1B233B",
+                                        "dash_nav_active_text": "#FFFFFF",
+                                        "dash_active_link": "#F05025"
+                                    },
+                                    {
+                                        "key": "petal_party",
+                                        "value": "petal party",
+                                        "title": "Petal Party",
+                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-pro/assets/images/admin-settings-icons/color-preview-img/petal-party.svg",
+                                        "color_options": {
+                                            "color-1": "#870A30",
+                                            "color-2": "#D43790",
+                                            "color-3": "#F4BECF",
+                                            "color-4": "#C33385"
+                                        },
+                                        "btn_text": "#FFFFFF",
+                                        "btn_primary": "#D43790",
+                                        "btn_primary_border": "#D43790",
+                                        "btn_hover_text": "#FFFFFF",
+                                        "btn_hover": "#C33385",
+                                        "btn_hover_border": "#BB3381",
+                                        "dash_nav_text": "#F4BECF",
+                                        "dash_nav_bg": "#870A30",
+                                        "dash_nav_active_text": "#FFFFFF",
+                                        "dash_active_link": "#D43790"
+                                    },
+                                    {
+                                        "key": "pinky",
+                                        "value": "pinky",
+                                        "title": "Pinky",
+                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-pro/assets/images/admin-settings-icons/color-preview-img/pinky.svg",
+                                        "color_options": {
+                                            "color-1": "#B52E5F",
+                                            "color-2": "#FF0080",
+                                            "color-3": "#FFCAE4",
+                                            "color-4": "#FF21E1"
+                                        },
+                                        "btn_text": "#FFFFFF",
+                                        "btn_primary": "#FF0080",
+                                        "btn_primary_border": "#FF0080",
+                                        "btn_hover_text": "#FFFFFF",
+                                        "btn_hover": "#DF0070",
+                                        "btn_hover_border": "#C50063",
+                                        "dash_nav_text": "#EBE0D0",
+                                        "dash_nav_bg": "#A91B60",
+                                        "dash_nav_active_text": "#FFFFFF",
+                                        "dash_active_link": "#D43790"
+                                    },
+                                    {
+                                        "key": "ocean",
+                                        "value": "ocean",
+                                        "title": "Ocean",
+                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-pro/assets/images/admin-settings-icons/color-preview-img/ocean.svg",
+                                        "color_options": {
+                                            "color-1": "#38748C",
+                                            "color-2": "#34ABDB",
+                                            "color-3": "#C6EFFF",
+                                            "color-4": "#2FA3D1"
+                                        },
+                                        "btn_text": "#FFFFFF",
+                                        "btn_primary": "#34ABDB",
+                                        "btn_primary_border": "#34ABDB",
+                                        "btn_hover_text": "#FFFFFF",
+                                        "btn_hover": "#2FA3D1",
+                                        "btn_hover_border": "#2C98C3",
+                                        "dash_nav_text": "#99C7DA",
+                                        "dash_nav_bg": "#38748C",
+                                        "dash_nav_active_text": "#FFFFFF",
+                                        "dash_active_link": "#34ABDB"
+                                    },
+                                    {
+                                        "key": "sweety",
+                                        "value": "sweety",
+                                        "title": "Sweety",
+                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-pro/assets/images/admin-settings-icons/color-preview-img/sweety.svg",
+                                        "color_options": {
+                                            "color-1": "#FB4570",
+                                            "color-2": "#C61740",
+                                            "color-3": "#FFC8D5",
+                                            "color-4": "#FB4570"
+                                        },
+                                        "btn_text": "#FFFFFF",
+                                        "btn_primary": "#FB4570",
+                                        "btn_primary_border": "#FB4570",
+                                        "btn_hover_text": "#FFFFFF",
+                                        "btn_hover": "#EC3661",
+                                        "btn_hover_border": "#D33A5E",
+                                        "dash_nav_text": "#FFC8D5",
+                                        "dash_nav_bg": "#FB4570",
+                                        "dash_nav_active_text": "#FFFFFF",
+                                        "dash_active_link": "#C61740"
+                                    },
+                                    {
+                                        "key": "summer_splash",
+                                        "value": "summer splash",
+                                        "title": "Summer Splash",
+                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-pro/assets/images/admin-settings-icons/color-preview-img/summer-splash.svg",
+                                        "color_options": {
+                                            "color-1": "#29A0B1",
+                                            "color-2": "#167D7F",
+                                            "color-3": "#BDECF2",
+                                            "color-4": "#228D9C"
+                                        },
+                                        "btn_text": "#FFFFFF",
+                                        "btn_primary": "#29A0B1",
+                                        "btn_primary_border": "#29A0B1",
+                                        "btn_hover_text": "#FFFFFF",
+                                        "btn_hover": "#228D9C",
+                                        "btn_hover_border": "#1E7683",
+                                        "dash_nav_text": "#BDECF2",
+                                        "dash_nav_bg": "#29A0B1",
+                                        "dash_nav_active_text": "#FFFFFF",
+                                        "dash_active_link": "#167D7F"
+                                    },
+                                    {
+                                        "key": "tree",
+                                        "value": "tree",
+                                        "title": "Tree",
+                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-pro/assets/images/admin-settings-icons/color-preview-img/tree.svg",
+                                        "color_options": {
+                                            "color-1": "#1BAC9E",
+                                            "color-2": "#167067",
+                                            "color-3": "#ABF5EE",
+                                            "color-4": "#1CB6A7"
+                                        },
+                                        "btn_text": "#FFFFFF",
+                                        "btn_primary": "#1CB6A7",
+                                        "btn_primary_border": "#1CB6A7",
+                                        "btn_hover_text": "#FFFFFF",
+                                        "btn_hover": "#1DADA0",
+                                        "btn_hover_border": "#148C81",
+                                        "dash_nav_text": "#ABF5EE",
+                                        "dash_nav_bg": "#1BAC9E",
+                                        "dash_nav_active_text": "#FFFFFF",
+                                        "dash_active_link": "#167D7F"
+                                    }
+                                ]
+                            }
+                        ],
+                        "description": "Select a color palette for your store.",
+                        "dependency_key": "dashboard-color-customizer-page.dokan-store-colors",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    }
+                ],
+                "description": "Customize the colors and appearance of vendor dashboards to match your brand.",
+                "dependency_key": "dashboard-color-customizer-page",
+                "dependencies": [],
+                "validations": [],
+                "priority": 300,
+                "doc_link": "https://dokan.co/docs/wordpress/modules/color-scheme/"
+            },
+            {
+                "id": "storefont_social_onboarding",
+                "type": "subpage",
+                "title": "Storefront Socials",
+                "icon": "",
+                "tooltip": "",
+                "display": true,
+                "hook_key": "dokan_settings_appearance_storefont_social_onboarding",
+                "children": [
+                    {
+                        "id": "storefont_social_onboarding_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section",
+                        "children": [
+                            {
+                                "id": "facebook_api_group",
+                                "type": "fieldgroup",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_facebook_api_group",
+                                "children": [
+                                    {
+                                        "id": "facebook_enabled",
+                                        "type": "field",
+                                        "title": "Connect to Facebook",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_facebook_api_group_facebook_enabled",
+                                        "children": [],
+                                        "description": "Configure your Facebook API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-facebook/\" target=\"_blank\">Get Help</a>",
+                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_enabled",
+                                        "dependencies": [],
+                                        "validations": [],
+                                        "variant": "switch",
+                                        "value": "off",
+                                        "default": "off",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/social-onboarding/facebook.svg",
+                                        "options": [],
+                                        "enable_state": {
+                                            "value": "on",
+                                            "title": "Enabled"
+                                        },
+                                        "disable_state": {
+                                            "value": "off",
+                                            "title": "Disabled"
+                                        },
+                                        "switcher_type": null,
+                                        "should_confirm": false,
+                                        "confirm_modal": []
+                                    },
+                                    {
+                                        "id": "facebook_info",
+                                        "type": "field",
+                                        "title": "Facebook app / meta app instead of facebook account",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_facebook_api_group_facebook_info",
+                                        "children": [],
+                                        "description": "",
+                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_info",
+                                        "dependencies": [
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_info"
+                                            },
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_info"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "info",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "",
+                                        "link_text": "+ Create an App",
+                                        "link_url": "https://developers.facebook.com/apps/",
+                                        "show_icon": true
+                                    },
+                                    {
+                                        "id": "facebook_app_id",
+                                        "type": "field",
+                                        "title": "Facebook App ID",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_facebook_api_group_facebook_app_id",
+                                        "children": [],
+                                        "description": "Enter your Facebook App ID from Facebook Developer Console.",
+                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_app_id",
+                                        "dependencies": [
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_app_id"
+                                            },
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_app_id"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "show_hide",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "Enter your Facebook App ID",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": ""
+                                    },
+                                    {
+                                        "id": "facebook_app_secret",
+                                        "type": "field",
+                                        "title": "Facebook App Secret",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_facebook_api_group_facebook_app_secret",
+                                        "children": [],
+                                        "description": "Enter your Facebook App Secret from Facebook Developer Console.",
+                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_app_secret",
+                                        "dependencies": [
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_app_secret"
+                                            },
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_app_secret"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "show_hide",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "Enter your Facebook App Secret",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": ""
+                                    },
+                                    {
+                                        "id": "facebook_redirect_url",
+                                        "type": "field",
+                                        "title": "Redirect URL",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_facebook_api_group_facebook_redirect_url",
+                                        "children": [],
+                                        "description": "The redirect URL for Facebook Login. Copy this URL and add it to your Facebook App settings.",
+                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_redirect_url",
+                                        "dependencies": [
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_redirect_url"
+                                            },
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_redirect_url"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "copy_field",
+                                        "value": "https://core-dokan.test/my-account/",
+                                        "default": "https://core-dokan.test/wp-admin/admin-ajax.php?action=dokan_facebook_callback",
+                                        "placeholder": "https://core-dokan.test/wp-admin/admin-ajax.php?action=dokan_facebook_callback",
+                                        "readonly": true,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": ""
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group",
+                                "dependencies": [],
+                                "validations": [],
+                                "content_class": ""
+                            },
+                            {
+                                "id": "x_api_group",
+                                "type": "fieldgroup",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_x_api_group",
+                                "children": [
+                                    {
+                                        "id": "x_enabled",
+                                        "type": "field",
+                                        "title": "Connect to X",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_x_api_group_x_enabled",
+                                        "children": [],
+                                        "description": "Configure your X API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-twitter/\" target=\"_blank\">Get Help</a>",
+                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_enabled",
+                                        "dependencies": [],
+                                        "validations": [],
+                                        "variant": "switch",
+                                        "value": "off",
+                                        "default": "off",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/social-onboarding/x-twitter.svg",
+                                        "options": [],
+                                        "enable_state": {
+                                            "value": "on",
+                                            "title": "Enabled"
+                                        },
+                                        "disable_state": {
+                                            "value": "off",
+                                            "title": "Disabled"
+                                        },
+                                        "switcher_type": null,
+                                        "should_confirm": false,
+                                        "confirm_modal": []
+                                    },
+                                    {
+                                        "id": "x_info",
+                                        "type": "field",
+                                        "title": "X app / meta app instead of x account",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_x_api_group_x_info",
+                                        "children": [],
+                                        "description": "",
+                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_info",
+                                        "dependencies": [
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_info"
+                                            },
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_info"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "info",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "",
+                                        "link_text": "+ Create an App",
+                                        "link_url": "https://apps.twitter.com/",
+                                        "show_icon": true
+                                    },
+                                    {
+                                        "id": "x_api_key",
+                                        "type": "field",
+                                        "title": "X API Key",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_x_api_group_x_api_key",
+                                        "children": [],
+                                        "description": "Enter your X API Key from X Developer Console.",
+                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_api_key",
+                                        "dependencies": [
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_api_key"
+                                            },
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_api_key"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "show_hide",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "Enter your X API Key",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": ""
+                                    },
+                                    {
+                                        "id": "x_api_secret",
+                                        "type": "field",
+                                        "title": "X API Secret",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_x_api_group_x_api_secret",
+                                        "children": [],
+                                        "description": "Enter your X API Secret from X Developer Console.",
+                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_api_secret",
+                                        "dependencies": [
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_api_secret"
+                                            },
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_api_secret"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "show_hide",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "Enter your X API Secret",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": ""
+                                    },
+                                    {
+                                        "id": "x_redirect_url",
+                                        "type": "field",
+                                        "title": "Redirect URL",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_x_api_group_x_redirect_url",
+                                        "children": [],
+                                        "description": "The redirect URL for X Login. Copy this URL and add it to your X App settings.",
+                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_redirect_url",
+                                        "dependencies": [
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_redirect_url"
+                                            },
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_redirect_url"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "copy_field",
+                                        "value": "https://core-dokan.test/my-account/",
+                                        "default": "https://core-dokan.test/wp-admin/admin-ajax.php?action=dokan_x_callback",
+                                        "placeholder": "https://core-dokan.test/wp-admin/admin-ajax.php?action=dokan_x_callback",
+                                        "readonly": true,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": ""
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group",
+                                "dependencies": [],
+                                "validations": [],
+                                "content_class": ""
+                            },
+                            {
+                                "id": "google_api_group",
+                                "type": "fieldgroup",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_google_api_group",
+                                "children": [
+                                    {
+                                        "id": "google_enabled",
+                                        "type": "field",
+                                        "title": "Connect to Google",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_google_api_group_google_enabled",
+                                        "children": [],
+                                        "description": "Configure your Google API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-google/\" target=\"_blank\">Get Help</a>",
+                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_enabled",
+                                        "dependencies": [],
+                                        "validations": [],
+                                        "variant": "switch",
+                                        "value": "off",
+                                        "default": "off",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/social-onboarding/google.svg",
+                                        "options": [],
+                                        "enable_state": {
+                                            "value": "on",
+                                            "title": "Enabled"
+                                        },
+                                        "disable_state": {
+                                            "value": "off",
+                                            "title": "Disabled"
+                                        },
+                                        "switcher_type": null,
+                                        "should_confirm": false,
+                                        "confirm_modal": []
+                                    },
+                                    {
+                                        "id": "google_info",
+                                        "type": "field",
+                                        "title": "Google app / meta app instead of google account",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_google_api_group_google_info",
+                                        "children": [],
+                                        "description": "",
+                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_info",
+                                        "dependencies": [
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_info"
+                                            },
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_info"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "info",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "",
+                                        "link_text": "+ Create an App",
+                                        "link_url": "https://console.developers.google.com/project",
+                                        "show_icon": true
+                                    },
+                                    {
+                                        "id": "google_client_id",
+                                        "type": "field",
+                                        "title": "Google Client ID",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_google_api_group_google_client_id",
+                                        "children": [],
+                                        "description": "Enter your Google Client ID from Google Cloud Console.",
+                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_client_id",
+                                        "dependencies": [
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_client_id"
+                                            },
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_client_id"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "show_hide",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "Enter your Google Client ID",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": ""
+                                    },
+                                    {
+                                        "id": "google_client_secret",
+                                        "type": "field",
+                                        "title": "Google Client Secret",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_google_api_group_google_client_secret",
+                                        "children": [],
+                                        "description": "Enter your Google Client Secret from Google Cloud Console.",
+                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_client_secret",
+                                        "dependencies": [
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_client_secret"
+                                            },
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_client_secret"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "show_hide",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "Enter your Google Client Secret",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": ""
+                                    },
+                                    {
+                                        "id": "google_redirect_url",
+                                        "type": "field",
+                                        "title": "Redirect URL",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_google_api_group_google_redirect_url",
+                                        "children": [],
+                                        "description": "The redirect URL for Google Login. Copy this URL and add it to your Google OAuth settings.",
+                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_redirect_url",
+                                        "dependencies": [
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_redirect_url"
+                                            },
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_redirect_url"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "copy_field",
+                                        "value": "https://core-dokan.test/my-account/",
+                                        "default": "https://core-dokan.test/wp-admin/admin-ajax.php?action=dokan_google_callback",
+                                        "placeholder": "https://core-dokan.test/wp-admin/admin-ajax.php?action=dokan_google_callback",
+                                        "readonly": true,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": ""
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group",
+                                "dependencies": [],
+                                "validations": [],
+                                "content_class": ""
+                            },
+                            {
+                                "id": "linkedin_api_group",
+                                "type": "fieldgroup",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_linkedin_api_group",
+                                "children": [
+                                    {
+                                        "id": "linkedin_enabled",
+                                        "type": "field",
+                                        "title": "Connect to LinkedIn",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_linkedin_api_group_linkedin_enabled",
+                                        "children": [],
+                                        "description": "Configure your LinkedIn API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-linkedin/\" target=\"_blank\">Get Help</a>",
+                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_enabled",
+                                        "dependencies": [],
+                                        "validations": [],
+                                        "variant": "switch",
+                                        "value": "off",
+                                        "default": "off",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/social-onboarding/linkedin.svg",
+                                        "options": [],
+                                        "enable_state": {
+                                            "value": "on",
+                                            "title": "Enabled"
+                                        },
+                                        "disable_state": {
+                                            "value": "off",
+                                            "title": "Disabled"
+                                        },
+                                        "switcher_type": null,
+                                        "should_confirm": false,
+                                        "confirm_modal": []
+                                    },
+                                    {
+                                        "id": "linkedin_info",
+                                        "type": "field",
+                                        "title": "Linkedin app / meta app instead of linkedin account",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_linkedin_api_group_linkedin_info",
+                                        "children": [],
+                                        "description": "",
+                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_info",
+                                        "dependencies": [
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_info"
+                                            },
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_info"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "info",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "",
+                                        "link_text": "+ Create an App",
+                                        "link_url": "https://www.linkedin.com/developer/apps/",
+                                        "show_icon": true
+                                    },
+                                    {
+                                        "id": "linkedin_client_id",
+                                        "type": "field",
+                                        "title": "LinkedIn Client ID",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_linkedin_api_group_linkedin_client_id",
+                                        "children": [],
+                                        "description": "Enter your LinkedIn Client ID from LinkedIn Developer Console.",
+                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_client_id",
+                                        "dependencies": [
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_client_id"
+                                            },
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_client_id"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "show_hide",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "Enter your LinkedIn Client ID",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": ""
+                                    },
+                                    {
+                                        "id": "linkedin_client_secret",
+                                        "type": "field",
+                                        "title": "LinkedIn Client Secret",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_linkedin_api_group_linkedin_client_secret",
+                                        "children": [],
+                                        "description": "Enter your LinkedIn Client Secret from LinkedIn Developer Console.",
+                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_client_secret",
+                                        "dependencies": [
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_client_secret"
+                                            },
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_client_secret"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "show_hide",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "Enter your LinkedIn Client Secret",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": ""
+                                    },
+                                    {
+                                        "id": "linkedin_redirect_url",
+                                        "type": "field",
+                                        "title": "Redirect URL",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_linkedin_api_group_linkedin_redirect_url",
+                                        "children": [],
+                                        "description": "The redirect URL for LinkedIn Login. Copy this URL and add it to your LinkedIn App settings.",
+                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_redirect_url",
+                                        "dependencies": [
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_redirect_url"
+                                            },
+                                            {
+                                                "key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_enabled",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_redirect_url"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "copy_field",
+                                        "value": "https://core-dokan.test/my-account/",
+                                        "default": "https://core-dokan.test/wp-admin/admin-ajax.php?action=dokan_linkedin_callback",
+                                        "placeholder": "https://core-dokan.test/wp-admin/admin-ajax.php?action=dokan_linkedin_callback",
+                                        "readonly": true,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": ""
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group",
+                                "dependencies": [],
+                                "validations": [],
+                                "content_class": ""
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    }
+                ],
+                "description": "Allow vendors to link their social accounts to build trust and connect with customers.",
+                "dependency_key": "storefont_social_onboarding",
+                "dependencies": [],
+                "validations": [],
+                "priority": 400,
+                "doc_link": "https://dokan.co/docs/wordpress/settings/dokan-social-login/"
+            },
+            {
+                "id": "dashboard-menu-manager-page",
+                "type": "subpage",
+                "title": "Dashboard Menu Manager",
+                "icon": "",
+                "tooltip": "",
+                "display": true,
+                "hook_key": "dokan_settings_appearance_dashboard-menu-manager-page",
+                "children": [
+                    {
+                        "id": "dokan-menu-manager",
+                        "type": "subsection",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_appearance_dashboard-menu-manager-page_dokan-menu-manager",
+                        "children": [
+                            {
+                                "id": "dashboard_menu_manager",
+                                "type": "field",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_appearance_dashboard-menu-manager-page_dokan-menu-manager_dashboard_menu_manager",
+                                "children": [],
+                                "description": "",
+                                "dependency_key": "dashboard-menu-manager-page.dokan-menu-manager.dashboard_menu_manager",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "menu_manager",
+                                "value": {
+                                    "left_menus": {
+                                        "dashboard": {
+                                            "title": "Dashboard",
+                                            "url": "https://core-dokan.test/dashboard/?path=analyticsOverview",
+                                            "permission": "dokan_view_overview_menu",
+                                            "icon": "",
+                                            "pos": 10
+                                        },
+                                        "products": {
+                                            "title": "Products",
+                                            "url": "https://core-dokan.test/dashboard/products/",
+                                            "permission": "dokan_view_product_menu",
+                                            "icon": "",
+                                            "pos": 30
+                                        },
+                                        "orders": {
+                                            "title": "Orders",
+                                            "url": "https://core-dokan.test/dashboard/orders/",
+                                            "permission": "dokan_view_order_menu",
+                                            "icon": "",
+                                            "pos": 50,
+                                            "submenu": {
+                                                "all": {
+                                                    "title": "All Orders",
+                                                    "url": "https://core-dokan.test/dashboard/orders/",
+                                                    "permission": "dokan_view_order_menu",
+                                                    "icon": "",
+                                                    "pos": 30
+                                                },
+                                                "order-new": {
+                                                    "title": "Add New Order",
+                                                    "url": "https://core-dokan.test/dashboard/new/#orders/new",
+                                                    "permission": "dokan_manage_manual_order",
+                                                    "react_route": "orders/new",
+                                                    "icon": "",
+                                                    "pos": 50
+                                                }
+                                            }
+                                        },
+                                        "requested-quotes": {
+                                            "title": "Request Quotes",
+                                            "url": "https://core-dokan.test/dashboard/requested-quotes/",
+                                            "permission": "dokan_view_request_quote_menu",
+                                            "icon": "",
+                                            "pos": 53
+                                        },
+                                        "coupons": {
+                                            "title": "Coupons",
+                                            "url": "https://core-dokan.test/dashboard/new/#coupons",
+                                            "permission": "dokan_view_coupon_menu",
+                                            "react_route": "coupons",
+                                            "icon": "",
+                                            "pos": 55
+                                        },
+                                        "reports": {
+                                            "title": "Reports",
+                                            "url": "https://core-dokan.test/dashboard/reports/?path=analyticsproducts",
+                                            "permission": "dokan_view_report_menu",
+                                            "icon": "",
+                                            "pos": 60,
+                                            "submenu": {
+                                                "report_products": {
+                                                    "title": "Products",
+                                                    "url": "https://core-dokan.test/dashboard/reports/?path=analyticsproducts",
+                                                    "permission": "dokan_view_report_menu",
+                                                    "icon": "",
+                                                    "pos": 60
+                                                },
+                                                "report_revenue": {
+                                                    "title": "Revenue",
+                                                    "url": "https://core-dokan.test/dashboard/reports/?path=analyticsrevenue",
+                                                    "permission": "dokan_view_report_menu",
+                                                    "icon": "",
+                                                    "pos": 60
+                                                },
+                                                "report_orders": {
+                                                    "title": "Orders",
+                                                    "url": "https://core-dokan.test/dashboard/reports/?path=analyticsorders",
+                                                    "permission": "dokan_view_report_menu",
+                                                    "icon": "",
+                                                    "pos": 60
+                                                },
+                                                "report_variations": {
+                                                    "title": "Variations",
+                                                    "url": "https://core-dokan.test/dashboard/reports/?path=analyticsvariations",
+                                                    "permission": "dokan_view_report_menu",
+                                                    "icon": "",
+                                                    "pos": 60
+                                                },
+                                                "report_categories": {
+                                                    "title": "Categories",
+                                                    "url": "https://core-dokan.test/dashboard/reports/?path=analyticscategories",
+                                                    "permission": "dokan_view_report_menu",
+                                                    "icon": "",
+                                                    "pos": 60
+                                                },
+                                                "report_stock": {
+                                                    "title": "Stock",
+                                                    "url": "https://core-dokan.test/dashboard/reports/?path=analyticsstock",
+                                                    "permission": "dokan_view_report_menu",
+                                                    "icon": "",
+                                                    "pos": 60
+                                                },
+                                                "report_statement": {
+                                                    "title": "Statement",
+                                                    "url": "https://core-dokan.test/dashboard/reports/?path=analyticsstatement",
+                                                    "permission": "dokan_view_statement_report",
+                                                    "icon": "",
+                                                    "pos": 60
+                                                }
+                                            }
+                                        },
+                                        "delivery-time-dashboard": {
+                                            "title": "Delivery Time",
+                                            "url": "https://core-dokan.test/dashboard/new/#delivery-time-dashboard",
+                                            "permission": "dokandar",
+                                            "react_route": "delivery-time-dashboard",
+                                            "icon": "",
+                                            "pos": 61
+                                        },
+                                        "reviews": {
+                                            "title": "Reviews",
+                                            "url": "https://core-dokan.test/dashboard/new/#reviews",
+                                            "permission": "dokan_view_review_menu",
+                                            "react_route": "reviews",
+                                            "icon": "",
+                                            "pos": 65
+                                        },
+                                        "withdraw": {
+                                            "title": "Withdraw",
+                                            "url": "https://core-dokan.test/dashboard/new/#withdraw",
+                                            "permission": "dokan_view_withdraw_menu",
+                                            "react_route": "withdraw",
+                                            "icon": "",
+                                            "pos": 70
+                                        },
+                                        "seller-badge": {
+                                            "title": "Badge",
+                                            "url": "https://core-dokan.test/dashboard/seller-badge/",
+                                            "permission": "dokan_view_badge_menu",
+                                            "icon": "",
+                                            "pos": 73
+                                        },
+                                        "product-questions-answers": {
+                                            "title": "Product Q&amp;A",
+                                            "url": "https://core-dokan.test/dashboard/new/#product-questions-answers",
+                                            "permission": "dokandar",
+                                            "react_route": "product-questions-answers",
+                                            "icon": "",
+                                            "pos": 80
+                                        },
+                                        "return-request": {
+                                            "title": "Return Requests",
+                                            "url": "https://core-dokan.test/dashboard/new/#return-request",
+                                            "permission": "dokan_view_store_rma_menu",
+                                            "react_route": "return-request",
+                                            "icon": "",
+                                            "pos": 170,
+                                            "counts": 0
+                                        },
+                                        "staffs": {
+                                            "title": "Staff",
+                                            "url": "https://core-dokan.test/dashboard/new/#staffs",
+                                            "react_route": "staffs",
+                                            "icon": "",
+                                            "pos": 172
+                                        },
+                                        "followers": {
+                                            "title": "Followers",
+                                            "url": "https://core-dokan.test/dashboard/followers/",
+                                            "permission": "dokan_view_overview_menu",
+                                            "icon": "",
+                                            "pos": 175
+                                        },
+                                        "subscription": {
+                                            "title": "Subscription",
+                                            "url": "https://core-dokan.test/dashboard/new/#subscription",
+                                            "react_route": "subscription",
+                                            "icon": "",
+                                            "pos": 180
+                                        },
+                                        "announcement": {
+                                            "title": "Announcements",
+                                            "url": "https://core-dokan.test/dashboard/new/#announcement",
+                                            "permission": "dokan_view_announcement",
+                                            "react_route": "announcement",
+                                            "icon": "",
+                                            "pos": 181
+                                        },
+                                        "analytics": {
+                                            "title": "Store Stats",
+                                            "url": "https://core-dokan.test/dashboard/analytics/",
+                                            "icon": "",
+                                            "pos": 182
+                                        },
+                                        "vendor-support": {
+                                            "title": "Admin Support",
+                                            "url": "https://core-dokan.test/dashboard/new/#vendor-support",
+                                            "permission": "dokan_view_announcement",
+                                            "react_route": "vendor-support",
+                                            "icon": "",
+                                            "pos": 182
+                                        },
+                                        "tools": {
+                                            "title": "Tools",
+                                            "url": "https://core-dokan.test/dashboard/tools/",
+                                            "icon": "",
+                                            "pos": 183
+                                        },
+                                        "support": {
+                                            "title": "Support",
+                                            "url": "https://core-dokan.test/dashboard/new/#support",
+                                            "react_route": "support",
+                                            "icon": "",
+                                            "pos": 199,
+                                            "counts": 0
+                                        }
+                                    },
+                                    "settings_sub_menu": {
+                                        "store": {
+                                            "title": "Store",
+                                            "url": "https://core-dokan.test/dashboard/settings/store/",
+                                            "permission": "dokan_view_store_settings_menu",
+                                            "icon": "",
+                                            "pos": 30
+                                        },
+                                        "payment": {
+                                            "title": "Payment",
+                                            "url": "https://core-dokan.test/dashboard/settings/payment/",
+                                            "permission": "dokan_view_store_payment_menu",
+                                            "icon": "",
+                                            "pos": 50
+                                        },
+                                        "verification": {
+                                            "title": "Verification",
+                                            "url": "https://core-dokan.test/dashboard/new/#settings/verification",
+                                            "permission": "dokan_view_store_verification_menu",
+                                            "react_route": "settings/verification",
+                                            "icon": "",
+                                            "pos": 55
+                                        },
+                                        "shipping": {
+                                            "title": "Shipping",
+                                            "url": "https://core-dokan.test/dashboard/new/#settings/shipping",
+                                            "permission": "dokan_view_store_shipping_menu",
+                                            "react_route": "settings/shipping",
+                                            "icon": "",
+                                            "pos": 70
+                                        },
+                                        "shipstation": {
+                                            "title": "ShipStation",
+                                            "url": "https://core-dokan.test/dashboard/settings/shipstation/",
+                                            "permission": "dokan_view_store_shipping_menu",
+                                            "icon": "",
+                                            "pos": 72
+                                        },
+                                        "social": {
+                                            "title": "Social Profile",
+                                            "url": "https://core-dokan.test/dashboard/new/#settings/social",
+                                            "permission": "dokan_view_store_social_menu",
+                                            "react_route": "settings/social",
+                                            "icon": "",
+                                            "pos": 90
+                                        },
+                                        "rma": {
+                                            "title": "RMA",
+                                            "url": "https://core-dokan.test/dashboard/settings/rma/",
+                                            "permission": "dokan_view_store_rma_menu",
+                                            "icon": "",
+                                            "pos": 93
+                                        },
+                                        "seo": {
+                                            "title": "Store SEO",
+                                            "url": "https://core-dokan.test/dashboard/new/#settings/seo",
+                                            "permission": "dokan_view_store_seo_menu",
+                                            "react_route": "settings/seo",
+                                            "icon": "",
+                                            "pos": 110
+                                        }
+                                    }
+                                },
+                                "default": {
+                                    "left_menus": {
+                                        "dashboard": {
+                                            "title": "Dashboard",
+                                            "icon": "<i class=\"fas fa-tachometer-alt\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/?path=%2Fanalytics%2FOverview",
+                                            "pos": 10,
+                                            "icon_name": "House",
+                                            "permission": "dokan_view_overview_menu"
+                                        },
+                                        "products": {
+                                            "title": "Products",
+                                            "icon": "<i class=\"fas fa-briefcase\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/products/",
+                                            "pos": 30,
+                                            "icon_name": "Box",
+                                            "permission": "dokan_view_product_menu"
+                                        },
+                                        "orders": {
+                                            "title": "Orders",
+                                            "icon": "<i class=\"fas fa-shopping-cart\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/orders/",
+                                            "pos": 50,
+                                            "icon_name": "ShoppingCart",
+                                            "permission": "dokan_view_order_menu",
+                                            "submenu": {
+                                                "all": {
+                                                    "title": "All Orders",
+                                                    "icon": "<i class=\"fas fa-shopping-cart\"></i>",
+                                                    "url": "https://core-dokan.test/dashboard/orders/",
+                                                    "pos": 30,
+                                                    "icon_name": "ShoppingCart",
+                                                    "permission": "dokan_view_order_menu"
+                                                },
+                                                "order-new": {
+                                                    "title": "Add New Order",
+                                                    "icon": "<i class=\"fas fa-cart-plus\"></i>",
+                                                    "url": "https://core-dokan.test/dashboard/new/#orders/new",
+                                                    "pos": 50,
+                                                    "permission": "dokan_manage_manual_order",
+                                                    "react_route": "orders/new"
+                                                }
+                                            }
+                                        },
+                                        "requested-quotes": {
+                                            "title": "Request Quotes",
+                                            "icon": "<i class=\"fa fa-list\" aria-hidden=\"true\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/requested-quotes/",
+                                            "pos": 53,
+                                            "icon_name": "ShoppingBag",
+                                            "permission": "dokan_view_request_quote_menu"
+                                        },
+                                        "coupons": {
+                                            "title": "Coupons",
+                                            "icon": "<i class=\"fas fa-gift\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/new/#coupons",
+                                            "pos": 55,
+                                            "icon_name": "CirclePercent",
+                                            "permission": "dokan_view_coupon_menu",
+                                            "react_route": "coupons"
+                                        },
+                                        "reports": {
+                                            "title": "Reports",
+                                            "icon": "<i class=\"fas fa-chart-line\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/reports/?path=%2Fanalytics%2Fproducts",
+                                            "pos": 60,
+                                            "icon_name": "ChartPie",
+                                            "permission": "dokan_view_report_menu",
+                                            "submenu": {
+                                                "report_products": {
+                                                    "title": "Products",
+                                                    "icon": "<i class=\"fa-solid fa-box\"></i>",
+                                                    "url": "https://core-dokan.test/dashboard/reports/?path=%2Fanalytics%2Fproducts",
+                                                    "pos": 60,
+                                                    "permission": "dokan_view_report_menu"
+                                                },
+                                                "report_revenue": {
+                                                    "title": "Revenue",
+                                                    "icon": "<i class=\"fa-solid fa-chart-column\"></i>",
+                                                    "url": "https://core-dokan.test/dashboard/reports/?path=%2Fanalytics%2Frevenue",
+                                                    "pos": 60,
+                                                    "permission": "dokan_view_report_menu"
+                                                },
+                                                "report_orders": {
+                                                    "title": "Orders",
+                                                    "icon": "<i class=\"fa-solid fa-cart-shopping\"></i>",
+                                                    "url": "https://core-dokan.test/dashboard/reports/?path=%2Fanalytics%2Forders",
+                                                    "pos": 60,
+                                                    "permission": "dokan_view_report_menu"
+                                                },
+                                                "report_variations": {
+                                                    "title": "Variations",
+                                                    "icon": "<i class=\"fa-solid fa-boxes-stacked\"></i>",
+                                                    "url": "https://core-dokan.test/dashboard/reports/?path=%2Fanalytics%2Fvariations",
+                                                    "pos": 60,
+                                                    "permission": "dokan_view_report_menu"
+                                                },
+                                                "report_categories": {
+                                                    "title": "Categories",
+                                                    "icon": "<i class=\"fa-solid fa-bars-staggered\"></i>",
+                                                    "url": "https://core-dokan.test/dashboard/reports/?path=%2Fanalytics%2Fcategories",
+                                                    "pos": 60,
+                                                    "permission": "dokan_view_report_menu"
+                                                },
+                                                "report_stock": {
+                                                    "title": "Stock",
+                                                    "icon": "<i class=\"fa-solid fa-boxes-packing\"></i>",
+                                                    "url": "https://core-dokan.test/dashboard/reports/?path=%2Fanalytics%2Fstock",
+                                                    "pos": 60,
+                                                    "permission": "dokan_view_report_menu"
+                                                },
+                                                "report_statement": {
+                                                    "title": "Statement",
+                                                    "icon": "<i class=\"fa-solid fa-file-invoice\"></i>",
+                                                    "url": "https://core-dokan.test/dashboard/reports/?path=%2Fanalytics%2Fstatement",
+                                                    "pos": 60,
+                                                    "permission": "dokan_view_statement_report"
+                                                }
+                                            }
+                                        },
+                                        "delivery-time-dashboard": {
+                                            "title": "Delivery Time",
+                                            "icon": "<i class=\"far fa-clock\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/new/#delivery-time-dashboard",
+                                            "pos": 61,
+                                            "icon_name": "Truck",
+                                            "react_route": "delivery-time-dashboard",
+                                            "permission": "dokandar"
+                                        },
+                                        "reviews": {
+                                            "title": "Reviews",
+                                            "icon": "<i class=\"far fa-comments\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/new/#reviews",
+                                            "pos": 65,
+                                            "icon_name": "Star",
+                                            "permission": "dokan_view_review_menu",
+                                            "react_route": "reviews"
+                                        },
+                                        "withdraw": {
+                                            "title": "Withdraw",
+                                            "icon": "<i class=\"fas fa-upload\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/new/#withdraw",
+                                            "pos": 70,
+                                            "icon_name": "DollarSign",
+                                            "permission": "dokan_view_withdraw_menu",
+                                            "react_route": "withdraw"
+                                        },
+                                        "seller-badge": {
+                                            "title": "Badge",
+                                            "icon": "<i class=\"fas fa-award\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/seller-badge/",
+                                            "pos": 73,
+                                            "icon_name": "BadgeCheck",
+                                            "permission": "dokan_view_badge_menu"
+                                        },
+                                        "product-questions-answers": {
+                                            "title": "Product Q&A",
+                                            "icon": "<i class=\"far fa-question-circle\" aria-hidden=\"true\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/new/#product-questions-answers",
+                                            "pos": 80,
+                                            "icon_name": "MessageCircleQuestionMark",
+                                            "permission": "dokandar",
+                                            "react_route": "product-questions-answers"
+                                        },
+                                        "return-request": {
+                                            "title": "Return Requests",
+                                            "icon": "<i class=\"fas fa-undo-alt\" aria-hidden=\"true\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/new/#return-request",
+                                            "pos": 170,
+                                            "icon_name": "IterationCw",
+                                            "permission": "dokan_view_store_rma_menu",
+                                            "counts": 0,
+                                            "react_route": "return-request"
+                                        },
+                                        "staffs": {
+                                            "title": "Staff",
+                                            "icon": "<i class=\"fas fa-users\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/new/#staffs",
+                                            "pos": 172,
+                                            "icon_name": "Users",
+                                            "react_route": "staffs"
+                                        },
+                                        "followers": {
+                                            "title": "Followers",
+                                            "icon": "<i class=\"fas fa-heart\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/followers/",
+                                            "pos": 175,
+                                            "icon_name": "UserStar",
+                                            "permission": "dokan_view_overview_menu"
+                                        },
+                                        "subscription": {
+                                            "title": "Subscription",
+                                            "icon": "<i class=\"fas fa-book\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/new/#subscription",
+                                            "pos": 180,
+                                            "icon_name": "Crown",
+                                            "react_route": "subscription"
+                                        },
+                                        "announcement": {
+                                            "title": "Announcements",
+                                            "icon": "<i class=\"fas fa-bell\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/new/#announcement",
+                                            "pos": 181,
+                                            "icon_name": "Megaphone",
+                                            "react_route": "announcement",
+                                            "permission": "dokan_view_announcement"
+                                        },
+                                        "analytics": {
+                                            "title": "Store Stats",
+                                            "icon": "<i class=\"fas fa-chart-area\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/analytics/",
+                                            "icon_name": "ChartSpline",
+                                            "pos": 182
+                                        },
+                                        "vendor-support": {
+                                            "title": "Admin Support",
+                                            "icon": "<i class=\"fa-solid fa-comment-dots\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/new/#vendor-support",
+                                            "pos": 182,
+                                            "icon_name": "MessagesSquare",
+                                            "react_route": "vendor-support",
+                                            "permission": "dokan_view_announcement"
+                                        },
+                                        "tools": {
+                                            "title": "Tools",
+                                            "icon": "<i class=\"fas fa-wrench\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/tools/",
+                                            "icon_name": "Settings2",
+                                            "pos": 183
+                                        },
+                                        "support": {
+                                            "title": "Support",
+                                            "icon": "<i class=\"far fa-life-ring\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/new/#support",
+                                            "pos": 199,
+                                            "icon_name": "Headphones",
+                                            "react_route": "support",
+                                            "counts": 0
+                                        }
+                                    },
+                                    "settings_sub_menu": {
+                                        "store": {
+                                            "title": "Store",
+                                            "icon": "<i class=\"fas fa-university\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/settings/store/",
+                                            "pos": 30,
+                                            "permission": "dokan_view_store_settings_menu"
+                                        },
+                                        "payment": {
+                                            "title": "Payment",
+                                            "icon": "<i class=\"far fa-credit-card\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/settings/payment/",
+                                            "pos": 50,
+                                            "permission": "dokan_view_store_payment_menu"
+                                        },
+                                        "verification": {
+                                            "title": "Verification",
+                                            "icon": "<i class=\"fas fa-check\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/new/#settings/verification",
+                                            "pos": 55,
+                                            "permission": "dokan_view_store_verification_menu",
+                                            "react_route": "settings/verification"
+                                        },
+                                        "shipping": {
+                                            "title": "Shipping",
+                                            "icon": "<i class=\"fas fa-truck\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/new/#settings/shipping",
+                                            "pos": 70,
+                                            "permission": "dokan_view_store_shipping_menu",
+                                            "react_route": "settings/shipping"
+                                        },
+                                        "shipstation": {
+                                            "title": "ShipStation",
+                                            "icon": "<i class=\"fas fa-cog\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/settings/shipstation/",
+                                            "pos": 72,
+                                            "permission": "dokan_view_store_shipping_menu"
+                                        },
+                                        "social": {
+                                            "title": "Social Profile",
+                                            "icon": "<i class=\"fas fa-share-alt-square\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/new/#settings/social",
+                                            "pos": 90,
+                                            "permission": "dokan_view_store_social_menu",
+                                            "react_route": "settings/social"
+                                        },
+                                        "rma": {
+                                            "title": "RMA",
+                                            "icon": "<i class=\"fas fa-undo-alt\" aria-hidden=\"true\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/settings/rma/",
+                                            "pos": 93,
+                                            "permission": "dokan_view_store_rma_menu"
+                                        },
+                                        "seo": {
+                                            "title": "Store SEO",
+                                            "icon": "<i class=\"fas fa-globe\"></i>",
+                                            "url": "https://core-dokan.test/dashboard/new/#settings/seo",
+                                            "pos": 110,
+                                            "permission": "dokan_view_store_seo_menu",
+                                            "react_route": "settings/seo"
+                                        }
+                                    }
+                                },
+                                "api_endpoint": "https://core-dokan.test/wp-json/dokan/v1/admin/menu-manager"
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "dashboard-menu-manager-page.dokan-menu-manager",
+                        "dependencies": [],
+                        "validations": []
+                    }
+                ],
+                "description": "Reorder, Rename, Activate, and Deactivate menus for your vendor dashboard.",
+                "dependency_key": "dashboard-menu-manager-page",
+                "dependencies": [],
+                "validations": [],
+                "priority": 200,
+                "doc_link": "https://dokan.co/docs/wordpress/dokan-dashboard/vendor-dashboard-menu-manager/"
+            }
+        ],
+        "description": "Configure dashboard menu settings, visibility, and customization options.",
+        "dependency_key": "",
+        "dependencies": [],
+        "validations": []
+    },
+    {
         "id": "shipment",
         "type": "page",
         "title": "Shipment",
@@ -15594,7 +18172,8 @@ const dokanSettingsSchema: SettingsElement[] = [
                 "dependencies": [],
                 "validations": [],
                 "priority": 200,
-                "doc_link": "https://wedevs.com/docs/dokan-lite/compliance/eu-compliance/"
+                "doc_link": "https://wedevs.com/docs/dokan-lite/compliance/eu-compliance/",
+                "doc_link_text": 'Doc'
             }
         ],
         "description": "Configure compliance settings, privacy policies, and legal requirements.",
