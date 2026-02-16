@@ -8973,6 +8973,3578 @@ const dokanSettingsSchema: SettingsElement[] = [
         "dependencies": [],
         "validations": []
     },
+    {
+        "id": "transaction",
+        "type": "page",
+        "title": "Transaction",
+        "icon": "ArrowRightLeft",
+        "tooltip": "",
+        "display": true,
+        "hook_key": "dokan_settings_transaction",
+        "children": [
+            {
+                "id": "commission",
+                "type": "subpage",
+                "title": "Commissions",
+                "icon": "",
+                "tooltip": "",
+                "display": true,
+                "hook_key": "dokan_settings_transaction_commission",
+                "children": [
+                    {
+                        "id": "commission",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_transaction_commission_commission",
+                        "children": [
+                            {
+                                "id": "commission_type",
+                                "type": "field",
+                                "title": "Commission Type",
+                                "icon": "",
+                                "tooltip": "Select a commission type",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_commission_commission_commission_type",
+                                "children": [],
+                                "description": "Select a commission type for your marketplace",
+                                "dependency_key": "commission.commission.commission_type",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "radio_capsule",
+                                "value": "category_based",
+                                "default": "fixed",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "value": "fixed",
+                                        "title": "Fixed",
+                                        "startIcon": "User"
+                                    },
+                                    {
+                                        "value": "category_based",
+                                        "title": "Category Based",
+                                        "startIcon": "Users"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "admin_commission",
+                                "type": "field",
+                                "title": "Admin Commission",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_commission_commission_admin_commission",
+                                "children": [],
+                                "description": "Amount you will get from sales in both percentage and fixed fee",
+                                "dependency_key": "commission.commission.admin_commission",
+                                "dependencies": [
+                                    {
+                                        "key": "commission.commission.commission_type",
+                                        "value": "fixed",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "!==",
+                                        "self": "commission.commission.admin_commission"
+                                    },
+                                    {
+                                        "key": "commission.commission.commission_type",
+                                        "value": "fixed",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "===",
+                                        "self": "commission.commission.admin_commission"
+                                    }
+                                ],
+                                "validations": [
+                                    {
+                                        "rules": "not_empty",
+                                        "message": "Both percentage and fixed fee is required.",
+                                        "params": [],
+                                        "self": "commission.commission.admin_commission"
+                                    }
+                                ],
+                                "variant": "combine_input",
+                                "value": {
+                                    "additional_fee": "20",
+                                    "admin_percentage": "0"
+                                },
+                                "additional_fee": "20",
+                                "admin_percentage": "0",
+                                "is_automated": false
+                            },
+                            {
+                                "id": "reset_sub_category_when_edit_all_category",
+                                "type": "field",
+                                "title": "Apply Parent Category Commission to All Subcategories",
+                                "icon": "",
+                                "tooltip": "When enabled, changing a parent category&#039;s commission rate will automatically update all its subcategories. Disable this option to maintain independent commission rates for subcategories",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_commission_commission_reset_sub_category_when_edit_all_category",
+                                "children": [],
+                                "description": "Important: &#039;All Categories&#039; commission serves as your marketplace&#039;s default rate and cannot be empty. If 0 is given in value, then the marketplace will deduct no commission from vendors",
+                                "dependency_key": "commission.commission.reset_sub_category_when_edit_all_category",
+                                "dependencies": [
+                                    {
+                                        "key": "commission.commission.commission_type",
+                                        "value": "category_based",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "!==",
+                                        "self": "commission.commission.reset_sub_category_when_edit_all_category"
+                                    },
+                                    {
+                                        "key": "commission.commission.commission_type",
+                                        "value": "category_based",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "===",
+                                        "self": "commission.commission.reset_sub_category_when_edit_all_category"
+                                    }
+                                ],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "on",
+                                "default": "on",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "commission_category_based_values",
+                                "type": "field",
+                                "title": "Admin Commission",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_commission_commission_commission_category_based_values",
+                                "children": [],
+                                "description": "Amount you will get from each sale",
+                                "dependency_key": "commission.commission.commission_category_based_values",
+                                "dependencies": [
+                                    {
+                                        "key": "commission.commission.commission_type",
+                                        "value": "category_based",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "!==",
+                                        "self": "commission.commission.commission_category_based_values"
+                                    },
+                                    {
+                                        "key": "commission.commission.commission_type",
+                                        "value": "category_based",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "===",
+                                        "self": "commission.commission.commission_category_based_values"
+                                    },
+                                    {
+                                        "key": "commission.commission.reset_sub_category_when_edit_all_category",
+                                        "value": "on",
+                                        "to_self": true,
+                                        "attribute": "custom",
+                                        "effect": "custom",
+                                        "comparison": "===",
+                                        "self": "commission.commission.commission_category_based_values"
+                                    },
+                                    {
+                                        "key": "commission.commission.reset_sub_category_when_edit_all_category",
+                                        "value": "off",
+                                        "to_self": true,
+                                        "attribute": "custom",
+                                        "effect": "custom",
+                                        "comparison": "===",
+                                        "self": "commission.commission.commission_category_based_values"
+                                    }
+                                ],
+                                "validations": [
+                                    {
+                                        "rules": "not_empty",
+                                        "message": "Both percentage and fixed fee is required.",
+                                        "params": [],
+                                        "self": "commission.commission.commission_category_based_values"
+                                    }
+                                ],
+                                "variant": "category_based_commission",
+                                "value": {
+                                    "all": {
+                                        "flat": "4",
+                                        "percentage": "2"
+                                    },
+                                    "items": {
+                                        "15": {
+                                            "flat": "5",
+                                            "percentage": "3"
+                                        }
+                                    }
+                                },
+                                "categories": {
+                                    "15": {
+                                        "term_id": 15,
+                                        "name": "Uncategorized",
+                                        "parent_id": 0,
+                                        "children": [],
+                                        "parents": [],
+                                        "breadcumb": [ "Uncategorized" ]
+                                    },
+                                    "32": {
+                                        "term_id": 32,
+                                        "name": "Cate 1",
+                                        "parent_id": 0,
+                                        "children": [],
+                                        "parents": [],
+                                        "breadcumb": [ "Cate 1" ]
+                                    }
+                                },
+                                "reset_subcategory": "off"
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "commission.commission",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    }
+                ],
+                "description": "Set up marketplace commission structure and earnings from vendor sales.",
+                "dependency_key": "commission",
+                "dependencies": [],
+                "validations": [],
+                "priority": 200,
+                "doc_link": ""
+            },
+            {
+                "id": "fees",
+                "type": "subpage",
+                "title": "Fees",
+                "icon": "",
+                "tooltip": "",
+                "display": true,
+                "hook_key": "dokan_settings_transaction_fees",
+                "children": [
+                    {
+                        "id": "fees",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_transaction_fees_fees",
+                        "children": [
+                            {
+                                "id": "shipping_fee",
+                                "type": "field",
+                                "title": "Shipping Fee",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_fees_fees_shipping_fee",
+                                "children": [],
+                                "description": "Who will be receiving the shipping fees? Note that, tax fees for corresponding shipping method will not be included with shipping fees.",
+                                "dependency_key": "fees.fees.shipping_fee",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "radio_capsule",
+                                "value": "seller",
+                                "default": "seller",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "value": "seller",
+                                        "title": "Vendor",
+                                        "startIcon": "Users"
+                                    },
+                                    {
+                                        "value": "admin",
+                                        "title": "Admin",
+                                        "startIcon": "User"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "product_tax_fee",
+                                "type": "field",
+                                "title": "Product Tax Fee",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_fees_fees_product_tax_fee",
+                                "children": [],
+                                "description": "Who will be receiving the tax fees for products? Note that, shipping tax fees will not be included with product tax.",
+                                "dependency_key": "fees.fees.product_tax_fee",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "radio_capsule",
+                                "value": "seller",
+                                "default": "seller",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "value": "seller",
+                                        "title": "Vendor",
+                                        "startIcon": "Users"
+                                    },
+                                    {
+                                        "value": "admin",
+                                        "title": "Admin",
+                                        "startIcon": "User"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "shipping_tax_fee",
+                                "type": "field",
+                                "title": "Shipping Tax Fee",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_fees_fees_shipping_tax_fee",
+                                "children": [],
+                                "description": "Who will be receiving the tax fees for shipping?",
+                                "dependency_key": "fees.fees.shipping_tax_fee",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "radio_capsule",
+                                "value": "seller",
+                                "default": "seller",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "value": "seller",
+                                        "title": "Vendor",
+                                        "startIcon": "Users"
+                                    },
+                                    {
+                                        "value": "admin",
+                                        "title": "Admin",
+                                        "startIcon": "User"
+                                    }
+                                ]
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "fees.fees",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    }
+                ],
+                "description": "Configure how different types of fees are distributed between vendors and admin",
+                "dependency_key": "fees",
+                "dependencies": [],
+                "validations": [],
+                "priority": 100,
+                "doc_link": ""
+            },
+            {
+                "id": "withdraw_charge",
+                "type": "subpage",
+                "title": "Withdraw",
+                "icon": "",
+                "tooltip": "",
+                "display": true,
+                "hook_key": "dokan_settings_transaction_withdraw_charge",
+                "children": [
+                    {
+                        "id": "section_withdraw_charge",
+                        "type": "section",
+                        "title": "Withdraw Methods and Charges",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge",
+                        "children": [
+                            {
+                                "id": "withdraw_methods_group_paypal",
+                                "type": "fieldgroup",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_paypal",
+                                "children": [
+                                    {
+                                        "id": "paypal_withdraw",
+                                        "type": "field",
+                                        "title": "PayPal",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_paypal_paypal_withdraw",
+                                        "children": [],
+                                        "description": "Enable PayPal as a withdrawal method for vendors.",
+                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw",
+                                        "dependencies": [],
+                                        "validations": [],
+                                        "variant": "switch",
+                                        "value": "on",
+                                        "default": "on",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "https://cdn.pixabay.com/photo/2018/05/08/21/29/paypal-3384015_1280.png",
+                                        "options": [],
+                                        "enable_state": {
+                                            "value": "on",
+                                            "title": "Enabled"
+                                        },
+                                        "disable_state": {
+                                            "value": "off",
+                                            "title": "Disabled"
+                                        },
+                                        "switcher_type": null,
+                                        "should_confirm": false,
+                                        "confirm_modal": []
+                                    },
+                                    {
+                                        "id": "paypal_withdraw_charges",
+                                        "type": "field",
+                                        "title": "Withdraw charges",
+                                        "icon": "",
+                                        "tooltip": "Set withdrawal charges for PayPal method.",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_paypal_paypal_withdraw_charges",
+                                        "children": [],
+                                        "description": "",
+                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw_charges",
+                                        "dependencies": [
+                                            {
+                                                "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw_charges"
+                                            },
+                                            {
+                                                "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw",
+                                                "value": "off",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw_charges"
+                                            }
+                                        ],
+                                        "validations": [
+                                            {
+                                                "rules": "not_empty",
+                                                "message": "Both percentage and fixed fee is required.",
+                                                "params": [],
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw_charges"
+                                            }
+                                        ],
+                                        "variant": "combine_input",
+                                        "value": {
+                                            "additional_fee": "0.00",
+                                            "admin_percentage": "0.00"
+                                        },
+                                        "additional_fee": "0.00",
+                                        "admin_percentage": "0.00",
+                                        "is_automated": false
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal",
+                                "dependencies": [],
+                                "validations": [],
+                                "content_class": ""
+                            },
+                            {
+                                "id": "withdraw_methods_group_bank",
+                                "type": "fieldgroup",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_bank",
+                                "children": [
+                                    {
+                                        "id": "bank_transfer_withdraw",
+                                        "type": "field",
+                                        "title": "Bank Transfer",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_bank_bank_transfer_withdraw",
+                                        "children": [],
+                                        "description": "Enable Bank Transfer as a withdrawal method for vendors.",
+                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw",
+                                        "dependencies": [],
+                                        "validations": [],
+                                        "variant": "switch",
+                                        "value": "off",
+                                        "default": "off",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "https://cdn.pixabay.com/photo/2018/05/08/21/29/paypal-3384015_1280.png",
+                                        "options": [],
+                                        "enable_state": {
+                                            "value": "on",
+                                            "title": "Enabled"
+                                        },
+                                        "disable_state": {
+                                            "value": "off",
+                                            "title": "Disabled"
+                                        },
+                                        "switcher_type": null,
+                                        "should_confirm": false,
+                                        "confirm_modal": []
+                                    },
+                                    {
+                                        "id": "bank_transfer_withdraw_charges",
+                                        "type": "field",
+                                        "title": "Withdraw charges",
+                                        "icon": "",
+                                        "tooltip": "Set withdrawal charges for Bank Transfer method.",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_bank_bank_transfer_withdraw_charges",
+                                        "children": [],
+                                        "description": "",
+                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw_charges",
+                                        "dependencies": [
+                                            {
+                                                "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw_charges"
+                                            },
+                                            {
+                                                "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw",
+                                                "value": "off",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw_charges"
+                                            }
+                                        ],
+                                        "validations": [
+                                            {
+                                                "rules": "not_empty",
+                                                "message": "Both percentage and fixed fee is required.",
+                                                "params": [],
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw_charges"
+                                            }
+                                        ],
+                                        "variant": "combine_input",
+                                        "value": {
+                                            "additional_fee": "0.00",
+                                            "admin_percentage": "0.00"
+                                        },
+                                        "additional_fee": "0.00",
+                                        "admin_percentage": "0.00",
+                                        "is_automated": false
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank",
+                                "dependencies": [],
+                                "validations": [],
+                                "content_class": ""
+                            },
+                            {
+                                "id": "withdraw_methods_group_paypal_marketplace",
+                                "type": "fieldgroup",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_paypal_marketplace",
+                                "children": [
+                                    {
+                                        "id": "paypal_marketplace_withdraw",
+                                        "type": "field",
+                                        "title": "PayPal Marketplace",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_paypal_marketplace_paypal_marketplace_withdraw",
+                                        "children": [],
+                                        "description": "Enable PayPal Marketplace as a withdrawal method for vendors.",
+                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal_marketplace.paypal_marketplace_withdraw",
+                                        "dependencies": [],
+                                        "validations": [],
+                                        "variant": "switch",
+                                        "value": "off",
+                                        "default": "off",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "https://cdn.pixabay.com/photo/2018/05/08/21/29/paypal-3384015_1280.png",
+                                        "options": [],
+                                        "enable_state": {
+                                            "value": "on",
+                                            "title": "Enabled"
+                                        },
+                                        "disable_state": {
+                                            "value": "off",
+                                            "title": "Disabled"
+                                        },
+                                        "switcher_type": null,
+                                        "should_confirm": false,
+                                        "confirm_modal": []
+                                    },
+                                    {
+                                        "id": "paypal_marketplace_withdraw_charges",
+                                        "type": "field",
+                                        "title": "Withdraw charges",
+                                        "icon": "",
+                                        "tooltip": "Set withdrawal charges for PayPal Marketplace method.",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_paypal_marketplace_paypal_marketplace_withdraw_charges",
+                                        "children": [],
+                                        "description": "",
+                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal_marketplace.paypal_marketplace_withdraw_charges",
+                                        "dependencies": [
+                                            {
+                                                "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal_marketplace.paypal_marketplace_withdraw",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal_marketplace.paypal_marketplace_withdraw_charges"
+                                            },
+                                            {
+                                                "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal_marketplace.paypal_marketplace_withdraw",
+                                                "value": "off",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal_marketplace.paypal_marketplace_withdraw_charges"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "combine_input",
+                                        "value": {
+                                            "additional_fee": "0.00",
+                                            "admin_percentage": "0.00"
+                                        },
+                                        "additional_fee": "0.00",
+                                        "admin_percentage": "0.00",
+                                        "is_automated": true
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal_marketplace",
+                                "dependencies": [],
+                                "validations": [],
+                                "content_class": ""
+                            },
+                            {
+                                "id": "withdraw_methods_group_razorpay",
+                                "type": "fieldgroup",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_razorpay",
+                                "children": [
+                                    {
+                                        "id": "razorpay_withdraw",
+                                        "type": "field",
+                                        "title": "Razorpay",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_razorpay_razorpay_withdraw",
+                                        "children": [],
+                                        "description": "Enable Razorpay as a withdrawal method for vendors.",
+                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw",
+                                        "dependencies": [],
+                                        "validations": [],
+                                        "variant": "switch",
+                                        "value": "off",
+                                        "default": "off",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "https://cdn.pixabay.com/photo/2018/05/08/21/29/paypal-3384015_1280.png",
+                                        "options": [],
+                                        "enable_state": {
+                                            "value": "on",
+                                            "title": "Enabled"
+                                        },
+                                        "disable_state": {
+                                            "value": "off",
+                                            "title": "Disabled"
+                                        },
+                                        "switcher_type": null,
+                                        "should_confirm": false,
+                                        "confirm_modal": []
+                                    },
+                                    {
+                                        "id": "razorpay_withdraw_charges",
+                                        "type": "field",
+                                        "title": "Withdraw charges",
+                                        "icon": "",
+                                        "tooltip": "Set withdrawal charges for Razorpay method.",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_razorpay_razorpay_withdraw_charges",
+                                        "children": [],
+                                        "description": "",
+                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw_charges",
+                                        "dependencies": [
+                                            {
+                                                "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw_charges"
+                                            },
+                                            {
+                                                "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw",
+                                                "value": "off",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw_charges"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "combine_input",
+                                        "value": {
+                                            "additional_fee": "0.00",
+                                            "admin_percentage": "0.00"
+                                        },
+                                        "additional_fee": "0.00",
+                                        "admin_percentage": "0.00",
+                                        "is_automated": true
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay",
+                                "dependencies": [],
+                                "validations": [],
+                                "content_class": ""
+                            },
+                            {
+                                "id": "withdraw_methods_group_stripe",
+                                "type": "fieldgroup",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_stripe",
+                                "children": [
+                                    {
+                                        "id": "stripe_withdraw",
+                                        "type": "field",
+                                        "title": "Stripe",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_stripe_stripe_withdraw",
+                                        "children": [],
+                                        "description": "Enable Stripe as a withdrawal method for vendors.",
+                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_stripe.stripe_withdraw",
+                                        "dependencies": [],
+                                        "validations": [],
+                                        "variant": "switch",
+                                        "value": "off",
+                                        "default": "off",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "https://cdn.pixabay.com/photo/2018/05/08/21/29/paypal-3384015_1280.png",
+                                        "options": [],
+                                        "enable_state": {
+                                            "value": "on",
+                                            "title": "Enabled"
+                                        },
+                                        "disable_state": {
+                                            "value": "off",
+                                            "title": "Disabled"
+                                        },
+                                        "switcher_type": null,
+                                        "should_confirm": false,
+                                        "confirm_modal": []
+                                    },
+                                    {
+                                        "id": "stripe_withdraw_charges",
+                                        "type": "field",
+                                        "title": "Withdraw charges",
+                                        "icon": "",
+                                        "tooltip": "Set withdrawal charges for Stripe method.",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_stripe_stripe_withdraw_charges",
+                                        "children": [],
+                                        "description": "",
+                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_stripe.stripe_withdraw_charges",
+                                        "dependencies": [
+                                            {
+                                                "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_stripe.stripe_withdraw",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_stripe.stripe_withdraw_charges"
+                                            },
+                                            {
+                                                "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_stripe.stripe_withdraw",
+                                                "value": "off",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_stripe.stripe_withdraw_charges"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "combine_input",
+                                        "value": {
+                                            "additional_fee": "0.00",
+                                            "admin_percentage": "0.00"
+                                        },
+                                        "additional_fee": "0.00",
+                                        "admin_percentage": "0.00",
+                                        "is_automated": true
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_stripe",
+                                "dependencies": [],
+                                "validations": [],
+                                "content_class": ""
+                            },
+                            {
+                                "id": "withdraw_methods_group_paystack",
+                                "type": "fieldgroup",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_paystack",
+                                "children": [
+                                    {
+                                        "id": "paystack_withdraw",
+                                        "type": "field",
+                                        "title": "Paystack",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_paystack_paystack_withdraw",
+                                        "children": [],
+                                        "description": "Enable Paystack as a withdrawal method for vendors.",
+                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paystack.paystack_withdraw",
+                                        "dependencies": [],
+                                        "validations": [],
+                                        "variant": "switch",
+                                        "value": "off",
+                                        "default": "off",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "https://cdn.pixabay.com/photo/2018/05/08/21/29/paypal-3384015_1280.png",
+                                        "options": [],
+                                        "enable_state": {
+                                            "value": "on",
+                                            "title": "Enabled"
+                                        },
+                                        "disable_state": {
+                                            "value": "off",
+                                            "title": "Disabled"
+                                        },
+                                        "switcher_type": null,
+                                        "should_confirm": false,
+                                        "confirm_modal": []
+                                    },
+                                    {
+                                        "id": "paystack_withdraw_charges",
+                                        "type": "field",
+                                        "title": "Withdraw charges",
+                                        "icon": "",
+                                        "tooltip": "Set withdrawal charges for Paystack method.",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_paystack_paystack_withdraw_charges",
+                                        "children": [],
+                                        "description": "",
+                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paystack.paystack_withdraw_charges",
+                                        "dependencies": [
+                                            {
+                                                "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paystack.paystack_withdraw",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paystack.paystack_withdraw_charges"
+                                            },
+                                            {
+                                                "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paystack.paystack_withdraw",
+                                                "value": "off",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paystack.paystack_withdraw_charges"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "combine_input",
+                                        "value": {
+                                            "additional_fee": "0.00",
+                                            "admin_percentage": "0.00"
+                                        },
+                                        "additional_fee": "0.00",
+                                        "admin_percentage": "0.00",
+                                        "is_automated": true
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paystack",
+                                "dependencies": [],
+                                "validations": [],
+                                "content_class": ""
+                            },
+                            {
+                                "id": "withdraw_methods_group_skrill",
+                                "type": "fieldgroup",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_skrill",
+                                "children": [
+                                    {
+                                        "id": "skrill_withdraw",
+                                        "type": "field",
+                                        "title": "Skrill",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_skrill_skrill_withdraw",
+                                        "children": [],
+                                        "description": "Enable Skrill as a withdrawal method for vendors.",
+                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill.skrill_withdraw",
+                                        "dependencies": [],
+                                        "validations": [],
+                                        "variant": "switch",
+                                        "value": "off",
+                                        "default": "off",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "https://cdn.pixabay.com/photo/2018/05/08/21/29/paypal-3384015_1280.png",
+                                        "options": [],
+                                        "enable_state": {
+                                            "value": "on",
+                                            "title": "Enabled"
+                                        },
+                                        "disable_state": {
+                                            "value": "off",
+                                            "title": "Disabled"
+                                        },
+                                        "switcher_type": null,
+                                        "should_confirm": false,
+                                        "confirm_modal": []
+                                    },
+                                    {
+                                        "id": "skrill_withdraw_charges",
+                                        "type": "field",
+                                        "title": "Withdraw charges",
+                                        "icon": "",
+                                        "tooltip": "Set withdrawal charges for Skrill method.",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_skrill_skrill_withdraw_charges",
+                                        "children": [],
+                                        "description": "",
+                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill.skrill_withdraw_charges",
+                                        "dependencies": [
+                                            {
+                                                "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill.skrill_withdraw",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill.skrill_withdraw_charges"
+                                            },
+                                            {
+                                                "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill.skrill_withdraw",
+                                                "value": "off",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill.skrill_withdraw_charges"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "combine_input",
+                                        "value": {
+                                            "additional_fee": "0.00",
+                                            "admin_percentage": "0.00"
+                                        },
+                                        "additional_fee": "0.00",
+                                        "admin_percentage": "0.00",
+                                        "is_automated": false
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill",
+                                "dependencies": [],
+                                "validations": [],
+                                "content_class": ""
+                            },
+                            {
+                                "id": "withdraw_methods_group_custom",
+                                "type": "fieldgroup",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_custom",
+                                "children": [
+                                    {
+                                        "id": "custom_withdraw",
+                                        "type": "field",
+                                        "title": "Custom",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_custom_custom_withdraw",
+                                        "children": [],
+                                        "description": "Enable Custom withdrawal method for vendors.",
+                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_withdraw",
+                                        "dependencies": [],
+                                        "validations": [],
+                                        "variant": "switch",
+                                        "value": "off",
+                                        "default": "off",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "https://cdn.pixabay.com/photo/2018/05/08/21/29/paypal-3384015_1280.png",
+                                        "options": [],
+                                        "enable_state": {
+                                            "value": "on",
+                                            "title": "Enabled"
+                                        },
+                                        "disable_state": {
+                                            "value": "off",
+                                            "title": "Disabled"
+                                        },
+                                        "switcher_type": null,
+                                        "should_confirm": false,
+                                        "confirm_modal": []
+                                    },
+                                    {
+                                        "id": "custom_method_name",
+                                        "type": "field",
+                                        "title": "Custom Method Name",
+                                        "icon": "",
+                                        "tooltip": "This will be the title of the custom withdraw method.",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_custom_custom_method_name",
+                                        "children": [],
+                                        "description": "",
+                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_method_name",
+                                        "dependencies": [
+                                            {
+                                                "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_withdraw",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_method_name"
+                                            },
+                                            {
+                                                "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_withdraw",
+                                                "value": "off",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_method_name"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "text",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "Type something",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": ""
+                                    },
+                                    {
+                                        "id": "custom_method_type",
+                                        "type": "field",
+                                        "title": "Custom Method Type",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_custom_custom_method_type",
+                                        "children": [],
+                                        "description": "Custom Withdraw method type.",
+                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_method_type",
+                                        "dependencies": [
+                                            {
+                                                "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_withdraw",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_method_type"
+                                            },
+                                            {
+                                                "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_withdraw",
+                                                "value": "off",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_method_type"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "text",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "e.g. Email or Phone Number",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": ""
+                                    },
+                                    {
+                                        "id": "bank_transfer_withdraw_charges",
+                                        "type": "field",
+                                        "title": "Withdraw charges",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_custom_bank_transfer_withdraw_charges",
+                                        "children": [],
+                                        "description": "Set withdrawal charges for Bank Transfer method.",
+                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.bank_transfer_withdraw_charges",
+                                        "dependencies": [
+                                            {
+                                                "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_withdraw",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.bank_transfer_withdraw_charges"
+                                            },
+                                            {
+                                                "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_withdraw",
+                                                "value": "off",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.bank_transfer_withdraw_charges"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "combine_input",
+                                        "value": {
+                                            "additional_fee": "0.00",
+                                            "admin_percentage": "0.00"
+                                        },
+                                        "additional_fee": "0.00",
+                                        "admin_percentage": "0.00",
+                                        "is_automated": false
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom",
+                                "dependencies": [],
+                                "validations": [],
+                                "content_class": ""
+                            }
+                        ],
+                        "description": "Select suitable withdraw methods and charges for vendors.",
+                        "dependency_key": "withdraw_charge.section_withdraw_charge",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "minimum_withdraw_limit_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_transaction_withdraw_charge_minimum_withdraw_limit_section",
+                        "children": [
+                            {
+                                "id": "minimum_withdraw_limit",
+                                "type": "field",
+                                "title": "Minimum Withdraw Limit",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_withdraw_charge_minimum_withdraw_limit_section_minimum_withdraw_limit",
+                                "children": [],
+                                "description": "Minimum balance required to make a withdraw request. Leave blank to set no minimum limits.",
+                                "dependency_key": "withdraw_charge.minimum_withdraw_limit_section.minimum_withdraw_limit",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "number",
+                                "value": 50,
+                                "default": "50",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "&#36;",
+                                "image_url": "",
+                                "minimum": null,
+                                "maximum": null,
+                                "step": 0.1,
+                                "addon_icon": false
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "withdraw_charge.minimum_withdraw_limit_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "cod_payments_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_transaction_withdraw_charge_cod_payments_section",
+                        "children": [
+                            {
+                                "id": "cod_payments",
+                                "type": "field",
+                                "title": "COD Payments",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_withdraw_charge_cod_payments_section_cod_payments",
+                                "children": [],
+                                "description": "If an order is paid with Cash on Delivery (COD), then exclude that payment from vendor balance.",
+                                "dependency_key": "withdraw_charge.cod_payments_section.cod_payments",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "radio_capsule",
+                                "value": "include",
+                                "default": "include",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "value": "include",
+                                        "title": "Include",
+                                        "icon": ""
+                                    },
+                                    {
+                                        "value": "exclude",
+                                        "title": "Exclude",
+                                        "icon": ""
+                                    }
+                                ]
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "withdraw_charge.cod_payments_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "withdraw_threshold_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_threshold_section",
+                        "children": [
+                            {
+                                "id": "withdraw_threshold",
+                                "type": "field",
+                                "title": "Withdraw Threshold",
+                                "icon": "",
+                                "tooltip": "If enabled, sales earning will add to vendor balance after mentioned number of days.",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_threshold_section_withdraw_threshold",
+                                "children": [],
+                                "description": "Days to wait before users can withdraw from completed orders. Set to &quot;0&quot; to disable the waiting period.",
+                                "dependency_key": "withdraw_charge.withdraw_threshold_section.withdraw_threshold",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "number",
+                                "value": 0,
+                                "default": "0",
+                                "placeholder": "e.g 2",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "Days",
+                                "prefix": "",
+                                "image_url": "",
+                                "minimum": null,
+                                "maximum": null,
+                                "step": 0.1,
+                                "addon_icon": false
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "withdraw_charge.withdraw_threshold_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "withdraw_option_visibility_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section",
+                        "children": [
+                            {
+                                "id": "withdraw_option_visibility",
+                                "type": "field",
+                                "title": "Withdraw Option Visibility",
+                                "icon": "",
+                                "tooltip": "withdraw option (when vendor is getting commission automatically)",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_withdraw_option_visibility",
+                                "children": [],
+                                "description": "withdraw option (when vendor is getting commission automatically)",
+                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "on",
+                                "default": "on",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "manual_withdraw",
+                                "type": "field",
+                                "title": "Manual Withdraw",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_manual_withdraw",
+                                "children": [],
+                                "description": "Allow manual withdrawal process for vendors.",
+                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
+                                "dependencies": [
+                                    {
+                                        "key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
+                                        "value": "on",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "===",
+                                        "self": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw"
+                                    },
+                                    {
+                                        "key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
+                                        "value": "off",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "===",
+                                        "self": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw"
+                                    }
+                                ],
+                                "validations": [],
+                                "variant": "multicheck",
+                                "value": [ "manual" ],
+                                "default": [ "manual" ],
+                                "options": [
+                                    {
+                                        "value": "manual",
+                                        "title": "Enable Manual Withdraw"
+                                    },
+                                    {
+                                        "value": "schedule",
+                                        "title": "Schedule Disbursement or Auto Withdraw Process for Vendors"
+                                    }
+                                ],
+                                "helper_text": ""
+                            },
+                            {
+                                "id": "quarterly_withdraw_sub_section",
+                                "type": "subsection",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section",
+                                "children": [
+                                    {
+                                        "id": "quarterly_withdraw_group",
+                                        "type": "fieldgroup",
+                                        "title": "Quarterly",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group",
+                                        "children": [
+                                            {
+                                                "id": "quarterly_withdraw",
+                                                "type": "field",
+                                                "title": "Quarterly Withdraw",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw",
+                                                "children": [],
+                                                "description": "Enable Quarterly Withdraw as a withdrawal method for vendors.",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
+                                                        "value": "schedule",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "in",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
+                                                        "value": "schedule",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "not_in",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "switch",
+                                                "value": "off",
+                                                "default": "off",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": false,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [],
+                                                "enable_state": {
+                                                    "value": "on",
+                                                    "title": "Enabled"
+                                                },
+                                                "disable_state": {
+                                                    "value": "off",
+                                                    "title": "Disabled"
+                                                },
+                                                "switcher_type": null,
+                                                "should_confirm": false,
+                                                "confirm_modal": []
+                                            },
+                                            {
+                                                "id": "quarterly_withdraw_month",
+                                                "type": "field",
+                                                "title": "First Quarter",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_month",
+                                                "children": [],
+                                                "description": "",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "off",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "select",
+                                                "value": "march",
+                                                "default": "march",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": false,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [
+                                                    {
+                                                        "value": "january",
+                                                        "title": "January"
+                                                    },
+                                                    {
+                                                        "value": "february",
+                                                        "title": "February"
+                                                    },
+                                                    {
+                                                        "value": "march",
+                                                        "title": "March"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "quarterly_withdraw_month_1_schedule_1",
+                                                "type": "field",
+                                                "title": "Second Quarter",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_month_1_schedule_1",
+                                                "children": [],
+                                                "description": "",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_1_schedule_1",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_1_schedule_1"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month",
+                                                        "value": "january",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "!==",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_1_schedule_1"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "!==",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_1_schedule_1"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "select",
+                                                "value": "april",
+                                                "default": "april",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": true,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [
+                                                    {
+                                                        "value": "april",
+                                                        "title": "April"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "quarterly_withdraw_month_1_schedule_2",
+                                                "type": "field",
+                                                "title": "Second Quarter",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_month_1_schedule_2",
+                                                "children": [],
+                                                "description": "",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_1_schedule_2",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_1_schedule_2"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month",
+                                                        "value": "february",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "!==",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_1_schedule_2"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "!==",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_1_schedule_2"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "select",
+                                                "value": "may",
+                                                "default": "may",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": true,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [
+                                                    {
+                                                        "value": "may",
+                                                        "title": "May"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "quarterly_withdraw_month_1_schedule_3",
+                                                "type": "field",
+                                                "title": "Second Quarter",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_month_1_schedule_3",
+                                                "children": [],
+                                                "description": "",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_1_schedule_3",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_1_schedule_3"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month",
+                                                        "value": "march",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "!==",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_1_schedule_3"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "!==",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_1_schedule_3"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "select",
+                                                "value": "june",
+                                                "default": "june",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": true,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [
+                                                    {
+                                                        "value": "june",
+                                                        "title": "June"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "quarterly_withdraw_month_2_schedule_1",
+                                                "type": "field",
+                                                "title": "Third Quarter",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_month_2_schedule_1",
+                                                "children": [],
+                                                "description": "",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_2_schedule_1",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_2_schedule_1"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month",
+                                                        "value": "january",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "!==",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_2_schedule_1"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "!==",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_2_schedule_1"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "select",
+                                                "value": "july",
+                                                "default": "july",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": true,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [
+                                                    {
+                                                        "value": "july",
+                                                        "title": "July"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "quarterly_withdraw_month_2_schedule_2",
+                                                "type": "field",
+                                                "title": "Third Quarter",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_month_2_schedule_2",
+                                                "children": [],
+                                                "description": "",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_2_schedule_2",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_2_schedule_2"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month",
+                                                        "value": "february",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "!==",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_2_schedule_2"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "!==",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_2_schedule_2"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "select",
+                                                "value": "august",
+                                                "default": "august",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": true,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [
+                                                    {
+                                                        "value": "august",
+                                                        "title": "August"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "quarterly_withdraw_month_2_schedule_3",
+                                                "type": "field",
+                                                "title": "Third Quarter",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_month_2_schedule_3",
+                                                "children": [],
+                                                "description": "",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_2_schedule_3",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_2_schedule_3"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month",
+                                                        "value": "march",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "!==",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_2_schedule_3"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "!==",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_2_schedule_3"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "select",
+                                                "value": "september",
+                                                "default": "september",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": true,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [
+                                                    {
+                                                        "value": "september",
+                                                        "title": "September"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "quarterly_withdraw_month_3_schedule_1",
+                                                "type": "field",
+                                                "title": "Fourth Quarter",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_month_3_schedule_1",
+                                                "children": [],
+                                                "description": "",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_3_schedule_1",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_3_schedule_1"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month",
+                                                        "value": "january",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "!==",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_3_schedule_1"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "!==",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_3_schedule_1"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "select",
+                                                "value": "october",
+                                                "default": "october",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": true,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [
+                                                    {
+                                                        "value": "october",
+                                                        "title": "October"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "quarterly_withdraw_month_3_schedule_2",
+                                                "type": "field",
+                                                "title": "Fourth Quarter",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_month_3_schedule_2",
+                                                "children": [],
+                                                "description": "",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_3_schedule_2",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_3_schedule_2"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month",
+                                                        "value": "february",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "!==",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_3_schedule_2"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "!==",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_3_schedule_2"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "select",
+                                                "value": "november",
+                                                "default": "november",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": true,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [
+                                                    {
+                                                        "value": "november",
+                                                        "title": "November"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "quarterly_withdraw_month_3_schedule_3",
+                                                "type": "field",
+                                                "title": "Fourth Quarter",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_month_3_schedule_3",
+                                                "children": [],
+                                                "description": "",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_3_schedule_3",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_3_schedule_3"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month",
+                                                        "value": "march",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "!==",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_3_schedule_3"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "!==",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_3_schedule_3"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "select",
+                                                "value": "december",
+                                                "default": "december",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": true,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [
+                                                    {
+                                                        "value": "december",
+                                                        "title": "December"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "quarterly_withdraw_week",
+                                                "type": "field",
+                                                "title": "Week",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_week",
+                                                "children": [],
+                                                "description": "",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_week",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_week"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "off",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_week"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "select",
+                                                "value": "1",
+                                                "default": "1",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": false,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [
+                                                    {
+                                                        "value": "1",
+                                                        "title": "1st Week"
+                                                    },
+                                                    {
+                                                        "value": "2",
+                                                        "title": "2nd Week"
+                                                    },
+                                                    {
+                                                        "value": "3",
+                                                        "title": "3rd Week"
+                                                    },
+                                                    {
+                                                        "value": "L",
+                                                        "title": "Last Week"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "quarterly_withdraw_day",
+                                                "type": "field",
+                                                "title": "Day",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_day",
+                                                "children": [],
+                                                "description": "",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_day",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_day"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
+                                                        "value": "off",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_day"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "select",
+                                                "value": "monday",
+                                                "default": "monday",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": false,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [
+                                                    {
+                                                        "value": "saturday",
+                                                        "title": "Saturday"
+                                                    },
+                                                    {
+                                                        "value": "sunday",
+                                                        "title": "Sunday"
+                                                    },
+                                                    {
+                                                        "value": "monday",
+                                                        "title": "Monday"
+                                                    },
+                                                    {
+                                                        "value": "tuesday",
+                                                        "title": "Tuesday"
+                                                    },
+                                                    {
+                                                        "value": "wednesday",
+                                                        "title": "Wednesday"
+                                                    },
+                                                    {
+                                                        "value": "thursday",
+                                                        "title": "Thursday"
+                                                    },
+                                                    {
+                                                        "value": "friday",
+                                                        "title": "Friday"
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "description": "Select suitable months, weeks and day of week. 4 times in a year.",
+                                        "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group",
+                                        "dependencies": [
+                                            {
+                                                "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
+                                                "value": "schedule",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "in",
+                                                "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group"
+                                            },
+                                            {
+                                                "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
+                                                "value": "schedule",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "not_in",
+                                                "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "content_class": "dokan-single-line-row"
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section",
+                                "dependencies": [
+                                    {
+                                        "key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
+                                        "value": "on",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "===",
+                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section"
+                                    },
+                                    {
+                                        "key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
+                                        "value": "off",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "===",
+                                        "self": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            {
+                                "id": "monthly_withdraw_sub_section",
+                                "type": "subsection",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_monthly_withdraw_sub_section",
+                                "children": [
+                                    {
+                                        "id": "monthly_withdraw_group",
+                                        "type": "fieldgroup",
+                                        "title": "Monthly",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_monthly_withdraw_sub_section_monthly_withdraw_group",
+                                        "children": [
+                                            {
+                                                "id": "monthly_withdraw",
+                                                "type": "field",
+                                                "title": "Monthly Withdraw",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_monthly_withdraw_sub_section_monthly_withdraw_group_monthly_withdraw",
+                                                "children": [],
+                                                "description": "Enable Monthly Withdraw as a withdrawal method for vendors.",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
+                                                        "value": "schedule",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "in",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
+                                                        "value": "schedule",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "not_in",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "switch",
+                                                "value": "off",
+                                                "default": "off",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": false,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [],
+                                                "enable_state": {
+                                                    "value": "on",
+                                                    "title": "Enabled"
+                                                },
+                                                "disable_state": {
+                                                    "value": "off",
+                                                    "title": "Disabled"
+                                                },
+                                                "switcher_type": null,
+                                                "should_confirm": false,
+                                                "confirm_modal": []
+                                            },
+                                            {
+                                                "id": "monthly_withdraw_week",
+                                                "type": "field",
+                                                "title": "Week",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_monthly_withdraw_sub_section_monthly_withdraw_group_monthly_withdraw_week",
+                                                "children": [],
+                                                "description": "",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_week",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_week"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw",
+                                                        "value": "off",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_week"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "select",
+                                                "value": "1",
+                                                "default": "1",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": false,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [
+                                                    {
+                                                        "value": "1",
+                                                        "title": "First Week"
+                                                    },
+                                                    {
+                                                        "value": "2",
+                                                        "title": "Second Week"
+                                                    },
+                                                    {
+                                                        "value": "3",
+                                                        "title": "Third Week"
+                                                    },
+                                                    {
+                                                        "value": "L",
+                                                        "title": "Last Week"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "monthly_withdraw_day",
+                                                "type": "field",
+                                                "title": "Day",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_monthly_withdraw_sub_section_monthly_withdraw_group_monthly_withdraw_day",
+                                                "children": [],
+                                                "description": "",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_day",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_day"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw",
+                                                        "value": "off",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_day"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "select",
+                                                "value": "monday",
+                                                "default": "monday",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": false,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [
+                                                    {
+                                                        "value": "saturday",
+                                                        "title": "Saturday"
+                                                    },
+                                                    {
+                                                        "value": "sunday",
+                                                        "title": "Sunday"
+                                                    },
+                                                    {
+                                                        "value": "monday",
+                                                        "title": "Monday"
+                                                    },
+                                                    {
+                                                        "value": "tuesday",
+                                                        "title": "Tuesday"
+                                                    },
+                                                    {
+                                                        "value": "wednesday",
+                                                        "title": "Wednesday"
+                                                    },
+                                                    {
+                                                        "value": "thursday",
+                                                        "title": "Thursday"
+                                                    },
+                                                    {
+                                                        "value": "friday",
+                                                        "title": "Friday"
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "description": "Select suitable weeks and day of week. 12 times in a year.",
+                                        "dependency_key": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group",
+                                        "dependencies": [
+                                            {
+                                                "key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group"
+                                            },
+                                            {
+                                                "key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
+                                                "value": "off",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "content_class": "dokan-single-line-row"
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section",
+                                "dependencies": [
+                                    {
+                                        "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
+                                        "value": "schedule",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "in",
+                                        "self": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section"
+                                    },
+                                    {
+                                        "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
+                                        "value": "schedule",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "not_in",
+                                        "self": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            {
+                                "id": "biweekly_withdraw_sub_section",
+                                "type": "subsection",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_biweekly_withdraw_sub_section",
+                                "children": [
+                                    {
+                                        "id": "biweekly_withdraw_group",
+                                        "type": "fieldgroup",
+                                        "title": "Biweekly",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_biweekly_withdraw_sub_section_biweekly_withdraw_group",
+                                        "children": [
+                                            {
+                                                "id": "biweekly_withdraw",
+                                                "type": "field",
+                                                "title": "Biweekly Withdraw",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_biweekly_withdraw_sub_section_biweekly_withdraw_group_biweekly_withdraw",
+                                                "children": [],
+                                                "description": "Enable Biweekly Withdraw as a withdrawal method for vendors.",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
+                                                        "value": "schedule",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "in",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
+                                                        "value": "schedule",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "not_in",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "switch",
+                                                "value": "off",
+                                                "default": "off",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": false,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [],
+                                                "enable_state": {
+                                                    "value": "on",
+                                                    "title": "Enabled"
+                                                },
+                                                "disable_state": {
+                                                    "value": "off",
+                                                    "title": "Disabled"
+                                                },
+                                                "switcher_type": null,
+                                                "should_confirm": false,
+                                                "confirm_modal": []
+                                            },
+                                            {
+                                                "id": "biweekly_withdraw_week",
+                                                "type": "field",
+                                                "title": "First",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_biweekly_withdraw_sub_section_biweekly_withdraw_group_biweekly_withdraw_week",
+                                                "children": [],
+                                                "description": "",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_week",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_week"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw",
+                                                        "value": "off",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_week"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "select",
+                                                "value": "1",
+                                                "default": "1",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": false,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [
+                                                    {
+                                                        "value": "1",
+                                                        "title": "1st Week"
+                                                    },
+                                                    {
+                                                        "value": "2",
+                                                        "title": "2nd Week"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "biweekly_withdraw_1_week_1",
+                                                "type": "field",
+                                                "title": "Second",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_biweekly_withdraw_sub_section_biweekly_withdraw_group_biweekly_withdraw_1_week_1",
+                                                "children": [],
+                                                "description": "",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_1_week_1",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_1_week_1"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_week",
+                                                        "value": "1",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "!==",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_1_week_1"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw",
+                                                        "value": "off",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_1_week_1"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "select",
+                                                "value": "3",
+                                                "default": "3",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": true,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [
+                                                    {
+                                                        "value": "3",
+                                                        "title": "3rd Week"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "biweekly_withdraw_1_week_2",
+                                                "type": "field",
+                                                "title": "Second",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_biweekly_withdraw_sub_section_biweekly_withdraw_group_biweekly_withdraw_1_week_2",
+                                                "children": [],
+                                                "description": "",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_1_week_2",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_1_week_2"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_week",
+                                                        "value": "2",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "!==",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_1_week_2"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw",
+                                                        "value": "off",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_1_week_2"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "select",
+                                                "value": "4",
+                                                "default": "4",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": true,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [
+                                                    {
+                                                        "value": "4",
+                                                        "title": "4th Week"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "biweekly_withdraw_day",
+                                                "type": "field",
+                                                "title": "Day",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_biweekly_withdraw_sub_section_biweekly_withdraw_group_biweekly_withdraw_day",
+                                                "children": [],
+                                                "description": "",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_day",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_day"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw",
+                                                        "value": "off",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_day"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "select",
+                                                "value": "monday",
+                                                "default": "monday",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": false,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [
+                                                    {
+                                                        "value": "saturday",
+                                                        "title": "Saturday"
+                                                    },
+                                                    {
+                                                        "value": "sunday",
+                                                        "title": "Sunday"
+                                                    },
+                                                    {
+                                                        "value": "monday",
+                                                        "title": "Monday"
+                                                    },
+                                                    {
+                                                        "value": "tuesday",
+                                                        "title": "Tuesday"
+                                                    },
+                                                    {
+                                                        "value": "wednesday",
+                                                        "title": "Wednesday"
+                                                    },
+                                                    {
+                                                        "value": "thursday",
+                                                        "title": "Thursday"
+                                                    },
+                                                    {
+                                                        "value": "friday",
+                                                        "title": "Friday"
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "description": "Select suitable weeks and day of week. 24 times in a year.",
+                                        "dependency_key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group",
+                                        "dependencies": [
+                                            {
+                                                "key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group"
+                                            },
+                                            {
+                                                "key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
+                                                "value": "off",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "content_class": "dokan-single-line-row"
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section",
+                                "dependencies": [
+                                    {
+                                        "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
+                                        "value": "schedule",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "in",
+                                        "self": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section"
+                                    },
+                                    {
+                                        "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
+                                        "value": "schedule",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "not_in",
+                                        "self": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            {
+                                "id": "weekly_withdraw_sub_section",
+                                "type": "subsection",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_weekly_withdraw_sub_section",
+                                "children": [
+                                    {
+                                        "id": "weekly_withdraw_group",
+                                        "type": "fieldgroup",
+                                        "title": "Weekly",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_weekly_withdraw_sub_section_weekly_withdraw_group",
+                                        "children": [
+                                            {
+                                                "id": "weekly_withdraw",
+                                                "type": "field",
+                                                "title": "Weekly Withdraw",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_weekly_withdraw_sub_section_weekly_withdraw_group_weekly_withdraw",
+                                                "children": [],
+                                                "description": "Enable Weekly Withdraw as a withdrawal method for vendors.",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
+                                                        "value": "schedule",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "in",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
+                                                        "value": "schedule",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "not_in",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "switch",
+                                                "value": "off",
+                                                "default": "off",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": false,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [],
+                                                "enable_state": {
+                                                    "value": "on",
+                                                    "title": "Enabled"
+                                                },
+                                                "disable_state": {
+                                                    "value": "off",
+                                                    "title": "Disabled"
+                                                },
+                                                "switcher_type": null,
+                                                "should_confirm": false,
+                                                "confirm_modal": []
+                                            },
+                                            {
+                                                "id": "weekly_withdraw_day",
+                                                "type": "field",
+                                                "title": "Day",
+                                                "icon": "",
+                                                "tooltip": "",
+                                                "display": true,
+                                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_weekly_withdraw_sub_section_weekly_withdraw_group_weekly_withdraw_day",
+                                                "children": [],
+                                                "description": "",
+                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw_day",
+                                                "dependencies": [
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw",
+                                                        "value": "on",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "show",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw_day"
+                                                    },
+                                                    {
+                                                        "key": "withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw",
+                                                        "value": "off",
+                                                        "to_self": true,
+                                                        "attribute": "display",
+                                                        "effect": "hide",
+                                                        "comparison": "===",
+                                                        "self": "withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw_day"
+                                                    }
+                                                ],
+                                                "validations": [],
+                                                "variant": "select",
+                                                "value": "monday",
+                                                "default": "monday",
+                                                "placeholder": "",
+                                                "readonly": false,
+                                                "disabled": false,
+                                                "size": 20,
+                                                "helper_text": "",
+                                                "postfix": "",
+                                                "prefix": "",
+                                                "image_url": "",
+                                                "options": [
+                                                    {
+                                                        "value": "saturday",
+                                                        "title": "Saturday"
+                                                    },
+                                                    {
+                                                        "value": "sunday",
+                                                        "title": "Sunday"
+                                                    },
+                                                    {
+                                                        "value": "monday",
+                                                        "title": "Monday"
+                                                    },
+                                                    {
+                                                        "value": "tuesday",
+                                                        "title": "Tuesday"
+                                                    },
+                                                    {
+                                                        "value": "wednesday",
+                                                        "title": "Wednesday"
+                                                    },
+                                                    {
+                                                        "value": "thursday",
+                                                        "title": "Thursday"
+                                                    },
+                                                    {
+                                                        "value": "friday",
+                                                        "title": "Friday"
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "description": "Select suitable day of week. 52 times in a year.",
+                                        "dependency_key": "withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group",
+                                        "dependencies": [
+                                            {
+                                                "key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group"
+                                            },
+                                            {
+                                                "key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
+                                                "value": "off",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "content_class": "dokan-single-line-row"
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section",
+                                "dependencies": [
+                                    {
+                                        "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
+                                        "value": "schedule",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "in",
+                                        "self": "withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section"
+                                    },
+                                    {
+                                        "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
+                                        "value": "schedule",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "not_in",
+                                        "self": "withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section"
+                                    }
+                                ],
+                                "validations": []
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "withdraw_charge.withdraw_option_visibility_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    }
+                ],
+                "description": "Set up available withdrawal methods and transaction conditions for vendors.",
+                "dependency_key": "withdraw_charge",
+                "dependencies": [],
+                "validations": [],
+                "priority": 300,
+                "doc_link": "https://dokan.co/docs/wordpress/withdraw/"
+            },
+            {
+                "id": "reverse_withdrawal",
+                "type": "subpage",
+                "title": "Reverse Withdrawal",
+                "icon": "",
+                "tooltip": "",
+                "display": true,
+                "hook_key": "dokan_settings_transaction_reverse_withdrawal",
+                "children": [
+                    {
+                        "id": "reverse_withdrawal_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section",
+                        "children": [
+                            {
+                                "id": "enabled",
+                                "type": "field",
+                                "title": "Activate Reverse Withdrawal (Cash On Delivery)",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_enabled",
+                                "children": [],
+                                "description": "Enable this option to activate automatic balance deducting from vendors.",
+                                "dependency_key": "reverse_withdrawal.reverse_withdrawal_section.enabled",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "off",
+                                "default": "off",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "billing_type",
+                                "type": "field",
+                                "title": "Billing Type",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_billing_type",
+                                "children": [],
+                                "description": "Select how vendors will be billed for their reverse balance amounts.",
+                                "dependency_key": "reverse_withdrawal.reverse_withdrawal_section.billing_type",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "radio_capsule",
+                                "value": "by_amount",
+                                "default": "by_amount",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "value": "by_amount",
+                                        "title": "By Amount Limit",
+                                        "icon": "DollarSign"
+                                    },
+                                    {
+                                        "value": "by_month",
+                                        "title": "Monthly",
+                                        "icon": "Calendar"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "reverse_balance_threshold",
+                                "type": "field",
+                                "title": "Reverse Balance Threshold (USD)",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_reverse_balance_threshold",
+                                "children": [],
+                                "description": "Set the amount that triggers automatic withdrawal actions.",
+                                "dependency_key": "reverse_withdrawal.reverse_withdrawal_section.reverse_balance_threshold",
+                                "dependencies": [
+                                    {
+                                        "key": "reverse_withdrawal.reverse_withdrawal_section.billing_type",
+                                        "value": "by_amount",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "===",
+                                        "self": "reverse_withdrawal.reverse_withdrawal_section.reverse_balance_threshold"
+                                    },
+                                    {
+                                        "key": "reverse_withdrawal.reverse_withdrawal_section.billing_type",
+                                        "value": "by_month",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "===",
+                                        "self": "reverse_withdrawal.reverse_withdrawal_section.reverse_balance_threshold"
+                                    }
+                                ],
+                                "validations": [],
+                                "variant": "number",
+                                "value": 150,
+                                "default": "150",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "&#36;",
+                                "image_url": "",
+                                "minimum": 0,
+                                "maximum": null,
+                                "step": 0.5,
+                                "addon_icon": true
+                            },
+                            {
+                                "id": "monthly_billing_day",
+                                "type": "field",
+                                "title": "Monthly Billing Date",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_monthly_billing_day",
+                                "children": [],
+                                "description": "Enter the day of month when you want to send reverse withdrawal balance invoices to vendors.",
+                                "dependency_key": "reverse_withdrawal.reverse_withdrawal_section.monthly_billing_day",
+                                "dependencies": [
+                                    {
+                                        "key": "reverse_withdrawal.reverse_withdrawal_section.billing_type",
+                                        "value": "by_month",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "===",
+                                        "self": "reverse_withdrawal.reverse_withdrawal_section.monthly_billing_day"
+                                    },
+                                    {
+                                        "key": "reverse_withdrawal.reverse_withdrawal_section.billing_type",
+                                        "value": "by_amount",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "===",
+                                        "self": "reverse_withdrawal.reverse_withdrawal_section.monthly_billing_day"
+                                    }
+                                ],
+                                "validations": [],
+                                "variant": "number",
+                                "value": 1,
+                                "default": "1",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "Calendar",
+                                "image_url": "",
+                                "minimum": 1,
+                                "maximum": 28,
+                                "step": 0.1,
+                                "addon_icon": true
+                            },
+                            {
+                                "id": "due_period",
+                                "type": "field",
+                                "title": "Grace Period",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_due_period",
+                                "children": [],
+                                "description": "Number of days to wait before enforcing collection actions. Set to 0 for immediate action.",
+                                "dependency_key": "reverse_withdrawal.reverse_withdrawal_section.due_period",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "number",
+                                "value": 7,
+                                "default": "7",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "Days",
+                                "prefix": "Calendar",
+                                "image_url": "",
+                                "minimum": 0,
+                                "maximum": 28,
+                                "step": 1,
+                                "addon_icon": true
+                            },
+                            {
+                                "id": "failed_actions",
+                                "type": "field",
+                                "title": "Penalty Actions After Grace Period",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_failed_actions",
+                                "children": [],
+                                "description": "Choose actions to take when the grace period expires and payment remains outstanding.",
+                                "dependency_key": "reverse_withdrawal.reverse_withdrawal_section.failed_actions",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "multicheck",
+                                "value": [ "enable_catalog_mode" ],
+                                "default": [ "enable_catalog_mode" ],
+                                "options": [
+                                    {
+                                        "value": "enable_catalog_mode",
+                                        "title": "Disable Add to Cart Button"
+                                    },
+                                    {
+                                        "value": "hide_withdraw_menu",
+                                        "title": "Hide Withdraw Menu"
+                                    },
+                                    {
+                                        "value": "status_inactive",
+                                        "title": "Make Vendor Status Inactive"
+                                    }
+                                ],
+                                "helper_text": ""
+                            },
+                            {
+                                "id": "display_notice",
+                                "type": "field",
+                                "title": "Display Notice During Grace Period",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_display_notice",
+                                "children": [],
+                                "description": "Show a payment reminder notification on the vendor dashboard during the grace period.",
+                                "dependency_key": "reverse_withdrawal.reverse_withdrawal_section.display_notice",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "on",
+                                "default": "on",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "send_announcement",
+                                "type": "field",
+                                "title": "Send Announcement?",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_send_announcement",
+                                "children": [],
+                                "description": "Send platform announcements to vendors during the grace period. Limited to one announcement per billing period.",
+                                "dependency_key": "reverse_withdrawal.reverse_withdrawal_section.send_announcement",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "off",
+                                "default": "off",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "reverse_withdrawal.reverse_withdrawal_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    }
+                ],
+                "description": "Set up commission collection from vendors on Cash on Delivery orders. Control when and how to charge money from vendor accounts when they owe you.",
+                "dependency_key": "reverse_withdrawal",
+                "dependencies": [],
+                "validations": [],
+                "priority": 400,
+                "doc_link": "https://wedevs.com/docs/dokan/withdraw/dokan-reverse-withdrawal/"
+            }
+        ],
+        "description": "Configure transaction-related settings including commissions and fees.",
+        "dependency_key": "",
+        "dependencies": [],
+        "validations": []
+    },
 ];
 
 /**
