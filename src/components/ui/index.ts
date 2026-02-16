@@ -32,6 +32,7 @@ export {
   type CurrencyOption,
 } from "./currency-input";
 export { Input } from "./input";
+export { CopyInput, type CopyInputProps } from "./copy-input";
 export {
   InputGroup,
   InputGroupAddon,

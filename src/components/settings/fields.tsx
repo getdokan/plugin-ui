@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import { FileText, Info, Eye, EyeOff } from "lucide-react";
+import { FileText, Info, Eye, EyeOff, ArrowUpRight } from "lucide-react";
 import {
   Checkbox,
   Input,
+  CopyInput,
   RadioGroup,
   RadioImageCard,
   Select,
@@ -21,6 +22,8 @@ import {
   Alert,
   AlertDescription,
   AlertTitle,
+  Notice,
+  NoticeTitle,
 } from "../ui";
 import { ButtonToggleGroup } from "../button-toggle-group";
 import type { FieldComponentProps, SettingsElement } from "./settings-types";
@@ -545,6 +548,64 @@ export function NoticeField({ element }: FieldComponentProps) {
         </AlertDescription>
       )}
     </Alert>
+  );
+}
+
+// ============================================
+// Copy Field
+// ============================================
+
+export function CopyField({ element }: FieldComponentProps) {
+  const value = String(element.value ?? element.default ?? "");
+
+  return (
+    <FieldWrapper element={element} layout={element.layout ?? "horizontal"}>
+      <CopyInput
+        value={value}
+        placeholder={element.placeholder ? String(element.placeholder) : undefined}
+        disabled={element.disabled}
+        className="max-w-56 md:max-w-full"
+      />
+    </FieldWrapper>
+  );
+}
+
+// ============================================
+// Info Field
+// ============================================
+
+export function InfoField({ element }: FieldComponentProps) {
+  const infoTitle = element.label || element.title;
+  const infoDescription = element.description || element.notice_description;
+  const linkUrl = element.link_url || element.doc_link;
+  const linkTitle = element.link_title || element.doc_link_text;
+
+  return (
+    <Notice
+      className={ cn( 'bg-primary/10 border-primary mx-4', element.css_class ) }
+      id={element.id}
+      data-testid={`settings-field-${element.id}`}
+    >
+      <NoticeTitle className="flex items-center flex-wrap gap-x-2 gap-y-1">
+        {infoTitle && <span className="text-foreground"><RawHTML>{infoTitle}</RawHTML></span>}
+        {linkUrl && (
+          <a
+            href={linkUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:underline flex items-center gap-0.5"
+          >
+            <RawHTML>{linkTitle || "Learn more"}</RawHTML>
+            <ArrowUpRight className="size-3.5" />
+          </a>
+        )}
+      </NoticeTitle>
+      {infoDescription && (
+        <div className="text-sm text-muted-foreground leading-relaxed">
+          <RawHTML>{infoDescription}</RawHTML>
+        </div>
+      )}
+    </Notice>
   );
 }
 

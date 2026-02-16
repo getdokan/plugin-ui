@@ -15,6 +15,8 @@ import {
     HtmlField,
     NoticeField,
     FallbackField,
+    CopyField,
+    InfoField,
 } from './fields';
 
 // ============================================
@@ -139,6 +141,20 @@ export function FieldRenderer({ element }: { element: SettingsElement }) {
             return applyFilters(
                 `${filterPrefix}_settings_notice_field`,
                 <NoticeField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'copy_field':
+            return applyFilters(
+                `${filterPrefix}_settings_copy_field`,
+                <CopyField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'info':
+            return applyFilters(
+                `${filterPrefix}_settings_info_field`,
+                <InfoField {...fieldProps} />,
                 mergedElement
             );
 
