@@ -248,7 +248,7 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
 // Element Renderer — dispatches by type
 // ============================================
 
-function ElementRenderer({ element, isNested }: { element: SettingsElementType, isNested?: boolean }) {
+function ElementRenderer({ element, isNested, isGroupParent }: { element: SettingsElementType, isNested?: boolean, isGroupParent?: boolean }) {
     const { shouldDisplay } = useSettings();
 
     if (!shouldDisplay(element)) {
@@ -258,13 +258,13 @@ function ElementRenderer({ element, isNested }: { element: SettingsElementType, 
     switch (element.type) {
         case 'section':
         case 'subsection':
-            return <SettingsSubSection element={element} isNested={isNested} />;
+            return <SettingsSubSection element={element} isNested={isNested} isGroupParent={isGroupParent} />;
 
         case 'field':
-            return <FieldRenderer element={element} isNested={isNested} />;
+            return <FieldRenderer element={element} isNested={isNested} isGroupParent={isGroupParent} />;
 
         case 'fieldgroup':
-            return <SettingsFieldGroup element={element} isNested={isNested} />;
+            return <SettingsFieldGroup element={element} isNested={isNested} isGroupParent={isGroupParent} />;
 
         default:
             return null;
@@ -275,7 +275,7 @@ function ElementRenderer({ element, isNested }: { element: SettingsElementType, 
 // Sub-Section
 // ============================================
 
-function SettingsSubSection({ element, isNested }: { element: SettingsElementType, isNested?: boolean }) {
+function SettingsSubSection({ element, isNested, isGroupParent }: { element: SettingsElementType, isNested?: boolean, isGroupParent?: boolean }) {
     const allChildrenAreFields = element.children?.every(
         (c) => c.type === 'field' || c.type === 'fieldgroup'
     );
@@ -299,8 +299,13 @@ function SettingsSubSection({ element, isNested }: { element: SettingsElementTyp
                 </div>
             )}
             <div className={cn(allChildrenAreFields && 'divide-y divide-border')}>
-                {element.children?.map((child) => (
-                    <ElementRenderer key={child.id} element={child} isNested={isNested} />
+                {element.children?.map((child, index) => (
+                    <ElementRenderer 
+                        key={child.id} 
+                        element={child} 
+                        isNested={isNested} 
+                        isGroupParent={isGroupParent && index === (element.children?.length ?? 0) - 1}
+                    />
                 ))}
             </div>
         </div>
@@ -311,11 +316,11 @@ function SettingsSubSection({ element, isNested }: { element: SettingsElementTyp
 // Field Group
 // ============================================
 
-function SettingsFieldGroup({ element, isNested }: { element: SettingsElementType, isNested?: boolean }) {
+function SettingsFieldGroup({ element, isNested, isGroupParent }: { element: SettingsElementType, isNested?: boolean, isGroupParent?: boolean }) {
     return (
       <div className="flex flex-wrap gap-4">
           {element.children?.map((child) => (
-            <FieldRenderer key={child.id} element={child} isNested={isNested} />
+            <FieldRenderer key={child.id} element={child} isNested={isNested} isGroupParent={isGroupParent} />
           ))}
       </div>
     );

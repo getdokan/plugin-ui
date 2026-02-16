@@ -32,9 +32,11 @@ import {
 export function FieldRenderer({
     element,
     isNested,
+    isGroupParent,
 }: {
     element: SettingsElement;
     isNested?: boolean;
+    isGroupParent?: boolean;
 }) {
     const { values, updateValue, shouldDisplay, hookPrefix, errors, applyFilters } = useSettings();
 
@@ -54,6 +56,7 @@ export function FieldRenderer({
         element: mergedElement,
         onChange: updateValue,
         isNested,
+        isGroupParent,
     };
 
     const variant = element.variant || '';
@@ -66,12 +69,19 @@ export function FieldRenderer({
                 ? mergedElement.value === element.enable_state.value
                 : Boolean(mergedElement.value);
 
+            const hasVisibleChildren = isEnabled && (element.children?.length ?? 0) > 0;
+
             return applyFilters(
                 `${filterPrefix}_settings_switch_group_field`,
                 <div className="flex flex-col">
-                    <SwitchField {...fieldProps} isGroupParent={true} />
-                    {isEnabled && element.children?.map((child) => (
-                        <FieldRenderer key={child.id} element={child} isNested={true} />
+                    <SwitchField {...fieldProps} isGroupParent={hasVisibleChildren} />
+                    {isEnabled && element.children?.map((child, index) => (
+                        <FieldRenderer 
+                            key={child.id} 
+                            element={child} 
+                            isNested={true} 
+                            isGroupParent={index < (element.children?.length ?? 0) - 1}
+                        />
                     ))}
                 </div>,
                 mergedElement

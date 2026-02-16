@@ -64,8 +64,8 @@ function FieldWrapper({
     className,
     element.className,
     element.css_class,
-    isGroupParent && "!pb-0",
-    isNested && "!pt-0 !border-t-0 !border-none",
+    isGroupParent && "!pb-2",
+    isNested && "!pt-2 !border-t-0 !border-none",
   );
 
   if (layout === "full-width") {
