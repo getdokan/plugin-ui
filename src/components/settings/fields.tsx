@@ -25,6 +25,7 @@ import {
   AlertTitle,
   Notice,
   NoticeTitle,
+  RichTextEditor,
 } from "../ui";
 import { ButtonToggleGroup } from "../button-toggle-group";
 import type { FieldComponentProps, SettingsElement } from "./settings-types";
@@ -255,6 +256,24 @@ export function TextareaField({ element, onChange }: FieldComponentProps) {
         }
         disabled={element.disabled}
         rows={4}
+      />
+    </FieldWrapper>
+  );
+}
+
+// ============================================
+// Rich Text Field
+// ============================================
+
+export function RichTextField({ element, onChange }: FieldComponentProps) {
+  return (
+    <FieldWrapper element={element} layout="full-width">
+      <RichTextEditor
+        value={String(element.value ?? element.default ?? "")}
+        onChange={(value) => onChange(element.dependency_key!, value)}
+        placeholder={
+          element.placeholder ? String(element.placeholder) : undefined
+        }
       />
     </FieldWrapper>
   );

@@ -17,6 +17,7 @@ import {
     FallbackField,
     CopyField,
     InfoField,
+    RichTextField,
 } from './fields';
 
 // ============================================
@@ -69,6 +70,13 @@ export function FieldRenderer({ element }: { element: SettingsElement }) {
             return applyFilters(
                 `${filterPrefix}_settings_textarea_field`,
                 <TextareaField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'rich_text':
+            return applyFilters(
+                `${filterPrefix}_settings_rich_text_field`,
+                <RichTextField {...fieldProps} />,
                 mergedElement
             );
 
