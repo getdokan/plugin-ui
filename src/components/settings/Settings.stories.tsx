@@ -4030,6 +4030,1165 @@ const dokanSettingsSchema: SettingsElement[] = [
         "dependencies": [],
         "validations": []
     },
+    {
+        "id": "ai_assist",
+        "type": "page",
+        "title": "AI Assist",
+        "icon": "Sparkles",
+        "tooltip": "",
+        "display": true,
+        "hook_key": "dokan_settings_ai_assist",
+        "children": [
+            {
+                "id": "product_generation",
+                "type": "subpage",
+                "title": "Content Generation",
+                "icon": "",
+                "tooltip": "",
+                "display": true,
+                "hook_key": "dokan_settings_ai_assist_product_generation",
+                "children": [
+                    {
+                        "id": "product_image_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section",
+                        "children": [
+                            {
+                                "id": "product_info_generate",
+                                "type": "field",
+                                "title": "Product Info Generate",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_product_info_generate",
+                                "children": [],
+                                "description": "Let vendors generate product info by AI.",
+                                "dependency_key": "product_generation.product_image_section.product_info_generate",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "off",
+                                "default": "off",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "product_info_engine",
+                                "type": "field",
+                                "title": "Engine",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_product_info_engine",
+                                "children": [],
+                                "description": "Select which AI provider to use for generating content.",
+                                "dependency_key": "product_generation.product_image_section.product_info_engine",
+                                "dependencies": [
+                                    {
+                                        "key": "product_generation.product_image_section.product_info_generate",
+                                        "value": "on",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "===",
+                                        "self": "product_generation.product_image_section.product_info_engine"
+                                    },
+                                    {
+                                        "key": "product_generation.product_image_section.product_info_generate",
+                                        "value": "on",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "!==",
+                                        "self": "product_generation.product_image_section.product_info_engine"
+                                    }
+                                ],
+                                "validations": [],
+                                "variant": "select",
+                                "value": "chatgpt",
+                                "default": "openai",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "value": "openai",
+                                        "title": "OpenAI"
+                                    },
+                                    {
+                                        "value": "gemini",
+                                        "title": "Gemini"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "openai_api_info_group",
+                                "type": "fieldgroup",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_openai_api_info_group",
+                                "children": [
+                                    {
+                                        "id": "openai_api_info",
+                                        "type": "field",
+                                        "title": "OpenAI API",
+                                        "icon": "CircleCheck",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_openai_api_info_group_openai_api_info",
+                                        "children": [],
+                                        "description": "Connect to your OpenAI account with your website. <a href=\"https://platform.openai.com/api-keys\" target=\"_blank\" rel=\"noopener noreferrer\">Get Help</a>",
+                                        "dependency_key": "product_generation.product_image_section.openai_api_info_group.openai_api_info",
+                                        "dependencies": [
+                                            {
+                                                "key": "product_generation.product_image_section.product_info_generate",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "product_generation.product_image_section.openai_api_info_group.openai_api_info"
+                                            },
+                                            {
+                                                "key": "product_generation.product_image_section.product_info_generate",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "product_generation.product_image_section.openai_api_info_group.openai_api_info"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "base_field_label",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "https://images.seeklogo.com/logo-png/46/2/chatgpt-logo-png_seeklogo-465219.png",
+                                        "suffix": "",
+                                        "doc_link": null
+                                    },
+                                    {
+                                        "id": "openai_api_notice",
+                                        "type": "field",
+                                        "title": "You can get your API Keys in your OpenAI Account.",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_openai_api_info_group_openai_api_notice",
+                                        "children": [],
+                                        "description": "",
+                                        "dependency_key": "product_generation.product_image_section.openai_api_info_group.openai_api_notice",
+                                        "dependencies": [
+                                            {
+                                                "key": "product_generation.product_image_section.product_info_generate",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "product_generation.product_image_section.openai_api_info_group.openai_api_notice"
+                                            },
+                                            {
+                                                "key": "product_generation.product_image_section.product_info_generate",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "product_generation.product_image_section.openai_api_info_group.openai_api_notice"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "info",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "",
+                                        "link_text": "OpenAI Account",
+                                        "link_url": "https://platform.openai.com/api-keys",
+                                        "show_icon": true
+                                    },
+                                    {
+                                        "id": "openai_api_key",
+                                        "type": "field",
+                                        "title": "API Key",
+                                        "icon": "",
+                                        "tooltip": "Enter your OpenAI API key for content generation.",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_openai_api_info_group_openai_api_key",
+                                        "children": [],
+                                        "description": "",
+                                        "dependency_key": "product_generation.product_image_section.openai_api_info_group.openai_api_key",
+                                        "dependencies": [
+                                            {
+                                                "key": "product_generation.product_image_section.product_info_generate",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "product_generation.product_image_section.openai_api_info_group.openai_api_key"
+                                            },
+                                            {
+                                                "key": "product_generation.product_image_section.product_info_generate",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "product_generation.product_image_section.openai_api_info_group.openai_api_key"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "show_hide",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "Enter your OpenAI API key",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": ""
+                                    },
+                                    {
+                                        "id": "openai_model",
+                                        "type": "field",
+                                        "title": "Model",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_openai_api_info_group_openai_model",
+                                        "children": [],
+                                        "description": "More advanced models provide higher quality output but may cost more per generation.",
+                                        "dependency_key": "product_generation.product_image_section.openai_api_info_group.openai_model",
+                                        "dependencies": [
+                                            {
+                                                "key": "product_generation.product_image_section.product_info_generate",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "product_generation.product_image_section.openai_api_info_group.openai_model"
+                                            },
+                                            {
+                                                "key": "product_generation.product_image_section.product_info_generate",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "product_generation.product_image_section.openai_api_info_group.openai_model"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "select",
+                                        "value": "gpt-3.5-turbo",
+                                        "default": "gpt-3.5-turbo",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "",
+                                        "options": [
+                                            {
+                                                "value": "gpt-3.5-turbo",
+                                                "title": "OpenAI GPT-3.5 Turbo"
+                                            },
+                                            {
+                                                "value": "gpt-4o-mini",
+                                                "title": "OpenAI GPT-4o Mini"
+                                            },
+                                            {
+                                                "value": "gpt-4o",
+                                                "title": "OpenAI GPT-4o"
+                                            },
+                                            {
+                                                "value": "chatgpt-4o-latest",
+                                                "title": "OpenAI ChatGPT-4o"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "product_generation.product_image_section.openai_api_info_group",
+                                "dependencies": [
+                                    {
+                                        "key": "product_generation.product_image_section.product_info_engine",
+                                        "value": "openai",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "===",
+                                        "self": "product_generation.product_image_section.openai_api_info_group"
+                                    },
+                                    {
+                                        "key": "product_generation.product_image_section.product_info_engine",
+                                        "value": "openai",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "!==",
+                                        "self": "product_generation.product_image_section.openai_api_info_group"
+                                    }
+                                ],
+                                "validations": [],
+                                "content_class": ""
+                            },
+                            {
+                                "id": "gemini_api_info_group",
+                                "type": "fieldgroup",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_gemini_api_info_group",
+                                "children": [
+                                    {
+                                        "id": "gemini_api_info",
+                                        "type": "field",
+                                        "title": "Gemini API",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_gemini_api_info_group_gemini_api_info",
+                                        "children": [],
+                                        "description": "Connect to your Gemini account with your website. <a href=\"https://aistudio.google.com/app/apikey\" target=\"_blank\" rel=\"noopener noreferrer\">Get Help</a>",
+                                        "dependency_key": "product_generation.product_image_section.gemini_api_info_group.gemini_api_info",
+                                        "dependencies": [
+                                            {
+                                                "key": "product_generation.product_image_section.product_info_generate",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "product_generation.product_image_section.gemini_api_info_group.gemini_api_info"
+                                            },
+                                            {
+                                                "key": "product_generation.product_image_section.product_info_generate",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "product_generation.product_image_section.gemini_api_info_group.gemini_api_info"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "base_field_label",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/ai-assist/gemini-ai.svg",
+                                        "suffix": "",
+                                        "doc_link": null
+                                    },
+                                    {
+                                        "id": "gemini_api_notice",
+                                        "type": "field",
+                                        "title": "You can get your API Keys in your Gemini Account.",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_gemini_api_info_group_gemini_api_notice",
+                                        "children": [],
+                                        "description": "Access your Gemini dashboard to generate API keys for integration.",
+                                        "dependency_key": "product_generation.product_image_section.gemini_api_info_group.gemini_api_notice",
+                                        "dependencies": [
+                                            {
+                                                "key": "product_generation.product_image_section.product_info_generate",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "product_generation.product_image_section.gemini_api_info_group.gemini_api_notice"
+                                            },
+                                            {
+                                                "key": "product_generation.product_image_section.product_info_generate",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "product_generation.product_image_section.gemini_api_info_group.gemini_api_notice"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "info",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "",
+                                        "link_text": "Gemini Account",
+                                        "link_url": "https://aistudio.google.com/app/apikey",
+                                        "show_icon": true
+                                    },
+                                    {
+                                        "id": "gemini_api_key",
+                                        "type": "field",
+                                        "title": "API Key",
+                                        "icon": "",
+                                        "tooltip": "Enter your Gemini API key for content generation.",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_gemini_api_info_group_gemini_api_key",
+                                        "children": [],
+                                        "description": "",
+                                        "dependency_key": "product_generation.product_image_section.gemini_api_info_group.gemini_api_key",
+                                        "dependencies": [
+                                            {
+                                                "key": "product_generation.product_image_section.product_info_generate",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "product_generation.product_image_section.gemini_api_info_group.gemini_api_key"
+                                            },
+                                            {
+                                                "key": "product_generation.product_image_section.product_info_generate",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "product_generation.product_image_section.gemini_api_info_group.gemini_api_key"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "show_hide",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "Enter your Gemini API key",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": ""
+                                    },
+                                    {
+                                        "id": "gemini_model",
+                                        "type": "field",
+                                        "title": "Model",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_gemini_api_info_group_gemini_model",
+                                        "children": [],
+                                        "description": "More advanced models provide higher quality output but may cost more per generation.",
+                                        "dependency_key": "product_generation.product_image_section.gemini_api_info_group.gemini_model",
+                                        "dependencies": [
+                                            {
+                                                "key": "product_generation.product_image_section.product_info_generate",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "product_generation.product_image_section.gemini_api_info_group.gemini_model"
+                                            },
+                                            {
+                                                "key": "product_generation.product_image_section.product_info_generate",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "product_generation.product_image_section.gemini_api_info_group.gemini_model"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "select",
+                                        "value": "gemini-2.0-flash",
+                                        "default": "gemini-2.0-flash",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "",
+                                        "options": [
+                                            {
+                                                "value": "gemini-2.5-flash",
+                                                "title": "Gemini 2.5 Flash"
+                                            },
+                                            {
+                                                "value": "gemini-2.5-pro",
+                                                "title": "Gemini 2.5 Pro"
+                                            },
+                                            {
+                                                "value": "gemini-2.5-flash-lite-preview-06-17",
+                                                "title": "Gemini 2.5 Flash Lite"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "product_generation.product_image_section.gemini_api_info_group",
+                                "dependencies": [
+                                    {
+                                        "key": "product_generation.product_image_section.product_info_engine",
+                                        "value": "gemini",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "===",
+                                        "self": "product_generation.product_image_section.gemini_api_info_group"
+                                    },
+                                    {
+                                        "key": "product_generation.product_image_section.product_info_engine",
+                                        "value": "gemini",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "!==",
+                                        "self": "product_generation.product_image_section.gemini_api_info_group"
+                                    }
+                                ],
+                                "validations": [],
+                                "content_class": ""
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "product_generation.product_image_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "product_description_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_ai_assist_product_generation_product_description_section",
+                        "children": [
+                            {
+                                "id": "product_image_enhancement",
+                                "type": "field",
+                                "title": "Product Image Enhancement",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_ai_assist_product_generation_product_description_section_product_image_enhancement",
+                                "children": [],
+                                "description": "Allow vendors to enhance and generate professional product images using AI.",
+                                "dependency_key": "product_generation.product_description_section.product_image_enhancement",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "off",
+                                "default": "off",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "product_image_engine",
+                                "type": "field",
+                                "title": "Engine",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_ai_assist_product_generation_product_description_section_product_image_engine",
+                                "children": [],
+                                "description": "Select your AI provider for image processing and generation.",
+                                "dependency_key": "product_generation.product_description_section.product_image_engine",
+                                "dependencies": [
+                                    {
+                                        "key": "product_generation.product_description_section.product_image_enhancement",
+                                        "value": "on",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "===",
+                                        "self": "product_generation.product_description_section.product_image_engine"
+                                    },
+                                    {
+                                        "key": "product_generation.product_description_section.product_image_enhancement",
+                                        "value": "on",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "!==",
+                                        "self": "product_generation.product_description_section.product_image_engine"
+                                    }
+                                ],
+                                "validations": [],
+                                "variant": "select",
+                                "value": "gemini",
+                                "default": "gemini",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "value": "gemini",
+                                        "title": "Gemini"
+                                    },
+                                    {
+                                        "value": "bria-ai",
+                                        "title": "BRIA AI"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "gemini_api_info_group",
+                                "type": "fieldgroup",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_ai_assist_product_generation_product_description_section_gemini_api_info_group",
+                                "children": [
+                                    {
+                                        "id": "gemini_api_info",
+                                        "type": "field",
+                                        "title": "Gemini API",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_ai_assist_product_generation_product_description_section_gemini_api_info_group_gemini_api_info",
+                                        "children": [],
+                                        "description": "Connect to your Gemini account with your website. <a href=\"https://aistudio.google.com/app/apikey\" target=\"_blank\" rel=\"noopener noreferrer\">Get Help</a>",
+                                        "dependency_key": "product_generation.product_description_section.gemini_api_info_group.gemini_api_info",
+                                        "dependencies": [
+                                            {
+                                                "key": "product_generation.product_description_section.product_image_enhancement",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "product_generation.product_description_section.gemini_api_info_group.gemini_api_info"
+                                            },
+                                            {
+                                                "key": "product_generation.product_description_section.product_image_enhancement",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "product_generation.product_description_section.gemini_api_info_group.gemini_api_info"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "base_field_label",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/ai-assist/gemini-ai.svg",
+                                        "suffix": "",
+                                        "doc_link": null
+                                    },
+                                    {
+                                        "id": "gemini_api_notice",
+                                        "type": "field",
+                                        "title": "You can get your API Keys in your Gemini Account.",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_ai_assist_product_generation_product_description_section_gemini_api_info_group_gemini_api_notice",
+                                        "children": [],
+                                        "description": "",
+                                        "dependency_key": "product_generation.product_description_section.gemini_api_info_group.gemini_api_notice",
+                                        "dependencies": [
+                                            {
+                                                "key": "product_generation.product_description_section.product_image_enhancement",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "product_generation.product_description_section.gemini_api_info_group.gemini_api_notice"
+                                            },
+                                            {
+                                                "key": "product_generation.product_description_section.product_image_enhancement",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "product_generation.product_description_section.gemini_api_info_group.gemini_api_notice"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "info",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "",
+                                        "link_text": "Gemini Account",
+                                        "link_url": "https://aistudio.google.com/app/apikey",
+                                        "show_icon": true
+                                    },
+                                    {
+                                        "id": "gemini_api_key",
+                                        "type": "field",
+                                        "title": "API Key",
+                                        "icon": "",
+                                        "tooltip": "Enter your Gemini API key for image generation.",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_ai_assist_product_generation_product_description_section_gemini_api_info_group_gemini_api_key",
+                                        "children": [],
+                                        "description": "",
+                                        "dependency_key": "product_generation.product_description_section.gemini_api_info_group.gemini_api_key",
+                                        "dependencies": [
+                                            {
+                                                "key": "product_generation.product_description_section.product_image_enhancement",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "product_generation.product_description_section.gemini_api_info_group.gemini_api_key"
+                                            },
+                                            {
+                                                "key": "product_generation.product_description_section.product_image_enhancement",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "product_generation.product_description_section.gemini_api_info_group.gemini_api_key"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "show_hide",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "Enter your Gemini API key",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": ""
+                                    },
+                                    {
+                                        "id": "gemini_model",
+                                        "type": "field",
+                                        "title": "Model",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_ai_assist_product_generation_product_description_section_gemini_api_info_group_gemini_model",
+                                        "children": [],
+                                        "description": "Choose the AI model for image enhancement and generation. Different models excel at various image types and styles.",
+                                        "dependency_key": "product_generation.product_description_section.gemini_api_info_group.gemini_model",
+                                        "dependencies": [
+                                            {
+                                                "key": "product_generation.product_description_section.product_image_enhancement",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "product_generation.product_description_section.gemini_api_info_group.gemini_model"
+                                            },
+                                            {
+                                                "key": "product_generation.product_description_section.product_image_enhancement",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "product_generation.product_description_section.gemini_api_info_group.gemini_model"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "select",
+                                        "value": "gemini-2.0-flash",
+                                        "default": "gemini-2.0-flash",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "",
+                                        "options": [
+                                            {
+                                                "value": "gemini-2.5-flash-image",
+                                                "title": "Gemini 2.5 Flash Image (aka Nano Banana)"
+                                            },
+                                            {
+                                                "value": "gemini-3-pro-image-preview",
+                                                "title": "Gemini 3 Pro Image (aka Nano Banana)"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "product_generation.product_description_section.gemini_api_info_group",
+                                "dependencies": [
+                                    {
+                                        "key": "product_generation.product_description_section.product_image_engine",
+                                        "value": "gemini",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "===",
+                                        "self": "product_generation.product_description_section.gemini_api_info_group"
+                                    },
+                                    {
+                                        "key": "product_generation.product_description_section.product_image_engine",
+                                        "value": "gemini",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "!==",
+                                        "self": "product_generation.product_description_section.gemini_api_info_group"
+                                    }
+                                ],
+                                "validations": [],
+                                "content_class": ""
+                            },
+                            {
+                                "id": "bria-ai_api_info_group",
+                                "type": "fieldgroup",
+                                "title": "",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_ai_assist_product_generation_product_description_section_bria-ai_api_info_group",
+                                "children": [
+                                    {
+                                        "id": "bria-ai_api_info",
+                                        "type": "field",
+                                        "title": "BRIA AI API",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_ai_assist_product_generation_product_description_section_bria-ai_api_info_group_bria-ai_api_info",
+                                        "children": [],
+                                        "description": "Connect to your BRIA AI account with your website. <a href=\"https://platform.bria.ai/console/account/api-keys\" target=\"_blank\" rel=\"noopener noreferrer\">Get Help</a>",
+                                        "dependency_key": "product_generation.product_description_section.bria-ai_api_info_group.bria-ai_api_info",
+                                        "dependencies": [
+                                            {
+                                                "key": "product_generation.product_description_section.product_image_enhancement",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "product_generation.product_description_section.bria-ai_api_info_group.bria-ai_api_info"
+                                            },
+                                            {
+                                                "key": "product_generation.product_description_section.product_image_enhancement",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "product_generation.product_description_section.bria-ai_api_info_group.bria-ai_api_info"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "base_field_label",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "https://core-dokan.test/wp-content/plugins/dokan-pro/assets/images/admin-settings-icons/ai-assist/bria-ai.svg",
+                                        "suffix": "",
+                                        "doc_link": null
+                                    },
+                                    {
+                                        "id": "bria-ai_api_notice",
+                                        "type": "field",
+                                        "title": "You can get your API Keys in your BRIA AI Account.",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_ai_assist_product_generation_product_description_section_bria-ai_api_info_group_bria-ai_api_notice",
+                                        "children": [],
+                                        "description": "",
+                                        "dependency_key": "product_generation.product_description_section.bria-ai_api_info_group.bria-ai_api_notice",
+                                        "dependencies": [
+                                            {
+                                                "key": "product_generation.product_description_section.product_image_enhancement",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "product_generation.product_description_section.bria-ai_api_info_group.bria-ai_api_notice"
+                                            },
+                                            {
+                                                "key": "product_generation.product_description_section.product_image_enhancement",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "product_generation.product_description_section.bria-ai_api_info_group.bria-ai_api_notice"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "info",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "",
+                                        "link_text": "BRIA AI Account",
+                                        "link_url": "https://platform.bria.ai/console/account/api-keys",
+                                        "show_icon": true
+                                    },
+                                    {
+                                        "id": "bria-ai_api_key",
+                                        "type": "field",
+                                        "title": "API Key",
+                                        "icon": "",
+                                        "tooltip": "Enter your BRIA AI API key for image generation.",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_ai_assist_product_generation_product_description_section_bria-ai_api_info_group_bria-ai_api_key",
+                                        "children": [],
+                                        "description": "",
+                                        "dependency_key": "product_generation.product_description_section.bria-ai_api_info_group.bria-ai_api_key",
+                                        "dependencies": [
+                                            {
+                                                "key": "product_generation.product_description_section.product_image_enhancement",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "product_generation.product_description_section.bria-ai_api_info_group.bria-ai_api_key"
+                                            },
+                                            {
+                                                "key": "product_generation.product_description_section.product_image_enhancement",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "product_generation.product_description_section.bria-ai_api_info_group.bria-ai_api_key"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "show_hide",
+                                        "value": "",
+                                        "default": "",
+                                        "placeholder": "Enter your BRIA AI API key",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": ""
+                                    },
+                                    {
+                                        "id": "bria-ai_model",
+                                        "type": "field",
+                                        "title": "Model",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_ai_assist_product_generation_product_description_section_bria-ai_api_info_group_bria-ai_model",
+                                        "children": [],
+                                        "description": "Choose the AI model for image enhancement and generation. Different models excel at various image types and styles.",
+                                        "dependency_key": "product_generation.product_description_section.bria-ai_api_info_group.bria-ai_model",
+                                        "dependencies": [
+                                            {
+                                                "key": "product_generation.product_description_section.product_image_enhancement",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "product_generation.product_description_section.bria-ai_api_info_group.bria-ai_model"
+                                            },
+                                            {
+                                                "key": "product_generation.product_description_section.product_image_enhancement",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "!==",
+                                                "self": "product_generation.product_description_section.bria-ai_api_info_group.bria-ai_model"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "select",
+                                        "value": "bria-generate-background",
+                                        "default": "bria-generate-background",
+                                        "placeholder": "",
+                                        "readonly": false,
+                                        "disabled": false,
+                                        "size": 20,
+                                        "helper_text": "",
+                                        "postfix": "",
+                                        "prefix": "",
+                                        "image_url": "",
+                                        "options": [
+                                            {
+                                                "value": "bria-generate-background",
+                                                "title": "Generate Background"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "description": "",
+                                "dependency_key": "product_generation.product_description_section.bria-ai_api_info_group",
+                                "dependencies": [
+                                    {
+                                        "key": "product_generation.product_description_section.product_image_engine",
+                                        "value": "bria-ai",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "show",
+                                        "comparison": "===",
+                                        "self": "product_generation.product_description_section.bria-ai_api_info_group"
+                                    },
+                                    {
+                                        "key": "product_generation.product_description_section.product_image_engine",
+                                        "value": "bria-ai",
+                                        "to_self": true,
+                                        "attribute": "display",
+                                        "effect": "hide",
+                                        "comparison": "!==",
+                                        "self": "product_generation.product_description_section.bria-ai_api_info_group"
+                                    }
+                                ],
+                                "validations": [],
+                                "content_class": ""
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "product_generation.product_description_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    }
+                ],
+                "description": "Set up AI to elevate your platform with enhanced capabilities.",
+                "dependency_key": "product_generation",
+                "dependencies": [],
+                "validations": [],
+                "priority": 100,
+                "doc_link": "https://dokan.co/docs/wordpress/settings/dokan-ai-assistant/",
+                "doc_link_text": "Doc"
+            }
+        ],
+        "description": "Configure AI-powered features to enhance your marketplace experience.",
+        "dependency_key": "",
+        "dependencies": [],
+        "validations": []
+    },
 ];
 
 /**
