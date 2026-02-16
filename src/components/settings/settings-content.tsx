@@ -3,7 +3,7 @@ import { useSettings } from './settings-context';
 import { FieldRenderer } from './field-renderer';
 import { cn } from '@/lib/utils';
 import { FileText, Info } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui";
+import { ScrollArea, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui";
 import { RawHTML } from "@wordpress/element";
 
 // ============================================
@@ -49,82 +49,83 @@ export function SettingsContent({ className }: { className?: string }) {
     }
 
     return (
-        <div className={cn('flex flex-col overflow-y-auto', className)} data-testid="settings-content">
+        <ScrollArea className={cn('flex flex-col overflow-y-auto', className)} data-testid="settings-content">
             <div className="flex-1">
                 {/* Heading */}
                 <div className="px-6 pt-6 pb-4" data-testid={`settings-heading-${contentSource.id}`}>
                     <div className="flex justify-between items-start">
                         <div className="flex flex-col gap-2">
                             {(contentSource.label || contentSource.title) && (
-                                <h2 className="text-2xl font-bold text-foreground leading-tight">
-                                    {contentSource.label || contentSource.title}
-                                </h2>
+                              <h2 className="text-2xl font-bold text-foreground leading-tight">
+                                  {contentSource.label || contentSource.title}
+                              </h2>
                             )}
                             {contentSource.description && (
-                                <p className="text-sm text-muted-foreground">
-                                    {contentSource.description}
-                                </p>
+                              <p className="text-sm text-muted-foreground">
+                                  {contentSource.description}
+                              </p>
                             )}
                         </div>
                         {contentSource.doc_link && (
-                            <a
-                                href={contentSource.doc_link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-muted-foreground flex gap-1 items-center text-sm hover:text-foreground transition-colors shrink-0"
-                            >
-                                <FileText className="size-4" />
-                                { contentSource.doc_link_text ?? '' }
-                            </a>
+                          <a
+                            href={contentSource.doc_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-muted-foreground flex gap-1 items-center text-sm hover:text-foreground transition-colors shrink-0"
+                          >
+                              <FileText className="size-4" />
+                              { contentSource.doc_link_text ?? '' }
+                          </a>
                         )}
                     </div>
                 </div>
 
                 {/* Tabs */}
                 {tabs.length > 0 && (
-                    <div className="px-6 border-b border-border" data-testid="settings-tabs">
-                        <nav className="flex gap-4 -mb-px">
-                            {tabs
-                                .filter((tab) => tab.display !== false)
-                                .map((tab) => (
-                                    <button
-                                        key={tab.id}
-                                        onClick={() => setActiveTab(tab.id)}
-                                        data-testid={`settings-tab-${tab.id}`}
-                                        className={cn(
-                                            'px-1 py-2.5 text-sm font-medium border-b-2 transition-colors',
-                                            activeTab === tab.id
-                                                ? 'border-primary text-primary'
-                                                : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
-                                        )}
-                                    >
-                                        {tab.label || tab.title}
-                                    </button>
-                                ))}
-                        </nav>
-                    </div>
+                  <div className="px-6 border-b border-border" data-testid="settings-tabs">
+                      <nav className="flex gap-4 -mb-px">
+                          {tabs
+                            .filter((tab) => tab.display !== false)
+                            .map((tab) => (
+                              <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                data-testid={`settings-tab-${tab.id}`}
+                                className={cn(
+                                  'px-1 py-2.5 text-sm font-medium border-b-2 transition-colors',
+                                  activeTab === tab.id
+                                    ? 'border-primary text-primary'
+                                    : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
+                                )}
+                              >
+                                  {tab.label || tab.title}
+                              </button>
+                            ))}
+                      </nav>
+                  </div>
                 )}
 
                 {/* Content — sections, fields, fieldgroups, subsections */}
                 <div className="p-6 space-y-6">
                     {content.map((item) => (
-                        <ContentBlock key={item.id} element={item} />
+                      <ContentBlock key={item.id} element={item} />
                     ))}
                 </div>
             </div>
 
             {/* Per-scope save button — sticky at the bottom */}
             {showSaveArea && (
-                <div
-                    className="sticky bottom-0 border-t border-border bg-background px-6 py-3 flex justify-end"
-                    data-testid={`settings-save-${scopeId}`}
-                >
-                    {renderSaveButton
-                        ? renderSaveButton({ scopeId, dirty, onSave: handleSave })
-                        : null}
-                </div>
+              <div
+                className="sticky bottom-0 border-t border-border bg-background px-6 py-3 flex justify-end"
+                data-testid={`settings-save-${scopeId}`}
+              >
+                  {renderSaveButton
+                    ? renderSaveButton({ scopeId, dirty, onSave: handleSave })
+                    : null}
+              </div>
             )}
-        </div>
+
+        </ScrollArea>
     );
 }
 

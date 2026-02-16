@@ -13,6 +13,7 @@ import {
     ShowHideField,
     ColorPickerField,
     HtmlField,
+    NoticeField,
     FallbackField,
 } from './fields';
 
@@ -131,6 +132,13 @@ export function FieldRenderer({ element }: { element: SettingsElement }) {
             return applyFilters(
                 `${filterPrefix}_settings_html_field`,
                 <HtmlField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'notice':
+            return applyFilters(
+                `${filterPrefix}_settings_notice_field`,
+                <NoticeField {...fieldProps} />,
                 mergedElement
             );
 

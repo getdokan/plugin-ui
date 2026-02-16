@@ -11,9 +11,6 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
   Switch,
   Textarea,
   Tooltip,
@@ -21,6 +18,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
   ColorPicker,
+  Alert,
+  AlertDescription,
+  AlertTitle,
 } from "../ui";
 import { ButtonToggleGroup } from "../button-toggle-group";
 import type { FieldComponentProps, SettingsElement } from "./settings-types";
@@ -498,6 +498,53 @@ export function CustomizeRadioField({
         ))}
       </RadioGroup>
     </FieldWrapper>
+  );
+}
+
+export function NoticeField({ element }: FieldComponentProps) {
+  const noticeTitle = element.notice_title || element.label || element.title;
+  const noticeDescription = element.notice_description || element.description;
+  const linkUrl = element.link_url || element.doc_link;
+  const linkTitle = element.link_title || element.doc_link_text;
+  const noticeType = element.notice_type || 'warning';
+
+  // Use Figma colors for warning variant as requested for Printful alerts
+  const isWarning = noticeType === 'warning';
+  
+  return (
+    <Alert
+      variant={noticeType as any}
+      className={cn(
+        "border rounded-lg p-5",
+        element.css_class
+      )}
+      id={element.id} data-testid={`settings-field-${element.id}`}
+    >
+      <Info className={cn("size-6", isWarning && "text-warning-foreground")} strokeWidth={2} />
+      {noticeTitle && (
+        <AlertTitle className={cn("font-bold text-base m-0 leading-tight", isWarning && "text-warning-foreground")}>
+          {noticeTitle}
+        </AlertTitle>
+      )}
+      {(noticeDescription || linkUrl) && (
+        <AlertDescription className={cn("text-sm m-0 leading-relaxed", isWarning && "text-warning-foreground")}>
+          {noticeDescription && <RawHTML>{noticeDescription}</RawHTML>}
+          {linkUrl && (
+            <a
+              href={linkUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                "text-sm font-bold underline underline-offset-4 hover:opacity-80 transition-opacity w-fit flex items-center gap-1.5 mt-2",
+                isWarning && "text-warning-foreground"
+              )}
+            >
+              {linkTitle || "Learn more"}
+            </a>
+          )}
+        </AlertDescription>
+      )}
+    </Alert>
   );
 }
 
