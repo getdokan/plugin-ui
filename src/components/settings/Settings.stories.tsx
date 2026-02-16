@@ -15053,6 +15053,553 @@ const dokanSettingsSchema: SettingsElement[] = [
         "dependencies": [],
         "validations": []
     },
+    {
+        "id": "compliance",
+        "type": "page",
+        "title": "Compliance",
+        "icon": "Files",
+        "tooltip": "",
+        "display": true,
+        "hook_key": "dokan_settings_compliance",
+        "children": [
+            {
+                "id": "privacy",
+                "type": "subpage",
+                "title": "Privacy",
+                "icon": "",
+                "tooltip": "",
+                "display": true,
+                "hook_key": "dokan_settings_compliance_privacy",
+                "children": [
+                    {
+                        "id": "privacy_settings",
+                        "type": "section",
+                        "title": "Privacy Settings",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_compliance_privacy_privacy_settings",
+                        "children": [
+                            {
+                                "id": "privacy_policy_display",
+                                "type": "field",
+                                "title": "Privacy Policy Display",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_compliance_privacy_privacy_settings_privacy_policy_display",
+                                "children": [],
+                                "description": "Show privacy policy link on vendor store contact forms.",
+                                "dependency_key": "privacy.privacy_settings.privacy_policy_display",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "on",
+                                "default": "on",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "privacy_policy_page",
+                                "type": "field",
+                                "title": "Privacy Policy Page",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_compliance_privacy_privacy_settings_privacy_policy_page",
+                                "children": [],
+                                "description": "Choose which page displays your privacy policy",
+                                "dependency_key": "privacy.privacy_settings.privacy_policy_page",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "select",
+                                "value": "",
+                                "default": "",
+                                "placeholder": "Select a page",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [
+                                    {
+                                        "title": "Classic Cart",
+                                        "value": 582
+                                    },
+                                    {
+                                        "title": "",
+                                        "value": 329
+                                    },
+                                    {
+                                        "title": "Single Product",
+                                        "value": 320
+                                    },
+                                    {
+                                        "title": "Block Shop",
+                                        "value": 316
+                                    },
+                                    {
+                                        "title": "Vendor registration",
+                                        "value": 106
+                                    },
+                                    {
+                                        "title": "Product Subscription",
+                                        "value": 61
+                                    },
+                                    {
+                                        "title": "Request for Quote",
+                                        "value": 60
+                                    },
+                                    {
+                                        "title": "Checkout 2",
+                                        "value": 54
+                                    },
+                                    {
+                                        "title": "My account Bn",
+                                        "value": 222
+                                    },
+                                    {
+                                        "title": "My account",
+                                        "value": 219
+                                    },
+                                    {
+                                        "title": "My account",
+                                        "value": 13
+                                    },
+                                    {
+                                        "title": "Checkout",
+                                        "value": 12
+                                    },
+                                    {
+                                        "title": "Cart",
+                                        "value": 11
+                                    },
+                                    {
+                                        "title": "Shop",
+                                        "value": 10
+                                    },
+                                    {
+                                        "title": "test-board",
+                                        "value": 194
+                                    },
+                                    {
+                                        "title": "My Orders",
+                                        "value": 8
+                                    },
+                                    {
+                                        "title": "Store List",
+                                        "value": 7
+                                    },
+                                    {
+                                        "title": "Dashboard",
+                                        "value": 6
+                                    },
+                                    {
+                                        "title": "Sample Page",
+                                        "value": 2
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "privacy_policy_content",
+                                "type": "field",
+                                "title": "Privacy Policy Content",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_compliance_privacy_privacy_policy_content_privacy_policy_content",
+                                "children": [],
+                                "description": "Create or edit your privacy policy text that will be displayed to users",
+                                "dependency_key": "privacy.privacy_policy_content.privacy_policy_content",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "rich_text",
+                                "value": "",
+                                "default": "",
+                                "placeholder": "Enter your privacy policy content here...",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": ""
+                            }
+                        ],
+                        "description": "Configure privacy policy display and content settings.",
+                        "dependency_key": "privacy.privacy_settings",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "admin_access_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_compliance_privacy_admin_access_section",
+                        "children": [
+                            {
+                                "id": "admin_access",
+                                "type": "field",
+                                "title": "Admin Area Access",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_compliance_privacy_admin_access_section_admin_access",
+                                "children": [],
+                                "description": "Prevent vendors from accessing the wp-admin dashboard area. If HPOS feature is enabled, admin access will be blocked regardless of this setting.",
+                                "dependency_key": "privacy.admin_access_section.admin_access",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "on",
+                                "default": "on",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "privacy.admin_access_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    },
+                    {
+                        "id": "data_clear_section",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_compliance_privacy_data_clear_section",
+                        "children": [
+                            {
+                                "id": "data_clear_on_uninstall",
+                                "type": "field",
+                                "title": "Data Clear",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_compliance_privacy_data_clear_section_data_clear_on_uninstall",
+                                "children": [],
+                                "description": "Permanently delete all data and database tables related to Dokan and Dokan Pro plugins. This action cannot be undone.",
+                                "dependency_key": "privacy.data_clear_section.data_clear_on_uninstall",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "off",
+                                "default": "off",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Clear Data"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": "error",
+                                "should_confirm": true,
+                                "confirm_modal": {
+                                    "title": "Are you sure to delete all data?",
+                                    "confirmationTitle": "Are you sure to delete all data?",
+                                    "description": "All data and tables related to Dokan and Dokan Pro will be deleted permanently. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?",
+                                    "confirmText": "Yes, Delete",
+                                    "cancelText": "Cancel",
+                                    "checkboxLabel": "Yes, I understand."
+                                }
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "privacy.data_clear_section",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    }
+                ],
+                "description": "Configure privacy policy settings and content for vendor stores.",
+                "dependency_key": "privacy",
+                "dependencies": [],
+                "validations": [],
+                "priority": 100,
+                "doc_link": "https://wedevs.com/docs/dokan-lite/compliance/privacy/",
+                "doc_link_text": "Doc"
+            },
+            {
+                "id": "eu_compliance",
+                "type": "subpage",
+                "title": "EU Compliance",
+                "icon": "",
+                "tooltip": "",
+                "display": true,
+                "hook_key": "dokan_settings_compliance_eu_compliance",
+                "children": [
+                    {
+                        "id": "eu_compliance_settings",
+                        "type": "section",
+                        "title": "",
+                        "icon": "",
+                        "tooltip": "",
+                        "display": true,
+                        "hook_key": "dokan_settings_compliance_eu_compliance_eu_compliance_settings",
+                        "children": [
+                            {
+                                "id": "eu_vendor_registration_display",
+                                "type": "field",
+                                "title": "Display in Vendor Registration Form?",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_compliance_eu_compliance_eu_compliance_settings_eu_vendor_registration_display",
+                                "children": [],
+                                "description": "Show required EU business fields during vendor account creation.",
+                                "dependency_key": "eu_compliance.eu_compliance_settings.eu_vendor_registration_display",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "on",
+                                "default": "on",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "vendor_extra_fields",
+                                "type": "field",
+                                "title": "Vendor Extra Fields",
+                                "icon": "",
+                                "tooltip": "Allow extra input fields for vendor info. Uncheck the fields that won&#039;t be available to the vendors.",
+                                "display": true,
+                                "hook_key": "dokan_settings_compliance_eu_compliance_eu_compliance_settings_vendor_extra_fields",
+                                "children": [],
+                                "description": "Checked fields will be used as extra fields for vendors.",
+                                "dependency_key": "eu_compliance.eu_compliance_settings.vendor_extra_fields",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "multicheck",
+                                "value": [ "company_name" ],
+                                "default": [ "company_name" ],
+                                "options": [
+                                    {
+                                        "value": "company_name",
+                                        "title": "Company Name"
+                                    },
+                                    {
+                                        "value": "company_id_number",
+                                        "title": "Company ID/EUID Number"
+                                    },
+                                    {
+                                        "value": "vat_number",
+                                        "title": "Vat/Tax ID"
+                                    },
+                                    {
+                                        "value": "bank_name",
+                                        "title": "Name of Bank"
+                                    },
+                                    {
+                                        "value": "bank_iban",
+                                        "title": "Account/IBAN"
+                                    }
+                                ],
+                                "helper_text": ""
+                            },
+                            {
+                                "id": "customer_extra_fields",
+                                "type": "field",
+                                "title": "Customer Extra Fields",
+                                "icon": "",
+                                "tooltip": "Allow extra input fields for customer billing and shipping address.",
+                                "display": true,
+                                "hook_key": "dokan_settings_compliance_eu_compliance_eu_compliance_settings_customer_extra_fields",
+                                "children": [],
+                                "description": "Checked fields will be used as extra fields for customers.",
+                                "dependency_key": "eu_compliance.eu_compliance_settings.customer_extra_fields",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "multicheck",
+                                "value": [ "billing_dokan_bank_iban" ],
+                                "default": [ "billing_dokan_bank_iban" ],
+                                "options": [
+                                    {
+                                        "value": "billing_dokan_company_id_number",
+                                        "title": "Company ID/EUID Number"
+                                    },
+                                    {
+                                        "value": "billing_dokan_vat_number",
+                                        "title": "Vat/Tax ID"
+                                    },
+                                    {
+                                        "value": "billing_dokan_bank_name",
+                                        "title": "Name of Bank"
+                                    },
+                                    {
+                                        "value": "billing_dokan_bank_iban",
+                                        "title": "Bank IBAN"
+                                    }
+                                ],
+                                "helper_text": ""
+                            },
+                            {
+                                "id": "germanized_support_vendors",
+                                "type": "field",
+                                "title": "Germanized Support For Vendors",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_compliance_eu_compliance_eu_compliance_settings_germanized_support_vendors",
+                                "children": [],
+                                "description": "This will add a new section in vendor product edit page with fields provided by Germanized for WooCommerce plugin.",
+                                "dependency_key": "eu_compliance.eu_compliance_settings.germanized_support_vendors",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "on",
+                                "default": "off",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            },
+                            {
+                                "id": "vendor_invoice_number_override",
+                                "type": "field",
+                                "title": "Vendor&#039;s Can Override Invoice Number",
+                                "icon": "",
+                                "tooltip": "",
+                                "display": true,
+                                "hook_key": "dokan_settings_compliance_eu_compliance_eu_compliance_settings_vendor_invoice_number_override",
+                                "children": [],
+                                "description": "If you enable this setting, each vendor will be able to customize invoice number for their orders.",
+                                "dependency_key": "eu_compliance.eu_compliance_settings.vendor_invoice_number_override",
+                                "dependencies": [],
+                                "validations": [],
+                                "variant": "switch",
+                                "value": "on",
+                                "default": "off",
+                                "placeholder": "",
+                                "readonly": false,
+                                "disabled": false,
+                                "size": 20,
+                                "helper_text": "",
+                                "postfix": "",
+                                "prefix": "",
+                                "image_url": "",
+                                "options": [],
+                                "enable_state": {
+                                    "value": "on",
+                                    "title": "Enabled"
+                                },
+                                "disable_state": {
+                                    "value": "off",
+                                    "title": "Disabled"
+                                },
+                                "switcher_type": null,
+                                "should_confirm": false,
+                                "confirm_modal": []
+                            }
+                        ],
+                        "description": "",
+                        "dependency_key": "eu_compliance.eu_compliance_settings",
+                        "dependencies": [],
+                        "validations": [],
+                        "doc_link": ""
+                    }
+                ],
+                "description": "Collect mandatory business information required by European Union law for marketplace operations.",
+                "dependency_key": "eu_compliance",
+                "dependencies": [],
+                "validations": [],
+                "priority": 200,
+                "doc_link": "https://wedevs.com/docs/dokan-lite/compliance/eu-compliance/"
+            }
+        ],
+        "description": "Configure compliance settings, privacy policies, and legal requirements.",
+        "dependency_key": "",
+        "dependencies": [],
+        "validations": []
+    }
 ];
 
 /**
