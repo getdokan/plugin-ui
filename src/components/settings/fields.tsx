@@ -132,12 +132,12 @@ function FieldLabel({ element }: { element: SettingsElement }) {
       )}
       <div className="flex flex-col gap-1 w-full">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-foreground">
+          <span className={ cn( 'text-sm font-semibold', element?.is_danger ? 'text-destructive' : 'text-foreground' ) }>
             {displayLabel}
           </span>
 
           {IconComponent && (
-            <IconComponent className="size-4 text-primary" />
+            <IconComponent className={ cn( 'size-4', element?.is_danger ? 'text-destructive' : 'text-primary' ) } />
           )}
 
           {element.tooltip && (
@@ -145,7 +145,7 @@ function FieldLabel({ element }: { element: SettingsElement }) {
               <Tooltip>
                 <TooltipTrigger>
                   <button type="button" className="inline-flex">
-                    <Info className="size-3.5 text-muted-foreground cursor-help" />
+                    <Info className={ cn( 'size-3.5 cursor-help', element?.is_danger ? 'text-destructive' : 'text-muted-foreground' ) } />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -156,7 +156,7 @@ function FieldLabel({ element }: { element: SettingsElement }) {
           )}
         </div>
         {element.description && (
-          <div className="text-xs text-muted-foreground leading-relaxed">
+          <div className={ cn( 'text-xs leading-relaxed', element?.is_danger ? 'text-destructive' : 'text-muted-foreground' ) }>
             <RawHTML>{element.description}</RawHTML>
           </div>
         )}

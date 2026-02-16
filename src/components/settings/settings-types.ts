@@ -37,6 +37,7 @@ export type SettingsElementOption = {
 export type SettingsElement = {
     id: string;
     type: 'page' | 'subpage' | 'tab' | 'section' | 'subsection' | 'field' | 'fieldgroup' | string;
+    is_danger: boolean;
     variant?: string;
     icon?: string;
     /** Primary display text (preferred over `title`). */

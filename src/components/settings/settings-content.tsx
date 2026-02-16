@@ -188,13 +188,13 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
     const tooltip = section?.tooltip || '';
 
     return (
-        <div className="rounded-lg border border-border bg-card overflow-hidden" data-testid={`settings-section-${section.id}`}>
+        <div className={ cn( 'rounded-lg border overflow-hidden', section.is_danger ? 'bg-destructive/10 border-destructive/20' : 'border-border bg-card' ) } data-testid={`settings-section-${section.id}`}>
             {hasHeading && (
                 <div className={ cn( 'px-5 pt-5 pb-3 flex justify-between items-start', section?.children?.length > 0 && 'border-b border-border' ) }>
                     <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2">
                             {sectionLabel && (
-                              <h3 className="text-lg font-semibold text-foreground">
+                              <h3 className={ cn( 'text-lg font-semibold', section.is_danger ? 'text-destructive' : 'text-foreground' ) }>
                                   {sectionLabel}
                               </h3>
                             )}
@@ -216,7 +216,7 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
                         </div>
 
                         {section.description && (
-                            <p className="text-sm text-muted-foreground">
+                            <p className={ cn( 'text-sm', section.is_danger ? 'text-destructive' : 'text-muted-foreground' ) }>
                                 {section.description}
                             </p>
                         )}
