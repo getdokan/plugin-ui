@@ -5,6 +5,7 @@ import { FileText, Info, Eye, EyeOff, ArrowUpRight, RefreshCcw, CircleCheck } fr
 import {
   Button,
   Checkbox,
+  LabeledCheckbox,
   Input,
   CopyInput,
   RadioGroup,
@@ -44,21 +45,33 @@ function FieldWrapper({
   children,
   layout = "horizontal",
   className,
+  isNested,
+  isGroupParent,
 }: {
   element: SettingsElement;
   children: React.ReactNode;
   layout?: "horizontal" | "vertical" | "full-width";
   className?: string;
+  isNested?: boolean;
+  isGroupParent?: boolean;
 }) {
   const hasLabel = Boolean(
     (element.label && element.label.length > 0) ||
       (element.title && element.title.length > 0),
   );
 
+  const mergedClassName = cn(
+    className,
+    element.className,
+    element.css_class,
+    isGroupParent && "!pb-0",
+    isNested && "!pt-0 !border-t-0 !border-none",
+  );
+
   if (layout === "full-width") {
     return (
       <div
-        className={cn("flex flex-col gap-3 w-full p-4", className)}
+        className={cn("flex flex-col gap-3 w-full p-4", mergedClassName)}
         id={element.id}
         data-testid={`settings-field-${element.id}`}
       >
@@ -75,7 +88,7 @@ function FieldWrapper({
     <div
       className={cn(
         "grid grid-cols-12 gap-2 items-center w-full p-4",
-        className,
+        mergedClassName,
       )}
       id={element.id}
       data-testid={`settings-field-${element.id}`}
@@ -155,9 +168,9 @@ function FieldLabel({ element }: { element: SettingsElement }) {
 // Text Field
 // ============================================
 
-export function TextField({ element, onChange }: FieldComponentProps) {
+export function TextField({ element, onChange, ...rest }: FieldComponentProps) {
   return (
-    <FieldWrapper element={element} layout={ element.layout ?? "horizontal" }>
+    <FieldWrapper element={element} layout={ element.layout ?? "horizontal" } {...rest}>
       <Input
         value={String(element.value ?? element.default ?? "")}
         onChange={(e) => onChange(element.dependency_key!, e.target.value)}
@@ -208,9 +221,9 @@ export function ShowHideField({ element, onChange }: FieldComponentProps) {
 // Number Field
 // ============================================
 
-export function NumberField({ element, onChange }: FieldComponentProps) {
+export function NumberField({ element, onChange, ...rest }: FieldComponentProps) {
   return (
-    <FieldWrapper element={element}>
+    <FieldWrapper element={element} {...rest}>
       <div className="flex items-center gap-1 relative max-w-56 md:max-w-full w-full">
         {element.prefix && (
           <span className="text-sm text-muted-foreground shrink-0 absolute left-3 top-1/2 -translate-y-1/2 hover:text-foreground transition-colors">
@@ -249,9 +262,9 @@ export function NumberField({ element, onChange }: FieldComponentProps) {
 // Textarea Field
 // ============================================
 
-export function TextareaField({ element, onChange }: FieldComponentProps) {
+export function TextareaField({ element, onChange, ...rest }: FieldComponentProps) {
   return (
-    <FieldWrapper element={element} layout="full-width">
+    <FieldWrapper element={element} layout="full-width" {...rest}>
       <Textarea
         value={String(element.value ?? element.default ?? "")}
         onChange={(e) => onChange(element.dependency_key!, e.target.value)}
@@ -269,9 +282,9 @@ export function TextareaField({ element, onChange }: FieldComponentProps) {
 // Rich Text Field
 // ============================================
 
-export function RichTextField({ element, onChange }: FieldComponentProps) {
+export function RichTextField({ element, onChange, ...rest }: FieldComponentProps) {
   return (
-    <FieldWrapper element={element} layout="full-width">
+    <FieldWrapper element={element} layout="full-width" {...rest}>
       <RichTextEditor
         value={String(element.value ?? element.default ?? "")}
         onChange={(value) => onChange(element.dependency_key!, value)}
@@ -287,13 +300,13 @@ export function RichTextField({ element, onChange }: FieldComponentProps) {
 // Google Analytics Field
 // ============================================
 
-export function GoogleAnalyticsField({ element, onChange }: FieldComponentProps) {
+export function GoogleAnalyticsField({ element, onChange, ...rest }: FieldComponentProps) {
   const value = element.value as any;
   const isConnected = value?.connected;
 
   if (!isConnected) {
     return (
-      <FieldWrapper element={element}>
+      <FieldWrapper element={element} {...rest}>
         <a
           href={value?.auth_url || "#"}
           className="flex border border-border rounded-md overflow-hidden hover:border-primary transition-colors group h-10"
@@ -383,7 +396,7 @@ export function GoogleAnalyticsField({ element, onChange }: FieldComponentProps)
 // Select Field
 // ============================================
 
-export function SelectField({ element, onChange }: FieldComponentProps) {
+export function SelectField({ element, onChange, ...rest }: FieldComponentProps) {
   const currentValue = String(element.value ?? element.default ?? "");
   const selectedOption = element.options?.find(
     (o) => String(o.value) === currentValue
@@ -391,7 +404,7 @@ export function SelectField({ element, onChange }: FieldComponentProps) {
   const selectedLabel = selectedOption?.label ?? selectedOption?.title;
 
   return (
-    <FieldWrapper element={element}>
+    <FieldWrapper element={element} {...rest}>
       <Select
         value={currentValue}
         onValueChange={(val: any) => onChange(element.dependency_key!, val)}
@@ -441,7 +454,7 @@ export function ColorPickerField({ element, onChange }: FieldComponentProps) {
 // Switch Field
 // ============================================
 
-export function SwitchField({ element, onChange }: FieldComponentProps) {
+export function SwitchField({ element, onChange, ...rest }: FieldComponentProps) {
   const isEnabled = element.enable_state
     ? element.value === element.enable_state.value
     : Boolean(element.value);
@@ -458,7 +471,7 @@ export function SwitchField({ element, onChange }: FieldComponentProps) {
   };
 
   return (
-    <FieldWrapper element={element}>
+    <FieldWrapper element={element} {...rest}>
       <Switch
         checked={isEnabled}
         onCheckedChange={handleChange}
@@ -472,7 +485,7 @@ export function SwitchField({ element, onChange }: FieldComponentProps) {
 // Radio Capsule Field (using ButtonToggleGroup)
 // ============================================
 
-export function RadioCapsuleField({ element, onChange }: FieldComponentProps) {
+export function RadioCapsuleField({ element, onChange, ...rest }: FieldComponentProps) {
   const currentValue = String(element.value ?? element.default ?? "");
 
   const items =
@@ -489,7 +502,7 @@ export function RadioCapsuleField({ element, onChange }: FieldComponentProps) {
     }) ?? [];
 
   return (
-    <FieldWrapper element={element}>
+    <FieldWrapper element={element} {...rest}>
       <ButtonToggleGroup
         items={items}
         value={currentValue}
@@ -504,7 +517,7 @@ export function RadioCapsuleField({ element, onChange }: FieldComponentProps) {
 // Multicheck Field
 // ============================================
 
-export function MulticheckField({ element, onChange }: FieldComponentProps) {
+export function MulticheckField({ element, onChange, ...rest }: FieldComponentProps) {
   const currentValues: string[] = Array.isArray(element.value)
     ? element.value.map(String)
     : Array.isArray(element.default)
@@ -519,21 +532,25 @@ export function MulticheckField({ element, onChange }: FieldComponentProps) {
   };
 
   return (
-    <FieldWrapper element={element} layout="full-width">
-      <div className="flex flex-col gap-2">
+    <FieldWrapper element={element} layout="full-width" {...rest}>
+      <div className="flex flex-col gap-4">
         {element.options?.map((option) => (
-          <label
+          <LabeledCheckbox
             key={String(option.value)}
-            className="flex items-center gap-2 cursor-pointer"
-          >
-            <Checkbox
-              checked={currentValues.includes(String(option.value))}
-              onCheckedChange={(checked) =>
-                handleToggle(String(option.value), Boolean(checked))
-              }
-            />
-            <span className="text-sm">{option.label ?? option.title}</span>
-          </label>
+            checked={currentValues.includes(String(option.value))}
+            onCheckedChange={(checked) =>
+              handleToggle(String(option.value), Boolean(checked))
+            }
+            label={option.label ?? option.title}
+            description={
+              option.description ? (
+                <div className="flex items-start gap-1.5 mt-1">
+                  <Info className="size-3.5 shrink-0 mt-0.5" />
+                  <RawHTML>{option.description}</RawHTML>
+                </div>
+              ) : undefined
+            }
+          />
         ))}
       </div>
     </FieldWrapper>
@@ -544,10 +561,10 @@ export function MulticheckField({ element, onChange }: FieldComponentProps) {
 // Label-only Field (base_field_label)
 // ============================================
 
-export function LabelField({ element }: FieldComponentProps) {
+export function LabelField({ element, ...rest }: FieldComponentProps) {
   return (
     <div
-      className="p-4 flex justify-between gap-4 items-center"
+      className={cn("p-4 flex justify-between gap-4 items-center", rest.isNested && "!pt-0 !border-t-0 !border-none", rest.isGroupParent && "!pb-0")}
       id={element.id}
       data-testid={`settings-field-${element.id}`}
     >
@@ -571,9 +588,9 @@ export function LabelField({ element }: FieldComponentProps) {
 // HTML Field
 // ============================================
 
-export function HtmlField({ element }: FieldComponentProps) {
+export function HtmlField({ element, ...rest }: FieldComponentProps) {
   return (
-    <div className={cn("w-full p-4", element.css_class)} id={element.id} data-testid={`settings-field-${element.id}`}>
+    <div className={cn("w-full p-4", element.css_class, rest.isNested && "!pt-0 !border-t-0 !border-none", rest.isGroupParent && "!pb-0")} id={element.id} data-testid={`settings-field-${element.id}`}>
       {(element.label || element.title || element.description) && (
         <div className="mb-3">
           {(element.label || element.title) && (
@@ -605,11 +622,12 @@ export function HtmlField({ element }: FieldComponentProps) {
 export function CustomizeRadioField({
   element,
   onChange,
+  ...rest
 }: FieldComponentProps) {
   const currentValue = String(element.value ?? element.default ?? "");
 
   return (
-    <FieldWrapper element={element} layout="full-width">
+    <FieldWrapper element={element} layout="full-width" {...rest}>
       <RadioGroup
         value={currentValue}
         onValueChange={(val: any) => onChange(element.dependency_key!, val)}
@@ -637,7 +655,7 @@ export function CustomizeRadioField({
   );
 }
 
-export function NoticeField({ element }: FieldComponentProps) {
+export function NoticeField({ element, ...rest }: FieldComponentProps) {
   const noticeTitle = element.notice_title || element.label || element.title;
   const noticeDescription = element.notice_description || element.description;
   const linkUrl = element.link_url || element.doc_link;
@@ -652,7 +670,9 @@ export function NoticeField({ element }: FieldComponentProps) {
       variant={noticeType as any}
       className={cn(
         "border rounded-lg p-5",
-        element.css_class
+        element.css_class,
+        rest.isNested && "!pt-0 !border-t-0 !border-none",
+        rest.isGroupParent && "!pb-0"
       )}
       id={element.id} data-testid={`settings-field-${element.id}`}
     >
@@ -688,11 +708,11 @@ export function NoticeField({ element }: FieldComponentProps) {
 // Copy Field
 // ============================================
 
-export function CopyField({ element }: FieldComponentProps) {
+export function CopyField({ element, ...rest }: FieldComponentProps) {
   const value = String(element.value ?? element.default ?? "");
 
   return (
-    <FieldWrapper element={element} layout={element.layout ?? "horizontal"}>
+    <FieldWrapper element={element} layout={element.layout ?? "horizontal"} {...rest}>
       <CopyInput
         value={value}
         placeholder={element.placeholder ? String(element.placeholder) : undefined}
@@ -707,7 +727,7 @@ export function CopyField({ element }: FieldComponentProps) {
 // Info Field
 // ============================================
 
-export function InfoField({ element }: FieldComponentProps) {
+export function InfoField({ element, ...rest }: FieldComponentProps) {
   const infoTitle = element.label || element.title;
   const infoDescription = element.description || element.notice_description;
   const linkUrl = element.link_url || element.doc_link;
@@ -715,7 +735,7 @@ export function InfoField({ element }: FieldComponentProps) {
 
   return (
     <Notice
-      className={ cn( 'bg-primary/10 border-primary mx-4', element.css_class ) }
+      className={ cn( 'bg-primary/10 border-primary mx-4', element.css_class, rest.isNested && "!pt-0 !border-t-0 !border-none", rest.isGroupParent && "!pb-0" ) }
       id={element.id}
       data-testid={`settings-field-${element.id}`}
     >
@@ -746,13 +766,13 @@ export function InfoField({ element }: FieldComponentProps) {
 // Combine Input Field
 // ============================================
 
-export function CombineInputField({ element, onChange }: FieldComponentProps) {
+export function CombineInputField({ element, onChange, ...rest }: FieldComponentProps) {
   const value = (element.value as any) || {};
 
   // If the field is automated, show a badge instead of the inputs
   if (element.is_automated) {
     return (
-      <FieldWrapper element={element}>
+      <FieldWrapper element={element} {...rest}>
         <Badge variant="secondary" className="px-3 h-6 rounded-full font-medium">
           Automated
         </Badge>
@@ -774,7 +794,7 @@ export function CombineInputField({ element, onChange }: FieldComponentProps) {
     ) || "additional_fee";
 
   return (
-    <FieldWrapper element={element} layout={element.layout ?? "horizontal"}>
+    <FieldWrapper element={element} layout={element.layout ?? "horizontal"} {...rest}>
       <CombineInput
         percentageValue={value[percentageKey] ?? ""}
         numberValue={value[numberKey] ?? ""}
@@ -797,9 +817,9 @@ export function CombineInputField({ element, onChange }: FieldComponentProps) {
 // Fallback Field (for unknown variants)
 // ============================================
 
-export function FallbackField({ element }: FieldComponentProps) {
+export function FallbackField({ element, ...rest }: FieldComponentProps) {
   return (
-    <div className="p-4 text-sm text-muted-foreground italic" id={element.id} data-testid={`settings-field-${element.id}`}>
+    <div className={cn("p-4 text-sm text-muted-foreground italic", rest.isNested && "!pt-0 !border-t-0 !border-none", rest.isGroupParent && "!pb-0")} id={element.id} data-testid={`settings-field-${element.id}`}>
       Unsupported field type:{" "}
       <code className="text-xs bg-muted px-1 py-0.5 rounded">
         {element.variant}

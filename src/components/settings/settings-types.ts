@@ -175,4 +175,6 @@ export interface SettingsProps {
 export interface FieldComponentProps {
     element: SettingsElement;
     onChange: (key: string, value: any) => void;
+    isNested?: boolean;
+    isGroupParent?: boolean;
 }

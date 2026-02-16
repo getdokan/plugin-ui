@@ -29,7 +29,13 @@ import {
 //  e.g. @wordpress/hooks applyFilters or a custom function)
 // ============================================
 
-export function FieldRenderer({ element }: { element: SettingsElement }) {
+export function FieldRenderer({
+    element,
+    isNested,
+}: {
+    element: SettingsElement;
+    isNested?: boolean;
+}) {
     const { values, updateValue, shouldDisplay, hookPrefix, errors, applyFilters } = useSettings();
 
     // Check display status (dependency evaluation)
@@ -47,6 +53,7 @@ export function FieldRenderer({ element }: { element: SettingsElement }) {
     const fieldProps: FieldComponentProps = {
         element: mergedElement,
         onChange: updateValue,
+        isNested,
     };
 
     const variant = element.variant || '';
@@ -54,6 +61,23 @@ export function FieldRenderer({ element }: { element: SettingsElement }) {
 
     // Dispatch by variant — each wrapped with applyFilters
     switch (variant) {
+        case 'switch_group': {
+            const isEnabled = element.enable_state
+                ? mergedElement.value === element.enable_state.value
+                : Boolean(mergedElement.value);
+
+            return applyFilters(
+                `${filterPrefix}_settings_switch_group_field`,
+                <div className="flex flex-col">
+                    <SwitchField {...fieldProps} isGroupParent={true} />
+                    {isEnabled && element.children?.map((child) => (
+                        <FieldRenderer key={child.id} element={child} isNested={true} />
+                    ))}
+                </div>,
+                mergedElement
+            );
+        }
+
         case 'text':
             return applyFilters(
                 `${filterPrefix}_settings_text_field`,

@@ -10454,12 +10454,11 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "tooltip": "withdraw option (when vendor is getting commission automatically)",
                                 "display": true,
                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_withdraw_option_visibility",
-                                "children": [],
                                 "description": "withdraw option (when vendor is getting commission automatically)",
                                 "dependency_key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
                                 "dependencies": [],
                                 "validations": [],
-                                "variant": "switch",
+                                "variant": "switch_group",
                                 "value": "on",
                                 "default": "on",
                                 "placeholder": "",
@@ -10481,54 +10480,57 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 },
                                 "switcher_type": null,
                                 "should_confirm": false,
-                                "confirm_modal": []
-                            },
-                            {
-                                "id": "manual_withdraw",
-                                "type": "field",
-                                "title": "Manual Withdraw",
-                                "icon": "",
-                                "tooltip": "",
-                                "display": true,
-                                "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_manual_withdraw",
-                                "children": [],
-                                "description": "Allow manual withdrawal process for vendors.",
-                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
-                                "dependencies": [
+                                "confirm_modal": [],
+                                "children": [
                                     {
-                                        "key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
-                                        "value": "on",
-                                        "to_self": true,
-                                        "attribute": "display",
-                                        "effect": "show",
-                                        "comparison": "===",
-                                        "self": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw"
-                                    },
-                                    {
-                                        "key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
-                                        "value": "off",
-                                        "to_self": true,
-                                        "attribute": "display",
-                                        "effect": "hide",
-                                        "comparison": "===",
-                                        "self": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw"
+                                        "id": "manual_withdraw",
+                                        "type": "field",
+                                        "title": "",
+                                        "icon": "",
+                                        "tooltip": "",
+                                        "display": true,
+                                        "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_manual_withdraw",
+                                        "children": [],
+                                        "description": "",
+                                        "dependency_key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
+                                        "dependencies": [
+                                            {
+                                                "key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
+                                                "value": "on",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "show",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw"
+                                            },
+                                            {
+                                                "key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
+                                                "value": "off",
+                                                "to_self": true,
+                                                "attribute": "display",
+                                                "effect": "hide",
+                                                "comparison": "===",
+                                                "self": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw"
+                                            }
+                                        ],
+                                        "validations": [],
+                                        "variant": "multicheck",
+                                        "value": [ "manual" ],
+                                        "default": [ "manual" ],
+                                        "options": [
+                                            {
+                                                "value": "manual",
+                                                "title": "Manual Withdraw"
+                                            },
+                                            {
+                                                "value": "schedule",
+                                                "title": "Schedule Disbursement or Auto Withdraw Process for Vendors",
+                                                "description": "Admin can make multiple schedules but vendor can choose anyone."
+                                            }
+                                        ],
+                                        "helper_text": ""
                                     }
-                                ],
-                                "validations": [],
-                                "variant": "multicheck",
-                                "value": [ "manual" ],
-                                "default": [ "manual" ],
-                                "options": [
-                                    {
-                                        "value": "manual",
-                                        "title": "Enable Manual Withdraw"
-                                    },
-                                    {
-                                        "value": "schedule",
-                                        "title": "Schedule Disbursement or Auto Withdraw Process for Vendors"
-                                    }
-                                ],
-                                "helper_text": ""
+                                ]
                             },
                             {
                                 "id": "quarterly_withdraw_sub_section",
