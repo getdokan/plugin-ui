@@ -60,7 +60,7 @@ function FieldWrapper({
         {hasLabel && <FieldLabel element={element} />}
         <div className="w-full">{children}</div>
         {element.validationError && (
-          <p className="text-sm text-destructive">{element.validationError}</p>
+          <div className="text-sm text-destructive"><RawHTML>{element.validationError}</RawHTML></div>
         )}
       </div>
     );
@@ -91,7 +91,7 @@ function FieldWrapper({
       </div>
       {element.validationError && (
         <div className="col-span-12">
-          <p className="text-sm text-destructive">{element.validationError}</p>
+          <div className="text-sm text-destructive"><RawHTML>{element.validationError}</RawHTML></div>
         </div>
       )}
     </div>
