@@ -9,6 +9,7 @@ import {
     RadioCapsuleField,
     CustomizeRadioField,
     MulticheckField,
+    PreviewMulticheckField,
     LabelField,
     ShowHideField,
     ColorPickerField,
@@ -163,6 +164,14 @@ export function FieldRenderer({
             return applyFilters(
                 `${filterPrefix}_settings_multicheck_field`,
                 <MulticheckField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'vendor_info_preview':
+        case 'single_product_preview':
+            return applyFilters(
+                `${filterPrefix}_settings_preview_multicheck_field`,
+                <PreviewMulticheckField {...fieldProps} />,
                 mergedElement
             );
 

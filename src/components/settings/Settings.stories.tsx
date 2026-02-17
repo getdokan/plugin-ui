@@ -13125,7 +13125,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "type": "field",
                                 "title": "Vendor Info Visibility",
                                 "icon": "",
-                                "tooltip": "",
+                                "tooltip": "Choose what vendor details to show customers in single store page.",
                                 "display": true,
                                 "hook_key": "dokan_settings_appearance_store_vendor_info_visibility_section_vendor_info_visibility",
                                 "children": [],
@@ -13134,6 +13134,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "vendor_info_preview",
+                                "image_url": image,
                                 "value": {
                                     "email": "",
                                     "phone": "",
@@ -13232,9 +13233,9 @@ const dokanSettingsSchema: SettingsElement[] = [
                             {
                                 "id": "single_product_preview",
                                 "type": "field",
-                                "title": "Single Product Page Appearance ",
+                                "title": "Single Product Page Appearance",
                                 "icon": "",
-                                "tooltip": "",
+                                "tooltip": "Choose which sections to show when customers view individual products.",
                                 "display": true,
                                 "hook_key": "dokan_settings_appearance_store_single_product_preview_section_single_product_preview",
                                 "children": [],
@@ -13243,6 +13244,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "single_product_preview",
+                                "image_url": image2,
                                 "value": {
                                     "vendor_info": true,
                                     "more_products_tab": true,

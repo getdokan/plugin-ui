@@ -4,7 +4,6 @@ import * as LucideIcons from "lucide-react";
 import { FileText, Info, Eye, EyeOff, ArrowUpRight, RefreshCcw, CircleCheck } from "lucide-react";
 import {
   Button,
-  Checkbox,
   LabeledCheckbox,
   Input,
   CopyInput,
@@ -543,6 +542,8 @@ export function MulticheckField({ element, onChange, ...rest }: FieldComponentPr
               handleToggle(String(option.value), Boolean(checked))
             }
             label={option.label ?? option.title}
+            image={option.image}
+            className="rounded-[4px]"
             description={
               option.description ? (
                 <div className="flex items-start gap-1.5 mt-1">
@@ -553,6 +554,90 @@ export function MulticheckField({ element, onChange, ...rest }: FieldComponentPr
             }
           />
         ))}
+      </div>
+    </FieldWrapper>
+  );
+}
+
+// ============================================
+// Preview Multicheck Field
+// ============================================
+
+export function PreviewMulticheckField({ element, onChange, ...rest }: FieldComponentProps) {
+  const currentValues = element.value ?? element.default ?? {};
+  
+  const getValue = (optionValue: string) => {
+    if (Array.isArray(currentValues)) {
+        return currentValues.map(String).includes(optionValue);
+    }
+    if (typeof currentValues === 'object' && currentValues !== null) {
+        return !!(currentValues as any)[optionValue];
+    }
+    return false;
+  }
+
+  const handleToggle = (optionValue: string, checked: boolean) => {
+    if (Array.isArray(currentValues)) {
+        const vals = currentValues.map(String);
+        const updated = checked
+          ? [...vals, optionValue]
+          : vals.filter((v) => v !== optionValue);
+        onChange(element.dependency_key!, updated);
+    } else {
+        const updated = {
+            ...(typeof currentValues === 'object' ? currentValues : {}),
+            [optionValue]: checked
+        };
+        onChange(element.dependency_key!, updated);
+    }
+  };
+
+  // Create a wrapper element without label/description to avoid double rendering
+  // but keep id and other properties for FieldWrapper
+  const wrapperElement = {
+    ...element,
+    label: '',
+    title: '',
+    description: '',
+    tooltip: '',
+  };
+
+  return (
+    <FieldWrapper element={wrapperElement} layout="full-width" {...rest}>
+      <div className="flex flex-col md:flex-row gap-8 items-start justify-between w-full">
+        <div className="flex-1 flex flex-col gap-6">
+          <FieldLabel element={{ ...element, image_url: undefined }} />
+          <div className="flex flex-col gap-4">
+            {element.options?.map((option) => (
+              <LabeledCheckbox
+                key={String(option.value)}
+                checked={getValue(String(option.value))}
+                onCheckedChange={(checked) =>
+                  handleToggle(String(option.value), Boolean(checked))
+                }
+                label={option.label ?? option.title}
+                image={option.image}
+                className="rounded-[4px]"
+                description={
+                  option.description ? (
+                    <div className="flex items-start gap-1.5 mt-1">
+                      <Info className="size-3.5 shrink-0 mt-0.5" />
+                      <RawHTML>{option.description}</RawHTML>
+                    </div>
+                  ) : undefined
+                }
+              />
+            ))}
+          </div>
+        </div>
+        
+        {element.image_url && (
+          <div className="shrink-0 w-full md:w-64 lg:w-80 mt-2 md:mt-0">
+            <div className="aspect-[4/3] rounded-2xl border border-primary/10 bg-primary/5 flex items-center justify-center p-6 shadow-sm">
+              <img src={element.image_url} alt="" className="max-w-full max-h-full object-contain" />
+            </div>
+          </div>
+        )}
       </div>
     </FieldWrapper>
   );
