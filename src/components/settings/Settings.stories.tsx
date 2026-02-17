@@ -12976,22 +12976,22 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     {
                                         "title": "Template 1",
                                         "value": "default",
-                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/store/store-page-template-one.svg"
+                                        "image": image
                                     },
                                     {
                                         "title": "Template 2",
                                         "value": "layout1",
-                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/store/store-page-template-two.svg"
+                                        "image": image
                                     },
                                     {
                                         "title": "Template 3",
                                         "value": "layout2",
-                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/store/store-page-template-three.svg"
+                                        "image": image
                                     },
                                     {
                                         "title": "Template 4",
                                         "value": "layout3",
-                                        "image": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/store/store-page-template-four.svg"
+                                        "image": image
                                     }
                                 ],
                                 "radio_variant": "template",
