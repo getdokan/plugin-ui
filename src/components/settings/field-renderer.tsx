@@ -167,8 +167,7 @@ export function FieldRenderer({
                 mergedElement
             );
 
-        case 'vendor_info_preview':
-        case 'single_product_preview':
+        case 'checkbox_group_preview':
             return applyFilters(
                 `${filterPrefix}_settings_preview_multicheck_field`,
                 <PreviewMulticheckField {...fieldProps} />,

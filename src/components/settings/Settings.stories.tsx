@@ -13133,7 +13133,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "dependency_key": "store.vendor_info_visibility_section.vendor_info_visibility",
                                 "dependencies": [],
                                 "validations": [],
-                                "variant": "vendor_info_preview",
+                                "variant": "checkbox_group_preview",
                                 "image_url": image,
                                 "value": {
                                     "email": "",
@@ -13243,7 +13243,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "dependency_key": "store.single_product_preview_section.single_product_preview",
                                 "dependencies": [],
                                 "validations": [],
-                                "variant": "single_product_preview",
+                                "variant": "checkbox_group_preview",
                                 "image_url": image2,
                                 "value": {
                                     "vendor_info": true,
