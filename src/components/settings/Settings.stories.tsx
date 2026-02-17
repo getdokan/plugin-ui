@@ -13602,7 +13602,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "helper_text": "",
                                         "postfix": "",
                                         "prefix": "",
-                                        "image_url": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/social-onboarding/facebook.svg",
+                                        "image_url": "https://cdn.pixabay.com/photo/2021/06/15/12/51/facebook-6338508_640.png",
                                         "options": [],
                                         "enable_state": {
                                             "value": "on",
@@ -13834,7 +13834,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "helper_text": "",
                                         "postfix": "",
                                         "prefix": "",
-                                        "image_url": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/social-onboarding/x-twitter.svg",
+                                        "image_url": "https://cdn.pixabay.com/photo/2021/06/15/12/51/facebook-6338508_640.png",
                                         "options": [],
                                         "enable_state": {
                                             "value": "on",
@@ -14066,7 +14066,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "helper_text": "",
                                         "postfix": "",
                                         "prefix": "",
-                                        "image_url": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/social-onboarding/google.svg",
+                                        "image_url": "https://cdn.pixabay.com/photo/2021/06/15/12/51/facebook-6338508_640.png",
                                         "options": [],
                                         "enable_state": {
                                             "value": "on",
@@ -14298,7 +14298,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "helper_text": "",
                                         "postfix": "",
                                         "prefix": "",
-                                        "image_url": "https://core-dokan.test/wp-content/plugins/dokan-lite/assets/images/admin-settings-icons/social-onboarding/linkedin.svg",
+                                        "image_url": "https://cdn.pixabay.com/photo/2021/06/15/12/51/facebook-6338508_640.png",
                                         "options": [],
                                         "enable_state": {
                                             "value": "on",
