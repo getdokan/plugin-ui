@@ -208,7 +208,7 @@ export function ShowHideField({ element, onChange }: FieldComponentProps) {
         <button
           type="button"
           onClick={() => setShow(!show)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
           aria-label={show ? "Hide" : "Show"}
         >
           {show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
