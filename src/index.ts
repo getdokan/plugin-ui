@@ -135,15 +135,20 @@ export {
     Notice, NoticeAction, NoticeTitle,
     // Popover
     Popover,
-    PopoverArrow,
-    PopoverClose,
     PopoverContent,
     PopoverDescription,
+    PopoverHeader,
     PopoverPortal,
     PopoverTitle,
     PopoverTrigger,
     // Skeleton
     Skeleton,
+    // Sortable
+    Sortable,
+    SortableItem,
+    SortableDragHandle,
+    SortableProvider,
+    DragOverlay,
     // ScrollArea
     ScrollArea,
     ScrollBar,
@@ -213,6 +218,10 @@ export {
     type ModalProps,
     type ProgressProps,
     type SeparatorProps,
+    type SortableProps,
+    type SortableItemProps,
+    type SortableDragHandleProps,
+    type SortableProviderProps,
     type SliderProps,
     type SwitchProps,
     type LabeledSwitchProps,
