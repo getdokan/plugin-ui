@@ -16648,7 +16648,8 @@ const dokanSettingsSchema: SettingsElement[] = [
                 "dependencies": [],
                 "validations": [],
                 "priority": 200,
-                "doc_link": "https://dokan.co/docs/wordpress/modules/dokan-delivery-time/"
+                "doc_link": "https://dokan.co/docs/wordpress/modules/dokan-delivery-time/",
+                "doc_link_text": "Doc"
             }
         ],
         "description": "",
