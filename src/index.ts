@@ -261,6 +261,18 @@ export { TopBar, type TopBarProps } from './components/top-bar'
 export { CrownIcon, type CrownIconProps } from './components/crown-icon'
 export { ButtonToggleGroup, type ButtonToggleGroupProps, type ButtonToggleGroupItem } from './components/button-toggle-group'
 
+// Settings (schema-driven settings page)
+export {
+    Settings,
+    useSettings,
+    formatSettingsData,
+    extractValues,
+    type ApplyFiltersFunction,
+    type SettingsProps,
+    type SettingsElement,
+    type FieldComponentProps,
+} from './components/settings';
+
 // ============================================
 // Theme Presets
 // ============================================
