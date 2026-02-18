@@ -381,7 +381,6 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
         filter,
         tabs,
         search,
-        searchLabel,
         searchPlaceholder = __('Search', 'default'),
         ...dataViewsTableProps
     } = props;
