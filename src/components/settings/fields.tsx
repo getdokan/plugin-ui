@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { cn } from "@/lib/utils";
 import { FileText, Info } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";

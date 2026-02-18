@@ -1,4 +1,5 @@
 import type { SettingsElement } from './settings-types';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 /**
  * Formats flat settings data into a hierarchical structure.

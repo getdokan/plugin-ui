@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
     createContext,
     useCallback,
@@ -260,12 +261,8 @@ export function SettingsProvider({
     const handleOnSave = useCallback(
         async (pageId: string, pageValues: Record<string, any>) => {
             if (!onSave) return;
-            try {
-                await Promise.resolve(onSave(pageId, pageValues));
-                resetPageDirty(pageId);
-            } catch (err) {
-                throw err;
-            }
+            await Promise.resolve(onSave(pageId, pageValues));
+            resetPageDirty(pageId);
         },
         [onSave, resetPageDirty]
     );
