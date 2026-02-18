@@ -68,7 +68,7 @@ export interface SettingsContextValue {
     /** Get only the values that belong to a specific page */
     getPageValues: (pageId: string) => Record<string, any>;
     /** Consumer-provided save handler (exposed so SettingsContent can call it) */
-    onSave?: (pageId: string, values: Record<string, any>) => void;
+    onSave?: (pageId: string, values: Record<string, any>) => void | Promise<void>;
     /** Consumer-provided render function for the save button */
     renderSaveButton?: (props: SaveButtonRenderProps) => React.ReactNode;
 }
@@ -87,7 +87,7 @@ export interface SettingsProviderProps {
     schema: SettingsElement[];
     values?: Record<string, any>;
     onChange?: (scopeId: string, key: string, value: any) => void;
-    onSave?: (scopeId: string, values: Record<string, any>) => void;
+    onSave?: (scopeId: string, values: Record<string, any>) => void | Promise<void>;
     renderSaveButton?: (props: SaveButtonRenderProps) => React.ReactNode;
     loading?: boolean;
     hookPrefix?: string;
@@ -256,11 +256,16 @@ export function SettingsProvider({
         [scopeFieldKeysMap, values]
     );
 
-    // Wrapped onSave that also resets dirty state for the page
+    // Wrapped onSave that also resets dirty state for the page (only on success)
     const handleOnSave = useCallback(
-        (pageId: string, pageValues: Record<string, any>) => {
-            onSave?.(pageId, pageValues);
-            resetPageDirty(pageId);
+        async (pageId: string, pageValues: Record<string, any>) => {
+            if (!onSave) return;
+            try {
+                await Promise.resolve(onSave(pageId, pageValues));
+                resetPageDirty(pageId);
+            } catch (err) {
+                throw err;
+            }
         },
         [onSave, resetPageDirty]
     );

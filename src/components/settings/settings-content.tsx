@@ -80,30 +80,44 @@ export function SettingsContent({ className }: { className?: string }) {
                 {/* Tabs */}
                 {tabs.length > 0 && (
                     <div className="px-6 border-b border-border" data-testid="settings-tabs">
-                        <nav className="flex gap-4 -mb-px">
+                        <nav className="flex gap-4 -mb-px" role="tablist" aria-label="Settings sections">
                             {tabs
                                 .filter((tab) => tab.display !== false)
-                                .map((tab) => (
-                                    <button
-                                        key={tab.id}
-                                        onClick={() => setActiveTab(tab.id)}
-                                        data-testid={`settings-tab-${tab.id}`}
-                                        className={cn(
-                                            'px-1 py-2.5 text-sm font-medium border-b-2 transition-colors',
-                                            activeTab === tab.id
-                                                ? 'border-primary text-primary'
-                                                : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
-                                        )}
-                                    >
-                                        {tab.label || tab.title}
-                                    </button>
-                                ))}
+                                .map((tab) => {
+                                    const tabId = `settings-tab-${scopeId}-${tab.id}`;
+                                    const isSelected = activeTab === tab.id;
+                                    return (
+                                        <button
+                                            key={tab.id}
+                                            id={tabId}
+                                            role="tab"
+                                            aria-selected={isSelected}
+                                            aria-controls={`settings-tabpanel-${scopeId}`}
+                                            tabIndex={isSelected ? 0 : -1}
+                                            onClick={() => setActiveTab(tab.id)}
+                                            data-testid={`settings-tab-${tab.id}`}
+                                            className={cn(
+                                                'px-1 py-2.5 text-sm font-medium border-b-2 transition-colors',
+                                                isSelected
+                                                    ? 'border-primary text-primary'
+                                                    : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
+                                            )}
+                                        >
+                                            {tab.label || tab.title}
+                                        </button>
+                                    );
+                                })}
                         </nav>
                     </div>
                 )}
 
                 {/* Content — sections, fields, fieldgroups, subsections */}
-                <div className="p-6 space-y-6">
+                <div
+                    id={tabs.length > 0 ? `settings-tabpanel-${scopeId}` : undefined}
+                    role={tabs.length > 0 ? 'tabpanel' : undefined}
+                    aria-labelledby={tabs.length > 0 ? `settings-tab-${scopeId}-${activeTab}` : undefined}
+                    className="p-6 space-y-6"
+                >
                     {content.map((item) => (
                         <ContentBlock key={item.id} element={item} />
                     ))}
