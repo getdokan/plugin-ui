@@ -108,7 +108,7 @@ function FieldLabel({ element }: { element: SettingsElement }) {
         {element.tooltip && (
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger asChild>
+              <TooltipTrigger>
                 <button type="button" className="inline-flex">
                   <Info className="size-3.5 text-muted-foreground cursor-help" />
                 </button>
