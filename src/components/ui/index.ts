@@ -122,6 +122,24 @@ export {
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 
+// Popover component
+export {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverPortal,
+  PopoverDescription,
+  PopoverTitle,
+  PopoverClose,
+  PopoverArrow,
+} from "./popover";
+
+// Skeleton component
+export { Skeleton } from "./skeleton";
+
+// ScrollArea component
+export { ScrollArea, ScrollBar } from "./scroll-area";
+
 // AlertDialog component
 export {
   AlertDialog,

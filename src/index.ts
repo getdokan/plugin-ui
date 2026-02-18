@@ -133,6 +133,20 @@ export {
     ModalFooter, ModalHeader, ModalOverlay, ModalTitle,
     // Notice
     Notice, NoticeAction, NoticeTitle,
+    // Popover
+    Popover,
+    PopoverArrow,
+    PopoverClose,
+    PopoverContent,
+    PopoverDescription,
+    PopoverPortal,
+    PopoverTitle,
+    PopoverTrigger,
+    // Skeleton
+    Skeleton,
+    // ScrollArea
+    ScrollArea,
+    ScrollBar,
     // Progress
     Progress, ProgressIndicator,
     ProgressLabel, ProgressTrack, ProgressValue,
