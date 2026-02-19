@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useRef, useState } from 'react';
 import { Save } from 'lucide-react';
@@ -22,6 +23,7 @@ type LogEntry = {
 };
 
 function EventLog({ entries }: { entries: LogEntry[] }) {
+    if (entries.length === 0) return null;
     return (
         <div className="mt-4 rounded-lg border border-border bg-muted/40 max-h-64 overflow-y-auto">
             <div className="px-3 py-2 border-b border-border bg-muted/60 flex justify-between items-center">

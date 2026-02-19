@@ -77,10 +77,10 @@ export function FieldRenderer({
                 <div className="flex flex-col">
                     <SwitchField {...fieldProps} isGroupParent={hasVisibleChildren} />
                     {isEnabled && element.children?.map((child, index) => (
-                        <FieldRenderer 
-                            key={child.id} 
-                            element={child} 
-                            isNested={true} 
+                        <FieldRenderer
+                            key={child.id}
+                            element={child}
+                            isNested={true}
                             isGroupParent={index < (element.children?.length ?? 0) - 1}
                         />
                     ))}

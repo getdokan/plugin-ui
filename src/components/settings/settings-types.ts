@@ -1,6 +1,7 @@
 // ============================================
 // Settings Element Types
 // ============================================
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 export type SettingsValidation = {
     rules: string;

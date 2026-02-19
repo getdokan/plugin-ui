@@ -565,7 +565,7 @@ export function MulticheckField({ element, onChange, ...rest }: FieldComponentPr
 
 export function PreviewMulticheckField({ element, onChange, ...rest }: FieldComponentProps) {
   const currentValues = element.value ?? element.default ?? {};
-  
+
   const getValue = (optionValue: string) => {
     if (Array.isArray(currentValues)) {
         return currentValues.map(String).includes(optionValue);
@@ -630,7 +630,7 @@ export function PreviewMulticheckField({ element, onChange, ...rest }: FieldComp
             ))}
           </div>
         </div>
-        
+
         {element.image_url && (
           <div className="shrink-0 w-full md:w-64 lg:w-80 mt-2 md:mt-0">
             <div className="aspect-[4/3] rounded-2xl border border-primary/10 bg-primary/5 flex items-center justify-center p-6 shadow-sm">
@@ -767,7 +767,7 @@ export function NoticeField({ element, ...rest }: FieldComponentProps) {
 
   // Use Figma colors for warning variant as requested for Printful alerts
   const isWarning = noticeType === 'warning';
-  
+
   return (
     <Alert
       variant={noticeType as any}
