@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import * as LucideIcons from "lucide-react";
-import { FileText, Info, Eye, EyeOff, ArrowUpRight, RefreshCcw, CircleCheck } from "lucide-react";
+import { FileText, Info, Eye, EyeOff, ArrowUpRight, RefreshCcw } from "lucide-react";
 import {
   Button,
   LabeledCheckbox,
@@ -28,7 +28,6 @@ import {
   Notice,
   NoticeTitle,
   RichTextEditor,
-  Separator,
   CombineInput,
   Badge,
 } from "../ui";
@@ -118,7 +117,7 @@ function FieldWrapper({
 
 function FieldLabel({ element }: { element: SettingsElement }) {
   const displayLabel = element.label || element.title || '';
-  const IconComponent = element.icon ? (LucideIcons as any)[element.icon] : null;
+  const IconComponent = element.icon ? (LucideIcons[element.icon as keyof typeof LucideIcons] as React.ElementType) : null;
 
   return (
     <div className="flex items-start gap-3">
@@ -301,7 +300,13 @@ export function RichTextField({ element, onChange, ...rest }: FieldComponentProp
 // ============================================
 
 export function GoogleAnalyticsField({ element, onChange, ...rest }: FieldComponentProps) {
-  const value = element.value as any;
+  const value = element.value as {
+    connected?: boolean;
+    auth_url?: string;
+    disconnect_url?: string;
+    profile_id?: string | number;
+    profiles?: Array<{ value: string | number; label: string }>;
+  };
   const isConnected = value?.connected;
 
   if (!isConnected) {
@@ -327,7 +332,7 @@ export function GoogleAnalyticsField({ element, onChange, ...rest }: FieldCompon
   }
 
   const selectedProfile = (value?.profiles || []).find(
-    (p: any) => String(p.value) === String(value?.profile_id)
+    (p) => String(p.value) === String(value?.profile_id)
   );
 
   return (
@@ -375,7 +380,7 @@ export function GoogleAnalyticsField({ element, onChange, ...rest }: FieldCompon
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              {(value?.profiles || []).map((p: any) => (
+              {(value?.profiles || []).map((p) => (
                 <SelectItem key={p.value} value={String(p.value)}>
                   {p.label}
                 </SelectItem>
@@ -407,7 +412,7 @@ export function SelectField({ element, onChange, ...rest }: FieldComponentProps)
     <FieldWrapper element={element} {...rest}>
       <Select
         value={currentValue}
-        onValueChange={(val: any) => onChange(element.dependency_key!, val)}
+        onValueChange={(val) => onChange(element.dependency_key!, val)}
         disabled={element.disabled}
       >
         <SelectTrigger className="sm:max-w-56">
@@ -490,8 +495,8 @@ export function RadioCapsuleField({ element, onChange, ...rest }: FieldComponent
 
   const items =
     element.options?.map((option) => {
-      const StartIcon = option.startIcon ? (LucideIcons as any)[option.startIcon] : null;
-      const EndIcon = option.endIcon ? (LucideIcons as any)[option.endIcon] : null;
+      const StartIcon = option.startIcon ? (LucideIcons[option.startIcon as keyof typeof LucideIcons] as React.ElementType) : null;
+      const EndIcon = option.endIcon ? (LucideIcons[option.endIcon as keyof typeof LucideIcons] as React.ElementType) : null;
 
       return {
         value: String(option.value),
@@ -521,7 +526,7 @@ export function MulticheckField({ element, onChange, ...rest }: FieldComponentPr
   const currentValues: string[] = Array.isArray(element.value)
     ? element.value.map(String)
     : Array.isArray(element.default)
-    ? (element.default as any[]).map(String)
+    ? (element.default as Array<string | number>).map(String)
     : [];
 
   const handleToggle = (optionValue: string, checked: boolean) => {
@@ -571,7 +576,7 @@ export function PreviewMulticheckField({ element, onChange, ...rest }: FieldComp
         return currentValues.map(String).includes(optionValue);
     }
     if (typeof currentValues === 'object' && currentValues !== null) {
-        return !!(currentValues as any)[optionValue];
+        return !!(currentValues as Record<string, boolean>)[optionValue];
     }
     return false;
   }
@@ -585,9 +590,9 @@ export function PreviewMulticheckField({ element, onChange, ...rest }: FieldComp
         onChange(element.dependency_key!, updated);
     } else {
         const updated = {
-            ...(typeof currentValues === 'object' ? currentValues : {}),
+            ...(typeof currentValues === 'object' && currentValues !== null ? currentValues : {}),
             [optionValue]: checked
-        };
+        } as Record<string, boolean>;
         onChange(element.dependency_key!, updated);
     }
   };
@@ -717,7 +722,7 @@ export function CustomizeRadioField({
     <FieldWrapper element={element} layout="full-width" {...rest}>
       <RadioGroup
         value={currentValue}
-        onValueChange={(val: any) => onChange(element.dependency_key!, val)}
+        onValueChange={(val) => onChange(element.dependency_key!, val)}
         className={cn(
           "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3",
           "[&>[data-slot=field-group]]:h-full",
@@ -728,7 +733,6 @@ export function CustomizeRadioField({
       >
         {element.options?.map((option) => {
           const commonProps = {
-            key: String(option.value),
             value: String(option.value),
             currentValue,
             label: option.label ?? option.title ?? '',
@@ -739,6 +743,7 @@ export function CustomizeRadioField({
           if (radioVariant === 'radio_box') {
             return (
               <RadioIconCard
+                key={String(option.value)}
                 {...commonProps}
                 icon={option.icon || option.image}
               />
@@ -747,6 +752,7 @@ export function CustomizeRadioField({
 
           return (
             <RadioImageCard
+              key={String(option.value)}
               {...commonProps}
               image={option.image || option.icon}
               position="right"
@@ -765,12 +771,21 @@ export function NoticeField({ element, ...rest }: FieldComponentProps) {
   const linkTitle = element.link_title || element.doc_link_text;
   const noticeType = element.notice_type || 'warning';
 
-  // Use Figma colors for warning variant as requested for Printful alerts
   const isWarning = noticeType === 'warning';
+
+  const variantMap: Record<string, "default" | "destructive" | "success" | "warning" | "info"> = {
+    warning: "warning",
+    error: "destructive",
+    success: "success",
+    info: "info",
+    default: "default"
+  };
+
+  const alertVariant = variantMap[noticeType] || "default";
 
   return (
     <Alert
-      variant={noticeType as any}
+      variant={alertVariant}
       className={cn(
         "border rounded-lg p-5",
         element.css_class,
@@ -870,7 +885,7 @@ export function InfoField({ element, ...rest }: FieldComponentProps) {
 // ============================================
 
 export function CombineInputField({ element, onChange, ...rest }: FieldComponentProps) {
-  const value = (element.value as any) || {};
+  const value = (element.value as Record<string, string | number | undefined>) || {};
 
   // If the field is automated, show a badge instead of the inputs
   if (element.is_automated) {
