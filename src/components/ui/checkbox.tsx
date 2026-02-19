@@ -34,6 +34,7 @@ type PositionVariants = "left" | "right";
 interface LabeledCheckboxProps extends CheckboxProps {
   label: React.ReactNode;
   description?: React.ReactNode;
+  image?: string;
   orientation?: OrientationVariants;
   position?: PositionVariants;
 }
@@ -41,6 +42,7 @@ interface LabeledCheckboxProps extends CheckboxProps {
 function LabeledCheckbox({ 
   label, 
   description, 
+  image,
   className,
   orientation = "horizontal",
   position = "left",
@@ -60,13 +62,31 @@ function LabeledCheckbox({
           {...props}
         />
         <FieldContent>
-          <FieldLabel htmlFor={props.id}>
-            {label}
-          </FieldLabel>
-          {description && (
-            <FieldDescription>
-              {description}
-            </FieldDescription>
+          {image ? (
+            <div className="flex items-center gap-3">
+              <img src={image} alt="" className="size-10 rounded object-cover shrink-0" />
+              <div className="flex flex-col gap-1">
+                <FieldLabel htmlFor={props.id}>
+                  {label}
+                </FieldLabel>
+                {description && (
+                  <FieldDescription>
+                    {description}
+                  </FieldDescription>
+                )}
+              </div>
+            </div>
+          ) : (
+            <>
+              <FieldLabel htmlFor={props.id}>
+                {label}
+              </FieldLabel>
+              {description && (
+                <FieldDescription>
+                  {description}
+                </FieldDescription>
+              )}
+            </>
           )}
         </FieldContent>
       </Field>

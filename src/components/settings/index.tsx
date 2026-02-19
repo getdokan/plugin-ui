@@ -7,6 +7,7 @@ import { SettingsContent } from './settings-content';
 import { useSettings } from './settings-context';
 import type { SettingsProps } from './settings-types';
 import { Menu, X } from 'lucide-react';
+import { RawHTML } from "@wordpress/element";
 
 // ============================================
 // Settings Root Component
@@ -112,7 +113,7 @@ function SettingsInner({
                     {/* Mobile close button */}
                     <div className="flex h-12 items-center justify-between border-b border-border px-3 lg:hidden">
                         {title && (
-                            <span className="text-sm font-semibold text-foreground">{title}</span>
+                            <div className="text-sm font-semibold text-foreground"><RawHTML>{title}</RawHTML></div>
                         )}
                         <Button
                             variant="ghost"
@@ -129,7 +130,7 @@ function SettingsInner({
                     {/* Desktop title */}
                     {title && (
                         <div className="px-4 py-3 border-b border-border hidden lg:block">
-                            <h1 className="text-base font-semibold text-foreground">{title}</h1>
+                            <h1 className="text-base font-semibold text-foreground"><RawHTML>{title}</RawHTML></h1>
                         </div>
                     )}
 

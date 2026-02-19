@@ -29,6 +29,8 @@ export type SettingsElementOption = {
     value: string | number;
     description?: string;
     icon?: string;
+    startIcon?: string;
+    endIcon?: string;
     image?: string;
     preview?: boolean;
 };
@@ -36,6 +38,7 @@ export type SettingsElementOption = {
 export type SettingsElement = {
     id: string;
     type: 'page' | 'subpage' | 'tab' | 'section' | 'subsection' | 'field' | 'fieldgroup' | string;
+    is_danger: boolean;
     variant?: string;
     icon?: string;
     /** Primary display text (preferred over `title`). */
@@ -66,10 +69,12 @@ export type SettingsElement = {
     suffix?: string;
     image_url?: string;
     doc_link?: string;
+    doc_link_text?: string;
     css_class?: string;
     wrapper_class?: string;
     content_class?: string;
     divider?: boolean;
+    layout?: 'horizontal' | 'full-width';
 
     // Switch-specific
     enable_state?: { value: string | number; title: string };
@@ -172,4 +177,6 @@ export interface SettingsProps {
 export interface FieldComponentProps {
     element: SettingsElement;
     onChange: (key: string, value: any) => void;
+    isNested?: boolean;
+    isGroupParent?: boolean;
 }
