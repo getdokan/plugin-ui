@@ -125,8 +125,8 @@ function RadioCard({
 }
 
 interface RadioImageCardProps extends LabeledRadioProps {
-  currentValue: any;
-  image: any;
+  currentValue?: string | number | boolean;
+  image?: string | React.ReactNode;
 }
 
 function RadioImageCard({
@@ -159,7 +159,9 @@ function RadioImageCard({
               disabled={disabled}
               {...props}
             />
-            <FieldTitle className="font-bold"><RawHTML>{label as any}</RawHTML></FieldTitle>
+            <FieldTitle className="font-bold">
+              {typeof label === 'string' ? <RawHTML>{label}</RawHTML> : label}
+            </FieldTitle>
           </div>
           <FieldContent className={cn('p-3 flex items-center justify-center')} >
             <div className="flex flex-col items-start gap-3 w-full">
@@ -169,7 +171,11 @@ function RadioImageCard({
                 </FieldDescription>
               )}
               {image && (
-                <img src={image} alt={typeof label === 'string' ? label : 'Option image'} className="w-full h-auto object-contain" />
+                typeof image === 'string' ? (
+                  <img src={image} alt={typeof label === 'string' ? label : 'Option image'} className="w-full h-auto object-contain" />
+                ) : (
+                  image
+                )
               )}
             </div>
           </FieldContent>
@@ -180,18 +186,15 @@ function RadioImageCard({
 }
 
 interface RadioIconCardProps extends LabeledRadioProps {
-  currentValue: any;
-  icon: any;
+  currentValue?: string | number | boolean;
+  icon?: string | React.ReactNode;
 }
 
 function RadioIconCard({
   label,
-  description,
   className,
   orientation = "horizontal",
-  position = "left",
   disabled,
-  currentValue = '',
   icon = '',
   ...props
 }: RadioIconCardProps) {
@@ -225,7 +228,9 @@ function RadioIconCard({
             />
           </div>
           <div className="flex gap-1 w-full">
-             <FieldTitle className="font-semibold text-sm text-foreground"><RawHTML>{label as any}</RawHTML></FieldTitle>
+             <FieldTitle className="font-semibold text-sm text-foreground">
+               {typeof label === 'string' ? <RawHTML>{label}</RawHTML> : label}
+             </FieldTitle>
           </div>
         </Field>
       </FieldLabel>

@@ -49,7 +49,7 @@ export const DifferentCurrency: Story = {
 };
 
 export const Interactive: Story = {
-  render: (args) => {
+  render: function Render(args) {
     const [percentage, setPercentage] = useState(args.percentageValue);
     const [number, setNumber] = useState(args.numberValue);
 

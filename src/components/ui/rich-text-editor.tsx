@@ -10,7 +10,6 @@ import {
   AlignLeft,
   Link,
   Image,
-  MoreHorizontal,
   Undo,
   Redo,
   Sparkles,
