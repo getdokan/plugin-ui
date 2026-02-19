@@ -159,7 +159,7 @@ function RadioImageCard({
               disabled={disabled}
               {...props}
             />
-            <FieldTitle className="font-bold"><RawHTML>{label}</RawHTML></FieldTitle>
+            <FieldTitle className="font-bold"><RawHTML>{label as any}</RawHTML></FieldTitle>
           </div>
           <FieldContent className={cn('p-3 flex items-center justify-center')} >
             <div className="flex flex-col items-start gap-3 w-full">
@@ -225,7 +225,7 @@ function RadioIconCard({
             />
           </div>
           <div className="flex gap-1 w-full">
-             <FieldTitle className="font-semibold text-sm text-foreground"><RawHTML>{label}</RawHTML></FieldTitle>
+             <FieldTitle className="font-semibold text-sm text-foreground"><RawHTML>{label as any}</RawHTML></FieldTitle>
           </div>
         </Field>
       </FieldLabel>

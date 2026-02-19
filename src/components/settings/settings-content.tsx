@@ -330,12 +330,12 @@ function SettingsSubSection({ element, isNested, isGroupParent }: { element: Set
 // Field Group
 // ============================================
 
-function SettingsFieldGroup({ element }: { element: SettingsElementType }) {
+function SettingsFieldGroup({ element, isNested, isGroupParent }: { element: SettingsElementType, isNested?: boolean, isGroupParent?: boolean }) {
     return (
         <div className="p-4">
             <div className="flex flex-wrap gap-4">
                 {element.children?.map((child) => (
-                    <FieldRenderer key={child.id} element={child} />
+                    <FieldRenderer key={child.id} element={child} isNested={isNested} isGroupParent={isGroupParent} />
                 ))}
             </div>
         </div>
