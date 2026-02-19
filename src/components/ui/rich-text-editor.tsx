@@ -10,23 +10,27 @@ import {
   AlignLeft,
   Link,
   Image,
-  MoreHorizontal,
   Undo,
   Redo,
   Sparkles,
+  MoreVertical,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 interface RichTextEditorProps {
+  value?: string;
   defaultValue?: string;
+  onChange?: (value: string) => void;
   placeholder?: string;
   className?: string;
   variant?: "full" | "simple";
 }
 
 function RichTextEditor({
+  value,
   defaultValue = "",
+  onChange,
   placeholder = "Start typing...",
   className = "",
   variant = "full",
@@ -36,9 +40,19 @@ function RichTextEditor({
   const [fontFamily, setFontFamily] = React.useState("Sans Serif");
   const [textStyle, setTextStyle] = React.useState("Paragraph");
 
+  // Sync internal content with value prop if it changes and is different
+  React.useEffect(() => {
+    if (value !== undefined && editorRef.current && value !== editorRef.current.innerHTML) {
+      editorRef.current.innerHTML = value;
+    }
+  }, [value]);
+
   const executeCommand = (command: string, value?: string) => {
     document.execCommand(command, false, value);
     editorRef.current?.focus();
+    if (onChange && editorRef.current) {
+      onChange(editorRef.current.innerHTML);
+    }
   };
 
   const handleFontSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -84,7 +98,7 @@ function RichTextEditor({
       )}
     >
       {/* Toolbar */}
-      <div className="flex items-center gap-1 border-b border-border px-3 py-2 flex-wrap">
+      <div className="flex items-center gap-1 border-b border-border px-3 py-2 flex-wrap bg-muted/30">
         {variant === "simple" && (
           <>
             <button
@@ -167,7 +181,17 @@ function RichTextEditor({
           <Strikethrough className="size-4" />
         </button>
 
-        <div className="w-px h-6 bg-border mx-1" />
+        <button
+          type="button"
+          className="p-1.5 hover:bg-muted rounded"
+          title="Link"
+          onClick={() => {
+            const url = prompt("Enter URL:");
+            if (url) executeCommand("createLink", url);
+          }}
+        >
+          <Link className="size-4" />
+        </button>
 
         <button
           type="button"
@@ -177,6 +201,9 @@ function RichTextEditor({
         >
           <Quote className="size-4" />
         </button>
+
+        <div className="w-px h-6 bg-border mx-1" />
+
         <button
           type="button"
           className="p-1.5 hover:bg-muted rounded"
@@ -185,16 +212,15 @@ function RichTextEditor({
         >
           <List className="size-4" />
         </button>
-        {variant === "simple" && (
-          <button
-            type="button"
-            className="p-1.5 hover:bg-muted rounded"
-            title="Numbered List"
-            onClick={() => executeCommand("insertOrderedList")}
-          >
-            <ListOrdered className="size-4" />
-          </button>
-        )}
+        <button
+          type="button"
+          className="p-1.5 hover:bg-muted rounded"
+          title="Numbered List"
+          onClick={() => executeCommand("insertOrderedList")}
+        >
+          <ListOrdered className="size-4" />
+        </button>
+
         <button
           type="button"
           className="p-1.5 hover:bg-muted rounded"
@@ -237,18 +263,18 @@ function RichTextEditor({
             <button
               type="button"
               className="p-1.5 hover:bg-muted rounded"
-              title="Undo"
-              onClick={() => executeCommand("undo")}
-            >
-              <Undo className="size-4" />
-            </button>
-            <button
-              type="button"
-              className="p-1.5 hover:bg-muted rounded"
               title="Redo"
               onClick={() => executeCommand("redo")}
             >
               <Redo className="size-4" />
+            </button>
+            <button
+              type="button"
+              className="p-1.5 hover:bg-muted rounded"
+              title="Undo"
+              onClick={() => executeCommand("undo")}
+            >
+              <Undo className="size-4" />
             </button>
 
             <button
@@ -256,7 +282,7 @@ function RichTextEditor({
               className="p-1.5 hover:bg-muted rounded ml-auto"
               title="More"
             >
-              <MoreHorizontal className="size-4" />
+              <MoreVertical className="size-4" />
             </button>
           </>
         )}
@@ -271,12 +297,15 @@ function RichTextEditor({
           ref={editorRef}
           contentEditable
           className="w-full h-full px-3 py-2 text-sm outline-none bg-transparent prose prose-sm max-w-none"
-          dangerouslySetInnerHTML={{ __html: defaultValue }}
+          dangerouslySetInnerHTML={{ __html: value ?? defaultValue }}
           suppressContentEditableWarning
           data-placeholder={placeholder}
           onInput={(e) => {
             if (e.currentTarget.textContent?.trim() === "") {
               e.currentTarget.innerHTML = "";
+            }
+            if (onChange) {
+              onChange(e.currentTarget.innerHTML);
             }
           }}
           style={{

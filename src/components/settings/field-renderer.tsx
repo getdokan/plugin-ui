@@ -9,9 +9,18 @@ import {
     RadioCapsuleField,
     CustomizeRadioField,
     MulticheckField,
+    PreviewMulticheckField,
     LabelField,
+    ShowHideField,
+    ColorPickerField,
     HtmlField,
+    NoticeField,
     FallbackField,
+    CopyField,
+    InfoField,
+    RichTextField,
+    GoogleAnalyticsField,
+    CombineInputField,
 } from './fields';
 
 // ============================================
@@ -21,7 +30,15 @@ import {
 //  e.g. @wordpress/hooks applyFilters or a custom function)
 // ============================================
 
-export function FieldRenderer({ element }: { element: SettingsElement }) {
+export function FieldRenderer({
+    element,
+    isNested,
+    isGroupParent,
+}: {
+    element: SettingsElement;
+    isNested?: boolean;
+    isGroupParent?: boolean;
+}) {
     const { values, updateValue, shouldDisplay, hookPrefix, errors, applyFilters } = useSettings();
 
     // Check display status (dependency evaluation)
@@ -39,6 +56,8 @@ export function FieldRenderer({ element }: { element: SettingsElement }) {
     const fieldProps: FieldComponentProps = {
         element: mergedElement,
         onChange: updateValue,
+        isNested,
+        isGroupParent,
     };
 
     const variant = element.variant || '';
@@ -46,6 +65,30 @@ export function FieldRenderer({ element }: { element: SettingsElement }) {
 
     // Dispatch by variant — each wrapped with applyFilters
     switch (variant) {
+        case 'switch_group': {
+            const isEnabled = element.enable_state
+                ? mergedElement.value === element.enable_state.value
+                : Boolean(mergedElement.value);
+
+            const hasVisibleChildren = isEnabled && (element.children?.length ?? 0) > 0;
+
+            return applyFilters(
+                `${filterPrefix}_settings_switch_group_field`,
+                <div className="flex flex-col">
+                    <SwitchField {...fieldProps} isGroupParent={hasVisibleChildren} />
+                    {isEnabled && element.children?.map((child, index) => (
+                        <FieldRenderer
+                            key={child.id}
+                            element={child}
+                            isNested={true}
+                            isGroupParent={index < (element.children?.length ?? 0) - 1}
+                        />
+                    ))}
+                </div>,
+                mergedElement
+            );
+        }
+
         case 'text':
             return applyFilters(
                 `${filterPrefix}_settings_text_field`,
@@ -64,6 +107,13 @@ export function FieldRenderer({ element }: { element: SettingsElement }) {
             return applyFilters(
                 `${filterPrefix}_settings_textarea_field`,
                 <TextareaField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'rich_text':
+            return applyFilters(
+                `${filterPrefix}_settings_rich_text_field`,
+                <RichTextField {...fieldProps} />,
                 mergedElement
             );
 
@@ -95,11 +145,32 @@ export function FieldRenderer({ element }: { element: SettingsElement }) {
                 mergedElement
             );
 
+        case 'google_analytics':
+            return applyFilters(
+                `${filterPrefix}_settings_google_analytics_field`,
+                <GoogleAnalyticsField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'combine_input':
+            return applyFilters(
+                `${filterPrefix}_settings_combine_input_field`,
+                <CombineInputField {...fieldProps} />,
+                mergedElement
+            );
+
         case 'multicheck':
         case 'checkbox_group':
             return applyFilters(
                 `${filterPrefix}_settings_multicheck_field`,
                 <MulticheckField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'checkbox_group_preview':
+            return applyFilters(
+                `${filterPrefix}_settings_preview_multicheck_field`,
+                <PreviewMulticheckField {...fieldProps} />,
                 mergedElement
             );
 
@@ -110,10 +181,46 @@ export function FieldRenderer({ element }: { element: SettingsElement }) {
                 mergedElement
             );
 
+        case 'show_hide':
+            return applyFilters(
+                `${filterPrefix}_settings_show_hide_field`,
+                <ShowHideField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'color_picker':
+        case 'select_color_picker':
+            return applyFilters(
+                `${filterPrefix}_settings_color_picker_field`,
+                <ColorPickerField {...fieldProps} />,
+                mergedElement
+            );
+
         case 'html':
             return applyFilters(
                 `${filterPrefix}_settings_html_field`,
                 <HtmlField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'notice':
+            return applyFilters(
+                `${filterPrefix}_settings_notice_field`,
+                <NoticeField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'copy_field':
+            return applyFilters(
+                `${filterPrefix}_settings_copy_field`,
+                <CopyField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'info':
+            return applyFilters(
+                `${filterPrefix}_settings_info_field`,
+                <InfoField {...fieldProps} />,
                 mergedElement
             );
 

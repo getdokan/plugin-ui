@@ -311,29 +311,41 @@ export function evaluateDependencies(
         const currentValue = values[dep.key];
         const comparison = dep.comparison || '==';
         const expectedValue = dep.value;
+        const effect = dep.effect || 'show';
 
+        let result = false;
         switch (comparison) {
             case '==':
-                return currentValue == expectedValue; // eslint-disable-line eqeqeq
+                result = currentValue == expectedValue; // eslint-disable-line eqeqeq
+                break;
             case '!=':
-                return currentValue != expectedValue; // eslint-disable-line eqeqeq
+                result = currentValue != expectedValue; // eslint-disable-line eqeqeq
+                break;
             case '===':
-                return currentValue === expectedValue;
+                result = currentValue === expectedValue;
+                break;
             case '!==':
-                return currentValue !== expectedValue;
+                result = currentValue !== expectedValue;
+                break;
             case 'in':
-                return (
+                result =
                     Array.isArray(expectedValue) &&
-                    expectedValue.includes(currentValue)
-                );
+                    expectedValue.includes(currentValue);
+                break;
             case 'not_in':
-                return (
+                result =
                     Array.isArray(expectedValue) &&
-                    !expectedValue.includes(currentValue)
-                );
+                    !expectedValue.includes(currentValue);
+                break;
             default:
-                return true;
+                result = true;
         }
+
+        if (effect === 'hide') {
+            return !result;
+        }
+
+        return result;
     });
 }
 

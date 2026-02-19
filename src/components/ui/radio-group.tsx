@@ -3,6 +3,7 @@ import { RadioGroup as RadioGroupPrimitive } from "@base-ui/react/radio-group"
 import { Field, FieldGroup, FieldLabel, FieldContent, FieldDescription, FieldTitle } from "@/components/ui/field"
 import { cn } from "@/lib/utils"
 import { CircleIcon } from "lucide-react"
+import { RawHTML } from "@wordpress/element";
 
 function RadioGroup({ className, ...props }: RadioGroupPrimitive.Props) {
   return (
@@ -96,7 +97,7 @@ function RadioCard({
   return (
     <FieldGroup className={cn(disabled && "opacity-50")}>
       <FieldLabel className={cn(
-        "transition-colors has-data-checked:bg-transparent dark:has-data-checked:bg-transparent has-data-checked:border-primary", 
+        "border-muted transition-colors has-data-checked:bg-transparent dark:has-data-checked:bg-transparent has-data-checked:border-primary", 
         !disabled && "hover:border-primary"
       )}>
         <Field 
@@ -123,5 +124,119 @@ function RadioCard({
   )
 }
 
-export { RadioGroup, RadioGroupItem, LabeledRadio, RadioCard }
-export type { RadioGroupItemProps, LabeledRadioProps, RadioCardProps }
+interface RadioImageCardProps extends LabeledRadioProps {
+  currentValue?: string | number | boolean;
+  image?: string | React.ReactNode;
+}
+
+function RadioImageCard({
+  label,
+  description,
+  className,
+  orientation = "horizontal",
+  position = "left",
+  disabled,
+  currentValue = '',
+  image = '',
+  ...props
+  }: RadioImageCardProps) {
+  return (
+    <FieldGroup className={cn(disabled && "opacity-50")}>
+      <FieldLabel className={cn(
+        "transition-colors has-data-checked:bg-transparent dark:has-data-checked:bg-transparent p-0 group cursor-pointer group",
+        currentValue === props.value && 'border-primary!',
+        !disabled && "hover:border-primary"
+      )}>
+        <Field
+          orientation={orientation}
+          data-disabled={disabled}
+          className="flex flex-col p-0!"
+          data-testid={`settings-field-${props.id}`}
+        >
+          <div className={cn( 'w-full flex flex-row items-center justify-between gap-3 border-b border-border group-hover:border-primary p-3', position === "right" && "flex-row-reverse", currentValue === props.value && 'border-primary!')}>
+            <RadioGroupItem
+              className={cn("disabled:opacity-100", className)}
+              disabled={disabled}
+              {...props}
+            />
+            <FieldTitle className="font-bold">
+              {typeof label === 'string' ? <RawHTML>{label}</RawHTML> : label}
+            </FieldTitle>
+          </div>
+          <FieldContent className={cn('p-3 flex items-center justify-center')} >
+            <div className="flex flex-col items-start gap-3 w-full">
+              {description && (
+                <FieldDescription className="text-center">
+                  {description}
+                </FieldDescription>
+              )}
+              {image && (
+                typeof image === 'string' ? (
+                  <img src={image} alt={typeof label === 'string' ? label : 'Option image'} className="w-full h-auto object-contain" />
+                ) : (
+                  image
+                )
+              )}
+            </div>
+          </FieldContent>
+        </Field>
+      </FieldLabel>
+    </FieldGroup>
+  )
+}
+
+interface RadioIconCardProps extends LabeledRadioProps {
+  currentValue?: string | number | boolean;
+  icon?: string | React.ReactNode;
+}
+
+function RadioIconCard({
+  label,
+  className,
+  orientation = "horizontal",
+  disabled,
+  icon = '',
+  ...props
+}: RadioIconCardProps) {
+  return (
+    <FieldGroup className={cn(disabled && "opacity-50")}>
+      <FieldLabel className={cn(
+        "transition-colors p-4 group cursor-pointer border rounded-xl border-border",
+        "has-data-checked:border-primary",
+        !disabled && "hover:border-primary"
+      )}>
+        <Field
+          orientation={orientation}
+          data-disabled={disabled}
+          className="flex flex-col p-0! gap-4"
+          data-testid={`settings-field-${props.id}`}
+        >
+          <div className="w-full flex flex-row items-center justify-between">
+            {icon && (
+               <div className="size-10 flex items-center justify-center rounded-lg overflow-hidden bg-muted/30">
+                  {typeof icon === 'string' ? (
+                    <img src={icon} alt="" className="size-full object-contain rounded-md" />
+                  ) : (
+                    icon
+                  )}
+               </div>
+            )}
+            <RadioGroupItem
+              className={cn("disabled:opacity-100 ml-auto", className)}
+              disabled={disabled}
+              {...props}
+            />
+          </div>
+          <div className="flex gap-1 w-full">
+             <FieldTitle className="font-semibold text-sm text-foreground">
+               {typeof label === 'string' ? <RawHTML>{label}</RawHTML> : label}
+             </FieldTitle>
+          </div>
+        </Field>
+      </FieldLabel>
+    </FieldGroup>
+  )
+}
+
+export { RadioGroup, RadioGroupItem, LabeledRadio, RadioCard, RadioImageCard, RadioIconCard }
+export type { RadioGroupItemProps, LabeledRadioProps, RadioCardProps, RadioImageCardProps, RadioIconCardProps }

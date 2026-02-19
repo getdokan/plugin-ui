@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { RadioGroup, RadioGroupItem, LabeledRadio, RadioCard } from "./radio-group";
+import { RadioGroup, RadioGroupItem, LabeledRadio, RadioCard, RadioImageCard, RadioIconCard } from "./radio-group";
 
 const meta = {
   title: "UI/RadioGroup",
@@ -377,6 +377,82 @@ export const NotificationPreferencesExample: Story = {
             />
           </RadioGroup>
         </fieldset>
+      );
+    }
+    return <Demo />;
+  },
+};
+
+export const ImageCard: Story = {
+  name: "Image Card",
+  render: () => {
+    function Demo() {
+      const [value, setValue] = useState("template1");
+      return (
+        <div className="w-[600px]">
+          <RadioGroup value={value} onValueChange={setValue} className="grid grid-cols-2 gap-4">
+            <RadioImageCard
+              id="t1"
+              value="template1"
+              label="Template 1"
+              description="A clean and modern layout"
+              image="https://picsum.photos/400/300?random=1"
+              currentValue={value}
+            />
+            <RadioImageCard
+              id="t2"
+              value="template2"
+              label="Template 2"
+              description="Focus on high-quality images"
+              image="https://picsum.photos/400/300?random=2"
+              currentValue={value}
+            />
+          </RadioGroup>
+        </div>
+      );
+    }
+    return <Demo />;
+  },
+};
+
+export const IconCard: Story = {
+  name: "Icon Card",
+  render: () => {
+    function Demo() {
+      const [value, setValue] = useState("messenger");
+      return (
+        <div className="w-[800px]">
+          <RadioGroup value={value} onValueChange={setValue} className="grid grid-cols-4 gap-4">
+            <RadioIconCard
+              id="messenger"
+              value="messenger"
+              label="Messenger"
+              icon="https://picsum.photos/100?random=3"
+              currentValue={value}
+            />
+            <RadioIconCard
+              id="talkjs"
+              value="talkjs"
+              label="Talk JS"
+              icon="https://picsum.photos/100?random=4"
+              currentValue={value}
+            />
+            <RadioIconCard
+              id="tawkto"
+              value="tawkto"
+              label="Tawk.to"
+              icon="https://picsum.photos/100?random=5"
+              currentValue={value}
+            />
+            <RadioIconCard
+              id="whatsapp"
+              value="whatsapp"
+              label="WhatsApp"
+              icon="https://picsum.photos/100?random=6"
+              currentValue={value}
+            />
+          </RadioGroup>
+        </div>
       );
     }
     return <Demo />;

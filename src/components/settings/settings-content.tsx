@@ -2,7 +2,9 @@ import type { SettingsElement as SettingsElementType } from './settings-types';
 import { useSettings } from './settings-context';
 import { FieldRenderer } from './field-renderer';
 import { cn } from '@/lib/utils';
-import { FileText } from 'lucide-react';
+import { FileText, Info } from "lucide-react";
+import { ScrollArea, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui";
+import { RawHTML } from "@wordpress/element";
 
 // ============================================
 // Settings Content — renders heading, tabs, sections
@@ -47,32 +49,33 @@ export function SettingsContent({ className }: { className?: string }) {
     }
 
     return (
-        <div className={cn('flex flex-col', className)} data-testid="settings-content">
-            <div className="flex-1 overflow-y-auto">
+        <ScrollArea className={cn('flex flex-col overflow-y-auto', className)} data-testid="settings-content">
+            <div className="flex-1">
                 {/* Heading */}
                 <div className="px-6 pt-6 pb-4" data-testid={`settings-heading-${contentSource.id}`}>
                     <div className="flex justify-between items-start">
                         <div className="flex flex-col gap-2">
                             {(contentSource.label || contentSource.title) && (
-                                <h2 className="text-2xl font-bold text-foreground leading-tight">
-                                    {contentSource.label || contentSource.title}
-                                </h2>
+                              <h2 className="text-2xl font-bold text-foreground leading-tight">
+                                  {contentSource.label || contentSource.title}
+                              </h2>
                             )}
                             {contentSource.description && (
-                                <p className="text-sm text-muted-foreground">
-                                    {contentSource.description}
-                                </p>
+                              <p className="text-sm text-muted-foreground">
+                                  {contentSource.description}
+                              </p>
                             )}
                         </div>
                         {contentSource.doc_link && (
-                            <a
-                                href={contentSource.doc_link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-muted-foreground flex gap-1 items-center text-sm hover:text-foreground transition-colors shrink-0"
-                            >
-                                <FileText className="size-4" />
-                            </a>
+                          <a
+                            href={contentSource.doc_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-muted-foreground flex gap-1 items-center text-sm hover:text-foreground transition-colors shrink-0"
+                          >
+                              <FileText className="size-4" />
+                              { contentSource.doc_link_text ?? '' }
+                          </a>
                         )}
                     </div>
                 </div>
@@ -126,16 +129,17 @@ export function SettingsContent({ className }: { className?: string }) {
 
             {/* Per-scope save button — sticky at the bottom */}
             {showSaveArea && (
-                <div
-                    className="sticky bottom-0 border-t border-border bg-background px-6 py-3 flex justify-end"
-                    data-testid={`settings-save-${scopeId}`}
-                >
-                    {renderSaveButton
-                        ? renderSaveButton({ scopeId, dirty, onSave: handleSave })
-                        : null}
-                </div>
+              <div
+                className="sticky bottom-0 border-t border-border bg-background px-6 py-3 flex justify-end"
+                data-testid={`settings-save-${scopeId}`}
+              >
+                  {renderSaveButton
+                    ? renderSaveButton({ scopeId, dirty, onSave: handleSave })
+                    : null}
+              </div>
             )}
-        </div>
+
+        </ScrollArea>
     );
 }
 
@@ -195,19 +199,38 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
 
     const sectionLabel = section.label || section.title || '';
     const hasHeading = Boolean(sectionLabel || section.description);
+    const tooltip = section?.tooltip || '';
 
     return (
-        <div className="rounded-lg border border-border bg-card overflow-hidden" data-testid={`settings-section-${section.id}`}>
+        <div className={ cn( 'rounded-lg border overflow-hidden', section.is_danger ? 'bg-destructive/10 border-destructive/20' : 'border-border bg-card' ) } data-testid={`settings-section-${section.id}`}>
             {hasHeading && (
-                <div className="px-5 pt-5 pb-3 flex justify-between items-start">
+                <div className={ cn( 'px-5 pt-5 pb-3 flex justify-between items-start', section?.children?.length > 0 && 'border-b border-border' ) }>
                     <div className="flex flex-col gap-1">
-                        {sectionLabel && (
-                            <h3 className="text-lg font-semibold text-foreground">
-                                {sectionLabel}
-                            </h3>
-                        )}
+                        <div className="flex items-center gap-2">
+                            {sectionLabel && (
+                              <h3 className={ cn( 'text-lg font-semibold', section.is_danger ? 'text-destructive' : 'text-foreground' ) }>
+                                  {sectionLabel}
+                              </h3>
+                            )}
+
+                            {tooltip && (
+                              <TooltipProvider>
+                                  <Tooltip>
+                                      <TooltipTrigger>
+                                          <button type="button" className="inline-flex">
+                                              <Info className="size-3.5 text-muted-foreground cursor-help" />
+                                          </button>
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                          <p className="max-w-xs text-xs">{tooltip}</p>
+                                      </TooltipContent>
+                                  </Tooltip>
+                              </TooltipProvider>
+                            )}
+                        </div>
+
                         {section.description && (
-                            <p className="text-sm text-muted-foreground">
+                            <p className={ cn( 'text-sm', section.is_danger ? 'text-destructive' : 'text-muted-foreground' ) }>
                                 {section.description}
                             </p>
                         )}
@@ -220,7 +243,7 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
                             className="text-muted-foreground flex gap-1 items-center text-sm hover:text-foreground transition-colors shrink-0"
                         >
                             <FileText className="size-4" />
-                            Doc
+                            { section.doc_link_text ?? '' }
                         </a>
                     )}
                 </div>
@@ -239,7 +262,7 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
 // Element Renderer — dispatches by type
 // ============================================
 
-function ElementRenderer({ element }: { element: SettingsElementType }) {
+function ElementRenderer({ element, isNested, isGroupParent }: { element: SettingsElementType, isNested?: boolean, isGroupParent?: boolean }) {
     const { shouldDisplay } = useSettings();
 
     if (!shouldDisplay(element)) {
@@ -249,13 +272,13 @@ function ElementRenderer({ element }: { element: SettingsElementType }) {
     switch (element.type) {
         case 'section':
         case 'subsection':
-            return <SettingsSubSection element={element} />;
+            return <SettingsSubSection element={element} isNested={isNested} isGroupParent={isGroupParent} />;
 
         case 'field':
-            return <FieldRenderer element={element} />;
+            return <FieldRenderer element={element} isNested={isNested} isGroupParent={isGroupParent} />;
 
         case 'fieldgroup':
-            return <SettingsFieldGroup element={element} />;
+            return <SettingsFieldGroup element={element} isNested={isNested} isGroupParent={isGroupParent} />;
 
         default:
             return null;
@@ -266,7 +289,7 @@ function ElementRenderer({ element }: { element: SettingsElementType }) {
 // Sub-Section
 // ============================================
 
-function SettingsSubSection({ element }: { element: SettingsElementType }) {
+function SettingsSubSection({ element, isNested, isGroupParent }: { element: SettingsElementType, isNested?: boolean, isGroupParent?: boolean }) {
     const allChildrenAreFields = element.children?.every(
         (c) => c.type === 'field' || c.type === 'fieldgroup'
     );
@@ -283,15 +306,20 @@ function SettingsSubSection({ element }: { element: SettingsElementType }) {
                         </h4>
                     )}
                     {element.description && (
-                        <p className="text-xs text-muted-foreground leading-relaxed">
-                            {element.description}
-                        </p>
+                        <div className="text-xs text-muted-foreground leading-relaxed">
+                            <RawHTML>{element.description}</RawHTML>
+                        </div>
                     )}
                 </div>
             )}
             <div className={cn(allChildrenAreFields && 'divide-y divide-border')}>
-                {element.children?.map((child) => (
-                    <ElementRenderer key={child.id} element={child} />
+                {element.children?.map((child, index) => (
+                    <ElementRenderer
+                        key={child.id}
+                        element={child}
+                        isNested={isNested}
+                        isGroupParent={isGroupParent && index === (element.children?.length ?? 0) - 1}
+                    />
                 ))}
             </div>
         </div>
@@ -302,14 +330,12 @@ function SettingsSubSection({ element }: { element: SettingsElementType }) {
 // Field Group
 // ============================================
 
-function SettingsFieldGroup({ element }: { element: SettingsElementType }) {
+function SettingsFieldGroup({ element, isNested, isGroupParent }: { element: SettingsElementType, isNested?: boolean, isGroupParent?: boolean }) {
     return (
-        <div className="p-4">
-            <div className="flex flex-wrap gap-4">
-                {element.children?.map((child) => (
-                    <FieldRenderer key={child.id} element={child} />
-                ))}
-            </div>
-        </div>
+      <div className="flex flex-wrap gap-4">
+          {element.children?.map((child) => (
+            <FieldRenderer key={child.id} element={child} isNested={isNested} isGroupParent={isGroupParent} />
+          ))}
+      </div>
     );
 }
