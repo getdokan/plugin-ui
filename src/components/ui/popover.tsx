@@ -12,7 +12,7 @@ function PopoverTrigger({ ...props }: PopoverPrimitive.Trigger.Props) {
   return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />;
 }
 
-export function PopoverPortal({ ...props }: PopoverPrimitive.Portal.Props) {
+function PopoverPortal({ ...props }: PopoverPrimitive.Portal.Props) {
   return <PopoverPrimitive.Portal data-slot="popover-portal" {...props} />;
 }
 

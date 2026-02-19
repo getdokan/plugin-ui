@@ -5,18 +5,14 @@ import {
   DndContext,
   type DndContextProps,
   DragOverlay,
-  type DragOverlayProps,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
   closestCenter,
-  type DragStartEvent,
   type DragEndEvent,
-  type DragOverEvent,
   type UniqueIdentifier,
-  defaultDropAnimationSideEffects,
-  type DropAnimation,
+  type DraggableSyntheticListeners,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -29,7 +25,6 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
-import { GripVertical } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -111,7 +106,7 @@ const Sortable = <TData extends { id: UniqueIdentifier }>({
 // --- Sortable Item Context ---
 interface SortableItemContextValue {
   attributes: React.HTMLAttributes<HTMLElement>;
-  listeners: any; // dnd-kit uses a complex type here, but any is safe for context
+  listeners: DraggableSyntheticListeners; // dnd-kit uses a complex type here
   setActivatorNodeRef: (element: HTMLElement | null) => void;
   isDragging?: boolean;
 }

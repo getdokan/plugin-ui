@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { GripVertical, GripHorizontal, X, Pencil, Check } from "lucide-react";
+import { GripVertical, X, Pencil, Check } from "lucide-react";
 import {
-  verticalListSortingStrategy,
   horizontalListSortingStrategy,
   rectSortingStrategy,
 } from "@dnd-kit/sortable";
@@ -11,12 +10,10 @@ import {
   Sortable,
   SortableItem,
   SortableDragHandle,
-  SortableProvider,
 } from "./sortable";
 import { Button } from "./button";
 import { Input } from "./input";
 import { Switch } from "./switch";
-import { cn } from "@/lib/utils";
 
 const meta = {
   title: "UI/Sortable",
