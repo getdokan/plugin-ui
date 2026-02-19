@@ -60,6 +60,17 @@ export {
 } from "./design-system-section";
 export { Separator, type SeparatorProps } from "./separator";
 export { Spinner } from "./spinner";
+export {
+  Sortable,
+  SortableItem,
+  SortableDragHandle,
+  SortableProvider,
+  DragOverlay,
+  type SortableProps,
+  type SortableItemProps,
+  type SortableDragHandleProps,
+  type SortableProviderProps,
+} from "./sortable";
 export { Switch, LabeledSwitch, SwitchCard, type SwitchProps, type LabeledSwitchProps, type SwitchCardProps } from "./switch";
 export { Textarea } from "./textarea";
 export { RichTextEditor, type RichTextEditorProps } from "./rich-text-editor";
@@ -130,10 +141,9 @@ export {
   PopoverTrigger,
   PopoverContent,
   PopoverPortal,
+  PopoverHeader,
   PopoverDescription,
   PopoverTitle,
-  PopoverClose,
-  PopoverArrow,
 } from "./popover";
 
 // ColorPicker component
