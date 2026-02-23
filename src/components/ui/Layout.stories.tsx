@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { doAction } from "@wordpress/hooks";
 import {
   BarChart3,
   FileText,
@@ -139,7 +140,9 @@ export const WithControls: Story = {
     );
     return (
       <Layout
-        key={`sidebar-${args.defaultSidebarOpen}-${args.sidebarPosition ?? "none"}`}
+        key={`sidebar-${args.defaultSidebarOpen}-${
+          args.sidebarPosition ?? "none"
+        }`}
         {...args}
       >
         <LayoutHeader>
@@ -403,7 +406,7 @@ export const FullLayout: Story = {
               </p>
             </div>
           </LayoutMain>
-          <LayoutSidebar className="w-64 lg:w-72">
+          <LayoutSidebar width="w-64 lg:w-72">
             <LayoutMenu
               groups={sampleGroups}
               activeItemId="dashboard"
@@ -436,7 +439,7 @@ export const LeftSidebar: Story = {
         </Button>
       </LayoutHeader>
       <LayoutBody>
-        <LayoutSidebar className="w-64 lg:w-72">
+        <LayoutSidebar width="w-64 lg:w-72">
           <LayoutMenu
             groups={sampleGroups}
             searchable
@@ -460,6 +463,39 @@ export const LeftSidebar: Story = {
   ),
 };
 
+export const HeaderOnContent: Story = {
+  render: () => (
+    <Layout className="bg-background" sidebarPosition="left">
+      <LayoutBody>
+        <LayoutSidebar width="w-64 lg:w-72">
+          <LayoutMenu
+            groups={sampleGroups}
+            searchable
+            searchPlaceholder="Search menu…"
+          />
+        </LayoutSidebar>
+        <LayoutMain>
+          <LayoutHeader className="gap-4">
+            <span className="font-semibold">Sidebar on left</span>
+            <Button variant="outline" size="sm">
+              Sign out
+            </Button>
+          </LayoutHeader>
+          <div className="space-y-4">
+            <h1 className="text-2xl font-bold">Main content</h1>
+            <p className="text-muted-foreground">
+              Sidebar is on the left. Put LayoutSidebar before LayoutMain in
+              LayoutBody for left position.
+            </p>
+          </div>
+        </LayoutMain>
+      </LayoutBody>
+      <LayoutFooter>
+        <span className="text-muted-foreground text-sm">© 2025</span>
+      </LayoutFooter>
+    </Layout>
+  ),
+};
 /** Customize hover/focus and active (selected) colors via menuItemClassName and activeItemClassName. */
 export const CustomHoverAndActiveStyles: Story = {
   render: () => (
@@ -474,7 +510,7 @@ export const CustomHoverAndActiveStyles: Story = {
             <code>activeItemClassName</code> (e.g. primary colors).
           </p>
         </LayoutMain>
-        <LayoutSidebar className="w-64 lg:w-72">
+        <LayoutSidebar width="w-64 lg:w-72">
           <LayoutMenu
             groups={sampleGroups}
             activeItemId="users"
@@ -552,6 +588,70 @@ export const FlatMenu: Story = {
         </LayoutSidebar>
       </LayoutBody>
     </Layout>
+  ),
+};
+
+/**
+ * **WordPress Hooks: Toggle sidebar via `doAction`**
+ *
+ * The Layout registers a WordPress action hook `{namespace}_layout_toggle` that external code
+ * can call to programmatically toggle the sidebar. Pass a custom `namespace` prop to Layout
+ * to control the hook name (defaults to `"plugin_ui"`).
+ *
+ * ```ts
+ * import { doAction } from "@wordpress/hooks";
+ * doAction("dokan_layout_toggle"); // toggles sidebar
+ * ```
+ */
+export const WordPressHooksToggle: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Demonstrates toggling the sidebar via `doAction("{namespace}_layout_toggle")`. ' +
+          "Click the external button to toggle the sidebar using WordPress hooks instead of the built-in header button.",
+      },
+    },
+  },
+  render: () => (
+    <div>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => doAction("dokan_layout_toggle")}
+      >
+        External toggle (doAction)
+      </Button>
+      <Layout
+        className="bg-background"
+        sidebarPosition="left"
+        namespace="dokan"
+        defaultSidebarOpen
+      >
+        <LayoutHeader>
+          <span className="font-semibold">WordPress Hooks Demo</span>
+        </LayoutHeader>
+        <LayoutBody>
+          <LayoutSidebar>
+            <LayoutMenu groups={sampleGroups} searchable />
+          </LayoutSidebar>
+          <LayoutMain>
+            <div className="space-y-2 text-sm">
+              <p className="font-medium">Toggle sidebar via WordPress hooks</p>
+              <p className="text-muted-foreground">
+                The &quot;External toggle&quot; button calls{" "}
+                <code>doAction(&quot;dokan_layout_toggle&quot;)</code> to toggle
+                the sidebar. This allows external WordPress code to control the
+                sidebar without direct access to React state.
+              </p>
+              <pre className="rounded-md bg-muted p-3 text-xs">
+                {`import { doAction } from "@wordpress/hooks";\n\n// Toggle the sidebar from anywhere\ndoAction("dokan_layout_toggle");`}
+              </pre>
+            </div>
+          </LayoutMain>
+        </LayoutBody>
+      </Layout>
+    </div>
   ),
 };
 

@@ -12,6 +12,7 @@ import {
   type ReactNode,
 } from "react";
 import { Input } from "./input";
+import { useLayout } from "./layout";
 
 /* ============================================
    Types: multi-label nested menu items
@@ -40,6 +41,18 @@ export interface LayoutMenuGroupData {
   secondaryLabel?: string;
   items: LayoutMenuItemData[];
   className?: string;
+}
+
+/* ============================================
+   Safe layout hook (fallback for standalone use)
+   ============================================ */
+
+function useLayoutSafe() {
+  try {
+    return useLayout();
+  } catch {
+    return null;
+  }
 }
 
 /* ============================================
@@ -189,6 +202,9 @@ export const LayoutMenu = forwardRef<HTMLDivElement, LayoutMenuProps>(
   ) => {
     const [search, setSearch] = useState("");
     const menuContainerRef = useRef<HTMLDivElement>(null);
+    const layout = useLayoutSafe();
+    const collapsed = layout ? !layout.sidebarOpen : false;
+    const isLeft = layout?.sidebarPosition === "left";
 
     const filteredItems = useMemo(
       () => (items ? filterMenuItems(items, search) : []),
@@ -285,10 +301,14 @@ export const LayoutMenu = forwardRef<HTMLDivElement, LayoutMenuProps>(
       <div
         ref={ref}
         data-slot="layout-menu"
-        className={cn("flex flex-1 flex-col overflow-hidden", className)}
+        className={cn(
+          "flex flex-1 flex-col",
+          collapsed ? "overflow-visible" : "overflow-hidden",
+          className
+        )}
         {...props}
       >
-        {searchable && (
+        {searchable && !collapsed && (
           <LayoutMenuSearch
             value={search}
             onChange={setSearch}
@@ -297,7 +317,10 @@ export const LayoutMenu = forwardRef<HTMLDivElement, LayoutMenuProps>(
         )}
         <div
           ref={menuContainerRef}
-          className="flex-1 overflow-y-auto overflow-x-hidden"
+          className={cn(
+            "flex-1 overflow-y-auto overflow-x-hidden",
+            collapsed && "overflow-visible"
+          )}
           role="group"
           aria-label="Navigation menu"
           onKeyDown={handleMenuKeyDown}
@@ -307,6 +330,8 @@ export const LayoutMenu = forwardRef<HTMLDivElement, LayoutMenuProps>(
                 <LayoutMenuGroup
                   key={group.id}
                   group={group}
+                  collapsed={collapsed}
+                  isLeft={isLeft}
                   activeItemId={activeItemId}
                   menuItemClassName={menuItemClassName}
                   activeItemClassName={activeItemClassName}
@@ -319,6 +344,8 @@ export const LayoutMenu = forwardRef<HTMLDivElement, LayoutMenuProps>(
                 <LayoutMenuItemList
                   items={filteredItems}
                   depth={0}
+                  collapsed={collapsed}
+                  isLeft={isLeft}
                   activeItemId={activeItemId}
                   menuItemClassName={menuItemClassName}
                   activeItemClassName={activeItemClassName}
@@ -347,6 +374,8 @@ LayoutMenu.displayName = "LayoutMenu";
 
 interface LayoutMenuGroupInternalProps {
   group: LayoutMenuGroupData;
+  collapsed?: boolean;
+  isLeft?: boolean;
   activeItemId?: string | null;
   menuItemClassName?: string;
   activeItemClassName?: string;
@@ -357,6 +386,8 @@ interface LayoutMenuGroupInternalProps {
 
 function LayoutMenuGroup({
   group,
+  collapsed,
+  isLeft,
   activeItemId,
   menuItemClassName,
   activeItemClassName,
@@ -366,26 +397,33 @@ function LayoutMenuGroup({
 }: LayoutMenuGroupInternalProps) {
   return (
     <div data-slot="layout-menu-group" className={cn("py-1", group.className)}>
-      <div
-        data-slot="layout-menu-group-label"
-        className="text-muted-foreground flex flex-col gap-0 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider"
-      >
-        {renderGroupLabel ? (
-          renderGroupLabel(group)
-        ) : (
-          <>
-            <span>{group.label}</span>
-            {group.secondaryLabel && (
-              <span className="text-muted-foreground/80 text-[10px] font-normal normal-case">
-                {group.secondaryLabel}
-              </span>
-            )}
-          </>
-        )}
-      </div>
+      {!collapsed && (
+        <div
+          data-slot="layout-menu-group-label"
+          className="text-muted-foreground flex flex-col gap-0 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider"
+        >
+          {renderGroupLabel ? (
+            renderGroupLabel(group)
+          ) : (
+            <>
+              <span>{group.label}</span>
+              {group.secondaryLabel && (
+                <span className="text-muted-foreground/80 text-[10px] font-normal normal-case">
+                  {group.secondaryLabel}
+                </span>
+              )}
+            </>
+          )}
+        </div>
+      )}
+      {collapsed && (
+        <div className="mx-auto my-1 h-px w-6 bg-border" />
+      )}
       <LayoutMenuItemList
         items={group.items}
         depth={0}
+        collapsed={collapsed}
+        isLeft={isLeft}
         activeItemId={activeItemId}
         menuItemClassName={menuItemClassName}
         activeItemClassName={activeItemClassName}
@@ -403,6 +441,8 @@ function LayoutMenuGroup({
 interface LayoutMenuItemListProps {
   items: LayoutMenuItemData[];
   depth: number;
+  collapsed?: boolean;
+  isLeft?: boolean;
   activeItemId?: string | null;
   menuItemClassName?: string;
   activeItemClassName?: string;
@@ -413,6 +453,8 @@ interface LayoutMenuItemListProps {
 function LayoutMenuItemList({
   items,
   depth,
+  collapsed,
+  isLeft,
   activeItemId,
   menuItemClassName,
   activeItemClassName,
@@ -426,6 +468,8 @@ function LayoutMenuItemList({
           key={item.id}
           item={item}
           depth={depth}
+          collapsed={collapsed}
+          isLeft={isLeft}
           activeItemId={activeItemId}
           menuItemClassName={menuItemClassName}
           activeItemClassName={activeItemClassName}
@@ -444,6 +488,8 @@ function LayoutMenuItemList({
 interface LayoutMenuItemNodeProps {
   item: LayoutMenuItemData;
   depth: number;
+  collapsed?: boolean;
+  isLeft?: boolean;
   activeItemId?: string | null;
   menuItemClassName?: string;
   activeItemClassName?: string;
@@ -469,6 +515,8 @@ function hasActiveDescendant(
 function LayoutMenuItemNode({
   item,
   depth,
+  collapsed,
+  isLeft,
   activeItemId,
   menuItemClassName,
   activeItemClassName,
@@ -510,6 +558,61 @@ function LayoutMenuItemNode({
 
   const isActive = activeItemId != null && item.id === activeItemId;
 
+  // Collapsed mode: only show top-level items (depth 0) with icon-only
+  // Items with children get a hover flyout showing submenu (WordPress-style)
+  // Items without children are just clickable icons
+  if (collapsed && depth === 0) {
+    return (
+      <li
+        data-slot="layout-menu-item"
+        data-depth={depth}
+        data-testid={item.testId}
+        className={cn("relative rounded-md", hasChildren && "group/flyout")}
+        role="none"
+      >
+        <CollapsedMenuItemIcon
+          item={item}
+          isActive={isActive}
+          menuItemClassName={menuItemClassName}
+          activeItemClassName={activeItemClassName}
+          onItemClick={onItemClick}
+        />
+        {/* Flyout panel on hover — only for items with children */}
+        {hasChildren && (
+          <div
+            className={cn(
+              "pointer-events-none invisible absolute top-0 z-50 min-w-44 opacity-0 transition-[opacity,visibility] duration-150",
+              "group-hover/flyout:pointer-events-auto group-hover/flyout:visible group-hover/flyout:opacity-100",
+              isLeft ? "left-full ml-1" : "right-full mr-1"
+            )}
+          >
+            <div className="rounded-md border border-border bg-popover py-1 shadow-lg">
+              {/* Parent label as flyout header */}
+              <div className="px-3 py-1.5 text-sm font-medium">
+                {item.label}
+              </div>
+              {/* Submenu items */}
+              <div className="border-t border-border">
+                <FlyoutMenuItemList
+                  items={item.children!}
+                  onItemClick={onItemClick}
+                  menuItemClassName={menuItemClassName}
+                  activeItemClassName={activeItemClassName}
+                  activeItemId={activeItemId}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </li>
+    );
+  }
+
+  // Collapsed mode: hide nested items (they appear in flyout)
+  if (collapsed && depth > 0) {
+    return null;
+  }
+
   const content = renderItem ? (
     renderItem(item, depth)
   ) : (
@@ -545,6 +648,179 @@ function LayoutMenuItemNode({
           activeItemClassName={activeItemClassName}
           onItemClick={onItemClick}
           renderItem={renderItem}
+        />
+      )}
+    </li>
+  );
+}
+
+/* ============================================
+   CollapsedMenuItemIcon (icon-only button for collapsed rail)
+   ============================================ */
+
+interface CollapsedMenuItemIconProps {
+  item: LayoutMenuItemData;
+  isActive: boolean;
+  menuItemClassName?: string;
+  activeItemClassName?: string;
+  onItemClick?: (item: LayoutMenuItemData) => void;
+}
+
+function CollapsedMenuItemIcon({
+  item,
+  isActive,
+  menuItemClassName,
+  activeItemClassName,
+  onItemClick,
+}: CollapsedMenuItemIconProps) {
+  const handleClick = useCallback(() => {
+    item.onClick?.();
+    onItemClick?.(item);
+  }, [item, onItemClick]);
+
+  const Comp = item.href ? "a" : "button";
+  const compProps =
+    item.href
+      ? {
+          href: item.href,
+          onClick: () => onItemClick?.(item),
+        }
+      : {
+          type: "button" as const,
+          onClick: handleClick,
+        };
+
+  return (
+    <Comp
+      role="menuitem"
+      tabIndex={0}
+      aria-label={item.label}
+      aria-current={isActive ? "page" : undefined}
+      data-active={isActive || undefined}
+      className={cn(
+        "flex w-full cursor-pointer items-center justify-center rounded-md p-2 text-sm outline-none transition-colors disabled:pointer-events-none disabled:opacity-50",
+        "hover:bg-accent hover:text-accent-foreground",
+        "focus:bg-accent focus:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        menuItemClassName,
+        isActive && "bg-accent text-accent-foreground font-medium",
+        isActive && activeItemClassName,
+        item.className
+      )}
+      disabled={item.disabled}
+      {...compProps}
+    >
+      {item.icon ? (
+        <span className="flex shrink-0 [&_svg]:size-4">{item.icon}</span>
+      ) : (
+        <span className="flex size-4 items-center justify-center text-xs font-medium">
+          {item.label.charAt(0).toUpperCase()}
+        </span>
+      )}
+    </Comp>
+  );
+}
+
+/* ============================================
+   FlyoutMenuItemList (flat list inside flyout panel)
+   ============================================ */
+
+interface FlyoutMenuItemListProps {
+  items: LayoutMenuItemData[];
+  onItemClick?: (item: LayoutMenuItemData) => void;
+  menuItemClassName?: string;
+  activeItemClassName?: string;
+  activeItemId?: string | null;
+}
+
+function FlyoutMenuItemList({
+  items,
+  onItemClick,
+  menuItemClassName,
+  activeItemClassName,
+  activeItemId,
+}: FlyoutMenuItemListProps) {
+  return (
+    <ul className="list-none py-1" role="menu">
+      {items.map((item) => (
+        <FlyoutMenuItem
+          key={item.id}
+          item={item}
+          onItemClick={onItemClick}
+          menuItemClassName={menuItemClassName}
+          activeItemClassName={activeItemClassName}
+          activeItemId={activeItemId}
+        />
+      ))}
+    </ul>
+  );
+}
+
+interface FlyoutMenuItemProps {
+  item: LayoutMenuItemData;
+  onItemClick?: (item: LayoutMenuItemData) => void;
+  menuItemClassName?: string;
+  activeItemClassName?: string;
+  activeItemId?: string | null;
+}
+
+function FlyoutMenuItem({
+  item,
+  onItemClick,
+  menuItemClassName,
+  activeItemClassName,
+  activeItemId,
+}: FlyoutMenuItemProps) {
+  const isActive = activeItemId != null && item.id === activeItemId;
+  const hasChildren = item.children && item.children.length > 0;
+
+  const handleClick = useCallback(() => {
+    item.onClick?.();
+    onItemClick?.(item);
+  }, [item, onItemClick]);
+
+  const Comp = item.href ? "a" : "button";
+  const compProps =
+    item.href
+      ? {
+          href: item.href,
+          onClick: () => onItemClick?.(item),
+        }
+      : {
+          type: "button" as const,
+          onClick: handleClick,
+        };
+
+  return (
+    <li role="none">
+      <Comp
+        role="menuitem"
+        tabIndex={0}
+        aria-current={isActive ? "page" : undefined}
+        data-active={isActive || undefined}
+        className={cn(
+          "flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-left text-sm outline-none transition-colors disabled:pointer-events-none disabled:opacity-50",
+          "hover:bg-accent hover:text-accent-foreground",
+          "focus:bg-accent focus:text-accent-foreground",
+          menuItemClassName,
+          isActive && "bg-accent text-accent-foreground font-medium",
+          isActive && activeItemClassName,
+          item.className
+        )}
+        disabled={item.disabled}
+        {...compProps}
+      >
+        {item.icon && (
+          <span className="flex shrink-0 [&_svg]:size-4">{item.icon}</span>
+        )}
+        <span className="truncate">{item.label}</span>
+      </Comp>
+      {hasChildren && (
+        <FlyoutMenuItemList
+          items={item.children!}
+          onItemClick={onItemClick}
+          menuItemClassName={menuItemClassName}
+          activeItemClassName={activeItemClassName}
+          activeItemId={activeItemId}
         />
       )}
     </li>

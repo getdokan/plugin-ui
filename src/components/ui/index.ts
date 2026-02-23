@@ -195,6 +195,7 @@ export {
   LayoutMain,
   LayoutSidebar,
   LayoutFooter,
+  useLayout,
   type LayoutProps,
   type LayoutHeaderProps,
   type LayoutBodyProps,

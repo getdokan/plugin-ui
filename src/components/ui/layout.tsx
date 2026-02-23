@@ -4,12 +4,14 @@ import {
   createContext,
   forwardRef,
   useContext,
+  useEffect,
   useState,
   type HTMLAttributes,
   type ReactNode,
 } from "react";
 import { Button } from "./button";
 
+import { addAction, removeAction } from "@wordpress/hooks";
 /* ============================================
    Layout context (sidebar open state, breakpoint)
    ============================================ */
@@ -26,11 +28,13 @@ export interface LayoutContextValue {
   sidebarBreakpoint: string;
   sidebarPosition: LayoutSidebarPosition;
   isMobile: boolean;
+  /** Unique namespace for WordPress hooks (e.g. "dokan"). Used to register actions like `{namespace}_layout_toggle`. */
+  namespace: string;
 }
 
 const LayoutContext = createContext<LayoutContextValue | null>(null);
 
-function useLayout() {
+export function useLayout() {
   const ctx = useContext(LayoutContext);
   if (!ctx) throw new Error("Layout subcomponents must be used within Layout.");
   return ctx;
@@ -51,6 +55,8 @@ export interface LayoutProps extends HTMLAttributes<HTMLDivElement> {
   sidebarBreakpoint?: string;
   /** Initial open state for mobile sidebar */
   defaultSidebarOpen?: boolean;
+  /** Unique namespace for WordPress hooks integration. Used to register actions like `{namespace}_layout_toggle`. */
+  namespace?: string;
 }
 
 export const Layout = forwardRef<HTMLDivElement, LayoutProps>(
@@ -61,10 +67,11 @@ export const Layout = forwardRef<HTMLDivElement, LayoutProps>(
       sidebarVariant = "drawer",
       sidebarBreakpoint = "lg",
       defaultSidebarOpen = false,
+      namespace = "plugin_ui",
       children,
       ...props
     },
-    ref
+    ref,
   ) => {
     const [sidebarOpen, setSidebarOpen] = useState(defaultSidebarOpen);
     const value: LayoutContextValue = {
@@ -74,6 +81,7 @@ export const Layout = forwardRef<HTMLDivElement, LayoutProps>(
       sidebarBreakpoint,
       sidebarPosition: sidebarPosition ?? null,
       isMobile: true, // will be set by CSS/JS or consumer can override via provider
+      namespace,
     };
     return (
       <LayoutContext.Provider value={value}>
@@ -87,7 +95,7 @@ export const Layout = forwardRef<HTMLDivElement, LayoutProps>(
         </div>
       </LayoutContext.Provider>
     );
-  }
+  },
 );
 
 Layout.displayName = "Layout";
@@ -105,7 +113,22 @@ export interface LayoutHeaderProps extends HTMLAttributes<HTMLElement> {
 
 export const LayoutHeader = forwardRef<HTMLElement, LayoutHeaderProps>(
   ({ className, children, showSidebarToggle = true, ...props }, ref) => {
-    const { setSidebarOpen, sidebarPosition } = useLayout();
+    const { setSidebarOpen, sidebarPosition, namespace } = useLayout();
+
+    const toggleSideBar = () => {
+      setSidebarOpen((prev) => !prev);
+    };
+
+    // Register WordPress hook so external code can toggle the sidebar
+    // via `doAction('{namespace}_layout_toggle')`
+    useEffect(() => {
+      const hookName = `${namespace}_layout_toggle`;
+      addAction(hookName, namespace, toggleSideBar);
+      return () => {
+        removeAction(hookName, namespace);
+      };
+    });
+
     const hasSidebar =
       sidebarPosition === "left" || sidebarPosition === "right";
     return (
@@ -114,7 +137,7 @@ export const LayoutHeader = forwardRef<HTMLElement, LayoutHeaderProps>(
         data-slot="layout-header"
         className={cn(
           "sticky top-0 z-40 flex h-14 shrink-0 items-center gap-2 border-b border-border bg-background px-4",
-          className
+          className,
         )}
         {...props}
       >
@@ -123,7 +146,7 @@ export const LayoutHeader = forwardRef<HTMLElement, LayoutHeaderProps>(
             variant="ghost"
             size="icon"
             className="shrink-0"
-            onClick={() => setSidebarOpen((prev) => !prev)}
+            onClick={toggleSideBar}
             aria-label="Toggle sidebar"
           >
             <Menu className="size-5" />
@@ -132,7 +155,7 @@ export const LayoutHeader = forwardRef<HTMLElement, LayoutHeaderProps>(
         {children}
       </header>
     );
-  }
+  },
 );
 
 LayoutHeader.displayName = "LayoutHeader";
@@ -158,7 +181,7 @@ export const LayoutBody = forwardRef<HTMLDivElement, LayoutBodyProps>(
         {children}
       </div>
     );
-  }
+  },
 );
 
 LayoutBody.displayName = "LayoutBody";
@@ -180,14 +203,14 @@ export const LayoutMain = forwardRef<HTMLElement, LayoutMainProps>(
         data-slot="layout-main"
         className={cn(
           "min-w-0 flex-1 overflow-auto p-4 focus:outline-none",
-          className
+          className,
         )}
         {...props}
       >
         {children}
       </main>
     );
-  }
+  },
 );
 
 LayoutMain.displayName = "LayoutMain";
@@ -205,12 +228,8 @@ export interface LayoutSidebarProps extends HTMLAttributes<HTMLElement> {
 
 export const LayoutSidebar = forwardRef<HTMLElement, LayoutSidebarProps>(
   ({ className, children, width = "w-72", ...props }, ref) => {
-    const {
-      sidebarOpen,
-      setSidebarOpen,
-      sidebarBreakpoint,
-      sidebarPosition,
-    } = useLayout();
+    const { sidebarOpen, setSidebarOpen, sidebarBreakpoint, sidebarPosition } =
+      useLayout();
 
     if (sidebarPosition !== "left" && sidebarPosition !== "right") {
       return null;
@@ -222,10 +241,10 @@ export const LayoutSidebar = forwardRef<HTMLElement, LayoutSidebarProps>(
       bp === "lg" ? "lg:flex" : bp === "md" ? "md:flex" : "xl:flex";
     const collapseWhenClosed =
       bp === "lg"
-        ? "lg:w-0 lg:min-w-0 lg:overflow-hidden"
+        ? "lg:w-12 lg:min-w-12"
         : bp === "md"
-        ? "md:w-0 md:min-w-0 md:overflow-hidden"
-        : "xl:w-0 xl:min-w-0 xl:overflow-hidden";
+        ? "md:w-12 md:min-w-12"
+        : "xl:w-12 xl:min-w-12";
     const desktopTransition =
       bp === "lg"
         ? "lg:transition-[width] lg:duration-200"
@@ -240,7 +259,7 @@ export const LayoutSidebar = forwardRef<HTMLElement, LayoutSidebarProps>(
           className={cn(
             "fixed inset-0 z-40 bg-black/50 lg:hidden",
             "transition-opacity duration-300 ease-out",
-            sidebarOpen ? "opacity-100" : "pointer-events-none opacity-0"
+            sidebarOpen ? "opacity-100" : "pointer-events-none opacity-0",
           )}
           aria-hidden
           onClick={() => setSidebarOpen(false)}
@@ -266,11 +285,13 @@ export const LayoutSidebar = forwardRef<HTMLElement, LayoutSidebarProps>(
             !sidebarOpen &&
               (isLeft ? "max-lg:-translate-x-full" : "max-lg:translate-x-full"),
             "max-lg:transition-transform max-lg:duration-300 max-lg:ease-out",
+            !sidebarOpen && "lg:overflow-visible",
             breakpointClass,
-            className
+            className,
           )}
           {...props}
         >
+          {/* Mobile close button */}
           <div className="flex h-14 items-center border-b border-border px-2 lg:hidden">
             <Button
               variant="ghost"
@@ -281,13 +302,20 @@ export const LayoutSidebar = forwardRef<HTMLElement, LayoutSidebarProps>(
               <X className="size-5" />
             </Button>
           </div>
-          <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+          <div
+            className={cn(
+              "flex min-w-0 flex-1 flex-col",
+              sidebarOpen
+                ? "overflow-hidden"
+                : "max-lg:hidden lg:overflow-visible",
+            )}
+          >
             {children}
           </div>
         </aside>
       </>
     );
-  }
+  },
 );
 
 LayoutSidebar.displayName = "LayoutSidebar";
@@ -310,14 +338,14 @@ export const LayoutFooter = forwardRef<HTMLElement, LayoutFooterProps>(
         data-slot="layout-footer"
         className={cn(
           "shrink-0 border-t border-border bg-muted/30 px-4 py-3",
-          className
+          className,
         )}
         {...props}
       >
         {children}
       </footer>
     );
-  }
+  },
 );
 
 LayoutFooter.displayName = "LayoutFooter";
