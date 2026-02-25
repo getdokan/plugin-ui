@@ -196,6 +196,7 @@ export {
   LayoutSidebar,
   LayoutFooter,
   useLayout,
+  useLayoutOptional,
   type LayoutProps,
   type LayoutHeaderProps,
   type LayoutBodyProps,

@@ -12,7 +12,7 @@ import {
   type ReactNode,
 } from "react";
 import { Input } from "./input";
-import { useLayout } from "./layout";
+import { useLayoutOptional } from "./layout";
 
 /* ============================================
    Types: multi-label nested menu items
@@ -41,18 +41,6 @@ export interface LayoutMenuGroupData {
   secondaryLabel?: string;
   items: LayoutMenuItemData[];
   className?: string;
-}
-
-/* ============================================
-   Safe layout hook (fallback for standalone use)
-   ============================================ */
-
-function useLayoutSafe() {
-  try {
-    return useLayout();
-  } catch {
-    return null;
-  }
 }
 
 /* ============================================
@@ -202,7 +190,7 @@ export const LayoutMenu = forwardRef<HTMLDivElement, LayoutMenuProps>(
   ) => {
     const [search, setSearch] = useState("");
     const menuContainerRef = useRef<HTMLDivElement>(null);
-    const layout = useLayoutSafe();
+    const layout = useLayoutOptional();
     const collapsed = layout ? !layout.sidebarOpen : false;
     const isLeft = layout?.sidebarPosition === "left";
 
@@ -583,6 +571,7 @@ function LayoutMenuItemNode({
             className={cn(
               "pointer-events-none invisible absolute top-0 z-50 min-w-44 opacity-0 transition-[opacity,visibility] duration-150",
               "group-hover/flyout:pointer-events-auto group-hover/flyout:visible group-hover/flyout:opacity-100",
+              "group-focus-within/flyout:pointer-events-auto group-focus-within/flyout:visible group-focus-within/flyout:opacity-100",
               isLeft ? "left-full ml-1" : "right-full mr-1"
             )}
           >

@@ -3,6 +3,7 @@ import { Menu, X } from "lucide-react";
 import {
   createContext,
   forwardRef,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -11,7 +12,7 @@ import {
 } from "react";
 import { Button } from "./button";
 
-import { addAction, removeAction } from "@wordpress/hooks";
+import { addAction, doAction, removeAction } from "@wordpress/hooks";
 /* ============================================
    Layout context (sidebar open state, breakpoint)
    ============================================ */
@@ -38,6 +39,11 @@ export function useLayout() {
   const ctx = useContext(LayoutContext);
   if (!ctx) throw new Error("Layout subcomponents must be used within Layout.");
   return ctx;
+}
+
+/** Returns layout context or null when used outside a Layout provider. */
+export function useLayoutOptional() {
+  return useContext(LayoutContext);
 }
 
 /* ============================================
@@ -113,21 +119,11 @@ export interface LayoutHeaderProps extends HTMLAttributes<HTMLElement> {
 
 export const LayoutHeader = forwardRef<HTMLElement, LayoutHeaderProps>(
   ({ className, children, showSidebarToggle = true, ...props }, ref) => {
-    const { setSidebarOpen, sidebarPosition, namespace } = useLayout();
+    const { sidebarPosition, namespace } = useLayout();
 
     const toggleSideBar = () => {
-      setSidebarOpen((prev) => !prev);
+      doAction(`${namespace}_layout_toggle`);
     };
-
-    // Register WordPress hook so external code can toggle the sidebar
-    // via `doAction('{namespace}_layout_toggle')`
-    useEffect(() => {
-      const hookName = `${namespace}_layout_toggle`;
-      addAction(hookName, namespace, toggleSideBar);
-      return () => {
-        removeAction(hookName, namespace);
-      };
-    });
 
     const hasSidebar =
       sidebarPosition === "left" || sidebarPosition === "right";
@@ -228,8 +224,22 @@ export interface LayoutSidebarProps extends HTMLAttributes<HTMLElement> {
 
 export const LayoutSidebar = forwardRef<HTMLElement, LayoutSidebarProps>(
   ({ className, children, width = "w-72", ...props }, ref) => {
-    const { sidebarOpen, setSidebarOpen, sidebarBreakpoint, sidebarPosition } =
+    const { sidebarOpen, setSidebarOpen, sidebarBreakpoint, sidebarPosition, namespace } =
       useLayout();
+
+    const toggleSideBar = useCallback(() => {
+      setSidebarOpen((prev) => !prev);
+    }, [setSidebarOpen]);
+
+    // Register WordPress hook so external code can toggle the sidebar
+    // via `doAction('{namespace}_layout_toggle')`
+    useEffect(() => {
+      const hookName = `${namespace}_layout_toggle`;
+      addAction(hookName, namespace, toggleSideBar);
+      return () => {
+        removeAction(hookName, namespace);
+      };
+    }, [namespace, toggleSideBar]);
 
     if (sidebarPosition !== "left" && sidebarPosition !== "right") {
       return null;
