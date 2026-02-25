@@ -149,6 +149,47 @@ export {
 // ColorPicker component
 export { ColorPicker, type ColorPickerProps } from "./color-picker";
 
+// Sheet component
+export {
+  Sheet,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+} from "./sheet";
+
+// Sidebar component
+export {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupAction,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInput,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSkeleton,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+  SidebarRail,
+  SidebarSeparator,
+  SidebarTrigger,
+  useSidebar,
+  useSidebarOptional,
+} from "./sidebar";
+
 // Skeleton component
 export { Skeleton } from "./skeleton";
 
@@ -201,10 +242,8 @@ export {
   type LayoutMainProps,
   type LayoutSidebarProps,
   type LayoutFooterProps,
-  type LayoutSidebarPosition,
-  type LayoutSidebarVariant,
   type LayoutContextValue,
-} from "./layout";
+} from "../wordpress/layout";
 
 // Layout menu (searchable, multi-label nested menu for LayoutSidebar)
 export {
@@ -214,4 +253,4 @@ export {
   type LayoutMenuGroupData,
   type LayoutMenuProps,
   type LayoutMenuSearchProps,
-} from "./layout-menu";
+} from "../wordpress/layout-menu";

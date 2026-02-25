@@ -4,7 +4,7 @@ import { useSettings } from './settings-context';
 import {
     LayoutMenu,
     type LayoutMenuItemData,
-} from '../ui/layout-menu';
+} from '../wordpress/layout-menu';
 import type { SettingsElement } from './settings-types';
 import * as LucideIcons from 'lucide-react';
 import { cn } from '@/lib/utils';
