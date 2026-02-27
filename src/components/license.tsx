@@ -17,6 +17,7 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
+import { Badge } from "./ui";
 
 export interface LicenseStatus {
   is_valid: boolean;
@@ -218,9 +219,9 @@ export function License({
                 <div className="flex gap-2.5 items-center">
                   <h2 className="text-lg font-bold m-0">{labels.activationTitle}</h2>
                   {hasActive && (
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-success/15 text-success">
+                    <Badge variant="success">
                       {labels.activeStatus}
-                    </span>
+                    </Badge>
                   )}
                 </div>
                 <p className="m-0 mt-4 text-muted-foreground text-sm leading-snug">
@@ -228,7 +229,7 @@ export function License({
                 </p>
               </div>
               {headerImage && (
-                <div className="hidden md:flex w-1/2 justify-end">
+                <div className="sm:hidden md:flex w-1/2 justify-end">
                   {headerImage}
                 </div>
               )}
