@@ -260,6 +260,7 @@ export {
 export { TopBar, type TopBarProps } from './components/top-bar'
 export { CrownIcon, type CrownIconProps } from './components/crown-icon'
 export { ButtonToggleGroup, type ButtonToggleGroupProps, type ButtonToggleGroupItem } from './components/button-toggle-group'
+export { License, type LicenseProps, type LicenseLabels, type LicenseStatus, type LicenseClassNames } from './components/license'
 
 // Settings (schema-driven settings page)
 export {
