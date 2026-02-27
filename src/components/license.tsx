@@ -58,6 +58,53 @@ export interface LicenseLabels {
   hideKeyLabel?: string;
 }
 
+export interface LicenseClassNames {
+  /** Root wrapper div */
+  root?: string;
+  /** Page title (h1) */
+  title?: string;
+  /** Loading overlay backdrop */
+  loadingOverlay?: string;
+  /** Loading spinner icon */
+  loadingSpinner?: string;
+  /** Main license card */
+  card?: string;
+  /** Card header section (contains title, badge, description, image) */
+  header?: string;
+  /** Header title (h2) */
+  headerTitle?: string;
+  /** Header description paragraph */
+  headerDescription?: string;
+  /** Header image container */
+  headerImageContainer?: string;
+  /** Card body section */
+  body?: string;
+  /** Activate license heading section (icon + text) */
+  activateHeading?: string;
+  /** Activate heading icon container */
+  activateHeadingIcon?: string;
+  /** Activate heading title (h3) */
+  activateHeadingTitle?: string;
+  /** Activate heading subtitle */
+  activateHeadingSubtitle?: string;
+  /** License key label */
+  licenseKeyLabel?: string;
+  /** License key input */
+  input?: string;
+  /** Error message text */
+  errorMessage?: string;
+  /** Masked key info row */
+  maskedKeyInfo?: string;
+  /** Action buttons container */
+  actions?: string;
+  /** Status cards grid (activations + expiry) */
+  statusGrid?: string;
+  /** Activations remaining card */
+  activationsCard?: string;
+  /** License expiry card */
+  expiryCard?: string;
+}
+
 export interface LicenseProps extends HTMLAttributes<HTMLDivElement> {
   /** Current license key value */
   licenseKey: string;
@@ -85,6 +132,8 @@ export interface LicenseProps extends HTMLAttributes<HTMLDivElement> {
   labels?: LicenseLabels;
   /** Format a date string for display (e.g., using dateI18n from @wordpress/date) */
   formatDate?: (date: Date) => string;
+  /** Override Tailwind class names for individual sections of the component */
+  classNames?: LicenseClassNames;
 }
 
 const maskKey = (key: string): string => {
@@ -122,6 +171,7 @@ export function License({
   pluginName = "Plugin",
   labels: labelOverrides = {},
   formatDate = defaultFormatDate,
+  classNames: cx = {},
   className,
   ...props
 }: LicenseProps) {
@@ -197,39 +247,39 @@ export function License({
 
   return (
     <div
-      className={cn("w-full max-w-2xl lg:max-w-3xl mx-auto", className)}
+      className={cn("w-full max-w-2xl lg:max-w-3xl mx-auto", cx.root, className)}
       {...props}
     >
-      <h1 className="text-2xl font-bold mb-6">{labels.title}</h1>
+      <h1 className={cn("text-2xl font-bold mb-6", cx.title)}>{labels.title}</h1>
 
       <div className="relative">
         {loading && (
-          <div className="absolute inset-0 rounded-lg w-full h-full z-10 backdrop-blur-sm">
+          <div className={cn("absolute inset-0 rounded-lg w-full h-full z-10 backdrop-blur-sm", cx.loadingOverlay)}>
             <div className="flex items-center justify-center h-full">
-              <LoaderCircle role="status" aria-label="Loading" className={cn("animate-spin size-10 text-primary")} strokeWidth={1} />
+              <LoaderCircle role="status" aria-label="Loading" className={cn("animate-spin size-10 text-primary", cx.loadingSpinner)} strokeWidth={1} />
             </div>
           </div>
         )}
 
-        <Card className="bg-card rounded-lg mb-6 p-0 gap-0">
+        <Card className={cn("bg-card rounded-lg mb-6 p-0 gap-0", cx.card)}>
           {/* Header section */}
-          <div className="flex items-start justify-between p-6 border-b border-border">
+          <div className={cn("flex items-start justify-between p-6 border-b border-border", cx.header)}>
             <div className="flex justify-between w-full">
               <div className="w-full md:w-1/2">
                 <div className="flex gap-2.5 items-center">
-                  <h2 className="text-lg font-bold m-0">{labels.activationTitle}</h2>
+                  <h2 className={cn("text-lg font-bold m-0", cx.headerTitle)}>{labels.activationTitle}</h2>
                   {hasActive && (
                     <Badge variant="success">
                       {labels.activeStatus}
                     </Badge>
                   )}
                 </div>
-                <p className="m-0 mt-4 text-muted-foreground text-sm leading-snug">
+                <p className={cn("m-0 mt-4 text-muted-foreground text-sm leading-snug", cx.headerDescription)}>
                   {labels.activationDescription}
                 </p>
               </div>
               {headerImage && (
-                <div className="sm:hidden md:flex w-1/2 justify-end">
+                <div className={cn("sm:hidden md:flex w-1/2 justify-end", cx.headerImageContainer)}>
                   {headerImage}
                 </div>
               )}
@@ -237,18 +287,18 @@ export function License({
           </div>
 
           {/* Body section */}
-          <div className="p-6">
+          <div className={cn("p-6", cx.body)}>
             {/* Activate heading (shown when not active) */}
             {!hasActive && (
-              <div className="flex gap-3.5 mb-7">
-                <div className="bg-primary/10 size-11 rounded-xl flex items-center justify-center">
+              <div className={cn("flex gap-3.5 mb-7", cx.activateHeading)}>
+                <div className={cn("bg-primary/10 size-11 rounded-xl flex items-center justify-center", cx.activateHeadingIcon)}>
                   <KeyRound size={20} className="text-primary" />
                 </div>
                 <div className="flex flex-col justify-between">
-                  <h3 className="text-foreground font-bold text-lg p-0 m-0">
+                  <h3 className={cn("text-foreground font-bold text-lg p-0 m-0", cx.activateHeadingTitle)}>
                     {labels.activateLicenseHeading}
                   </h3>
-                  <span className="text-xs text-muted-foreground">
+                  <span className={cn("text-xs text-muted-foreground", cx.activateHeadingSubtitle)}>
                     {labels.activateLicenseSubheading}
                   </span>
                 </div>
@@ -256,7 +306,7 @@ export function License({
             )}
 
             {/* License key label */}
-            <div className="cursor-pointer text-sm font-semibold text-foreground mb-2.5 inline-block">
+            <div className={cn("cursor-pointer text-sm font-semibold text-foreground mb-2.5 inline-block", cx.licenseKeyLabel)}>
               {labels.licenseKeyLabel}
             </div>
 
@@ -271,7 +321,8 @@ export function License({
                 disabled={loading || hasActive}
                 className={cn(
                   "pr-10",
-                  error && "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20"
+                  error && "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20",
+                  cx.input
                 )}
               />
               <button
@@ -287,19 +338,19 @@ export function License({
 
             {/* Error message */}
             {error && (
-              <p className="text-destructive text-sm m-0 mt-2">{error}</p>
+              <p className={cn("text-destructive text-sm m-0 mt-2", cx.errorMessage)}>{error}</p>
             )}
 
             {/* Masked key info */}
             {!error && hasActive && (
-              <div className="text-sm text-muted-foreground mt-2 flex gap-1.5 items-center">
+              <div className={cn("text-sm text-muted-foreground mt-2 flex gap-1.5 items-center", cx.maskedKeyInfo)}>
                 <Info size={16} strokeWidth={3} />
                 <span>{labels.maskedKeyInfo}</span>
               </div>
             )}
 
             {/* Action buttons */}
-            <div className="flex items-center gap-3 mt-6">
+            <div className={cn("flex items-center gap-3 mt-6", cx.actions)}>
               {hasActive ? (
                 <>
                   <AlertDialog open={deactivateDialogOpen} onOpenChange={(open) => { if (!loading) setDeactivateDialogOpen(open); }}>
@@ -354,9 +405,9 @@ export function License({
 
         {/* Status cards (shown when active) */}
         {hasActive && (
-          <div className="grid gap-6 grid-cols-1 md:grid-cols-2 max-w-4xl">
+          <div className={cn("grid gap-6 grid-cols-1 md:grid-cols-2 max-w-4xl", cx.statusGrid)}>
             {/* Activations Remaining card */}
-            <Card className="bg-card rounded-lg p-6 gap-0">
+            <Card className={cn("bg-card rounded-lg p-6 gap-0", cx.activationsCard)}>
               <div className="flex items-center gap-3 mb-5">
                 <div className="bg-primary/10 size-11 rounded-full flex items-center justify-center">
                   <KeyRound size={20} className="text-primary" />
@@ -403,7 +454,7 @@ export function License({
             </Card>
 
             {/* License Expiry card */}
-            <Card className="bg-card rounded-lg p-6 gap-0">
+            <Card className={cn("bg-card rounded-lg p-6 gap-0", cx.expiryCard)}>
               <div className="flex items-center gap-3 mb-5">
                 <div className="bg-primary/10 size-11 rounded-full flex items-center justify-center">
                   <Calendar size={20} className="text-primary" />
