@@ -24,6 +24,7 @@ import {
   type LayoutMenuGroupData,
   type LayoutMenuItemData,
 } from "../ui";
+import { useSidebar } from "../ui/sidebar";
 
 /* ============================================
    Sample data
@@ -447,4 +448,76 @@ export const WordPressHooks: Story = {
       </Layout>
     </div>
   ),
+};
+
+/** Toggle group labels on/off via the Storybook controls panel. */
+export const HiddenGroupLabels: Story = {
+  args: {
+    showGroupLabels: false,
+    defaultSidebarOpen: false
+  },
+  argTypes: {
+    showGroupLabels: {
+      control: "boolean",
+      description: "Show or hide the sidebar group section labels.",
+    },
+  },
+  render: ({ showGroupLabels }) => (
+    <Layout defaultSidebarOpen className="bg-background">
+      <LayoutBody>
+        <LayoutSidebar>
+          <LayoutMenu
+            groups={sampleGroups}
+            activeItemId="dashboard"
+            searchable
+            showGroupLabels={showGroupLabels}
+          />
+        </LayoutSidebar>
+        <LayoutMain>
+          <LayoutHeader>
+            <span className="font-semibold">Group labels</span>
+          </LayoutHeader>
+          <p className="mt-4 text-muted-foreground">
+            Use the <strong>showGroupLabels</strong> control in the panel below
+            to toggle sidebar group section headers on and off.
+          </p>
+        </LayoutMain>
+      </LayoutBody>
+    </Layout>
+  ),
+};
+
+/** Sidebar expands on mouse enter and collapses on mouse leave. */
+export const ShowHideOnHover: Story = {
+  render: () => {
+    function HoverSidebar() {
+      const { showSidebar, hideSidebar } = useSidebar();
+      return (
+        <LayoutSidebar
+          onMouseEnter={showSidebar}
+          onMouseLeave={hideSidebar}
+        >
+          <LayoutMenu groups={sampleGroups} activeItemId="dashboard" searchable />
+        </LayoutSidebar>
+      );
+    }
+
+    return (
+      <Layout defaultSidebarOpen={false} className="bg-background">
+        <LayoutBody>
+          <HoverSidebar />
+          <LayoutMain>
+            <LayoutHeader>
+              <span className="font-semibold">Show / Hide on hover</span>
+            </LayoutHeader>
+            <p className="mt-4 text-muted-foreground">
+              Hover over the collapsed sidebar to expand it. Move the mouse away to
+              collapse it again. Uses <code>showSidebar</code> and{" "}
+              <code>hideSidebar</code> actions from the sidebar context.
+            </p>
+          </LayoutMain>
+        </LayoutBody>
+      </Layout>
+    );
+  },
 };
