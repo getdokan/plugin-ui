@@ -195,6 +195,8 @@ export interface LayoutMenuProps extends HTMLAttributes<HTMLDivElement> {
   renderItem?: (item: LayoutMenuItemData, depth: number) => ReactNode;
   /** Custom render for group header */
   renderGroupLabel?: (group: LayoutMenuGroupData) => ReactNode;
+  /** Whether to show group labels. Defaults to true. */
+  showGroupLabels?: boolean;
   className?: string;
 }
 
@@ -211,6 +213,7 @@ export const LayoutMenu = forwardRef<HTMLDivElement, LayoutMenuProps>(
       onItemClick,
       renderItem,
       renderGroupLabel,
+      showGroupLabels = true,
       className,
       ...props
     },
@@ -251,20 +254,22 @@ export const LayoutMenu = forwardRef<HTMLDivElement, LayoutMenuProps>(
         {filteredGroups.length > 0
           ? filteredGroups.map((group) => (
               <SidebarGroup key={group.id} className={group.className}>
-                <SidebarGroupLabel>
-                  {renderGroupLabel ? (
-                    renderGroupLabel(group)
-                  ) : (
-                    <>
-                      <span>{group.label}</span>
-                      {group.secondaryLabel && (
-                        <span className="text-muted-foreground/80 ml-1 text-[10px] font-normal normal-case">
-                          {group.secondaryLabel}
-                        </span>
-                      )}
-                    </>
-                  )}
-                </SidebarGroupLabel>
+                {showGroupLabels && (
+                  <SidebarGroupLabel>
+                    {renderGroupLabel ? (
+                      renderGroupLabel(group)
+                    ) : (
+                      <>
+                        <span>{group.label}</span>
+                        {group.secondaryLabel && (
+                          <span className="text-muted-foreground/80 ml-1 text-[10px] font-normal normal-case">
+                            {group.secondaryLabel}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </SidebarGroupLabel>
+                )}
                 <SidebarGroupContent>
                   <SidebarMenu>
                     {group.items.map((item) => (
