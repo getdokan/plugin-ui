@@ -17,7 +17,7 @@ import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 
 /** Convert string to snake_case (e.g. "myNamespace" -> "my_namespace"). */
 function snakeCase(str: string): string {
-    if( !str ) return '';
+    if (!str) return '';
     return str
         .replace(/-/g, '_')
         .replace(/\s+/g, '_')
@@ -28,7 +28,7 @@ function snakeCase(str: string): string {
 
 /** Convert string to kebab-case (e.g. "myNamespace" -> "my-namespace"). */
 function kebabCase(str: string): string {
-    if( !str ) return '';
+    if (!str) return '';
     return str
         .replace(/([a-z])([A-Z])/g, '$1-$2')
         .replace(/[\s_]+/g, '-')
@@ -113,7 +113,7 @@ function getQueryParamsFromView(view: View): Record<string, string | number | nu
         per_page: perPage ?? null,
         search: v.search ?? '',
         status: v.status ?? '',
-        filters,
+        filters
     };
 
     return params;
@@ -163,7 +163,11 @@ const FilterItems = ({
     buttonPopOverAnchor = null,
     labels = {}
 }: DataViewFilterProps) => {
-    const { removeFilter = __('Remove filter', 'default'), addFilter = __('Add Filter', 'default'), reset = __('Reset', 'default') } = labels;
+    const {
+        removeFilter = __('Remove filter', 'default'),
+        addFilter = __('Add Filter', 'default'),
+        reset = __('Reset', 'default')
+    } = labels;
 
     const [activeFilters, setActiveFilters] = useState<string[]>([]);
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -535,11 +539,14 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
             <Slot name={beforeSlotId} fillProps={{ ...filteredProps }} />
             {/* @ts-expect-error - Complex conditional types from wrapper don't perfectly align with @wordpress/dataviews types */}
             <DataViewsTable {...filteredProps}>
-                <div className="w-full flex items-center flex-col justify-between gap-4 rounded-tr-md rounded-tl-md">
+                <div className="w-full flex items-center flex-col justify-between rounded-tr-md rounded-tl-md">
                     {header && <div className="font-semibold text-sm text-foreground">{header}</div>}
-
-                    {tabs && tabs.tabs && tabs.tabs.length > 0 && (
-                        <div className="md:flex justify-between w-full items-center px-4 border-b border-border">
+                    <div
+                        className={cn(
+                            'md:flex justify-between w-full items-center px-4',
+                            (tabs?.tabs?.length || search) && 'border-b border-border'
+                        )}>
+                        {tabs && tabs.tabs && tabs.tabs.length > 0 && (
                             <Tabs
                                 defaultValue={
                                     (tabsWithFilterButton || tabs)?.initialTab ||
@@ -550,7 +557,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                                     const nextView = {
                                         ...view,
                                         status: value,
-                                        page: 1,
+                                        page: 1
                                     } as View & { status?: string };
 
                                     handleViewChange(nextView);
@@ -574,18 +581,22 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                                     ))}
                                 </TabsList>
                             </Tabs>
-                            <div className="flex items-center gap-2">
-                                {searchInput}
-                                {(tabsWithFilterButton || tabs)?.headerSlot?.map((node, index) => (
-                                    <Fragment key={index}>{node}</Fragment>
-                                ))}
-                            </div>
+                        )}
+                        <div
+                            className={cn(
+                                'flex items-center gap-2',
+                                !tabs?.tabs?.length && search && 'justify-end w-full py-2'
+                            )}>
+                            {searchInput}
+                            {(tabsWithFilterButton || tabs)?.headerSlot?.map((node, index) => (
+                                <Fragment key={index}>{node}</Fragment>
+                            ))}
                         </div>
-                    )}
+                    </div>
 
                     {filter && filter.fields && filter.fields.length > 0 && (
                         <div
-                            className={`transition-all flex w-full justify-between px-4 bg-background ${
+                            className={`transition-all flex w-full justify-between px-4 mt-4 bg-background ${
                                 showFilters ? '' : 'hidden!'
                             }`}>
                             <FilterItems
