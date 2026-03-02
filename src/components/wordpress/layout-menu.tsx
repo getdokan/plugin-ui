@@ -393,6 +393,7 @@ function MenuItemRenderer({
     const comp = item.href ? "a" : "button";
     return (
       <SidebarMenuItem data-testid={item.testId}>
+
         <SidebarMenuButton
           render={
             comp === "a"
@@ -410,22 +411,23 @@ function MenuItemRenderer({
           data-active={isActive || undefined}
           disabled={item.disabled}
         >
-          {item.icon && (
-            <span className="flex shrink-0 [&_svg]:size-4">{item.icon}</span>
-          )}
-          <span className="min-w-0 flex-1">
-            <span className="block truncate">{item.label}</span>
-            {item.secondaryLabel && (
-              <span
-                className={cn(
-                  "block truncate text-xs",
-                  isActive ? "opacity-90" : "text-muted-foreground"
-                )}
-              >
-                {item.secondaryLabel}
-              </span>
+            {item.icon && (
+              <span className="flex shrink-0 [&_svg]:size-4">{item.icon}</span>
             )}
-          </span>
+            <span className="min-w-0 flex-1">
+              <span className="block truncate">{item.label}</span>
+              {item.secondaryLabel && (
+                <span
+                  className={cn(
+                    "block truncate text-xs",
+                    isActive ? "opacity-90" : "text-muted-foreground"
+                  )}
+                >
+                  {item.secondaryLabel}
+                </span>
+              )}
+            </span>
+
         </SidebarMenuButton>
       </SidebarMenuItem>
     );

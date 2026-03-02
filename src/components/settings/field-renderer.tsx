@@ -227,7 +227,7 @@ export function FieldRenderer({
         default:
             // Unknown variant — consumer must handle via applyFilters
             return applyFilters(
-                `${filterPrefix}_settings_default_field`,
+                `${filterPrefix}_settings_${variant}_field`,
                 <FallbackField {...fieldProps} />,
                 mergedElement
             );
