@@ -1,7 +1,7 @@
 import { useMemo, useState, type HTMLAttributes, type ReactNode } from "react";
 import { RawHTML } from "@wordpress/element";
 import { doAction } from "@wordpress/hooks";
-import { Calendar, Eye, EyeOff, Info, KeyRound, Loader, LoaderCircle, RefreshCw } from "lucide-react";
+import { Calendar, Eye, EyeOff, Info, KeyRound, LoaderCircle, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

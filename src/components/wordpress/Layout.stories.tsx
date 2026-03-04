@@ -180,7 +180,7 @@ export const RightSidebar: Story = {
       <LayoutBody>
         <LayoutMain>
           <p className="text-muted-foreground">
-            Pass <code>side="right"</code> to <code>LayoutSidebar</code> to place it on the right.
+            Pass <code>side=&quot;right&quot;</code> to <code>LayoutSidebar</code> to place it on the right.
           </p>
         </LayoutMain>
         <LayoutSidebar side="right">
@@ -235,35 +235,37 @@ export const FlatItems: Story = {
 };
 
 /** Active item tracking — click items to navigate. */
+function ActiveItemTrackingExample() {
+  const [activeId, setActiveId] = useState("dashboard");
+  return (
+    <Layout defaultSidebarOpen className="bg-background">
+      <LayoutHeader>
+        <span className="font-semibold">Active: {activeId}</span>
+      </LayoutHeader>
+      <LayoutBody>
+        <LayoutSidebar>
+          <LayoutMenu
+            items={sampleItems}
+            activeItemId={activeId}
+            searchable
+            onItemClick={(item) => {
+              if (!item.children?.length) setActiveId(item.id);
+            }}
+          />
+        </LayoutSidebar>
+        <LayoutMain>
+          <p className="text-muted-foreground">
+            Click a leaf menu item to change the active state. The current active item
+            is <strong>{activeId}</strong>.
+          </p>
+        </LayoutMain>
+      </LayoutBody>
+    </Layout>
+  );
+}
+
 export const ActiveItemTracking: Story = {
-  render: () => {
-    const [activeId, setActiveId] = useState("dashboard");
-    return (
-      <Layout defaultSidebarOpen className="bg-background">
-        <LayoutHeader>
-          <span className="font-semibold">Active: {activeId}</span>
-        </LayoutHeader>
-        <LayoutBody>
-          <LayoutSidebar>
-            <LayoutMenu
-              items={sampleItems}
-              activeItemId={activeId}
-              searchable
-              onItemClick={(item) => {
-                if (!item.children?.length) setActiveId(item.id);
-              }}
-            />
-          </LayoutSidebar>
-          <LayoutMain>
-            <p className="text-muted-foreground">
-              Click a leaf menu item to change the active state. The current active item
-              is <strong>{activeId}</strong>.
-            </p>
-          </LayoutMain>
-        </LayoutBody>
-      </Layout>
-    );
-  },
+  render: () => <ActiveItemTrackingExample />,
 };
 
 /** Custom styling for menu items and active state using className props. */
@@ -440,7 +442,7 @@ export const WordPressHooks: Story = {
             </LayoutHeader>
             <p className="text-muted-foreground">
               The button above lives outside the Layout tree but toggles the sidebar
-              via <code>doAction("myapp_layout_toggle")</code>. Set the <code>namespace</code> prop
+              via <code>doAction(&quot;myapp_layout_toggle&quot;)</code>. Set the <code>namespace</code> prop
               on Layout to control the hook name.
             </p>
           </LayoutMain>

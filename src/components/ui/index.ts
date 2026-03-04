@@ -190,6 +190,17 @@ export {
   useSidebarOptional,
 } from "./sidebar";
 
+// Chart component
+export {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+  ChartStyle,
+  type ChartConfig,
+} from "./chart";
+
 // Skeleton component
 export { Skeleton } from "./skeleton";
 
