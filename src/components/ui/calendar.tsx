@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "./button";
-import { getWordPressTimezone, getWordPressLocale } from "@/lib/wordpress-date";
+import { getWordPressTimezone, getWordPressLocale, createWordPressLocale } from "@/lib/wordpress-date";
 import { wpLocaleToDayPickerKey, isWpLocaleRtl } from "@/lib/locale-map";
 
 // Use React.ComponentProps to preserve the full discriminated-union signature of
@@ -82,11 +82,12 @@ function Calendar({
   }, [wpTimezone]);
 
   // ── Locale: honour consumer-provided locale first ──────────────────────────
-  // When `locale` is omitted we return `undefined` so DayPicker uses its
-  // built-in enUS default. Consumer should import and pass a locale object for
-  // other languages (see Storybook examples). The wpLocale / wpLocaleToDayPickerKey
-  // helpers make it easy to pick the right import.
-  const resolvedLocale = locale;
+  // When `locale` is omitted, auto-detect from WordPress settings by building
+  // a date-fns-compatible locale from WP's l10n data (month/day names, etc.).
+  const resolvedLocale = React.useMemo(() => {
+    if (locale) return locale;
+    return createWordPressLocale() ?? undefined;
+  }, [locale]);
 
   // ── RTL direction ──────────────────────────────────────────────────────────
   const resolvedDir = React.useMemo<string | undefined>(() => {

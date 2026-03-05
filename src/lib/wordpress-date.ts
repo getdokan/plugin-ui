@@ -7,6 +7,8 @@
 
 import { getSettings, dateI18n, date as wpDate } from "@wordpress/date";
 
+import type { Locale as DateFnsLocale } from "date-fns";
+
 /** WordPress date/time settings shape returned by getSettings(). */
 export interface WordPressDateSettings {
   timezone: {
@@ -23,7 +25,16 @@ export interface WordPressDateSettings {
   dateFormat: string;
   /** WordPress time format string, e.g. "H:i". */
   timeFormat: string;
-  l10n: Record<string, unknown>;
+  l10n: {
+    locale: string;
+    months: string[];
+    monthsShort: string[];
+    weekdays: string[];
+    weekdaysShort: string[];
+    meridiem: { am: string; pm: string; AM: string; PM: string };
+    startOfWeek: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+    [key: string]: unknown;
+  };
 }
 
 /**
@@ -170,4 +181,111 @@ export function formatWordPressDateTime(
   const dateStr = formatWordPressDate(getWordPressDateFormat(), date, timezone);
   const timeStr = formatWordPressDate(getWordPressTimeFormat(), date, timezone);
   return `${dateStr} ${timeStr}`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// WordPress → date-fns locale adapter
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Helper: creates a `localize` function compatible with date-fns `Locale["localize"]`.
+ * Returns the value from the given array based on the `width` option.
+ */
+function buildLocalizer(wide: string[], abbreviated: string[], narrow?: string[]) {
+  return (index: number, options?: { width?: string }) => {
+    const w = options?.width ?? "wide";
+    if (w === "narrow" && narrow) return narrow[index] ?? abbreviated[index] ?? wide[index] ?? "";
+    if (w === "abbreviated" || w === "short") return abbreviated[index] ?? wide[index] ?? "";
+    return wide[index] ?? "";
+  };
+}
+
+/**
+ * Helper: creates a `formatLong` entry compatible with date-fns.
+ * date-fns calls these with `{ width: 'full' | 'long' | 'medium' | 'short' }`.
+ * Must return date-fns format tokens (e.g. "EEEE, MMMM d, y"), NOT PHP patterns.
+ */
+function buildFormatLong(formats: {
+  full: string;
+  long: string;
+  medium: string;
+  short: string;
+}) {
+  return (options?: { width?: "full" | "long" | "medium" | "short" }) => {
+    const w = options?.width ?? "full";
+    return formats[w] ?? formats.full;
+  };
+}
+
+/**
+ * Builds a date-fns-compatible `Locale` object from WordPress `@wordpress/date`
+ * settings. This lets react-day-picker render month names, weekday names, and
+ * first-day-of-week correctly without importing any date-fns locale bundles.
+ *
+ * Returns `null` when WordPress settings are unavailable (e.g. Storybook).
+ *
+ * @example
+ * ```tsx
+ * const wpLocale = createWordPressLocale();
+ * <Calendar locale={wpLocale ?? undefined} />
+ * ```
+ */
+export function createWordPressLocale(): DateFnsLocale | null {
+  const settings = getWordPressDateSettings();
+  if (!settings) return null;
+
+  const { l10n } = settings;
+
+  // WordPress l10n weekdays are [Sunday, Monday, ...] (index 0 = Sunday)
+  // date-fns day localize expects the same order.
+  const weekdaysNarrow = l10n.weekdaysShort.map((d: string) => d.charAt(0));
+
+  // We only need localize + formatLong + options for react-day-picker rendering.
+  // formatDistance, formatRelative, match are unused by DayPicker, so we cast.
+  const locale = {
+    code: l10n.locale || "en",
+
+    localize: {
+      month: buildLocalizer(l10n.months, l10n.monthsShort),
+      day: buildLocalizer(l10n.weekdays, l10n.weekdaysShort, weekdaysNarrow),
+
+      // Minimal stubs for other localize properties date-fns may access.
+      ordinalNumber: (n: number) => String(n),
+      era: (n: number) => (n === 0 ? "BC" : "AD"),
+      quarter: (n: number) => `Q${n + 1}`,
+      dayPeriod: (period: string) => {
+        if (period === "am") return l10n.meridiem?.am ?? "am";
+        if (period === "pm") return l10n.meridiem?.pm ?? "pm";
+        return period;
+      },
+    } as DateFnsLocale["localize"],
+
+    formatLong: {
+      date: buildFormatLong({
+        full: "EEEE, MMMM d, y",
+        long: "MMMM d, y",
+        medium: "MMM d, y",
+        short: "MM/dd/y",
+      }),
+      time: buildFormatLong({
+        full: "h:mm:ss a zzzz",
+        long: "h:mm:ss a z",
+        medium: "h:mm:ss a",
+        short: "h:mm a",
+      }),
+      dateTime: buildFormatLong({
+        full: "{{date}} '{{time}}'",
+        long: "{{date}} '{{time}}'",
+        medium: "{{date}}, {{time}}",
+        short: "{{date}}, {{time}}",
+      }),
+    } as DateFnsLocale["formatLong"],
+
+    options: {
+      weekStartsOn: l10n.startOfWeek ?? 0,
+      firstWeekContainsDate: 1,
+    },
+  };
+
+  return locale as DateFnsLocale;
 }

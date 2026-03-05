@@ -23,6 +23,7 @@ module.exports = {
         '@wordpress/element': '@wordpress/element',
         '@wordpress/components': '@wordpress/components',
         '@wordpress/block-editor': '@wordpress/block-editor',
+        '@wordpress/date': '@wordpress/date',
         '@wordpress/hooks': '@wordpress/hooks',
         '@wordpress/i18n': '@wordpress/i18n',
         '@wordpress/dataviews': '@wordpress/dataviews',

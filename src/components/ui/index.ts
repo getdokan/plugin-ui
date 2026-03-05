@@ -256,6 +256,7 @@ export {
   formatWordPressDate,
   formatWordPressDateTime,
   getWordPressDateSettings,
+  createWordPressLocale,
   type WordPressDateSettings,
 } from "@/lib/wordpress-date";
 

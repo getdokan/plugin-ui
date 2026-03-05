@@ -236,8 +236,16 @@ export {
     useComboboxAnchor,
     // Rich Text Editor
     RichTextEditor,
+    // Calendar & DatePicker
+    Calendar,
+    DatePicker,
+    DateRangePicker,
     // Types
     type RichTextEditorProps,
+    type CalendarProps,
+    type DatePickerProps,
+    type DateRangePickerProps,
+    type DateRange,
     type CircularProgressProps,
     type ComponentPreviewProps,
     type CurrencyInputProps,
