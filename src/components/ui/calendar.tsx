@@ -111,7 +111,7 @@ function Calendar({
       timeZone={resolvedTimezone}
       locale={resolvedLocale}
       classNames={{
-        root: "",
+        root: "rdp-root",
         // `months` is the nearest positioned ancestor for the Nav element
         // (Nav is a direct child of Months in react-day-picker v9 DOM).
         // No extra padding needed — the nav is overlaid on top of month_caption.
