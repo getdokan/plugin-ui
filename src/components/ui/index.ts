@@ -286,6 +286,9 @@ export {
   type LayoutContextValue,
 } from "../wordpress/layout";
 
+// Sonner (toast notifications)
+export { Toaster } from "./sonner";
+
 // Layout menu (searchable, multi-label nested menu for LayoutSidebar)
 export {
   LayoutMenu,

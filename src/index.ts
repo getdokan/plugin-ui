@@ -236,6 +236,8 @@ export {
     useComboboxAnchor,
     // Rich Text Editor
     RichTextEditor,
+    // Sonner (toast notifications)
+    Toaster,
     // Calendar & DatePicker
     Calendar,
     DatePicker,
@@ -335,3 +337,4 @@ export {
 export { cn } from "@/lib/utils";
 export { twMerge } from "tailwind-merge";
 export * as recharts from 'recharts';
+export { toast } from 'sonner';
