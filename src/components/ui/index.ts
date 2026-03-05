@@ -239,6 +239,35 @@ export {
 } from "./field";
 export { DataViews, type DataViewAction, type DataViewField, type DataViewFilterField, type DataViewFilterProps, type DataViewLayouts, type DataViewsProps, type DataViewState } from '../wordpress/dataviews';
 
+// Calendar component (react-day-picker + WordPress timezone/locale)
+export { Calendar, type CalendarProps } from "./calendar";
+export {
+  wpLocaleToDayPickerKey,
+  isWpLocaleRtl,
+  WP_TO_DAY_PICKER_LOCALE,
+  RTL_WP_LOCALES,
+  type DayPickerLocaleKey,
+} from "@/lib/locale-map";
+export {
+  getWordPressTimezone,
+  getWordPressLocale,
+  getWordPressDateFormat,
+  getWordPressTimeFormat,
+  formatWordPressDate,
+  formatWordPressDateTime,
+  getWordPressDateSettings,
+  type WordPressDateSettings,
+} from "@/lib/wordpress-date";
+
+// DatePicker component
+export {
+  DatePicker,
+  DateRangePicker,
+  type DatePickerProps,
+  type DateRangePickerProps,
+  type DateRange,
+} from "./date-picker";
+
 // Layout (responsive app layout with optional header/footer and right sidebar)
 export {
   Layout,
