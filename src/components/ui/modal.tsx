@@ -1,6 +1,10 @@
 import {
+  createContext,
   forwardRef,
+  useContext,
   useEffect,
+  useId,
+  useLayoutEffect,
   useRef,
   useState,
   type HTMLAttributes,
@@ -8,6 +12,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
+import { getThemeStyles, useThemeOptional } from "@/providers";
 
 /* ============================================
    Modal Overlay
@@ -15,12 +20,15 @@ import { cn } from "@/lib/utils";
 
 interface ModalOverlayProps extends HTMLAttributes<HTMLDivElement> {
   onClose?: () => void;
+  "data-state"?: "open" | "closed";
 }
 
 const ModalOverlay = forwardRef<HTMLDivElement, ModalOverlayProps>(
-  ({ className, onClose, ...props }, ref) => (
+  ({ className, onClose, "data-state": dataState, ...props }, ref) => (
     <div
       ref={ref}
+      data-state={dataState}
+      aria-hidden="true"
       className={cn(
         "fixed inset-0 z-50 bg-black/50 backdrop-blur-sm",
         "data-[state=open]:animate-in data-[state=closed]:animate-out",
@@ -41,12 +49,14 @@ ModalOverlay.displayName = "ModalOverlay";
 
 interface ModalContentProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
+  "data-state"?: "open" | "closed";
 }
 
 const ModalContent = forwardRef<HTMLDivElement, ModalContentProps>(
-  ({ className, children, ...props }, ref) => (
+  ({ className, children, "data-state": dataState, ...props }, ref) => (
     <div
       ref={ref}
+      data-state={dataState}
       className={cn(
         "fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2",
         "w-full max-w-lg max-h-[85vh] overflow-auto",
@@ -80,8 +90,9 @@ const ModalHeader = forwardRef<HTMLDivElement, ModalHeaderProps>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
+      data-slot="modal-header"
       className={cn(
-        "flex flex-col space-y-1.5 text-center sm:text-left border-b border-border py-4 px-8",
+        "flex flex-col space-y-1.5 text-center sm:text-left border-b p-5",
         className,
       )}
       {...props}
@@ -99,17 +110,27 @@ interface ModalTitleProps extends HTMLAttributes<HTMLHeadingElement> {
   children?: ReactNode;
 }
 
+const ModalContext = createContext<{
+  labelId: string | undefined;
+  descriptionId: string | undefined;
+} | null>(null);
+
 const ModalTitle = forwardRef<HTMLHeadingElement, ModalTitleProps>(
-  ({ className, ...props }, ref) => (
-    <h2
-      ref={ref}
-      className={cn(
-        "text-lg font-semibold leading-none tracking-tight text-foreground",
-        className,
-      )}
-      {...props}
-    />
-  ),
+  ({ className, id: idProp, ...props }, ref) => {
+    const context = useContext(ModalContext);
+    const id = idProp ?? context?.labelId;
+    return (
+      <h2
+        ref={ref}
+        id={id}
+        className={cn(
+          "text-lg font-bold text-foreground",
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
 );
 
 ModalTitle.displayName = "ModalTitle";
@@ -125,13 +146,18 @@ interface ModalDescriptionProps extends HTMLAttributes<HTMLParagraphElement> {
 const ModalDescription = forwardRef<
   HTMLParagraphElement,
   ModalDescriptionProps
->(({ className, ...props }, ref) => (
-  <p
-    ref={ref}
-    className={cn("p-8", className)}
-    {...props}
-  />
-));
+>(({ className, id: idProp, ...props }, ref) => {
+  const context = useContext(ModalContext);
+  const id = idProp ?? context?.descriptionId;
+  return (
+    <p
+      ref={ref}
+      id={id}
+      className={cn("px-5 py-8", className)}
+      {...props}
+    />
+  );
+});
 
 ModalDescription.displayName = "ModalDescription";
 
@@ -147,8 +173,9 @@ const ModalFooter = forwardRef<HTMLDivElement, ModalFooterProps>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
+      data-slot="modal-footer"
       className={cn(
-        "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 border-t border-border py-5 px-8",
+        "flex sm:flex-row sm:justify-end sm:space-x-2 border-t p-5",
         className,
       )}
       {...props}
@@ -167,12 +194,13 @@ interface ModalCloseProps extends HTMLAttributes<HTMLButtonElement> {
 }
 
 const ModalClose = forwardRef<HTMLButtonElement, ModalCloseProps>(
-  ({ className, onClose, ...props }, ref) => (
+  ({ className, onClose, "aria-label": ariaLabel, ...props }, ref) => (
     <button
       ref={ref}
       type="button"
+      aria-label={ariaLabel ?? "Close"}
       className={cn(
-        "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity",
+        "absolute right-4 top-4 cursor-pointer rounded-sm opacity-70 ring-offset-background transition-opacity",
         "hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
         "disabled:pointer-events-none",
         className,
@@ -250,6 +278,12 @@ export interface ModalProps {
    * @default 'default'
    */
   size?: "sm" | "default" | "lg" | "xl" | "full";
+
+  /**
+   * ARIA role for the modal content
+   * @default 'dialog'
+   */
+  role?: "dialog" | "alertdialog";
 }
 
 const sizeClasses = {
@@ -259,6 +293,11 @@ const sizeClasses = {
   xl: "max-w-4xl",
   full: "max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)]",
 };
+
+let bodyScrollLockCount = 0;
+
+const FOCUSABLE_SELECTOR =
+  'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 /**
  * Modal component that portals content to document.body.
@@ -294,13 +333,18 @@ export function Modal({
   closeOnEscape = true,
   className,
   size = "default",
+  role = "dialog",
 }: ModalProps) {
+  const theme = useThemeOptional();
+  const labelId = useId();
+  const descriptionId = useId();
   const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(
     null,
   );
   const previousActiveElement = useRef<Element | null>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!open) {
       setPortalContainer(null);
       return;
@@ -315,11 +359,16 @@ export function Modal({
     document.body.appendChild(container);
     setPortalContainer(container);
 
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    bodyScrollLockCount += 1;
+    if (bodyScrollLockCount === 1) {
+      document.body.style.overflow = "hidden";
+    }
 
     return () => {
-      document.body.style.overflow = originalOverflow;
+      bodyScrollLockCount -= 1;
+      if (bodyScrollLockCount === 0) {
+        document.body.style.overflow = "";
+      }
       document.body.removeChild(container);
 
       if (previousActiveElement.current instanceof HTMLElement) {
@@ -328,7 +377,21 @@ export function Modal({
     };
   }, [open]);
 
-  // Handle escape key
+  useEffect(() => {
+    if (!portalContainer || !theme) return;
+
+    const styles = getThemeStyles(theme.tokens);
+    Object.entries(styles).forEach(([key, value]) => {
+      portalContainer.style.setProperty(key, value);
+    });
+    portalContainer.setAttribute("data-pui-mode", theme.resolvedMode);
+    if (theme.resolvedMode === "dark") {
+      portalContainer.classList.add("dark");
+    } else {
+      portalContainer.classList.remove("dark");
+    }
+  }, [portalContainer, theme]);
+
   useEffect(() => {
     if (!open || !closeOnEscape) return;
 
@@ -342,18 +405,66 @@ export function Modal({
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [open, closeOnEscape, onClose]);
 
+  useLayoutEffect(() => {
+    if (!portalContainer || !open) return;
+
+    const container = contentRef.current;
+    if (!container) return;
+
+    const focusables = container.querySelectorAll<HTMLElement>(
+      FOCUSABLE_SELECTOR,
+    );
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+
+    (first ?? container).focus();
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
+      }
+    };
+
+    container.addEventListener("keydown", handleKeyDown);
+    return () => container.removeEventListener("keydown", handleKeyDown);
+  }, [portalContainer, open]);
+
   if (!open || !portalContainer) {
     return null;
   }
 
+  const contextValue = { labelId, descriptionId };
+
   return createPortal(
-    <>
-      <ModalOverlay onClose={closeOnOverlayClick ? onClose : undefined} />
-      <ModalContent className={cn(sizeClasses[size], className)}>
+    <ModalContext.Provider value={contextValue}>
+      <ModalOverlay
+        data-state="open"
+        onClose={closeOnOverlayClick ? onClose : undefined}
+      />
+      <ModalContent
+        ref={contentRef}
+        role={role}
+        aria-modal="true"
+        aria-labelledby={labelId}
+        aria-describedby={descriptionId}
+        tabIndex={-1}
+        data-state="open"
+        className={cn(sizeClasses[size], className)}
+      >
         {showCloseButton && <ModalClose onClose={onClose} />}
         {children}
       </ModalContent>
-    </>,
+    </ModalContext.Provider>,
     portalContainer,
   );
 }

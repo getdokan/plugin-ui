@@ -53,6 +53,11 @@ export {
     ModalFooter, ModalHeader, ModalOverlay, ModalTitle, type ModalProps
 } from "./modal";
 export {
+  Confirmation,
+  type ConfirmationProps,
+  type ConfirmationVariant,
+} from "./confirmation";
+export {
   ComponentPreview,
   DesignSystemSection,
   type ComponentPreviewProps,

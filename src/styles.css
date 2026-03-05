@@ -243,6 +243,22 @@
 }
 
 /* ============================================
+   Modal Header (overrides reset border-color)
+   ============================================ */
+
+.pui-root [data-slot="modal-header"] {
+    border-bottom: 1px solid #E9E9E9;
+}
+
+/* ============================================
+   Modal Footer (overrides reset border-color)
+   ============================================ */
+
+.pui-root [data-slot="modal-footer"] {
+    border-top: 1px solid #E9E9E9;
+}
+
+/* ============================================
    Component Base Styles
    ============================================ */
 
