@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Meta, StoryObj } from '@storybook/react';
-import React, { useRef, useState } from 'react';
-import { Save } from 'lucide-react';
+import React, { useRef, useState, useCallback } from 'react';
+import { Save, Copy, Check } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Settings } from './index';
 import type { SettingsElement, SettingsProps } from './settings-types';
@@ -23,12 +23,39 @@ type LogEntry = {
 };
 
 function EventLog({ entries }: { entries: LogEntry[] }) {
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = useCallback(() => {
+        const text = entries
+            .map((e) => {
+                const base = `${e.time} ${e.type === 'save' ? 'onSave' : 'onChange'} pageId="${e.pageId}"`;
+                if (e.type === 'change') return `${base} key="${e.key}" value=${JSON.stringify(e.value)}`;
+                if (e.type === 'save') return `${base} values=${JSON.stringify(e.values, null, 2)}`;
+                return base;
+            })
+            .join('\n');
+        navigator.clipboard.writeText(text).then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        });
+    }, [entries]);
+
     if (entries.length === 0) return null;
     return (
         <div className="mt-4 rounded-lg border border-border bg-muted/40 max-h-64 overflow-y-auto">
             <div className="px-3 py-2 border-b border-border bg-muted/60 flex justify-between items-center">
                 <span className="text-xs font-semibold text-foreground">Event Log</span>
-                <span className="text-xs text-muted-foreground">{entries.length} events</span>
+                <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground">{entries.length} events</span>
+                    <button
+                        onClick={handleCopy}
+                        className="inline-flex items-center gap-1 px-1.5 py-0.5 text-xs text-muted-foreground hover:text-foreground rounded transition-colors"
+                        title="Copy full log to clipboard"
+                    >
+                        {copied ? <Check className="w-3 h-3 text-green-600" /> : <Copy className="w-3 h-3" />}
+                        {copied ? 'Copied' : 'Copy'}
+                    </button>
+                </div>
             </div>
             {entries.length > 0 ? (
                 <div className="divide-y divide-border">
