@@ -177,15 +177,24 @@ export function SettingsProvider({
         return map;
     }, [scopeFieldKeysMap]);
 
+    // Track previous loading state to detect when loading finishes.
+    const [prevLoading, setPrevLoading] = useState(loading);
+
     // Sync internal values when external values change.
-    // NOTE: Do NOT reset initialValues here — that would break dirty tracking,
+    // NOTE: Do NOT reset initialValues on every change — that would break dirty tracking,
     // because the consumer typically updates externalValues in their onChange handler
-    // (controlled component pattern). initialValues is captured once on mount
-    // and only reset after a save via resetPageDirty.
+    // (controlled component pattern). However, when loading transitions from true→false,
+    // we re-snapshot initialValues so dirty tracking compares against the real saved data
+    // (not just schema defaults captured at mount time before async data arrived).
     useEffect(() => {
         const merged = { ...defaultValues, ...(externalValues || {}) };
         setInternalValues(merged);
-    }, [defaultValues, externalValues]);
+
+        if (prevLoading && !loading) {
+            setInitialValues(merged);
+        }
+        setPrevLoading(loading);
+    }, [defaultValues, externalValues, loading, prevLoading]);
 
     // Auto-select first page/subpage on schema load
     useEffect(() => {
