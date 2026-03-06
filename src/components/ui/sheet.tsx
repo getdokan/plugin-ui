@@ -44,7 +44,7 @@ function SheetContent({
   showCloseButton?: boolean
 }) {
   return (
-    <SheetPortal>
+    <SheetPortal className="pui-root">
       <SheetOverlay />
       <SheetPrimitive.Popup
         data-slot="sheet-content"
