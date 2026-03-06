@@ -66,6 +66,8 @@ export interface SettingsContextValue {
     isSidebarVisible: boolean;
     /** Check if any field on a specific page has been modified */
     isPageDirty: (pageId: string) => boolean;
+    /** Check if any field on a specific page has a validation error */
+    hasScopeErrors: (scopeId: string) => boolean;
     /** Get only the values that belong to a specific page */
     getPageValues: (pageId: string) => Record<string, any>;
     /** Trigger a save for the given scope. Builds treeValues from flat pageValues, then calls the consumer's onSave(scopeId, treeValues, flatValues). */
@@ -230,6 +232,16 @@ export function SettingsProvider({
             return keys.some((key) => values[key] !== initialValues[key]);
         },
         [scopeFieldKeysMap, values, initialValues]
+    );
+
+    // Per-scope error check
+    const hasScopeErrors = useCallback(
+        (scopeId: string): boolean => {
+            const keys = scopeFieldKeysMap.get(scopeId);
+            if (!keys) return false;
+            return keys.some((key) => key in errors);
+        },
+        [scopeFieldKeysMap, errors]
     );
 
     // Per-scope values extraction
@@ -510,6 +522,7 @@ export function SettingsProvider({
             getActiveTabs,
             isSidebarVisible,
             isPageDirty,
+            hasScopeErrors,
             getPageValues,
             save: handleOnSave,
             renderSaveButton,
@@ -535,6 +548,7 @@ export function SettingsProvider({
             getActiveTabs,
             isSidebarVisible,
             isPageDirty,
+            hasScopeErrors,
             getPageValues,
             handleOnSave,
             renderSaveButton,

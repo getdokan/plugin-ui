@@ -125,6 +125,8 @@ export interface SaveButtonRenderProps {
     scopeId: string;
     /** Whether any field in the current scope has been modified. */
     dirty: boolean;
+    /** Whether any field in the current scope has a validation error (client-side or server-side). */
+    hasErrors: boolean;
     /** Call this to trigger save — internally gathers scope values and invokes the consumer's `onSave(scopeId, treeValues, flatValues)`. */
     onSave: () => void;
 }

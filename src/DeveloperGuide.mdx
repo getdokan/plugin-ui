@@ -915,8 +915,8 @@ function SettingsPage() {
       onSave={async (scopeId, treeValues) => {
         await apiFetch({ path: `/my-plugin/v1/settings/${scopeId}`, method: 'POST', data: treeValues });
       }}
-      renderSaveButton={({ dirty, onSave }) => (
-        <Button onClick={onSave} disabled={!dirty}>{__('Save Changes', 'my-plugin')}</Button>
+      renderSaveButton={({ dirty, hasErrors, onSave }) => (
+        <Button onClick={onSave} disabled={!dirty || hasErrors}>{__('Save Changes', 'my-plugin')}</Button>
       )}
     />
   );

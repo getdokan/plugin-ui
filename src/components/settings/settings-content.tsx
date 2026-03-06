@@ -20,6 +20,7 @@ export function SettingsContent({ className }: { className?: string }) {
         activeTab,
         setActiveTab,
         isPageDirty,
+        hasScopeErrors,
         getPageValues,
         save,
         renderSaveButton,
@@ -32,9 +33,10 @@ export function SettingsContent({ className }: { className?: string }) {
     // Scope ID: subpage ID if a subpage is active, otherwise page ID
     const scopeId = activeSubpage || activePage;
     const dirty = isPageDirty(scopeId);
+    const hasErrors = hasScopeErrors(scopeId);
 
     const handleSave = () => {
-        if (!save) return;
+        if (!save || hasErrors) return;
         const scopeValues = getPageValues(scopeId);
         save(scopeId, scopeValues);
     };
@@ -134,7 +136,7 @@ export function SettingsContent({ className }: { className?: string }) {
                 data-testid={`settings-save-${scopeId}`}
               >
                   {renderSaveButton
-                    ? renderSaveButton({ scopeId, dirty, onSave: handleSave })
+                    ? renderSaveButton({ scopeId, dirty, hasErrors, onSave: handleSave })
                     : null}
               </div>
             )}

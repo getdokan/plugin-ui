@@ -1135,8 +1135,8 @@ function SettingsPage() {
           data: treeValues,
         });
       }}
-      renderSaveButton={({ dirty, onSave }) => (
-        <Button onClick={onSave} disabled={!dirty}>
+      renderSaveButton={({ dirty, hasErrors, onSave }) => (
+        <Button onClick={onSave} disabled={!dirty || hasErrors}>
           {__('Save Changes', 'my-plugin')}
         </Button>
       )}
