@@ -145,6 +145,8 @@ export {
     PopoverPortal,
     PopoverTitle,
     PopoverTrigger,
+    PopoverArrow,
+    PopoverClose,
     // Sheet
     Sheet,
     SheetTrigger,

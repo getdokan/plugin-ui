@@ -144,6 +144,8 @@ export {
   PopoverHeader,
   PopoverDescription,
   PopoverTitle,
+  PopoverClose,
+  PopoverArrow,
 } from "./popover";
 
 // ColorPicker component
