@@ -68,8 +68,8 @@ export interface SettingsContextValue {
     isPageDirty: (pageId: string) => boolean;
     /** Get only the values that belong to a specific page */
     getPageValues: (pageId: string) => Record<string, any>;
-    /** Consumer-provided save handler (exposed so SettingsContent can call it) */
-    onSave?: (pageId: string, treeValues: Record<string, any>, flatValues: Record<string, any>) => void | Promise<void>;
+    /** Trigger a save for the given scope. Builds treeValues from flat pageValues, then calls the consumer's onSave(scopeId, treeValues, flatValues). */
+    save?: (scopeId: string, pageValues: Record<string, any>) => void | Promise<void>;
     /** Consumer-provided render function for the save button */
     renderSaveButton?: (props: SaveButtonRenderProps) => React.ReactNode;
 }
@@ -502,7 +502,7 @@ export function SettingsProvider({
             isSidebarVisible,
             isPageDirty,
             getPageValues,
-            onSave: handleOnSave,
+            save: handleOnSave,
             renderSaveButton,
         }),
         [

@@ -21,7 +21,7 @@ export function SettingsContent({ className }: { className?: string }) {
         setActiveTab,
         isPageDirty,
         getPageValues,
-        onSave,
+        save,
         renderSaveButton,
     } = useSettings();
 
@@ -34,13 +34,13 @@ export function SettingsContent({ className }: { className?: string }) {
     const dirty = isPageDirty(scopeId);
 
     const handleSave = () => {
-        if (!onSave) return;
+        if (!save) return;
         const scopeValues = getPageValues(scopeId);
-        onSave(scopeId, scopeValues);
+        save(scopeId, scopeValues);
     };
 
     // Determine whether to show a save area
-    const showSaveArea = Boolean(onSave);
+    const showSaveArea = Boolean(save);
 
     if (!contentSource) {
         return (

@@ -622,7 +622,7 @@ import { Settings, Button } from "@wedevs/plugin-ui";
     <tr>
       <td><code>onSave</code></td>
       <td><code>{'() => void'}</code></td>
-      <td>Call this to trigger <code>onSave(scopeId, treeValues, flatValues)</code></td>
+      <td>Call this to trigger save — internally gathers scope values and calls the consumer's <code>onSave(scopeId, treeValues, flatValues)</code></td>
     </tr>
   </tbody>
 </table>
