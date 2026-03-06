@@ -69,7 +69,7 @@ export interface SettingsContextValue {
     /** Get only the values that belong to a specific page */
     getPageValues: (pageId: string) => Record<string, any>;
     /** Consumer-provided save handler (exposed so SettingsContent can call it) */
-    onSave?: (pageId: string, values: Record<string, any>) => void | Promise<void>;
+    onSave?: (pageId: string, treeValues: Record<string, any>, flatValues: Record<string, any>) => void | Promise<void>;
     /** Consumer-provided render function for the save button */
     renderSaveButton?: (props: SaveButtonRenderProps) => React.ReactNode;
 }
@@ -88,7 +88,7 @@ export interface SettingsProviderProps {
     schema: SettingsElement[];
     values?: Record<string, any>;
     onChange?: (scopeId: string, key: string, value: any) => void;
-    onSave?: (scopeId: string, values: Record<string, any>) => void | Promise<void>;
+    onSave?: (scopeId: string, treeValues: Record<string, any>, flatValues: Record<string, any>) => void | Promise<void>;
     renderSaveButton?: (props: SaveButtonRenderProps) => React.ReactNode;
     loading?: boolean;
     hookPrefix?: string;
@@ -261,10 +261,33 @@ export function SettingsProvider({
     const handleOnSave = useCallback(
         async (pageId: string, pageValues: Record<string, any>) => {
             if (!onSave) return;
-            await Promise.resolve(onSave(pageId, pageValues));
-            resetPageDirty(pageId);
+            // Build nested tree from dot-separated keys
+            const treeValues: Record<string, any> = {};
+            for (const [dotKey, val] of Object.entries(pageValues)) {
+                const parts = dotKey.split('.');
+                let cursor: Record<string, any> = treeValues;
+                for (let i = 0; i < parts.length - 1; i++) {
+                    if (!(parts[i] in cursor) || typeof cursor[parts[i]] !== 'object') {
+                        cursor[parts[i]] = {};
+                    }
+                    cursor = cursor[parts[i]];
+                }
+                cursor[parts[parts.length - 1]] = val;
+            }
+            try {
+                await Promise.resolve(onSave(pageId, treeValues, pageValues));
+                resetPageDirty(pageId);
+            } catch (error: any) {
+                console.error('[Settings] onSave error caught:', error);
+                // If the error contains field-level errors (e.g. from a 400 response),
+                // merge them into the errors state so they display on the relevant fields.
+                // Error keys should match field dependency_key values.
+                if (error && typeof error === 'object' && error.errors && typeof error.errors === 'object') {
+                    setErrors((prev) => ({ ...prev, ...error.errors }));
+                }
+            }
         },
-        [onSave, resetPageDirty]
+        [onSave, resetPageDirty, setErrors]
     );
 
     // Update a field value
