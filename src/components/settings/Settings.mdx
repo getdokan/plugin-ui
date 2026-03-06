@@ -82,8 +82,8 @@ function MySettingsPage() {
         // flatValues: original flat dot-keyed values
         console.log("Saving", scopeId, treeValues, flatValues);
       }}
-      renderSaveButton={({ dirty, onSave }) => (
-        <Button onClick={onSave} disabled={!dirty}>
+      renderSaveButton={({ dirty, hasErrors, onSave }) => (
+        <Button onClick={onSave} disabled={!dirty || hasErrors}>
           {__("Save Changes", "my-plugin")}
         </Button>
       )}
@@ -571,6 +571,34 @@ Fired when the save button is clicked. Only receives values **scoped to the acti
 />
 ```
 
+### Server-Side Validation Errors
+
+If your API returns field-level validation errors, **throw an object** with an `errors` property
+from `onSave`. The keys must match field `dependency_key` values:
+
+```tsx
+<Settings
+  onSave={async (scopeId, treeValues, flatValues) => {
+    const res = await fetch(`/wp-json/my-plugin/v1/settings/${scopeId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(treeValues),
+    });
+
+    if (!res.ok) {
+      const data = await res.json();
+      // Throw with { errors: { [dependency_key]: "message" } }
+      throw { errors: data.errors };
+      // e.g. { errors: { "dokan.general.store_name": "Store name already taken" } }
+    }
+  }}
+/>
+```
+
+- Errors display on the matching fields in red (`text-destructive`)
+- The save button is disabled while errors are present (`hasErrors` becomes `true`)
+- Errors auto-clear when the user changes the errored field
+
 ### Scope ID resolution
 
 The `scopeId` follows this logic:
@@ -592,8 +620,8 @@ import { __ } from "@wordpress/i18n";
 import { Settings, Button } from "@wedevs/plugin-ui";
 
 <Settings
-  renderSaveButton={({ scopeId, dirty, onSave }) => (
-    <Button onClick={onSave} disabled={!dirty}>
+  renderSaveButton={({ scopeId, dirty, hasErrors, onSave }) => (
+    <Button onClick={onSave} disabled={!dirty || hasErrors}>
       {__("Save Changes", "my-text-domain")}
     </Button>
   )}
@@ -618,6 +646,11 @@ import { Settings, Button } from "@wedevs/plugin-ui";
       <td><code>dirty</code></td>
       <td><code>boolean</code></td>
       <td><code>true</code> if any field in the scope has been modified</td>
+    </tr>
+    <tr>
+      <td><code>hasErrors</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code> if any field in the scope has a validation error (client-side or server-side)</td>
     </tr>
     <tr>
       <td><code>onSave</code></td>

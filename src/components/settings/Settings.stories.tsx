@@ -1108,13 +1108,22 @@ function SettingsStoryWrapper({
                         setValues((prev) => ({ ...prev, [key]: value }));
                         log({ type: 'change', pageId: scopeId, key, value });
                     }}
-                    onSave={(scopeId, scopeValues) => {
+                    onSave={async (scopeId, _treeValues, flatValues) => {
                         // eslint-disable-next-line no-console
-                        console.log(`Save scope "${scopeId}":`, scopeValues);
-                        log({ type: 'save', pageId: scopeId, values: scopeValues });
+                        console.log(`Save scope "${scopeId}":`, flatValues);
+                        log({ type: 'save', pageId: scopeId, values: flatValues });
+
+                        // Simulate server-side validation: if store_name is "test", throw a field error
+                        if (flatValues['store_name'] === 'test') {
+                            throw {
+                                errors: {
+                                    store_name: 'Store name "test" is already taken. Please choose another.',
+                                },
+                            };
+                        }
                     }}
-                    renderSaveButton={({ dirty, onSave: save }) => (
-                        <Button onClick={save} disabled={!dirty}>
+                    renderSaveButton={({ dirty, hasErrors, onSave: save }) => (
+                        <Button onClick={save} disabled={!dirty || hasErrors}>
                             <Save className="size-4 mr-2" />
                             Save Changes
                         </Button>
@@ -1190,6 +1199,65 @@ export const DependencyDemo: Story = {
             initialValues={{ enable_store_listing: false }}
         />
     ),
+};
+
+function ServerSideValidationWrapper(args: SettingsProps) {
+    const [values, setValues] = useState<Record<string, unknown>>({
+        store_name: '',
+    });
+    const { entries, log } = useEventLog();
+
+    return (
+        <div className="flex flex-col gap-4">
+            <div className="text-sm text-muted-foreground px-1">
+                Navigate to <strong>General &rarr; Store Settings</strong>, type <code className="bg-muted px-1 rounded">&ldquo;test&rdquo;</code> as
+                the Store Name, and click Save. A server-side error will appear on the field.
+                Changing the field clears the error automatically.
+            </div>
+            <div className="h-[700px] flex flex-col">
+                <Settings
+                    {...args}
+                    className="flex-1"
+                    values={values}
+                    onChange={(scopeId, key, value) => {
+                        setValues((prev) => ({ ...prev, [key]: value }));
+                        log({ type: 'change', pageId: scopeId, key, value });
+                    }}
+                    onSave={async (scopeId, _treeValues, flatValues) => {
+                        // Simulate network delay
+                        await new Promise((r) => setTimeout(r, 500));
+
+                        log({ type: 'save', pageId: scopeId, values: flatValues });
+
+                        // Simulate server-side validation error
+                        if (flatValues['store_name'] === 'test') {
+                            throw {
+                                errors: {
+                                    store_name: 'Store name "test" is already taken. Please choose another.',
+                                },
+                            };
+                        }
+                    }}
+                    renderSaveButton={({ dirty, hasErrors, onSave: triggerSave }) => (
+                        <Button onClick={triggerSave} disabled={!dirty || hasErrors}>
+                            <Save className="size-4 mr-2" />
+                            Save Changes
+                        </Button>
+                    )}
+                />
+            </div>
+            <EventLog entries={entries} />
+        </div>
+    );
+}
+
+/** Server-side validation demo — type "test" as store name and save to see a server error. */
+export const ServerSideValidation: Story = {
+    args: {
+        schema: sampleSchema,
+        title: 'Server-Side Validation',
+    },
+    render: (args) => <ServerSideValidationWrapper {...args} />,
 };
 
 // ============================================

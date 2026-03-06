@@ -66,8 +66,8 @@ import { Settings } from '@wedevs/plugin-ui';
     //   e.g. { "dokan.general.store_name": "..." }
     await api.post(`/settings/${scopeId}`, treeValues);
   }}
-  renderSaveButton={({ dirty, onSave }) => (
-    <Button onClick={onSave} disabled={!dirty}>Save</Button>
+  renderSaveButton={({ dirty, hasErrors, onSave }) => (
+    <Button onClick={onSave} disabled={!dirty || hasErrors}>Save</Button>
   )}
   hookPrefix="my_plugin"         // WordPress filter hook prefix
   applyFilters={applyFilters}    // @wordpress/hooks applyFilters for field extensibility
