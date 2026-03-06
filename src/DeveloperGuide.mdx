@@ -912,8 +912,8 @@ function SettingsPage() {
       hookPrefix="my_plugin"
       applyFilters={applyFilters}
       onChange={(scopeId, key, value) => setValues(prev => ({ ...prev, [key]: value }))}
-      onSave={async (scopeId, pageValues) => {
-        await apiFetch({ path: `/my-plugin/v1/settings/${scopeId}`, method: 'POST', data: pageValues });
+      onSave={async (scopeId, treeValues) => {
+        await apiFetch({ path: `/my-plugin/v1/settings/${scopeId}`, method: 'POST', data: treeValues });
       }}
       renderSaveButton={({ dirty, onSave }) => (
         <Button onClick={onSave} disabled={!dirty}>{__('Save Changes', 'my-plugin')}</Button>

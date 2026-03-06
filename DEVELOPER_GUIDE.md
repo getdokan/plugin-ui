@@ -1128,11 +1128,11 @@ function SettingsPage() {
       onChange={(scopeId, key, value) => {
         setValues(prev => ({ ...prev, [key]: value }));
       }}
-      onSave={async (scopeId, pageValues) => {
+      onSave={async (scopeId, treeValues) => {
         await apiFetch({
           path: `/my-plugin/v1/settings/${scopeId}`,
           method: 'POST',
-          data: pageValues,
+          data: treeValues,
         });
       }}
       renderSaveButton={({ dirty, onSave }) => (
