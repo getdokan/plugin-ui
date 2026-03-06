@@ -77,9 +77,10 @@ function MySettingsPage() {
       onChange={(scopeId, key, value) => {
         setValues((prev) => ({ ...prev, [key]: value }));
       }}
-      onSave={(scopeId, pageValues) => {
-        // POST pageValues to your REST API
-        console.log("Saving", scopeId, pageValues);
+      onSave={(scopeId, treeValues, flatValues) => {
+        // treeValues: nested object from dot-separated keys
+        // flatValues: original flat dot-keyed values
+        console.log("Saving", scopeId, treeValues, flatValues);
       }}
       renderSaveButton={({ dirty, onSave }) => (
         <Button onClick={onSave} disabled={!dirty}>
@@ -528,7 +529,7 @@ Fired whenever a field value changes.
 />
 ```
 
-### `onSave(scopeId, values)`
+### `onSave(scopeId, treeValues, flatValues)`
 
 Fired when the save button is clicked. Only receives values **scoped to the active page/subpage**.
 
@@ -547,19 +548,24 @@ Fired when the save button is clicked. Only receives values **scoped to the acti
       <td>Active subpage ID, or page ID if no subpage</td>
     </tr>
     <tr>
-      <td><code>values</code></td>
+      <td><code>treeValues</code></td>
       <td><code>{'Record<string, any>'}</code></td>
-      <td>Key-value pairs for fields in this scope only</td>
+      <td>Nested object built from dot-separated keys (e.g. <code>{'{"dokan":{"general":{"store_name":"..."}}}'}</code>)</td>
+    </tr>
+    <tr>
+      <td><code>flatValues</code></td>
+      <td><code>{'Record<string, any>'}</code></td>
+      <td>Original flat dot-keyed values (e.g. <code>{'{"dokan.general.store_name":"..."}'}</code>)</td>
     </tr>
   </tbody>
 </table>
 
 ```tsx
 <Settings
-  onSave={async (scopeId, pageValues) => {
+  onSave={async (scopeId, treeValues, flatValues) => {
     await fetch(`/wp-json/my-plugin/v1/settings/${scopeId}`, {
       method: "POST",
-      body: JSON.stringify(pageValues),
+      body: JSON.stringify(treeValues),
     });
   }}
 />
@@ -616,7 +622,7 @@ import { Settings, Button } from "@wedevs/plugin-ui";
     <tr>
       <td><code>onSave</code></td>
       <td><code>{'() => void'}</code></td>
-      <td>Call this to trigger <code>onSave(scopeId, scopeValues)</code></td>
+      <td>Call this to trigger save — internally gathers scope values and calls the consumer's <code>onSave(scopeId, treeValues, flatValues)</code></td>
     </tr>
   </tbody>
 </table>
@@ -810,7 +816,7 @@ const initialValues = extractValues(schema);
     </tr>
     <tr>
       <td><code>onSave</code></td>
-      <td><code>{'(scopeId, values) => void'}</code></td>
+      <td><code>{'(scopeId, treeValues, flatValues) => void'}</code></td>
       <td>—</td>
       <td>Called on save; enables save button area</td>
     </tr>

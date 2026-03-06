@@ -125,7 +125,7 @@ export interface SaveButtonRenderProps {
     scopeId: string;
     /** Whether any field in the current scope has been modified. */
     dirty: boolean;
-    /** Call this to trigger save — invokes `onSave(scopeId, scopeValues)`. */
+    /** Call this to trigger save — internally gathers scope values and invokes the consumer's `onSave(scopeId, treeValues, flatValues)`. */
     onSave: () => void;
 }
 
@@ -136,8 +136,8 @@ export interface SettingsProps {
     values?: Record<string, any>;
     /** Called when a field value changes. Receives the scope ID (subpage/page), field key, and new value. */
     onChange?: (scopeId: string, key: string, value: any) => void;
-    /** Called when the save button is clicked. Receives the scope ID and that scope's values only. */
-    onSave?: (scopeId: string, values: Record<string, any>) => void;
+    /** Called when the save button is clicked. Receives the scope ID, nested tree values, and flat dot-keyed values. */
+    onSave?: (scopeId: string, treeValues: Record<string, any>, flatValues: Record<string, any>) => void;
     /**
      * Custom render function for the save button area.
      * Use this to provide your own translated save button.
