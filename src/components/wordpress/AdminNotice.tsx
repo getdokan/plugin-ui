@@ -41,6 +41,8 @@ export interface Notice {
 interface AdminNoticeProps {
     interval?: number;
     notices?: Notice[];
+    noticesUrl?: string;
+    noticesUrlArgs?: Record<string, string>;
     actionUrl?: string;
 }
 
@@ -160,7 +162,7 @@ const ConfirmModal = ({ open, action, loading, onConfirm, onClose }: ConfirmModa
     </Modal>
 );
 
-const AdminNotice = ({ interval = 5000, notices: initialNotices = [], actionUrl }: AdminNoticeProps) => {
+const AdminNotice = ({ interval = 5000, notices: initialNotices = [], noticesUrl, noticesUrlArgs, actionUrl }: AdminNoticeProps) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [pendingAction, setPendingAction] = useState<{
         action: NoticeAction;
@@ -177,7 +179,7 @@ const AdminNotice = ({ interval = 5000, notices: initialNotices = [], actionUrl 
         resumeAutoSlide,
         executeAction,
         actionLoading
-    } = useNotices({ interval, notices: initialNotices, actionUrl });
+    } = useNotices({ interval, notices: initialNotices, noticesUrl, noticesUrlArgs, actionUrl });
 
     if (error || !notices.length) {
         return null;

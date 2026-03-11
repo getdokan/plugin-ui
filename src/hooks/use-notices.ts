@@ -5,6 +5,8 @@ interface NoticesOptions {
     interval?: number;
     autoSlide?: boolean;
     notices?: Notice[];
+    noticesUrl?: string;
+    noticesUrlArgs?: Record<string, string>;
     actionUrl?: string;
 }
 
@@ -12,15 +14,54 @@ export const useNotices = ({
     interval = 5000,
     autoSlide = true,
     notices: staticNotices = [],
+    noticesUrl,
+    noticesUrlArgs,
     actionUrl
 }: NoticesOptions = {}) => {
     const [notices, setNotices] = useState<Notice[]>([...staticNotices]);
     const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(!!noticesUrl);
     const [currentNotice, setCurrentNotice] = useState(1);
     const [isAutoSliding, setIsAutoSliding] = useState(autoSlide);
     const [actionLoading, setActionLoading] = useState<{
         [key: number]: boolean;
     }>({});
+
+    const fetchNotices = async () => {
+        setIsLoading(true);
+
+        try {
+            const url = new URL(noticesUrl as string, window.location.href);
+
+            if (noticesUrlArgs) {
+                Object.entries(noticesUrlArgs).forEach(([key, value]) => {
+                    url.searchParams.set(key, value);
+                });
+            }
+
+            const res = await fetch(url.toString());
+
+            if (!res.ok) {
+                throw new Error(`Failed to fetch notices: ${res.status}`);
+            }
+
+            const data: Notice[] | { success: boolean; data: Notice[] } = await res.json();
+            const fetched = Array.isArray(data) ? data : data.data;
+            setNotices(fetched);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to fetch notices');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (!noticesUrl) {
+            return;
+        }
+
+        fetchNotices();
+    }, [noticesUrl, noticesUrlArgs]);
 
     useEffect(() => {
         if (!isAutoSliding || notices.length <= 1) {
@@ -118,6 +159,7 @@ export const useNotices = ({
     return {
         notices,
         error,
+        isLoading,
         currentNotice,
         nextNotice,
         prevNotice,
