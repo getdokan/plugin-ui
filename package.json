@@ -10,34 +10,34 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     },
     "./components/ui": {
+      "types": "./dist/components/ui/index.d.ts",
       "import": "./dist/components/ui/index.js",
-      "require": "./dist/components/ui/index.js",
-      "types": "./dist/components/ui/index.d.ts"
+      "require": "./dist/components/ui/index.js"
     },
     "./providers": {
+      "types": "./dist/providers/index.d.ts",
       "import": "./dist/providers/index.js",
-      "require": "./dist/providers/index.js",
-      "types": "./dist/providers/index.d.ts"
+      "require": "./dist/providers/index.js"
     },
     "./themes": {
+      "types": "./dist/themes/index.d.ts",
       "import": "./dist/themes/index.js",
-      "require": "./dist/themes/index.js",
-      "types": "./dist/themes/index.d.ts"
+      "require": "./dist/themes/index.js"
     },
     "./utils": {
+      "types": "./dist/utils/index.d.ts",
       "import": "./dist/utils/index.js",
-      "require": "./dist/utils/index.js",
-      "types": "./dist/utils/index.d.ts"
+      "require": "./dist/utils/index.js"
     },
     "./settings": {
+      "types": "./dist/components/settings/index.d.ts",
       "import": "./dist/components/settings/index.js",
-      "require": "./dist/components/settings/index.js",
-      "types": "./dist/components/settings/index.d.ts"
+      "require": "./dist/components/settings/index.js"
     },
     "./styles.css": "./dist/styles.css"
   },
