@@ -2,6 +2,7 @@
 // All components are pure React - no WordPress dependencies
 
 export { Alert, AlertDescription, AlertTitle, AlertAction } from "./alert";
+export { default as AdminNotice } from "../wordpress/AdminNotice";
 export { Avatar,
   AvatarImage,
   AvatarFallback,
