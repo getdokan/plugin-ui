@@ -39,12 +39,16 @@ const tabsListVariants = cva(
 function TabsList({
   className,
   variant = "default",
+  activeColor,
   ...props
-}: TabsPrimitive.List.Props & VariantProps<typeof tabsListVariants>) {
+}: TabsPrimitive.List.Props & VariantProps<typeof tabsListVariants> & {
+  activeColor?: "white"
+}) {
   return (
     <TabsPrimitive.List
       data-slot="tabs-list"
       data-variant={variant}
+      data-active-color={activeColor}
       className={cn(tabsListVariants({ variant }), className)}
       {...props}
     />
@@ -59,6 +63,7 @@ function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
         "gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&_svg:not([class*='size-'])]:size-4 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring text-foreground/60 hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center whitespace-nowrap transition-all group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
         "group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent",
         "data-active:bg-background dark:data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 data-active:text-foreground",
+        "group-data-[active-color=white]/tabs-list:data-active:bg-white group-data-[active-color=white]/tabs-list:dark:data-active:bg-white",
         "after:bg-primary after:absolute after:opacity-0 after:transition-opacity after:inset-x-0 after:bottom-0 after:h-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100 group-data-[variant=line]/tabs-list:data-active:text-primary",
         className
       )}
