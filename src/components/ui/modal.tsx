@@ -8,6 +8,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/providers";
 
 /* ============================================
    Modal Overlay
@@ -295,6 +296,7 @@ export function Modal({
   className,
   size = "default",
 }: ModalProps) {
+  const { mode } = useTheme();
   const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(
     null,
   );
@@ -310,7 +312,7 @@ export function Modal({
 
     const container = document.createElement("div");
     container.setAttribute("data-pui-modal-root", "true");
-    container.className = "pui-root";
+    container.className = cn("pui-root", mode);
 
     document.body.appendChild(container);
     setPortalContainer(container);
@@ -327,6 +329,13 @@ export function Modal({
       }
     };
   }, [open]);
+
+  // Keep portal container class in sync with theme mode
+  useEffect(() => {
+    if (portalContainer) {
+      portalContainer.className = cn("pui-root", mode);
+    }
+  }, [mode, portalContainer]);
 
   // Handle escape key
   useEffect(() => {
