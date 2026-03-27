@@ -13,6 +13,7 @@
   .pui-root-dataviews .dataviews-wrapper .dataviews-view-table {
     border-left: none;
     border-right: none;
+    border-top: none;
     background-color: var(--background);
   }
   .pui-root-dataviews .dataviews-wrapper .dataviews-view-table thead {
@@ -26,6 +27,7 @@
   
   .pui-root-dataviews .dataviews-view-table .dataviews-view-table-header-button:not(:hover) {
     color: var(--foreground);
+    box-shadow: none;
   }
   .pui-root-dataviews .dataviews-wrapper .dataviews-view-table tbody tr {
     background-color: var(--background);
@@ -38,6 +40,12 @@
     color: var(--foreground);
     border-bottom-color: var(--border);
     background-color: var(--background);
+  }
+  .pui-root-dataviews .dataviews-wrapper .dataviews-view-table td,
+  .pui-root-dataviews .dataviews-wrapper .dataviews-view-table th {
+    border-top: none;
+    border-left: none;
+    border-right: none;
   }
   .pui-root-dataviews .dataviews-wrapper .dataviews-view-table tr {
     border-color: var(--border);

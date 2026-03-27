@@ -66,33 +66,24 @@ function updateUrlQueryParams(params: Record<string, string | number | null | un
  * We intentionally support both camelCase (`perPage`) and snake_case (`per_page`)
  * so that whatever the upstream shape is, we can still sync it into the URL.
  */
-function getQueryParamsFromView(view: View): Record<string, string | number | null | undefined> {
+function getQueryParamsFromView(view: View, tabViewKey: string): Record<string, string | number | null | undefined> {
     const v = view as View & {
-        page?: number;
-        per_page?: number;
-        perPage?: number;
-        search?: string;
-        filters?: unknown;
-        status?: string;
+        [key: string]: any;
     };
 
     const perPage = v.perPage ?? v.per_page;
 
     const filters =
-        v.filters &&
-        typeof v.filters === 'object' &&
-        Object.keys(v.filters as unknown as Record<string, unknown>).length > 0
-            ? JSON.stringify(v.filters)
-            : null;
+        typeof v.filters === 'object' && Object.keys(v.filters).length > 0 ? JSON.stringify(v.filters) : null;
 
     // Start with the core pieces of state we always want in the URL.
-    const params: Record<string, string | number | null | undefined> = {
+    const params: Record<string, any> = {
         // Use `current_page` instead of `page` so we don't conflict with
         // WordPress admin's own `page` query param (e.g. ?page=plugin-ui-test).
         current_page: v.page ?? null,
         per_page: perPage ?? null,
         search: v.search ?? '',
-        status: v.status ?? '',
+        [tabViewKey]: v[tabViewKey] ?? '',
         filters
     };
 
@@ -288,6 +279,8 @@ interface TabsProps {
     tabs?: Tab[];
     onSelect?: (value: string) => void;
     defaultValue?: string;
+    /** The view object key that tab selection maps to. Defaults to `'status'`. */
+    viewKey?: string;
     headerContent?: React.ReactNode[];
     /** @deprecated Use `headerContent` instead. Kept for backward compatibility. */
     headerSlot?: React.ReactNode[];
@@ -397,7 +390,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
 
     const handleViewChange = (nextView: View) => {
         // Sync key pieces of state into the URL so that the UI is shareable and bookmarkable.
-        updateUrlQueryParams(getQueryParamsFromView(nextView));
+        updateUrlQueryParams(getQueryParamsFromView(nextView, tabViewKey));
         onChangeView(nextView);
     };
 
@@ -494,6 +487,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     // Backward compatibility: prefer modern keys and fallback to deprecated aliases.
     const tabItems = resolvedTabsConfig?.items ?? resolvedTabsConfig?.tabs ?? [];
     const defaultTabValue = resolvedTabsConfig?.defaultValue ?? tabItems[0]?.value;
+    const tabViewKey = resolvedTabsConfig?.viewKey ?? 'status';
     const headerContent = resolvedTabsConfig?.headerContent ?? resolvedTabsConfig?.headerSlot ?? [];
 
     const paginationDetails = filteredProps.paginationInfo;
@@ -543,7 +537,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
 
     return (
         <div
-            className={cn('pui-root-dataviews', children && 'custom-layout')}
+            className={cn('pui-root-dataviews pui-root', children && 'custom-layout')}
             id={tableNameSpace}
             data-filter-id={filterId}>
             <Slot name={beforeSlotId} fillProps={{ ...filteredProps }} />
@@ -568,9 +562,9 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                                             // When a tab changes, reflect that in the view state
                                             const nextView = {
                                                 ...view,
-                                                status: value,
+                                                [tabViewKey]: value,
                                                 page: 1
-                                            } as View & { status?: string };
+                                            } as View & { [key: string]: string | number };
 
                                             handleViewChange(nextView);
 
@@ -584,8 +578,8 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                                                     value={tab.value}
                                                     disabled={tab.disabled}
                                                     className={cn(
-                                                        'cursor-pointer! flex! py-2! px-2! text-xs! md:py-6! md:px-4! md:text-sm! bg-transparent! rounded-none! hover:bg-transparent!',
-                                                        'focus:outline-none!',
+                                                        'cursor-pointer! flex! py-2! px-2! text-xs! md:py-6! md:px-4! md:text-sm! text-muted-foreground! bg-transparent! rounded-none! hover:bg-transparent!',
+                                                        'focus:outline-none! shadow-none!',
                                                         tab.className
                                                     )}>
                                                     {tab.icon && <tab.icon className="size-4" />}
