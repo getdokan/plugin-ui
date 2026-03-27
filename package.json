@@ -47,9 +47,9 @@
   ],
   "scripts": {
     "build": "npm run build:wp && npm run build:types",
-    "build:wp": "wp-scripts build --config webpack.config.js",
+    "build:wp": "wp-scripts build --progress",
     "build:types": "tsc --emitDeclarationOnly",
-    "start": "wp-scripts start --config webpack.config.js",
+    "start": "wp-scripts start --progress",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "lint": "eslint src --ext .ts,.tsx",

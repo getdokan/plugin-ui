@@ -262,7 +262,7 @@ const FilterItems = ({
                         {availableFilters.map((f) => (
                             <button
                                 key={f.id}
-                                className="w-full flex items-center gap-3 px-4 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-primary transition-all duration-200 border-none bg-transparent group"
+                                className="w-full flex items-center gap-3! px-4! py-2! text-sm text-muted-foreground hover:bg-accent! hover:text-primary transition-all duration-200 border-none bg-transparent! group"
                                 onClick={() => handleAddFilter(f.id)}>
                                 {f.label}
                             </button>
@@ -463,7 +463,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                           ref={setButtonRef}
                           title="Filter"
                           className={cn(
-                              'relative inline-flex items-center gap-2 rounded-md bg-transparent hover:bg-transparent px-3 py-1.5 text-sm hover:text-primary',
+                              'relative inline-flex items-center gap-2 rounded-md bg-transparent! hover:bg-transparent! px-3 py-1.5 text-sm hover:text-primary',
                               showFilters ? 'text-primary' : 'text-muted-foreground'
                           )}
                           onClick={() => {
@@ -527,6 +527,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                 <Search size={18} className="text-muted-foreground" />
             </InputGroupAddon>
             <InputGroupInput
+                className="border! border-border!"
                 placeholder={searchPlaceholder}
                 value={searchTerm}
                 onChange={(event) =>
@@ -556,8 +557,9 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                             {header && <div className="font-semibold text-sm text-foreground">{header}</div>}
                             <div
                                 className={cn(
-                                    'flex gap-2 md:flex-row flex-col justify-between w-full items-center p-4 md:px-4 md:py-0',
-                                    (tabItems.length || search) && 'border-b border-border'
+                                    'flex gap-2 md:flex-row flex-col justify-between w-full items-center',
+                                    (tabItems.length || search || headerContent.length) &&
+                                        'border-b border-border p-4 md:px-4 md:py-0'
                                 )}>
                                 {tabItems.length > 0 && (
                                     <Tabs
@@ -582,7 +584,8 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                                                     value={tab.value}
                                                     disabled={tab.disabled}
                                                     className={cn(
-                                                        'py-2 px-2 text-xs md:py-6 md:px-4 md:text-sm border-0 bg-transparent rounded-none hover:bg-transparent',
+                                                        'cursor-pointer! flex! py-2! px-2! text-xs! md:py-6! md:px-4! md:text-sm! bg-transparent! rounded-none! hover:bg-transparent!',
+                                                        'focus:outline-none!',
                                                         tab.className
                                                     )}>
                                                     {tab.icon && <tab.icon className="size-4" />}
@@ -606,7 +609,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
 
                             {filter && filter.fields && filter.fields.length > 0 && (
                                 <div
-                                    className={`transition-all flex w-full justify-between px-4 mt-4 bg-background ${
+                                    className={`transition-all flex w-full justify-between px-4 my-4 bg-background ${
                                         showFilters ? '' : 'hidden!'
                                     }`}>
                                     <FilterItems
