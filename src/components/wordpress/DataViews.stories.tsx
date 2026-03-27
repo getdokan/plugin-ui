@@ -724,46 +724,6 @@ export const FullFeatured: StoryFn = () => {
 };
 FullFeatured.storyName = "Full Featured";
 
-/** Different page sizes with pagination. Use view controls to change perPage. */
-export const DifferentPageSizes: StoryFn = () => {
-  const [view, setView] = useState<DataViewState>({
-    ...createDefaultView(["name", "email", "status"]),
-    perPage: 5,
-  });
-
-  const paginatedData = paginateData(allUsers, view);
-
-  return (
-    <div className="p-4">
-      <div className="mb-4 flex items-center gap-2">
-        <span className="text-sm text-muted-foreground">Items per page:</span>
-        <select
-          value={String(view.perPage ?? 10)}
-          onChange={(e) => setView(prev => ({ ...prev, perPage: Number(e.target.value), page: 1 }))}
-        >
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-        </select>
-      </div>
-      <DataViews<User>
-        namespace="dataviews-demo"
-        data={paginatedData}
-        fields={fields.filter(f => ["name", "email", "status"].includes(f.id))}
-        view={view}
-        onChangeView={setView}
-        paginationInfo={{
-          totalItems: allUsers.length,
-          totalPages: getTotalPages(allUsers.length, view.perPage),
-        }}
-        getItemId={(item) => item.id}
-      />
-    </div>
-  );
-};
-DifferentPageSizes.storyName = "Different Page Sizes";
-
 /**
  * Poster/hero style layout that displays items as large image cards
  * with overlaid text content.
