@@ -1,6 +1,7 @@
 
 @import "@wordpress/components/build-style/style.css";
 @import "@wordpress/dataviews/build-style/style.css";
+@import '@wordpress/theme/design-tokens.css';
 
 
 .pui-root-dataviews .dataviews-wrapper {
@@ -86,7 +87,8 @@
   .pui-root-dataviews .dataviews-view-list {
     background-color: var(--background);
   }
-  .pui-root-dataviews .dataviews-view-list__item {
+  .pui-root-dataviews .dataviews-view-list [role="row"],
+  .pui-root-dataviews .dataviews-view-list [role="article"] {
     background-color: var(--background);
     border-color: var(--border);
   }

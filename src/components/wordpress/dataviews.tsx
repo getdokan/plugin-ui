@@ -1,7 +1,6 @@
 import useWindowDimensions from '@/hooks/useWindowDimensions';
+import { cn, kebabCase, snakeCase } from '@/lib/utils';
 import { Popover, Slot } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
-import { cn } from '@/lib/utils';
 import {
     DataViews as DataViewsTable,
     type Action,
@@ -9,32 +8,12 @@ import {
     type SupportedLayouts,
     type View
 } from '@wordpress/dataviews/wp';
+import { __ } from '@wordpress/i18n';
 import { FileSearch, Funnel, Plus, Search, X } from 'lucide-react';
 import { Fragment, useEffect, useState } from 'react';
-import { Button } from '../ui/button';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '../ui';
+import { Button } from '../ui/button';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
-
-/** Convert string to snake_case (e.g. "myNamespace" -> "my_namespace"). */
-function snakeCase(str: string): string {
-    if (!str) return '';
-    return str
-        .replace(/-/g, '_')
-        .replace(/\s+/g, '_')
-        .replace(/([a-z])([A-Z])/g, '$1_$2')
-        .toLowerCase()
-        .replace(/^_+|_+$/g, '');
-}
-
-/** Convert string to kebab-case (e.g. "myNamespace" -> "my-namespace"). */
-function kebabCase(str: string): string {
-    if (!str) return '';
-    return str
-        .replace(/([a-z])([A-Z])/g, '$1-$2')
-        .replace(/[\s_]+/g, '-')
-        .toLowerCase()
-        .replace(/^-+|-+$/g, '');
-}
 
 declare global {
     interface Window {
@@ -396,17 +375,17 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
         enableHiding: false,
         ...field
     }));
-    const defaultLayouts =
-        props.defaultLayouts ||
-        ({
-            table: { density: 'comfortable' },
-            list: {}
-        } as SupportedLayouts);
+
+    const defaultLayouts = {
+        table: { density: 'comfortable' },
+        list: {},
+        grid: {}
+    };
 
     // Ensure view.fields is populated with all field IDs if not specified
     const normalizedView = {
         ...view,
-        fields: view.fields ?? fields.map((f) => f.id)
+        fields: view.fields?.length ? view.fields : fields.map((f) => f.id)
     };
 
     const handleViewChange = (nextView: View) => {
@@ -420,7 +399,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
         onChangeView: handleViewChange,
         view: normalizedView,
         fields: normalizedFields,
-        defaultLayouts,
+        defaultLayouts: props.defaultLayouts || defaultLayouts,
         empty: empty || <ListEmpty icon={emptyIcon} title={emptyTitle} description={emptyDescription} />
     };
 
@@ -450,7 +429,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
             return;
         }
 
-        const targetType: View['type'] = windowWidth <= 768 ? 'list' : 'table';
+        const targetType = windowWidth <= 768 ? 'list' : 'table';
 
         if (view.type !== targetType) {
             onChangeView({
@@ -615,15 +594,17 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                         </div>
                     )}
 
-                    <div
-                        className={cn(
-                            'transition-all duration-300 ease-in-out -mb-13 flex items-center bg-background z-1 border-b px-5 h-13 justify-between border-border w-full',
-                            filteredProps.selection && filteredProps.selection.length > 0
-                                ? 'opacity-100 visible translate-y-0'
-                                : 'opacity-0 invisible -translate-y-2'
-                        )}>
-                        <DataViewsTable.BulkActionToolbar />
-                    </div>
+                    {view.type === 'table' && (
+                        <div
+                            className={cn(
+                                'transition-all duration-300 ease-in-out -mb-13 flex items-center bg-background z-1 border-b px-5 h-13 justify-between border-border w-full',
+                                filteredProps.selection && filteredProps.selection.length > 0
+                                    ? 'opacity-100 visible translate-y-0'
+                                    : 'opacity-0 invisible -translate-y-2'
+                            )}>
+                            <DataViewsTable.BulkActionToolbar />
+                        </div>
+                    )}
                 </div>
                 <DataViewsTable.Layout />
                 <div className="flex items-center justify-between [&>div]:w-full [&>div]:flex [&>div]:justify-between! [&>div]:p-4">
