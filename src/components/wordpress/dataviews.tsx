@@ -496,6 +496,19 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     const defaultTabValue = resolvedTabsConfig?.defaultValue ?? tabItems[0]?.value;
     const headerContent = resolvedTabsConfig?.headerContent ?? resolvedTabsConfig?.headerSlot ?? [];
 
+    const paginationDetails = filteredProps.paginationInfo;
+    const explicitTotalPages = paginationDetails?.totalPages;
+    const viewPerPage = (view as View & { perPage?: number; per_page?: number }).perPage;
+    const perPage =
+        typeof viewPerPage === 'number' && viewPerPage > 0
+            ? viewPerPage
+            : (view as View & { per_page?: number }).per_page;
+    const computedTotalPages =
+        typeof paginationDetails?.totalItems === 'number' && typeof perPage === 'number' && perPage > 0
+            ? Math.ceil(paginationDetails.totalItems / perPage)
+            : 0;
+    const shouldShowPagination = (typeof explicitTotalPages === 'number' ? explicitTotalPages : computedTotalPages) > 1;
+
     const tableNameSpace = kebabCase(namespace);
 
     if (!namespace) {
@@ -612,22 +625,21 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                                 </div>
                             )}
 
-                            {view.type === 'table' && (
+                            {view.type === 'table' && filteredProps?.selection?.length > 0 && (
                                 <div
                                     className={cn(
-                                        'transition-all duration-300 ease-in-out -mb-13 flex items-center bg-background z-1 border-b px-5 h-13 justify-between border-border w-full',
-                                        filteredProps.selection && filteredProps.selection.length > 0
-                                            ? 'opacity-100 visible translate-y-0'
-                                            : 'opacity-0 invisible -translate-y-2'
+                                        'animate-in fade-in-0 slide-in-from-top-1 duration-200 transition-all ease-in-out -mb-13 flex items-center bg-background z-1 border-b px-5 h-13 justify-between border-border w-full'
                                     )}>
                                     <DataViewsTable.BulkActionToolbar />
                                 </div>
                             )}
                         </div>
                         <DataViewsTable.Layout />
-                        <div className="flex items-center justify-between [&>div]:w-full [&>div]:flex [&>div]:justify-between! [&>div]:p-4">
-                            <DataViewsTable.Pagination />
-                        </div>
+                        {shouldShowPagination && (
+                            <div className="flex items-center justify-between">
+                                <DataViewsTable.Pagination />
+                            </div>
+                        )}
                     </Fragment>
                 )}
             </DataViewsTable>

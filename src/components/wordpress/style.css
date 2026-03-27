@@ -3,7 +3,6 @@
 @import "@wordpress/dataviews/build-style/style.css";
 @import '@wordpress/theme/design-tokens.css';
 
-
 .pui-root-dataviews:not(.custom-layout) .dataviews-wrapper {
     border-radius: 6px;
     border: 1px solid var(--border);
@@ -46,6 +45,12 @@
   .pui-root-dataviews .dataviews-wrapper .dataviews-pagination .components-input-control__container {
     background-color: var(--background);
     color: var(--foreground);
+  }
+  .pui-root-dataviews .dataviews-wrapper .dataviews-pagination {
+    width: 100%;
+    display: flex;
+    justify-content: space-between !important;
+    padding: 16px;
   }
   .pui-root-dataviews .dataviews-wrapper .dataviews-view-table tr td:first-child,
   .pui-root-dataviews .dataviews-wrapper .dataviews-view-table tr th:first-child {
