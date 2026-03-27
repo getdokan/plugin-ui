@@ -10,6 +10,7 @@ import {
 } from '@wordpress/dataviews/wp';
 import { __ } from '@wordpress/i18n';
 import { FileSearch, Funnel, Plus, Search, X } from 'lucide-react';
+import type React from 'react';
 import { Fragment, useEffect, useState } from 'react';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '../ui';
 import { Button } from '../ui/button';
@@ -319,6 +320,7 @@ export type DataViewsProps<Item> = {
     header?: JSX.Element;
     filter?: DataViewFilterProps;
     tabs?: TabsProps;
+    children?: React.ReactNode;
 } & (Item extends ItemWithId ? { getItemId?: (item: Item) => string } : { getItemId: (item: Item) => string });
 
 interface ListEmptyProps {
@@ -365,6 +367,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
         tabs,
         search,
         searchPlaceholder = __('Search', 'default'),
+        children,
         ...dataViewsTableProps
     } = props;
     /**
@@ -514,104 +517,119 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     ) : null;
 
     return (
-        <div className="pui-root-dataviews" id={tableNameSpace} data-filter-id={filterId}>
+        <div
+            className={cn('pui-root-dataviews', children && 'custom-layout')}
+            id={tableNameSpace}
+            data-filter-id={filterId}>
             <Slot name={beforeSlotId} fillProps={{ ...filteredProps }} />
             {/* @ts-expect-error - Complex conditional types from wrapper don't perfectly align with @wordpress/dataviews types */}
             <DataViewsTable {...filteredProps}>
-                <div className="w-full flex items-center flex-col justify-between rounded-tr-md rounded-tl-md">
-                    {header && <div className="font-semibold text-sm text-foreground">{header}</div>}
-                    <div
-                        className={cn(
-                            'md:flex justify-between w-full items-center px-4',
-                            (tabs?.tabs?.length || search) && 'border-b border-border'
-                        )}>
-                        {tabs && tabs.tabs && tabs.tabs.length > 0 && (
-                            <Tabs
-                                defaultValue={
-                                    (tabsWithFilterButton || tabs)?.initialTab ||
-                                    (tabsWithFilterButton || tabs)?.tabs[0]?.value
-                                }
-                                onValueChange={(value) => {
-                                    // When a tab changes, reflect that in the view state
-                                    const nextView = {
-                                        ...view,
-                                        status: value,
-                                        page: 1
-                                    } as View & { status?: string };
+                {children ? (
+                    children
+                ) : (
+                    <>
+                        <div className="w-full flex items-center flex-col justify-between rounded-tr-md rounded-tl-md">
+                            {header && <div className="font-semibold text-sm text-foreground">{header}</div>}
+                            <div
+                                className={cn(
+                                    'md:flex justify-between w-full items-center px-4',
+                                    (tabs?.tabs?.length || search) && 'border-b border-border'
+                                )}>
+                                {tabs?.tabs?.length > 0 && (
+                                    <Tabs
+                                        defaultValue={
+                                            (tabsWithFilterButton || tabs)?.initialTab ||
+                                            (tabsWithFilterButton || tabs)?.tabs[0]?.value
+                                        }
+                                        onValueChange={(value) => {
+                                            // When a tab changes, reflect that in the view state
+                                            const nextView = {
+                                                ...view,
+                                                status: value,
+                                                page: 1
+                                            } as View & { status?: string };
 
-                                    handleViewChange(nextView);
+                                            handleViewChange(nextView);
 
-                                    tabs?.onSelect?.(value);
-                                    filteredProps.onChangeSelection?.([]);
-                                }}>
-                                <TabsList variant="line" className="p-0">
-                                    {(tabsWithFilterButton || tabs)?.tabs.map((tab) => (
-                                        <TabsTrigger
-                                            key={tab.value}
-                                            value={tab.value}
-                                            disabled={tab.disabled}
-                                            className={cn(
-                                                'py-4 px-3 md:py-6 border-0 md:px-4 bg-transparent rounded-none hover:bg-transparent',
-                                                tab.className
-                                            )}>
-                                            {tab.icon && <tab.icon className="size-4" />}
-                                            {tab.label}
-                                        </TabsTrigger>
+                                            tabs?.onSelect?.(value);
+                                            filteredProps.onChangeSelection?.([]);
+                                        }}>
+                                        <TabsList variant="line" className="p-0">
+                                            {(tabsWithFilterButton || tabs)?.tabs.map((tab) => (
+                                                <TabsTrigger
+                                                    key={tab.value}
+                                                    value={tab.value}
+                                                    disabled={tab.disabled}
+                                                    className={cn(
+                                                        'py-4 px-3 md:py-6 border-0 md:px-4 bg-transparent rounded-none hover:bg-transparent',
+                                                        tab.className
+                                                    )}>
+                                                    {tab.icon && <tab.icon className="size-4" />}
+                                                    {tab.label}
+                                                </TabsTrigger>
+                                            ))}
+                                        </TabsList>
+                                    </Tabs>
+                                )}
+                                <div
+                                    className={cn(
+                                        'flex items-center gap-2',
+                                        !tabs?.tabs?.length && search && 'justify-end w-full py-2'
+                                    )}>
+                                    {searchInput}
+                                    {(tabsWithFilterButton || tabs)?.headerSlot?.map((node, index) => (
+                                        <Fragment key={index}>{node}</Fragment>
                                     ))}
-                                </TabsList>
-                            </Tabs>
-                        )}
-                        <div
-                            className={cn(
-                                'flex items-center gap-2',
-                                !tabs?.tabs?.length && search && 'justify-end w-full py-2'
-                            )}>
-                            {searchInput}
-                            {(tabsWithFilterButton || tabs)?.headerSlot?.map((node, index) => (
-                                <Fragment key={index}>{node}</Fragment>
-                            ))}
-                        </div>
-                    </div>
+                                </div>
+                            </div>
 
-                    {filter && filter.fields && filter.fields.length > 0 && (
-                        <div
-                            className={`transition-all flex w-full justify-between px-4 mt-4 bg-background ${
-                                showFilters ? '' : 'hidden!'
-                            }`}>
-                            <FilterItems
-                                {...filter}
-                                openSelectorSignal={openSelectorSignal}
-                                onFirstFilterAdded={() => setShowFilters(true)}
-                                onReset={() => {
-                                    if (filter?.onReset) {
-                                        filter.onReset();
-                                    }
-                                    setShowFilters(false);
-                                }}
-                                onActiveFiltersChange={(count) => setActiveFilterCount(count)}
-                                buttonPopOverAnchor={buttonRef}
-                            />
-                        </div>
-                    )}
+                            {filter && filter.fields && filter.fields.length > 0 && (
+                                <div
+                                    className={`transition-all flex w-full justify-between px-4 mt-4 bg-background ${
+                                        showFilters ? '' : 'hidden!'
+                                    }`}>
+                                    <FilterItems
+                                        {...filter}
+                                        openSelectorSignal={openSelectorSignal}
+                                        onFirstFilterAdded={() => setShowFilters(true)}
+                                        onReset={() => {
+                                            if (filter?.onReset) {
+                                                filter.onReset();
+                                            }
+                                            setShowFilters(false);
+                                        }}
+                                        onActiveFiltersChange={(count) => setActiveFilterCount(count)}
+                                        buttonPopOverAnchor={buttonRef}
+                                    />
+                                </div>
+                            )}
 
-                    {view.type === 'table' && (
-                        <div
-                            className={cn(
-                                'transition-all duration-300 ease-in-out -mb-13 flex items-center bg-background z-1 border-b px-5 h-13 justify-between border-border w-full',
-                                filteredProps.selection && filteredProps.selection.length > 0
-                                    ? 'opacity-100 visible translate-y-0'
-                                    : 'opacity-0 invisible -translate-y-2'
-                            )}>
-                            <DataViewsTable.BulkActionToolbar />
+                            {view.type === 'table' && (
+                                <div
+                                    className={cn(
+                                        'transition-all duration-300 ease-in-out -mb-13 flex items-center bg-background z-1 border-b px-5 h-13 justify-between border-border w-full',
+                                        filteredProps.selection && filteredProps.selection.length > 0
+                                            ? 'opacity-100 visible translate-y-0'
+                                            : 'opacity-0 invisible -translate-y-2'
+                                    )}>
+                                    <DataViewsTable.BulkActionToolbar />
+                                </div>
+                            )}
                         </div>
-                    )}
-                </div>
-                <DataViewsTable.Layout />
-                <div className="flex items-center justify-between [&>div]:w-full [&>div]:flex [&>div]:justify-between! [&>div]:p-4">
-                    <DataViewsTable.Pagination />
-                </div>
+                        <DataViewsTable.Layout />
+                        <div className="flex items-center justify-between [&>div]:w-full [&>div]:flex [&>div]:justify-between! [&>div]:p-4">
+                            <DataViewsTable.Pagination />
+                        </div>
+                    </>
+                )}
             </DataViewsTable>
             <Slot name={afterSlotId} fillProps={{ ...filteredProps }} />
         </div>
     );
 }
+
+DataViews.Pagination = DataViewsTable.Pagination as React.ComponentType<any>;
+DataViews.Layout = DataViewsTable.Layout as React.ComponentType<any>;
+DataViews.Search = DataViewsTable.Search as React.ComponentType<any>;
+DataViews.Filters = DataViewsTable.Filters as React.ComponentType<any>;
+DataViews.BulkActionToolbar = DataViewsTable.BulkActionToolbar as React.ComponentType<any>;

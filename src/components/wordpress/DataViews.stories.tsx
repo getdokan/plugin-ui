@@ -763,3 +763,150 @@ export const DifferentPageSizes: StoryFn = () => {
   );
 };
 DifferentPageSizes.storyName = "Different Page Sizes";
+
+/**
+ * Poster/hero style layout that displays items as large image cards
+ * with overlaid text content.
+ */
+function PosterGrid({ items }: { items: User[] }) {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+        gap: "16px",
+        padding: "16px 0",
+      }}
+    >
+      {items.map((item) => (
+        <div
+          key={item.id}
+          style={{
+            position: "relative",
+            aspectRatio: "4 / 3",
+            borderRadius: "8px",
+            overflow: "hidden",
+            backgroundColor: "#cbd5e1", // Placeholder background
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              padding: "48px 16px 16px",
+              background:
+                "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 60%, transparent 100%)",
+              color: "white",
+            }}
+          >
+            <h3
+              style={{
+                margin: "0 0 4px",
+                fontSize: "18px",
+                fontWeight: 600,
+                textShadow: "0 1px 2px rgba(0,0,0,0.5)",
+              }}
+            >
+              {item.name}
+            </h3>
+            <p
+              style={{
+                margin: "0 0 8px",
+                fontSize: "13px",
+                opacity: 0.9,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {item.email}
+            </p>
+            <div style={{ display: "flex", gap: "6px" }}>
+              <span
+                style={{
+                  fontSize: "11px",
+                  padding: "2px 8px",
+                  borderRadius: "4px",
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                  textTransform: "capitalize",
+                }}
+              >
+                {item.role}
+              </span>
+              <span
+                style={{
+                  fontSize: "11px",
+                  padding: "2px 8px",
+                  borderRadius: "4px",
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                  textTransform: "capitalize",
+                }}
+              >
+                {item.status}
+              </span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Demonstrates a custom poster/hero layout using free composition.
+ *
+ * This story shows how to:
+ * - Use `<DataViews>` as a context provider with custom children
+ * - Render a completely custom layout (poster grid) instead of `<DataViews.Layout />`
+ * - Still leverage DataViews sub-components for search and pagination
+ */
+export const LayoutCustomComponent: StoryFn = () => {
+  const [view, setView] = useState<DataViewState>({
+    type: "table",
+    search: "",
+    page: 1,
+    perPage: 6,
+    fields: ["name", "email", "status", "role"],
+  });
+
+  const searchTerm = view.search ?? "";
+  const filteredUsers = searchTerm
+    ? allUsers.filter(user =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : allUsers;
+
+  const paginatedData = paginateData(filteredUsers, view);
+
+  return (
+    <div className="p-4">
+      <DataViews<User>
+        getItemId={(item) => item.id}
+        namespace="dataviews-demo"
+        paginationInfo={{
+          totalItems: filteredUsers.length,
+          totalPages: getTotalPages(filteredUsers.length, view.perPage),
+        }}
+        data={paginatedData}
+        view={view}
+        fields={fields}
+        onChangeView={setView}
+        defaultLayouts={{ table: {} }}
+      >
+        <div style={{ padding: "2px" }}>
+          {DataViews.Search && <DataViews.Search />}
+          <PosterGrid items={paginatedData} />
+        </div>
+        {DataViews.Pagination && (
+          <div className="flex items-center justify-between [&>div]:w-full [&>div]:flex [&>div]:justify-between! [&>div]:p-4">
+            <DataViews.Pagination />
+          </div>
+        )}
+      </DataViews>
+    </div>
+  );
+};
+LayoutCustomComponent.storyName = "Custom Layout Component";
