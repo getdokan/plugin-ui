@@ -213,7 +213,7 @@ const FilterItems = ({
     };
 
     return (
-        <>
+        <Fragment>
             <div className={cn('flex w-full justify-between items-center', className)}>
                 <div className="flex flex-row flex-wrap gap-4 items-center">
                     {activeFilters.map((id) => {
@@ -270,7 +270,7 @@ const FilterItems = ({
                     </div>
                 </Popover>
             )}
-        </>
+        </Fragment>
     );
 };
 
@@ -283,9 +283,13 @@ interface Tab {
 }
 
 interface TabsProps {
-    tabs: Tab[];
-    onSelect?: (tabValue: string) => void;
-    initialTab?: string;
+    items?: Tab[];
+    /** @deprecated Use `items` instead. Kept for backward compatibility. */
+    tabs?: Tab[];
+    onSelect?: (value: string) => void;
+    defaultValue?: string;
+    headerContent?: React.ReactNode[];
+    /** @deprecated Use `headerContent` instead. Kept for backward compatibility. */
     headerSlot?: React.ReactNode[];
 }
 
@@ -452,7 +456,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     const tabsWithFilterButton =
         filter?.fields && tabs && filter.fields.length > 0
             ? (() => {
-                  const existing = tabs?.headerSlot || [];
+                  const existing = tabs?.headerContent || tabs?.headerSlot || [];
                   const newButton = (
                       <button
                           type="button"
@@ -480,10 +484,17 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
 
                   return {
                       ...tabs,
-                      headerSlot: [...existing, newButton]
+                      headerContent: [...existing, newButton]
                   };
               })()
             : tabs;
+
+    const resolvedTabsConfig = tabsWithFilterButton || tabs;
+
+    // Backward compatibility: prefer modern keys and fallback to deprecated aliases.
+    const tabItems = resolvedTabsConfig?.items ?? resolvedTabsConfig?.tabs ?? [];
+    const defaultTabValue = resolvedTabsConfig?.defaultValue ?? tabItems[0]?.value;
+    const headerContent = resolvedTabsConfig?.headerContent ?? resolvedTabsConfig?.headerSlot ?? [];
 
     const tableNameSpace = kebabCase(namespace);
 
@@ -498,7 +509,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     const searchTerm = (view as View & { search?: string }).search ?? '';
 
     const searchInput = search ? (
-        <InputGroup className="w-64 min-w-64">
+        <InputGroup className="md:w-64 md:min-w-64">
             <InputGroupAddon>
                 <Search size={18} className="text-muted-foreground" />
             </InputGroupAddon>
@@ -527,20 +538,17 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                 {children ? (
                     children
                 ) : (
-                    <>
+                    <Fragment>
                         <div className="w-full flex items-center flex-col justify-between rounded-tr-md rounded-tl-md">
                             {header && <div className="font-semibold text-sm text-foreground">{header}</div>}
                             <div
                                 className={cn(
-                                    'md:flex justify-between w-full items-center px-4',
-                                    (tabs?.tabs?.length || search) && 'border-b border-border'
+                                    'flex gap-2 md:flex-row flex-col justify-between w-full items-center p-4 md:px-4 md:py-0',
+                                    (tabItems.length || search) && 'border-b border-border'
                                 )}>
-                                {tabs?.tabs?.length > 0 && (
+                                {tabItems.length > 0 && (
                                     <Tabs
-                                        defaultValue={
-                                            (tabsWithFilterButton || tabs)?.initialTab ||
-                                            (tabsWithFilterButton || tabs)?.tabs[0]?.value
-                                        }
+                                        defaultValue={defaultTabValue}
                                         onValueChange={(value) => {
                                             // When a tab changes, reflect that in the view state
                                             const nextView = {
@@ -554,14 +562,14 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                                             tabs?.onSelect?.(value);
                                             filteredProps.onChangeSelection?.([]);
                                         }}>
-                                        <TabsList variant="line" className="p-0">
-                                            {(tabsWithFilterButton || tabs)?.tabs.map((tab) => (
+                                        <TabsList variant="line" className="p-0 flex-wrap md:flex-nowrap">
+                                            {tabItems.map((tab) => (
                                                 <TabsTrigger
                                                     key={tab.value}
                                                     value={tab.value}
                                                     disabled={tab.disabled}
                                                     className={cn(
-                                                        'py-4 px-3 md:py-6 border-0 md:px-4 bg-transparent rounded-none hover:bg-transparent',
+                                                        'py-2 px-2 text-xs md:py-6 md:px-4 md:text-sm border-0 bg-transparent rounded-none hover:bg-transparent',
                                                         tab.className
                                                     )}>
                                                     {tab.icon && <tab.icon className="size-4" />}
@@ -574,10 +582,10 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                                 <div
                                     className={cn(
                                         'flex items-center gap-2',
-                                        !tabs?.tabs?.length && search && 'justify-end w-full py-2'
+                                        !tabItems.length && search && 'justify-end w-full py-2'
                                     )}>
                                     {searchInput}
-                                    {(tabsWithFilterButton || tabs)?.headerSlot?.map((node, index) => (
+                                    {headerContent.map((node, index) => (
                                         <Fragment key={index}>{node}</Fragment>
                                     ))}
                                 </div>
@@ -620,7 +628,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                         <div className="flex items-center justify-between [&>div]:w-full [&>div]:flex [&>div]:justify-between! [&>div]:p-4">
                             <DataViewsTable.Pagination />
                         </div>
-                    </>
+                    </Fragment>
                 )}
             </DataViewsTable>
             <Slot name={afterSlotId} fillProps={{ ...filteredProps }} />

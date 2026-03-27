@@ -288,14 +288,14 @@ export const WithTabs: StoryFn = () => {
           totalPages: getTotalPages(filteredUsers.length, view.perPage),
         }}
         getItemId={(item) => item.id}
-        tabs={{
-          tabs: [
+              tabs={{
+                items: [
             { label: "All", value: "all", icon: Users },
             { label: "Active", value: "active", icon: UserCheck },
             { label: "Inactive", value: "inactive", icon: UserX },
             { label: "Pending", value: "pending", icon: Archive },
           ],
-          initialTab: "all",
+          defaultValue: "all",
           onSelect: (value) => {
             setActiveTab(value);
             setView(prev => ({ ...prev, page: 1 }));
@@ -385,12 +385,12 @@ export const WithFilters: StoryFn = () => {
         }}
         getItemId={(item) => item.id}
         tabs={{
-          tabs: [
+          items: [
             { label: "All", value: "all", icon: Users },
             { label: "Active", value: "active", icon: UserCheck },
             { label: "Inactive", value: "inactive", icon: UserX },
           ],
-          initialTab: "all",
+          defaultValue: "all",
           onSelect: (value) => {
             setActiveTab(value);
             setView(prev => ({ ...prev, page: 1 }));
@@ -516,13 +516,13 @@ export const WithSearchInHeaderSlot: StoryFn = () => {
         }}
         getItemId={(item) => item.id}
         tabs={{
-          tabs: [
+                items: [
             { label: "All", value: "all", icon: Users },
             { label: "Active", value: "active", icon: UserCheck },
             { label: "Inactive", value: "inactive", icon: UserX },
             { label: "Pending", value: "pending", icon: Archive },
           ],
-          initialTab: "all",
+          defaultValue: "all",
           onSelect: (value) => {
             setActiveTab(value);
             setView(prev => ({ ...prev, page: 1 }));
@@ -692,13 +692,13 @@ export const FullFeatured: StoryFn = () => {
         }}
         getItemId={(item) => item.id}
         tabs={{
-          tabs: [
+          items: [
             { label: "All Users", value: "all", icon: Users },
             { label: "Active", value: "active", icon: UserCheck },
             { label: "Inactive", value: "inactive", icon: UserX },
             { label: "Pending", value: "pending", icon: Archive },
           ],
-          initialTab: "all",
+          defaultValue: "all",
           onSelect: (value) => {
             setActiveTab(value);
             setSelection([]);
