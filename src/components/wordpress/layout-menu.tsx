@@ -4,6 +4,7 @@ import {
   forwardRef,
   useCallback,
   useEffect,
+  useId,
   useMemo,
   useState,
   type HTMLAttributes,
@@ -24,7 +25,6 @@ import {
   SidebarProvider,
   useSidebarOptional,
 } from "../ui/sidebar";
-import { Collapsible } from "@base-ui/react/collapsible";
 
 /* ============================================
    Sidebar provider detection
@@ -369,6 +369,7 @@ function MenuItemRenderer({
     [item, activeItemId]
   );
   const [open, setOpen] = useState(containsActive);
+  const submenuId = useId();
 
   // Auto-expand when a descendant becomes active
   useEffect(() => {
@@ -441,52 +442,46 @@ function MenuItemRenderer({
   // Parent item with children at depth 0
   if (hasChildren && depth === 0) {
     return (
-      <Collapsible.Root open={open} onOpenChange={setOpen}>
-        <SidebarMenuItem data-testid={item.testId}>
-          <Collapsible.Trigger
-            render={
-              <SidebarMenuButton
-                tooltip={item.label}
-                isActive={isActive}
-                onClick={() => onItemClick?.(item)}
+      <SidebarMenuItem data-testid={item.testId}>
+        <SidebarMenuButton
+          tooltip={item.label}
+          isActive={isActive}
+          onClick={handleClick}
+          className={cn(
+            menuItemClassName,
+            isActive && activeItemClassName,
+            item.className,
+          )}
+          data-active={isActive || undefined}
+          disabled={item.disabled}
+          aria-expanded={open}
+          aria-controls={submenuId}
+        >
+          {item.icon && (
+            <span className="flex shrink-0 [&_svg]:size-4">{item.icon}</span>
+          )}
+          <span className="min-w-0 flex-1">
+            <span className="block truncate">{item.label}</span>
+            {item.secondaryLabel && (
+              <span
                 className={cn(
-                  menuItemClassName,
-                  isActive && activeItemClassName,
-                  item.className,
+                  "block truncate text-xs",
+                  isActive ? "opacity-90" : "text-muted-foreground"
                 )}
-                data-active={isActive || undefined}
-                disabled={item.disabled}
-              />
-            }
-          >
-            {item.icon && (
-              <span className="flex shrink-0 [&_svg]:size-4">{item.icon}</span>
+              >
+                {item.secondaryLabel}
+              </span>
             )}
-            <span className="min-w-0 flex-1">
-              <span className="block truncate">{item.label}</span>
-              {item.secondaryLabel && (
-                <span
-                  className={cn(
-                    "block truncate text-xs",
-                    isActive ? "opacity-90" : "text-muted-foreground"
-                  )}
-                >
-                  {item.secondaryLabel}
-                </span>
-              )}
-            </span>
-            <ChevronRight
-              className={cn(
-                "ml-auto size-4 shrink-0 transition-transform duration-200",
-                open && "rotate-90"
-              )}
-            />
-          </Collapsible.Trigger>
-          <Collapsible.Panel
-            render={
-              <SidebarMenuSub />
-            }
-          >
+          </span>
+          <ChevronRight
+            className={cn(
+              "ml-auto size-4 shrink-0 transition-transform duration-200",
+              open && "rotate-90"
+            )}
+          />
+        </SidebarMenuButton>
+        {open && (
+          <SidebarMenuSub id={submenuId}>
             {item.children!.map((child) => (
               <SubMenuItemRenderer
                 key={child.id}
@@ -499,9 +494,9 @@ function MenuItemRenderer({
                 renderItem={renderItem}
               />
             ))}
-          </Collapsible.Panel>
-        </SidebarMenuItem>
-      </Collapsible.Root>
+          </SidebarMenuSub>
+        )}
+      </SidebarMenuItem>
     );
   }
 
@@ -529,6 +524,7 @@ function SubMenuItemRenderer({
     [item, activeItemId]
   );
   const [open, setOpen] = useState(containsActive);
+  const submenuId = useId();
 
   useEffect(() => {
     if (containsActive) setOpen(true);
@@ -582,38 +578,33 @@ function SubMenuItemRenderer({
 
   // Nested parent sub-item
   return (
-    <Collapsible.Root open={open} onOpenChange={setOpen}>
-      <SidebarMenuSubItem data-testid={item.testId}>
-        <Collapsible.Trigger
-          render={
-            <SidebarMenuSubButton
-              isActive={isActive}
-              onClick={() => onItemClick?.(item)}
-              className={cn(
-                menuItemClassName,
-                isActive && activeItemClassName,
-                item.className,
-              )}
-              data-active={isActive || undefined}
-            />
-          }
-        >
-          {item.icon && (
-            <span className="flex shrink-0 [&_svg]:size-4">{item.icon}</span>
+    <SidebarMenuSubItem data-testid={item.testId}>
+      <SidebarMenuSubButton
+        render={<button type="button" />}
+        isActive={isActive}
+        onClick={handleClick}
+        className={cn(
+          menuItemClassName,
+          isActive && activeItemClassName,
+          item.className,
+        )}
+        data-active={isActive || undefined}
+        aria-expanded={open}
+        aria-controls={submenuId}
+      >
+        {item.icon && (
+          <span className="flex shrink-0 [&_svg]:size-4">{item.icon}</span>
+        )}
+        <span className="min-w-0 flex-1 truncate">{item.label}</span>
+        <ChevronRight
+          className={cn(
+            "ml-auto size-4 shrink-0 transition-transform duration-200",
+            open && "rotate-90"
           )}
-          <span className="min-w-0 flex-1 truncate">{item.label}</span>
-          <ChevronRight
-            className={cn(
-              "ml-auto size-4 shrink-0 transition-transform duration-200",
-              open && "rotate-90"
-            )}
-          />
-        </Collapsible.Trigger>
-        <Collapsible.Panel
-          render={
-            <SidebarMenuSub />
-          }
-        >
+        />
+      </SidebarMenuSubButton>
+      {open && (
+        <SidebarMenuSub id={submenuId}>
           {item.children!.map((child) => (
             <SubMenuItemRenderer
               key={child.id}
@@ -626,8 +617,8 @@ function SubMenuItemRenderer({
               renderItem={renderItem}
             />
           ))}
-        </Collapsible.Panel>
-      </SidebarMenuSubItem>
-    </Collapsible.Root>
+        </SidebarMenuSub>
+      )}
+    </SidebarMenuSubItem>
   );
 }
