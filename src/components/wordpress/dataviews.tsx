@@ -613,99 +613,95 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
             id={tableNameSpace}
             data-filter-id={filterId}>
             <Slot name={beforeSlotId} fillProps={{ ...filteredProps }} />
+            {/* Header Content */}
+            <div className="w-full flex items-center flex-col justify-between rounded-tr-md rounded-tl-md">
+                {header && <div className="font-semibold text-sm text-foreground">{header}</div>}
+                <div
+                    className={cn(
+                        'flex gap-2 md:flex-row flex-col justify-between w-full items-center',
+                        (tabItems.length || search || headerContent.length) &&
+                            'border-b border-border p-4 md:px-4 md:py-0'
+                    )}>
+                    {tabItems.length > 0 && (
+                        <Tabs
+                            defaultValue={defaultTabValue}
+                            onValueChange={(value) => {
+                                // When a tab changes, reflect that in the view state
+                                const nextView = {
+                                    ...view,
+                                    [tabViewKey]: value,
+                                    page: 1
+                                } as View & { [key: string]: string | number };
+
+                                handleViewChange(nextView);
+
+                                tabs?.onSelect?.(value);
+                                filteredProps.onChangeSelection?.([]);
+                            }}>
+                            <TabsList variant="line" className="p-0 flex-wrap md:flex-nowrap">
+                                {tabItems.map((tab) => (
+                                    <TabsTrigger
+                                        key={tab.value}
+                                        value={tab.value}
+                                        disabled={tab.disabled}
+                                        className={cn(
+                                            'cursor-pointer! flex! py-2! px-2! text-xs! md:py-6! md:px-4! md:text-sm! text-muted-foreground! bg-transparent! rounded-none! hover:bg-transparent!',
+                                            'focus:outline-none! shadow-none!',
+                                            tab.className
+                                        )}>
+                                        {tab.icon && <tab.icon className="size-4" />}
+                                        {tab.label}{' '}
+                                        {tab.count !== undefined && (
+                                            <span className="text-muted-foreground">({tab.count})</span>
+                                        )}
+                                    </TabsTrigger>
+                                ))}
+                            </TabsList>
+                        </Tabs>
+                    )}
+                    <div className={cn('flex items-center gap-2', showFullWidthHeader && 'justify-end w-full py-2')}>
+                        {searchInput}
+                        {headerContent.map((node, index) => (
+                            <Fragment key={index}>{node}</Fragment>
+                        ))}
+                    </div>
+                </div>
+
+                {hasFilters && (
+                    <div
+                        className={`transition-all flex w-full justify-between px-4 my-4 bg-background ${
+                            showFilters ? '' : 'hidden!'
+                        }`}>
+                        <FilterItems
+                            {...filter}
+                            openSelectorSignal={openSelectorSignal}
+                            onFirstFilterAdded={() => setShowFilters(true)}
+                            onReset={() => {
+                                if (filter?.onReset) {
+                                    filter.onReset();
+                                }
+                                setShowFilters(false);
+                            }}
+                            onActiveFiltersChange={(count) => setActiveFilterCount(count)}
+                            buttonPopOverAnchor={buttonRef}
+                        />
+                    </div>
+                )}
+            </div>
             {/* @ts-expect-error - Complex conditional types from wrapper don't perfectly align with @wordpress/dataviews types */}
             <DataViewsTable {...filteredProps}>
                 {children ? (
                     children
                 ) : (
                     <Fragment>
-                        <div className="w-full flex items-center flex-col justify-between rounded-tr-md rounded-tl-md">
-                            {header && <div className="font-semibold text-sm text-foreground">{header}</div>}
+                        {view.type === 'table' && filteredProps?.selection?.length > 0 && (
                             <div
                                 className={cn(
-                                    'flex gap-2 md:flex-row flex-col justify-between w-full items-center',
-                                    (tabItems.length || search || headerContent.length) &&
-                                        'border-b border-border p-4 md:px-4 md:py-0'
+                                    'animate-in fade-in-0 slide-in-from-top-1 duration-200 transition-all ease-in-out -mb-13 flex items-center bg-background z-1 border-b px-5 h-13 justify-between border-border w-full'
                                 )}>
-                                {tabItems.length > 0 && (
-                                    <Tabs
-                                        defaultValue={defaultTabValue}
-                                        onValueChange={(value) => {
-                                            // When a tab changes, reflect that in the view state
-                                            const nextView = {
-                                                ...view,
-                                                [tabViewKey]: value,
-                                                page: 1
-                                            } as View & { [key: string]: string | number };
-
-                                            handleViewChange(nextView);
-
-                                            tabs?.onSelect?.(value);
-                                            filteredProps.onChangeSelection?.([]);
-                                        }}>
-                                        <TabsList variant="line" className="p-0 flex-wrap md:flex-nowrap">
-                                            {tabItems.map((tab) => (
-                                                <TabsTrigger
-                                                    key={tab.value}
-                                                    value={tab.value}
-                                                    disabled={tab.disabled}
-                                                    className={cn(
-                                                        'cursor-pointer! flex! py-2! px-2! text-xs! md:py-6! md:px-4! md:text-sm! text-muted-foreground! bg-transparent! rounded-none! hover:bg-transparent!',
-                                                        'focus:outline-none! shadow-none!',
-                                                        tab.className
-                                                    )}>
-                                                    {tab.icon && <tab.icon className="size-4" />}
-                                                    {tab.label}{' '}
-                                                    {tab.count !== undefined && (
-                                                        <span className="text-muted-foreground">({tab.count})</span>
-                                                    )}
-                                                </TabsTrigger>
-                                            ))}
-                                        </TabsList>
-                                    </Tabs>
-                                )}
-                                <div
-                                    className={cn(
-                                        'flex items-center gap-2',
-                                        showFullWidthHeader && 'justify-end w-full py-2'
-                                    )}>
-                                    {searchInput}
-                                    {headerContent.map((node, index) => (
-                                        <Fragment key={index}>{node}</Fragment>
-                                    ))}
-                                </div>
+                                <DataViewsTable.BulkActionToolbar />
                             </div>
-
-                            {hasFilters && (
-                                <div
-                                    className={`transition-all flex w-full justify-between px-4 my-4 bg-background ${
-                                        showFilters ? '' : 'hidden!'
-                                    }`}>
-                                    <FilterItems
-                                        {...filter}
-                                        openSelectorSignal={openSelectorSignal}
-                                        onFirstFilterAdded={() => setShowFilters(true)}
-                                        onReset={() => {
-                                            if (filter?.onReset) {
-                                                filter.onReset();
-                                            }
-                                            setShowFilters(false);
-                                        }}
-                                        onActiveFiltersChange={(count) => setActiveFilterCount(count)}
-                                        buttonPopOverAnchor={buttonRef}
-                                    />
-                                </div>
-                            )}
-
-                            {view.type === 'table' && filteredProps?.selection?.length > 0 && (
-                                <div
-                                    className={cn(
-                                        'animate-in fade-in-0 slide-in-from-top-1 duration-200 transition-all ease-in-out -mb-13 flex items-center bg-background z-1 border-b px-5 h-13 justify-between border-border w-full'
-                                    )}>
-                                    <DataViewsTable.BulkActionToolbar />
-                                </div>
-                            )}
-                        </div>
+                        )}
                         <DataViewsTable.Layout />
                         {shouldShowPagination && (
                             <div className="flex items-center justify-between">
