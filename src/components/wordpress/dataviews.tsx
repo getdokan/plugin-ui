@@ -236,12 +236,12 @@ const FilterItems = ({
                             return null;
                         }
                         return (
-                            <div className="relative flex items-center gap-2" key={id}>
-                                <div className="[&>input]:pr-8 [&>select]:pr-8">{field.field}</div>
+                            <div className="relative flex items-center pe-2 border rounded-md border-border **:border-0 **:shadow-none" key={id}>
+                                {field.field}
                                 <span
                                     role="button"
                                     aria-label={removeFilter}
-                                    className="absolute right-2 inline-flex items-center justify-center w-5 h-5 text-muted-foreground hover:text-primary z-10"
+                                    className="inline-flex items-center justify-center w-5 h-5 text-muted-foreground hover:text-primary z-10"
                                     onClick={() => handleRemoveFilter(id)}>
                                     <X size="12" />
                                 </span>
@@ -591,42 +591,37 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
 
     const hasFilters = (filter?.fields?.length ?? 0) > 0;
 
-    const tabsWithFilterButton = hasFilters
-        ? (() => {
-              const existing = tabs?.headerContent || tabs?.headerSlot || [];
-              const newButton = (
-                  <button
-                      type="button"
-                      ref={setButtonRef}
-                      title="Filter"
-                      className={cn(
-                          'relative inline-flex items-center gap-2 rounded-md bg-transparent! hover:bg-transparent! px-3 py-1.5 text-sm hover:text-primary',
-                          showFilters ? 'text-primary' : 'text-muted-foreground'
-                      )}
-                      onClick={() => {
-                          if (activeFilterCount > 0) {
-                              setShowFilters((prev) => !prev);
-                          } else {
-                              setOpenSelectorSignal((s) => s + 1);
-                          }
-                      }}>
-                      <Funnel size={20} />
-                      {activeFilterCount > 0 && (
-                          <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">
-                              {activeFilterCount}
-                          </span>
-                      )}
-                  </button>
-              );
+    const filterButton = hasFilters ? (
+        <button
+            type="button"
+            ref={setButtonRef}
+            title="Filter"
+            className={cn(
+                'relative inline-flex items-center gap-2 rounded-md bg-transparent! hover:bg-transparent! px-3 py-1.5 text-sm hover:text-primary',
+                showFilters ? 'text-primary' : 'text-muted-foreground'
+            )}
+            onClick={() => {
+                if (activeFilterCount > 0) {
+                    setShowFilters((prev) => !prev);
+                } else {
+                    setOpenSelectorSignal((s) => s + 1);
+                }
+            }}>
+            <Funnel size={20} />
+            {activeFilterCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">
+                    {activeFilterCount}
+                </span>
+            )}
+        </button>
+    ) : null;
 
-              return {
-                  ...tabs,
-                  headerContent: [...existing, newButton]
-              };
-          })()
+    const resolvedTabsConfig = hasFilters
+        ? {
+              ...tabs,
+              headerContent: [...(tabs?.headerContent || tabs?.headerSlot || []), filterButton]
+          }
         : tabs;
-
-    const resolvedTabsConfig = tabsWithFilterButton || tabs;
 
     // Backward compatibility: prefer modern keys and fallback to deprecated aliases.
     const tabItems = resolvedTabsConfig?.items ?? resolvedTabsConfig?.tabs ?? [];
@@ -656,6 +651,39 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     const afterSlotId = `${filterId}-after`;
 
     const searchTerm = (view as View & { search?: string }).search ?? '';
+    const [localSearch, setLocalSearch] = useState(searchTerm);
+    const debounceRef = useRef<ReturnType<typeof setTimeout>>(null);
+
+    // Sync local state when the external view search changes (e.g. tab reset)
+    useEffect(() => {
+        setLocalSearch(searchTerm);
+    }, [searchTerm]);
+
+    const handleSearchChange = useCallback(
+        (value: string) => {
+            setLocalSearch(value);
+            if (debounceRef.current) {
+                clearTimeout(debounceRef.current);
+            }
+            debounceRef.current = setTimeout(() => {
+                handleViewChange({
+                    ...view,
+                    search: value,
+                    page: 1
+                } as View);
+            }, 500);
+        },
+        [handleViewChange, view]
+    );
+
+    // Cleanup timeout on unmount
+    useEffect(() => {
+        return () => {
+            if (debounceRef.current) {
+                clearTimeout(debounceRef.current);
+            }
+        };
+    }, []);
 
     const searchInput = search ? (
         <InputGroup className="md:w-64 md:min-w-64">
@@ -665,14 +693,8 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
             <InputGroupInput
                 className="border-none!"
                 placeholder={searchPlaceholder}
-                value={searchTerm}
-                onChange={(event) =>
-                    handleViewChange({
-                        ...view,
-                        search: event.target.value,
-                        page: 1
-                    } as View)
-                }
+                value={localSearch}
+                onChange={(event) => handleSearchChange(event.target.value)}
             />
         </InputGroup>
     ) : null;
@@ -793,6 +815,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                     </Fragment>
                 )}
             </DataViewsTable>
+
             <Slot name={afterSlotId} fillProps={{ ...filteredProps }} />
 
             {/* Destructive action confirmation AlertDialog */}
