@@ -288,14 +288,14 @@ export const WithTabs: StoryFn = () => {
           totalPages: getTotalPages(filteredUsers.length, view.perPage),
         }}
         getItemId={(item) => item.id}
-        tabs={{
-          tabs: [
+              tabs={{
+                items: [
             { label: "All", value: "all", icon: Users },
             { label: "Active", value: "active", icon: UserCheck },
             { label: "Inactive", value: "inactive", icon: UserX },
             { label: "Pending", value: "pending", icon: Archive },
           ],
-          initialTab: "all",
+          defaultValue: "all",
           onSelect: (value) => {
             setActiveTab(value);
             setView(prev => ({ ...prev, page: 1 }));
@@ -385,12 +385,12 @@ export const WithFilters: StoryFn = () => {
         }}
         getItemId={(item) => item.id}
         tabs={{
-          tabs: [
+          items: [
             { label: "All", value: "all", icon: Users },
             { label: "Active", value: "active", icon: UserCheck },
             { label: "Inactive", value: "inactive", icon: UserX },
           ],
-          initialTab: "all",
+          defaultValue: "all",
           onSelect: (value) => {
             setActiveTab(value);
             setView(prev => ({ ...prev, page: 1 }));
@@ -516,13 +516,13 @@ export const WithSearchInHeaderSlot: StoryFn = () => {
         }}
         getItemId={(item) => item.id}
         tabs={{
-          tabs: [
+                items: [
             { label: "All", value: "all", icon: Users },
             { label: "Active", value: "active", icon: UserCheck },
             { label: "Inactive", value: "inactive", icon: UserX },
             { label: "Pending", value: "pending", icon: Archive },
           ],
-          initialTab: "all",
+          defaultValue: "all",
           onSelect: (value) => {
             setActiveTab(value);
             setView(prev => ({ ...prev, page: 1 }));
@@ -692,13 +692,13 @@ export const FullFeatured: StoryFn = () => {
         }}
         getItemId={(item) => item.id}
         tabs={{
-          tabs: [
+          items: [
             { label: "All Users", value: "all", icon: Users },
             { label: "Active", value: "active", icon: UserCheck },
             { label: "Inactive", value: "inactive", icon: UserX },
             { label: "Pending", value: "pending", icon: Archive },
           ],
-          initialTab: "all",
+          defaultValue: "all",
           onSelect: (value) => {
             setActiveTab(value);
             setSelection([]);
@@ -724,42 +724,149 @@ export const FullFeatured: StoryFn = () => {
 };
 FullFeatured.storyName = "Full Featured";
 
-/** Different page sizes with pagination. Use view controls to change perPage. */
-export const DifferentPageSizes: StoryFn = () => {
+/**
+ * Poster/hero style layout that displays items as large image cards
+ * with overlaid text content.
+ */
+function PosterGrid({ items }: { items: User[] }) {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+        gap: "16px",
+        padding: "16px 0",
+      }}
+    >
+      {items.map((item) => (
+        <div
+          key={item.id}
+          style={{
+            position: "relative",
+            aspectRatio: "4 / 3",
+            borderRadius: "8px",
+            overflow: "hidden",
+            backgroundColor: "#cbd5e1", // Placeholder background
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              padding: "48px 16px 16px",
+              background:
+                "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 60%, transparent 100%)",
+              color: "white",
+            }}
+          >
+            <h3
+              style={{
+                margin: "0 0 4px",
+                fontSize: "18px",
+                fontWeight: 600,
+                textShadow: "0 1px 2px rgba(0,0,0,0.5)",
+              }}
+            >
+              {item.name}
+            </h3>
+            <p
+              style={{
+                margin: "0 0 8px",
+                fontSize: "13px",
+                opacity: 0.9,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {item.email}
+            </p>
+            <div style={{ display: "flex", gap: "6px" }}>
+              <span
+                style={{
+                  fontSize: "11px",
+                  padding: "2px 8px",
+                  borderRadius: "4px",
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                  textTransform: "capitalize",
+                }}
+              >
+                {item.role}
+              </span>
+              <span
+                style={{
+                  fontSize: "11px",
+                  padding: "2px 8px",
+                  borderRadius: "4px",
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                  textTransform: "capitalize",
+                }}
+              >
+                {item.status}
+              </span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Demonstrates a custom poster/hero layout using free composition.
+ *
+ * This story shows how to:
+ * - Use `<DataViews>` as a context provider with custom children
+ * - Render a completely custom layout (poster grid) instead of `<DataViews.Layout />`
+ * - Still leverage DataViews sub-components for search and pagination
+ */
+export const LayoutCustomComponent: StoryFn = () => {
   const [view, setView] = useState<DataViewState>({
-    ...createDefaultView(["name", "email", "status"]),
-    perPage: 5,
+    type: "table",
+    search: "",
+    page: 1,
+    perPage: 6,
+    fields: ["name", "email", "status", "role"],
   });
 
-  const paginatedData = paginateData(allUsers, view);
+  const searchTerm = view.search ?? "";
+  const filteredUsers = searchTerm
+    ? allUsers.filter(user =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : allUsers;
+
+  const paginatedData = paginateData(filteredUsers, view);
 
   return (
     <div className="p-4">
-      <div className="mb-4 flex items-center gap-2">
-        <span className="text-sm text-muted-foreground">Items per page:</span>
-        <select
-          value={String(view.perPage ?? 10)}
-          onChange={(e) => setView(prev => ({ ...prev, perPage: Number(e.target.value), page: 1 }))}
-        >
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-        </select>
-      </div>
       <DataViews<User>
-        namespace="dataviews-demo"
-        data={paginatedData}
-        fields={fields.filter(f => ["name", "email", "status"].includes(f.id))}
-        view={view}
-        onChangeView={setView}
-        paginationInfo={{
-          totalItems: allUsers.length,
-          totalPages: getTotalPages(allUsers.length, view.perPage),
-        }}
         getItemId={(item) => item.id}
-      />
+        namespace="dataviews-demo"
+        paginationInfo={{
+          totalItems: filteredUsers.length,
+          totalPages: getTotalPages(filteredUsers.length, view.perPage),
+        }}
+        data={paginatedData}
+        view={view}
+        fields={fields}
+        onChangeView={setView}
+        defaultLayouts={{ table: {} }}
+      >
+        <div style={{ padding: "2px" }}>
+          {DataViews.Search && <DataViews.Search />}
+          <PosterGrid items={paginatedData} />
+        </div>
+        {DataViews.Pagination && (
+          <div className="flex items-center justify-between [&>div]:w-full [&>div]:flex [&>div]:justify-between! [&>div]:p-4">
+            <DataViews.Pagination />
+          </div>
+        )}
+      </DataViews>
     </div>
   );
 };
-DifferentPageSizes.storyName = "Different Page Sizes";
+LayoutCustomComponent.storyName = "Custom Layout Component";

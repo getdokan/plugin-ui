@@ -1,7 +1,6 @@
 import useWindowDimensions from '@/hooks/useWindowDimensions';
+import { cn, kebabCase, snakeCase } from '@/lib/utils';
 import { Popover, Slot } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
-import { cn } from '@/lib/utils';
 import {
     DataViews as DataViewsTable,
     type Action,
@@ -9,32 +8,13 @@ import {
     type SupportedLayouts,
     type View
 } from '@wordpress/dataviews/wp';
+import { __ } from '@wordpress/i18n';
 import { FileSearch, Funnel, Plus, Search, X } from 'lucide-react';
+import type React from 'react';
 import { Fragment, useEffect, useState } from 'react';
-import { Button } from '../ui/button';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '../ui';
+import { Button } from '../ui/button';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
-
-/** Convert string to snake_case (e.g. "myNamespace" -> "my_namespace"). */
-function snakeCase(str: string): string {
-    if (!str) return '';
-    return str
-        .replace(/-/g, '_')
-        .replace(/\s+/g, '_')
-        .replace(/([a-z])([A-Z])/g, '$1_$2')
-        .toLowerCase()
-        .replace(/^_+|_+$/g, '');
-}
-
-/** Convert string to kebab-case (e.g. "myNamespace" -> "my-namespace"). */
-function kebabCase(str: string): string {
-    if (!str) return '';
-    return str
-        .replace(/([a-z])([A-Z])/g, '$1-$2')
-        .replace(/[\s_]+/g, '-')
-        .toLowerCase()
-        .replace(/^-+|-+$/g, '');
-}
 
 declare global {
     interface Window {
@@ -86,33 +66,24 @@ function updateUrlQueryParams(params: Record<string, string | number | null | un
  * We intentionally support both camelCase (`perPage`) and snake_case (`per_page`)
  * so that whatever the upstream shape is, we can still sync it into the URL.
  */
-function getQueryParamsFromView(view: View): Record<string, string | number | null | undefined> {
+function getQueryParamsFromView(view: View, tabViewKey: string): Record<string, string | number | null | undefined> {
     const v = view as View & {
-        page?: number;
-        per_page?: number;
-        perPage?: number;
-        search?: string;
-        filters?: unknown;
-        status?: string;
+        [key: string]: any;
     };
 
     const perPage = v.perPage ?? v.per_page;
 
     const filters =
-        v.filters &&
-        typeof v.filters === 'object' &&
-        Object.keys(v.filters as unknown as Record<string, unknown>).length > 0
-            ? JSON.stringify(v.filters)
-            : null;
+        typeof v.filters === 'object' && Object.keys(v.filters).length > 0 ? JSON.stringify(v.filters) : null;
 
     // Start with the core pieces of state we always want in the URL.
-    const params: Record<string, string | number | null | undefined> = {
+    const params: Record<string, any> = {
         // Use `current_page` instead of `page` so we don't conflict with
         // WordPress admin's own `page` query param (e.g. ?page=plugin-ui-test).
         current_page: v.page ?? null,
         per_page: perPage ?? null,
         search: v.search ?? '',
-        status: v.status ?? '',
+        [tabViewKey]: v[tabViewKey] ?? '',
         filters
     };
 
@@ -233,7 +204,7 @@ const FilterItems = ({
     };
 
     return (
-        <>
+        <Fragment>
             <div className={cn('flex w-full justify-between items-center', className)}>
                 <div className="flex flex-row flex-wrap gap-4 items-center">
                     {activeFilters.map((id) => {
@@ -282,7 +253,7 @@ const FilterItems = ({
                         {availableFilters.map((f) => (
                             <button
                                 key={f.id}
-                                className="w-full flex items-center gap-3 px-4 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-primary transition-all duration-200 border-none bg-transparent group"
+                                className="w-full flex items-center gap-3! px-4! py-2! text-sm text-muted-foreground hover:bg-accent! hover:text-primary transition-all duration-200 border-none bg-transparent! group"
                                 onClick={() => handleAddFilter(f.id)}>
                                 {f.label}
                             </button>
@@ -290,7 +261,7 @@ const FilterItems = ({
                     </div>
                 </Popover>
             )}
-        </>
+        </Fragment>
     );
 };
 
@@ -303,9 +274,15 @@ interface Tab {
 }
 
 interface TabsProps {
-    tabs: Tab[];
-    onSelect?: (tabValue: string) => void;
-    initialTab?: string;
+    items?: Tab[];
+    /** @deprecated Use `items` instead. Kept for backward compatibility. */
+    tabs?: Tab[];
+    onSelect?: (value: string) => void;
+    defaultValue?: string;
+    /** The view object key that tab selection maps to. Defaults to `'status'`. */
+    viewKey?: string;
+    headerContent?: React.ReactNode[];
+    /** @deprecated Use `headerContent` instead. Kept for backward compatibility. */
     headerSlot?: React.ReactNode[];
 }
 
@@ -340,6 +317,7 @@ export type DataViewsProps<Item> = {
     header?: JSX.Element;
     filter?: DataViewFilterProps;
     tabs?: TabsProps;
+    children?: React.ReactNode;
 } & (Item extends ItemWithId ? { getItemId?: (item: Item) => string } : { getItemId: (item: Item) => string });
 
 interface ListEmptyProps {
@@ -386,6 +364,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
         tabs,
         search,
         searchPlaceholder = __('Search', 'default'),
+        children,
         ...dataViewsTableProps
     } = props;
     /**
@@ -396,22 +375,22 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
         enableHiding: false,
         ...field
     }));
-    const defaultLayouts =
-        props.defaultLayouts ||
-        ({
-            table: { density: 'comfortable' },
-            list: {}
-        } as SupportedLayouts);
+
+    const defaultLayouts = {
+        table: { density: 'comfortable' },
+        list: {},
+        grid: {}
+    };
 
     // Ensure view.fields is populated with all field IDs if not specified
     const normalizedView = {
         ...view,
-        fields: view.fields ?? fields.map((f) => f.id)
+        fields: view.fields?.length ? view.fields : fields.map((f) => f.id)
     };
 
     const handleViewChange = (nextView: View) => {
         // Sync key pieces of state into the URL so that the UI is shareable and bookmarkable.
-        updateUrlQueryParams(getQueryParamsFromView(nextView));
+        updateUrlQueryParams(getQueryParamsFromView(nextView, tabViewKey));
         onChangeView(nextView);
     };
 
@@ -420,7 +399,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
         onChangeView: handleViewChange,
         view: normalizedView,
         fields: normalizedFields,
-        defaultLayouts,
+        defaultLayouts: props.defaultLayouts || defaultLayouts,
         empty: empty || <ListEmpty icon={emptyIcon} title={emptyTitle} description={emptyDescription} />
     };
 
@@ -450,7 +429,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
             return;
         }
 
-        const targetType: View['type'] = windowWidth <= 768 ? 'list' : 'table';
+        const targetType = windowWidth <= 768 ? 'list' : 'table';
 
         if (view.type !== targetType) {
             onChangeView({
@@ -470,14 +449,14 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     const tabsWithFilterButton =
         filter?.fields && tabs && filter.fields.length > 0
             ? (() => {
-                  const existing = tabs?.headerSlot || [];
+                  const existing = tabs?.headerContent || tabs?.headerSlot || [];
                   const newButton = (
                       <button
                           type="button"
                           ref={setButtonRef}
                           title="Filter"
                           className={cn(
-                              'relative inline-flex items-center gap-2 rounded-md bg-transparent hover:bg-transparent px-3 py-1.5 text-sm hover:text-primary',
+                              'relative inline-flex items-center gap-2 rounded-md bg-transparent! hover:bg-transparent! px-3 py-1.5 text-sm hover:text-primary',
                               showFilters ? 'text-primary' : 'text-muted-foreground'
                           )}
                           onClick={() => {
@@ -498,10 +477,31 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
 
                   return {
                       ...tabs,
-                      headerSlot: [...existing, newButton]
+                      headerContent: [...existing, newButton]
                   };
               })()
             : tabs;
+
+    const resolvedTabsConfig = tabsWithFilterButton || tabs;
+
+    // Backward compatibility: prefer modern keys and fallback to deprecated aliases.
+    const tabItems = resolvedTabsConfig?.items ?? resolvedTabsConfig?.tabs ?? [];
+    const defaultTabValue = resolvedTabsConfig?.defaultValue ?? tabItems[0]?.value;
+    const tabViewKey = resolvedTabsConfig?.viewKey ?? 'status';
+    const headerContent = resolvedTabsConfig?.headerContent ?? resolvedTabsConfig?.headerSlot ?? [];
+
+    const paginationDetails = filteredProps.paginationInfo;
+    const explicitTotalPages = paginationDetails?.totalPages;
+    const viewPerPage = (view as View & { perPage?: number; per_page?: number }).perPage;
+    const perPage =
+        typeof viewPerPage === 'number' && viewPerPage > 0
+            ? viewPerPage
+            : (view as View & { per_page?: number }).per_page;
+    const computedTotalPages =
+        typeof paginationDetails?.totalItems === 'number' && typeof perPage === 'number' && perPage > 0
+            ? Math.ceil(paginationDetails.totalItems / perPage)
+            : 0;
+    const shouldShowPagination = (typeof explicitTotalPages === 'number' ? explicitTotalPages : computedTotalPages) > 1;
 
     const tableNameSpace = kebabCase(namespace);
 
@@ -516,11 +516,12 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     const searchTerm = (view as View & { search?: string }).search ?? '';
 
     const searchInput = search ? (
-        <InputGroup className="w-64 min-w-64">
+        <InputGroup className="md:w-64 md:min-w-64">
             <InputGroupAddon>
                 <Search size={18} className="text-muted-foreground" />
             </InputGroupAddon>
             <InputGroupInput
+                className="border! border-border!"
                 placeholder={searchPlaceholder}
                 value={searchTerm}
                 onChange={(event) =>
@@ -535,102 +536,117 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     ) : null;
 
     return (
-        <div className="pui-root-dataviews" id={tableNameSpace} data-filter-id={filterId}>
+        <div
+            className={cn('pui-root-dataviews pui-root', children && 'custom-layout')}
+            id={tableNameSpace}
+            data-filter-id={filterId}>
             <Slot name={beforeSlotId} fillProps={{ ...filteredProps }} />
             {/* @ts-expect-error - Complex conditional types from wrapper don't perfectly align with @wordpress/dataviews types */}
             <DataViewsTable {...filteredProps}>
-                <div className="w-full flex items-center flex-col justify-between rounded-tr-md rounded-tl-md">
-                    {header && <div className="font-semibold text-sm text-foreground">{header}</div>}
-                    <div
-                        className={cn(
-                            'md:flex justify-between w-full items-center px-4',
-                            (tabs?.tabs?.length || search) && 'border-b border-border'
-                        )}>
-                        {tabs && tabs.tabs && tabs.tabs.length > 0 && (
-                            <Tabs
-                                defaultValue={
-                                    (tabsWithFilterButton || tabs)?.initialTab ||
-                                    (tabsWithFilterButton || tabs)?.tabs[0]?.value
-                                }
-                                onValueChange={(value) => {
-                                    // When a tab changes, reflect that in the view state
-                                    const nextView = {
-                                        ...view,
-                                        status: value,
-                                        page: 1
-                                    } as View & { status?: string };
+                {children ? (
+                    children
+                ) : (
+                    <Fragment>
+                        <div className="w-full flex items-center flex-col justify-between rounded-tr-md rounded-tl-md">
+                            {header && <div className="font-semibold text-sm text-foreground">{header}</div>}
+                            <div
+                                className={cn(
+                                    'flex gap-2 md:flex-row flex-col justify-between w-full items-center',
+                                    (tabItems.length || search || headerContent.length) &&
+                                        'border-b border-border p-4 md:px-4 md:py-0'
+                                )}>
+                                {tabItems.length > 0 && (
+                                    <Tabs
+                                        defaultValue={defaultTabValue}
+                                        onValueChange={(value) => {
+                                            // When a tab changes, reflect that in the view state
+                                            const nextView = {
+                                                ...view,
+                                                [tabViewKey]: value,
+                                                page: 1
+                                            } as View & { [key: string]: string | number };
 
-                                    handleViewChange(nextView);
+                                            handleViewChange(nextView);
 
-                                    tabs?.onSelect?.(value);
-                                    filteredProps.onChangeSelection?.([]);
-                                }}>
-                                <TabsList variant="line" className="p-0">
-                                    {(tabsWithFilterButton || tabs)?.tabs.map((tab) => (
-                                        <TabsTrigger
-                                            key={tab.value}
-                                            value={tab.value}
-                                            disabled={tab.disabled}
-                                            className={cn(
-                                                'py-4 px-3 md:py-6 border-0 md:px-4 bg-transparent rounded-none hover:bg-transparent',
-                                                tab.className
-                                            )}>
-                                            {tab.icon && <tab.icon className="size-4" />}
-                                            {tab.label}
-                                        </TabsTrigger>
+                                            tabs?.onSelect?.(value);
+                                            filteredProps.onChangeSelection?.([]);
+                                        }}>
+                                        <TabsList variant="line" className="p-0 flex-wrap md:flex-nowrap">
+                                            {tabItems.map((tab) => (
+                                                <TabsTrigger
+                                                    key={tab.value}
+                                                    value={tab.value}
+                                                    disabled={tab.disabled}
+                                                    className={cn(
+                                                        'cursor-pointer! flex! py-2! px-2! text-xs! md:py-6! md:px-4! md:text-sm! text-muted-foreground! bg-transparent! rounded-none! hover:bg-transparent!',
+                                                        'focus:outline-none! shadow-none!',
+                                                        tab.className
+                                                    )}>
+                                                    {tab.icon && <tab.icon className="size-4" />}
+                                                    {tab.label}
+                                                </TabsTrigger>
+                                            ))}
+                                        </TabsList>
+                                    </Tabs>
+                                )}
+                                <div
+                                    className={cn(
+                                        'flex items-center gap-2',
+                                        !tabItems.length && search && 'justify-end w-full py-2'
+                                    )}>
+                                    {searchInput}
+                                    {headerContent.map((node, index) => (
+                                        <Fragment key={index}>{node}</Fragment>
                                     ))}
-                                </TabsList>
-                            </Tabs>
+                                </div>
+                            </div>
+
+                            {filter && filter.fields && filter.fields.length > 0 && (
+                                <div
+                                    className={`transition-all flex w-full justify-between px-4 my-4 bg-background ${
+                                        showFilters ? '' : 'hidden!'
+                                    }`}>
+                                    <FilterItems
+                                        {...filter}
+                                        openSelectorSignal={openSelectorSignal}
+                                        onFirstFilterAdded={() => setShowFilters(true)}
+                                        onReset={() => {
+                                            if (filter?.onReset) {
+                                                filter.onReset();
+                                            }
+                                            setShowFilters(false);
+                                        }}
+                                        onActiveFiltersChange={(count) => setActiveFilterCount(count)}
+                                        buttonPopOverAnchor={buttonRef}
+                                    />
+                                </div>
+                            )}
+
+                            {view.type === 'table' && filteredProps?.selection?.length > 0 && (
+                                <div
+                                    className={cn(
+                                        'animate-in fade-in-0 slide-in-from-top-1 duration-200 transition-all ease-in-out -mb-13 flex items-center bg-background z-1 border-b px-5 h-13 justify-between border-border w-full'
+                                    )}>
+                                    <DataViewsTable.BulkActionToolbar />
+                                </div>
+                            )}
+                        </div>
+                        <DataViewsTable.Layout />
+                        {shouldShowPagination && (
+                            <div className="flex items-center justify-between">
+                                <DataViewsTable.Pagination />
+                            </div>
                         )}
-                        <div
-                            className={cn(
-                                'flex items-center gap-2',
-                                !tabs?.tabs?.length && search && 'justify-end w-full py-2'
-                            )}>
-                            {searchInput}
-                            {(tabsWithFilterButton || tabs)?.headerSlot?.map((node, index) => (
-                                <Fragment key={index}>{node}</Fragment>
-                            ))}
-                        </div>
-                    </div>
-
-                    {filter && filter.fields && filter.fields.length > 0 && (
-                        <div
-                            className={`transition-all flex w-full justify-between px-4 mt-4 bg-background ${
-                                showFilters ? '' : 'hidden!'
-                            }`}>
-                            <FilterItems
-                                {...filter}
-                                openSelectorSignal={openSelectorSignal}
-                                onFirstFilterAdded={() => setShowFilters(true)}
-                                onReset={() => {
-                                    if (filter?.onReset) {
-                                        filter.onReset();
-                                    }
-                                    setShowFilters(false);
-                                }}
-                                onActiveFiltersChange={(count) => setActiveFilterCount(count)}
-                                buttonPopOverAnchor={buttonRef}
-                            />
-                        </div>
-                    )}
-
-                    <div
-                        className={cn(
-                            'transition-all duration-300 ease-in-out -mb-13 flex items-center bg-background z-1 border-b px-5 h-13 justify-between border-border w-full',
-                            filteredProps.selection && filteredProps.selection.length > 0
-                                ? 'opacity-100 visible translate-y-0'
-                                : 'opacity-0 invisible -translate-y-2'
-                        )}>
-                        <DataViewsTable.BulkActionToolbar />
-                    </div>
-                </div>
-                <DataViewsTable.Layout />
-                <div className="flex items-center justify-between [&>div]:w-full [&>div]:flex [&>div]:justify-between! [&>div]:p-4">
-                    <DataViewsTable.Pagination />
-                </div>
+                    </Fragment>
+                )}
             </DataViewsTable>
             <Slot name={afterSlotId} fillProps={{ ...filteredProps }} />
         </div>
     );
 }
+
+DataViews.Pagination = DataViewsTable.Pagination as React.ComponentType<any>;
+DataViews.Layout = DataViewsTable.Layout as React.ComponentType<any>;
+DataViews.Search = DataViewsTable.Search as React.ComponentType<any>;
+DataViews.Filters = DataViewsTable.Filters as React.ComponentType<any>;
+DataViews.BulkActionToolbar = DataViewsTable.BulkActionToolbar as React.ComponentType<any>;

@@ -306,12 +306,12 @@ function TableWithTabs() {
       }}
       getItemId={(item) => item.id}
       tabs={{
-        tabs: [
+        items: [
           { label: 'All Users', value: 'all', icon: Users },
           { label: 'Active', value: 'active', icon: UserCheck },
           { label: 'Inactive', value: 'inactive', icon: UserX },
         ],
-        initialTab: 'all',
+        defaultValue: 'all',
         onSelect: handleTabChange,
       }}
     />
@@ -337,14 +337,14 @@ import { Plus, Download } from 'lucide-react';
   }}
   getItemId={(item) => item.id}
   tabs={{
-    tabs: [
+    items: [
       { label: 'All', value: 'all' },
       { label: 'Active', value: 'active' },
       { label: 'Inactive', value: 'inactive' },
     ],
-    initialTab: 'all',
+    defaultValue: 'all',
     onSelect: (tab) => console.log('Tab selected:', tab),
-    headerSlot: [
+    headerContent: [
       <Button key="export" variant="outline" size="sm">
         <Download size={16} className="mr-2" />
         Export
@@ -429,11 +429,11 @@ function TableWithFilters() {
       }}
       getItemId={(item) => item.id}
       tabs={{
-        tabs: [
+        items: [
           { label: 'All', value: 'all' },
           { label: 'Active', value: 'active' },
         ],
-        initialTab: 'all',
+        defaultValue: 'all',
         onSelect: () => {},
       }}
       filter={{
@@ -772,14 +772,14 @@ function UsersTable() {
       emptyTitle="No users found"
       emptyDescription="Try adjusting your filters or add a new user."
       tabs={{
-        tabs: [
+        items: [
           { label: 'All Users', value: 'all', icon: Users },
           { label: 'Active', value: 'active', icon: UserCheck },
           { label: 'Inactive', value: 'inactive', icon: UserX },
         ],
-        initialTab: 'all',
+        defaultValue: 'all',
         onSelect: setActiveTab,
-        headerSlot: [
+        headerContent: [
           <Button key="export" variant="outline" size="sm">
             <Download size={16} className="mr-2" />
             Export
@@ -889,9 +889,13 @@ interface Tab {
 
 // Tabs props
 interface TabsProps {
-  tabs: Tab[];
-  onSelect?: (tabValue: string) => void;
-  initialTab?: string;
+  items?: Tab[];
+  /** @deprecated Use `items` instead. Kept for backward compatibility. */
+  tabs?: Tab[];
+  onSelect?: (value: string) => void;
+  defaultValue?: string;
+  headerContent?: React.ReactNode[];
+  /** @deprecated Use `headerContent` instead. Kept for backward compatibility. */
   headerSlot?: React.ReactNode[];
 }
 ```
@@ -903,4 +907,6 @@ interface TabsProps {
 - Responsive behavior switches to list view on screens narrower than 768px.
 - Sorting and column hiding are disabled by default; enable them per-field if needed.
 - When using tabs with filters, a filter button is automatically added to the header slot.
+- Use `tabs.items` for tab definitions. `tabs.tabs` is still supported for backward compatibility but is deprecated.
+- Use `tabs.defaultValue` and `tabs.headerContent`. `tabs.headerSlot` remains supported for backward compatibility but is deprecated.
 - The bulk action toolbar appears when items are selected.
