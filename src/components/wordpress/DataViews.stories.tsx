@@ -659,9 +659,9 @@ export const EmptyState: StoryFn = () => {
 };
 EmptyState.storyName = "Empty State";
 
-/** DataViews in loading state. */
+/** DataViews skeleton loading state. Skeleton rows match `view.perPage` and columns match the number of fields. Header (tabs, search) stays visible. */
 export const Loading: StoryFn = () => {
-  const [view, setView] = useState<DataViewState>(createDefaultView());
+  const [view, setView] = useState<DataViewState>(createDefaultView(["name", "email", "status", "role", "joinedAt"]));
 
   return (
     <div className="p-4">
@@ -677,6 +677,16 @@ export const Loading: StoryFn = () => {
           totalPages: 0,
         }}
         getItemId={(item) => item.id}
+        search
+        searchPlaceholder="Search users..."
+        tabs={{
+          items: [
+            { label: "All Users", value: "all", icon: Users },
+            { label: "Active", value: "active", icon: UserCheck },
+            { label: "Inactive", value: "inactive", icon: UserX },
+          ],
+          defaultValue: "all",
+        }}
       />
     </div>
   );

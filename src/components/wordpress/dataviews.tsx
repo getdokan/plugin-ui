@@ -11,7 +11,7 @@ import {
 import { __ } from '@wordpress/i18n';
 import { FileSearch, Funnel, Plus, Search, X } from 'lucide-react';
 import type React from 'react';
-import { Fragment, useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -26,6 +26,7 @@ import {
     InputGroupInput
 } from '../ui';
 import { Button } from '../ui/button';
+import { Skeleton } from '../ui/skeleton';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 
 declare global {
@@ -366,6 +367,71 @@ const ListEmpty = ({ icon, description, title }: ListEmptyProps) => {
     );
 };
 
+/**
+ * Renders a skeleton table with real column headers and animated placeholder rows.
+ */
+function SkeletonTable({
+    rows,
+    headers,
+    hasActions,
+    hasBulkActions
+}: {
+    rows: number;
+    headers: string[];
+    hasActions: boolean;
+    hasBulkActions: boolean;
+}) {
+    const widths = ['w-3/4', 'w-1/2', 'w-2/3', 'w-5/6', 'w-2/5'];
+
+    return (
+        <table className="w-full text-sm border-collapse">
+            <thead>
+                <tr className="border-b border-border">
+                    {hasBulkActions && (
+                        <th className="h-12 bg-white w-12 px-4 align-middle">
+                            <Skeleton className="h-4 w-4 rounded-sm" />
+                        </th>
+                    )}
+                    {headers.map((label, colIdx) => {
+                        const isActions = hasActions && colIdx === headers.length - 1;
+                        return (
+                            <th
+                                key={colIdx}
+                                className={cn(
+                                    'h-12 bg-white px-4 align-middle text-[11px] font-medium text-foreground uppercase tracking-normal',
+                                    isActions ? 'text-right' : 'text-left'
+                                )}>
+                                {label}
+                            </th>
+                        );
+                    })}
+                </tr>
+            </thead>
+            <tbody>
+                {Array.from({ length: rows }, (_, rowIdx) => (
+                    <tr key={rowIdx} className="border-b border-border last:border-b-0">
+                        {hasBulkActions && (
+                            <td className="h-12 w-12 px-4 align-middle">
+                                <Skeleton className="h-4 w-4 rounded-sm" />
+                            </td>
+                        )}
+                        {headers.map((_, colIdx) => {
+                            const isActions = hasActions && colIdx === headers.length - 1;
+                            return (
+                                <td key={colIdx} className="h-12 px-4 align-middle">
+                                    <div className={cn(isActions && 'flex justify-end')}>
+                                        <Skeleton className={cn('h-4', widths[colIdx % widths.length])} />
+                                    </div>
+                                </td>
+                            );
+                        })}
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    );
+}
+
 export function DataViews<Item>(props: DataViewsProps<Item>) {
     const { width: windowWidth } = useWindowDimensions();
     const [showFilters, setShowFilters] = useState(false);
@@ -378,6 +444,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
         onChangeView,
         fields,
         view,
+        isLoading = false,
         empty,
         emptyIcon,
         emptyTitle,
@@ -467,6 +534,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
 
     const baseProps = {
         ...dataViewsTableProps,
+        isLoading,
         onChangeView: handleViewChange,
         view: normalizedView,
         fields: normalizedFields,
@@ -478,6 +546,11 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     const filteredActions = applyFiltersToTableElements(namespace, 'actions', baseProps.actions, props) as
         | DataViewAction<Item>[]
         | undefined;
+
+    const viewPerPageValue =
+        (view as View & { perPage?: number; per_page?: number }).perPage ??
+        (view as View & { per_page?: number }).per_page ??
+        10;
 
     const filteredProps = {
         ...baseProps,
@@ -563,16 +636,13 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
 
     const paginationDetails = filteredProps.paginationInfo;
     const explicitTotalPages = paginationDetails?.totalPages;
-    const viewPerPage = (view as View & { perPage?: number; per_page?: number }).perPage;
-    const perPage =
-        typeof viewPerPage === 'number' && viewPerPage > 0
-            ? viewPerPage
-            : (view as View & { per_page?: number }).per_page;
+    const perPage = viewPerPageValue;
     const computedTotalPages =
         typeof paginationDetails?.totalItems === 'number' && typeof perPage === 'number' && perPage > 0
             ? Math.ceil(paginationDetails.totalItems / perPage)
             : 0;
-    const shouldShowPagination = (typeof explicitTotalPages === 'number' ? explicitTotalPages : computedTotalPages) > 1;
+    const shouldShowPagination =
+        !isLoading && (typeof explicitTotalPages === 'number' ? explicitTotalPages : computedTotalPages) > 1;
     const showFullWidthHeader = !tabItems.length && (search || hasFilters);
 
     const tableNameSpace = kebabCase(namespace);
@@ -702,7 +772,19 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                                 <DataViewsTable.BulkActionToolbar />
                             </div>
                         )}
-                        <DataViewsTable.Layout />
+                        {isLoading ? (
+                            <SkeletonTable
+                                rows={viewPerPageValue}
+                                hasActions={!!props.actions?.length}
+                                hasBulkActions={!!props.onChangeSelection}
+                                headers={[
+                                    ...fields.map((f) => f.label ?? f.id),
+                                    ...(props.actions?.length ? [__('Actions', 'default')] : [])
+                                ]}
+                            />
+                        ) : (
+                            <DataViewsTable.Layout />
+                        )}
                         {shouldShowPagination && (
                             <div className="flex items-center justify-between">
                                 <DataViewsTable.Pagination />
