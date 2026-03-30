@@ -386,9 +386,9 @@ function SkeletonTable({
     return (
         <table className="w-full text-sm border-collapse">
             <thead>
-                <tr className="border-b border-border">
+                <tr className="bg-background border-b border-border">
                     {hasBulkActions && (
-                        <th className="h-12 bg-white w-12 px-5 align-middle">
+                        <th className="h-12 bg-background w-12 px-5 align-middle">
                             <Skeleton className="h-4 w-4 rounded-sm" />
                         </th>
                     )}
@@ -398,7 +398,7 @@ function SkeletonTable({
                             <th
                                 key={colIdx}
                                 className={cn(
-                                    'h-12 bg-white px-5 align-middle text-[11px] font-medium text-foreground uppercase tracking-normal',
+                                    'h-12 bg-background px-5 align-middle text-[11px] font-medium text-foreground uppercase tracking-normal',
                                     isActions ? 'text-right' : 'text-left'
                                 )}>
                                 {label}
@@ -409,7 +409,7 @@ function SkeletonTable({
             </thead>
             <tbody>
                 {Array.from({ length: rows }, (_, rowIdx) => (
-                    <tr key={rowIdx} className="border-b border-border last:border-b-0">
+                    <tr key={rowIdx} className="bg-background border-b border-border last:border-b-0">
                         {hasBulkActions && (
                             <td className="h-12 w-12 px-5 align-middle">
                                 <Skeleton className="h-4 w-4 rounded-sm" />

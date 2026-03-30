@@ -65,6 +65,7 @@
     display: flex;
     justify-content: space-between !important;
     padding: 16px;
+    background-color: var(--background, #FFFFFF);
   }
   .pui-root-dataviews .dataviews-wrapper .dataviews-view-table tr td:first-child,
   .pui-root-dataviews .dataviews-wrapper .dataviews-view-table tr th:first-child {
