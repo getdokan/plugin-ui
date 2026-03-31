@@ -228,7 +228,7 @@ const FilterItems = ({
 
     return (
         <Fragment>
-            <div className={cn('flex w-full justify-between items-center', className)}>
+            <div className={cn('sm:flex w-full justify-between items-center', className)}>
                 <div className="flex flex-row flex-wrap gap-4 items-center">
                     {activeFilters.map((id) => {
                         const field = fields.find((f) => f.id === id);
@@ -368,19 +368,55 @@ const ListEmpty = ({ icon, description, title }: ListEmptyProps) => {
 };
 
 /**
- * Renders a skeleton table with real column headers and animated placeholder rows.
+ * Renders a skeleton loading state matching the current view type.
  */
 function SkeletonTable({
     rows,
     headers,
     hasActions,
-    hasBulkActions
+    hasBulkActions,
+    viewType = 'table'
 }: {
     rows: number;
     headers: string[];
     hasActions: boolean;
     hasBulkActions: boolean;
+    viewType?: string;
 }) {
+    if (viewType === 'grid') {
+        return (
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4 p-4">
+                {Array.from({ length: rows }, (_, i) => (
+                    <div key={i} className="rounded-lg border border-border bg-background p-4 space-y-3">
+                        <Skeleton className="aspect-video w-full rounded-md" />
+                        <Skeleton className="h-4 w-3/4" />
+                        <Skeleton className="h-3 w-1/2" />
+                        <div className="flex gap-2 pt-1">
+                            <Skeleton className="h-5 w-14 rounded-full" />
+                            <Skeleton className="h-5 w-14 rounded-full" />
+                        </div>
+                    </div>
+                ))}
+            </div>
+        );
+    }
+
+    if (viewType === 'list') {
+        return (
+            <div className="divide-y divide-border">
+                {Array.from({ length: rows }, (_, i) => (
+                    <div key={i} className="flex items-center gap-4 px-5 py-4">
+                        <div className="flex-1 space-y-2">
+                            <Skeleton className="h-4 w-1/3" />
+                            <Skeleton className="h-3 w-1/2" />
+                        </div>
+                        {hasActions && <Skeleton className="h-4 w-8 shrink-0" />}
+                    </div>
+                ))}
+            </div>
+        );
+    }
+
     const widths = ['w-3/4', 'w-1/2', 'w-2/3', 'w-5/6', 'w-2/5'];
 
     return (
@@ -710,7 +746,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                 {header && <div className="font-semibold text-sm text-foreground">{header}</div>}
                 <div
                     className={cn(
-                        'flex gap-2 md:flex-row flex-col justify-between w-full items-center',
+                        'flex gap-2 md:flex-row flex-col justify-between w-full',
                         (tabItems.length || search || headerContent.length) &&
                             'border-b border-border p-4 md:px-4 md:py-0'
                     )}>
@@ -796,6 +832,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                         )}
                         {isLoading ? (
                             <SkeletonTable
+                                viewType={view.type}
                                 rows={viewPerPageValue}
                                 hasActions={!!props.actions?.length}
                                 hasBulkActions={!!props.onChangeSelection}

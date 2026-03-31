@@ -17,18 +17,35 @@ interface User {
 }
 
 // Generate sample data
+const firstNames = [
+  "James", "Emma", "Liam", "Olivia", "Noah", "Ava", "William", "Sophia",
+  "Benjamin", "Isabella", "Lucas", "Mia", "Henry", "Charlotte", "Alexander",
+  "Amelia", "Daniel", "Harper", "Matthew", "Evelyn", "Sebastian", "Aria",
+  "Jack", "Chloe", "Owen",
+];
+const lastNames = [
+  "Anderson", "Martinez", "Thompson", "Garcia", "Robinson", "Clark", "Lewis",
+  "Walker", "Hall", "Young", "King", "Wright", "Lopez", "Hill", "Scott",
+  "Green", "Adams", "Baker", "Nelson", "Carter", "Mitchell", "Perez",
+  "Roberts", "Turner", "Phillips",
+];
+
 const generateUsers = (count: number): User[] => {
   const statuses: User["status"][] = ["active", "inactive", "pending"];
   const roles = ["Admin", "Editor", "Viewer", "Manager"];
-  
-  return Array.from({ length: count }, (_, i) => ({
-    id: `user-${i + 1}`,
-    name: `User ${i + 1}`,
-    email: `user${i + 1}@example.com`,
-    status: statuses[i % 3],
-    role: roles[i % 4],
-    joinedAt: new Date(2024, i % 12, (i % 28) + 1).toLocaleDateString(),
-  }));
+
+  return Array.from({ length: count }, (_, i) => {
+    const first = firstNames[i % firstNames.length];
+    const last = lastNames[i % lastNames.length];
+    return {
+      id: `user-${i + 1}`,
+      name: `${first} ${last}`,
+      email: `${first.toLowerCase()}.${last.toLowerCase()}@example.com`,
+      status: statuses[i % 3],
+      role: roles[i % 4],
+      joinedAt: new Date(2024, i % 12, (i % 28) + 1).toLocaleDateString(),
+    };
+  });
 };
 
 const allUsers = generateUsers(100);

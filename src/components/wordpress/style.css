@@ -50,6 +50,7 @@
     color: var(--foreground, #1D1D1D);
     border-bottom-color: var(--border, #E7E7E7);
     background-color: var(--background, #FFFFFF);
+    vertical-align: middle;
   }
   .pui-root-dataviews .dataviews-wrapper .dataviews-view-table td,
   .pui-root-dataviews .dataviews-wrapper .dataviews-view-table th {
