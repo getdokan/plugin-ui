@@ -1059,3 +1059,58 @@ export const LayoutCustomComponent: StoryFn = () => {
   );
 };
 LayoutCustomComponent.storyName = "Custom Layout Component";
+
+/** Demonstrates fixed and custom column widths using `view.layout.styles` with per-column `width`, `minWidth`, and `maxWidth`. */
+export const FixedWidthColumns: StoryFn = () => {
+  const [view, setView] = useState<DataViewState>({
+    type: "table",
+    page: 1,
+    perPage: 10,
+    fields: ["name", "email", "status", "role", "joinedAt"],
+    layout: {
+      styles: {
+        name: { width: "20%" },
+        email: { width: "30%" },
+        status: { width: "12%", minWidth: "100px", maxWidth: "150px" },
+        role: { width: "10%" },
+        joinedAt: { width: "15%" },
+      },
+    },
+  });
+
+  const paginatedData = paginateData(allUsers, view);
+
+  return (
+    <div className="p-4">
+      <DataViews<User>
+        namespace="dataviews-demo"
+        data={paginatedData}
+        fields={fields}
+        view={view}
+        onChangeView={setView}
+        actions={actions}
+        paginationInfo={{
+          totalItems: allUsers.length,
+          totalPages: getTotalPages(allUsers.length, view.perPage),
+        }}
+        getItemId={(item) => item.id}
+      />
+    </div>
+  );
+};
+FixedWidthColumns.storyName = "Fixed Width Columns";
+FixedWidthColumns.parameters = {
+  docs: {
+    description: {
+      story: `Column widths are controlled via \`view.layout.styles\`, keyed by field ID. Each entry accepts \`width\`, \`minWidth\`, and \`maxWidth\` as CSS string values.
+
+- **Name**: \`width: "20%"\`
+- **Email**: \`width: "30%"\`
+- **Status**: \`width: "12%"\` with \`minWidth: "100px"\` and \`maxWidth: "150px"\`
+- **Role**: \`width: "10%"\`
+- **Joined At**: \`width: "15%"\`
+
+Use string values like \`"30%"\`, \`"200px"\`, or \`"10em"\`.`,
+    },
+  },
+};
