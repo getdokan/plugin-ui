@@ -23,7 +23,8 @@ import {
     AlertDialogTitle,
     InputGroup,
     InputGroupAddon,
-    InputGroupInput
+    InputGroupInput,
+    Spinner
 } from '../ui';
 import { Button } from '../ui/button';
 import { Skeleton } from '../ui/skeleton';
@@ -500,11 +501,20 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
         items: Item[];
         context: any;
     } | null>(null);
+    const [isConfirming, setIsConfirming] = useState(false);
 
-    const handleDestructiveConfirm = useCallback(() => {
+    const handleDestructiveConfirm = useCallback(async () => {
         if (pendingDestructiveAction) {
-            pendingDestructiveAction.action.callback(pendingDestructiveAction.items, pendingDestructiveAction.context);
-            setPendingDestructiveAction(null);
+            setIsConfirming(true);
+            try {
+                await pendingDestructiveAction.action.callback(
+                    pendingDestructiveAction.items,
+                    pendingDestructiveAction.context
+                );
+            } finally {
+                setIsConfirming(false);
+                setPendingDestructiveAction(null);
+            }
         }
     }, [pendingDestructiveAction]);
 
@@ -857,7 +867,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
 
             {/* Destructive action confirmation AlertDialog */}
             {pendingDestructiveAction && (
-                <AlertDialog open onOpenChange={(open) => !open && handleDestructiveCancel()}>
+                <AlertDialog open onOpenChange={(open) => !open && !isConfirming && handleDestructiveCancel()}>
                     <AlertDialogContent size="default">
                         <AlertDialogHeader>
                             <AlertDialogTitle>
@@ -872,10 +882,14 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                            <AlertDialogCancel onClick={handleDestructiveCancel}>
+                            <AlertDialogCancel onClick={handleDestructiveCancel} disabled={isConfirming}>
                                 {pendingDestructiveAction.action.cancelButtonLabel || __('Cancel', 'default')}
                             </AlertDialogCancel>
-                            <AlertDialogAction variant="destructive" onClick={handleDestructiveConfirm}>
+                            <AlertDialogAction
+                                variant="destructive"
+                                onClick={handleDestructiveConfirm}
+                                disabled={isConfirming}>
+                                {isConfirming && <Spinner className="mr-2" />}
                                 {pendingDestructiveAction.action.confirmButtonLabel ||
                                     (typeof pendingDestructiveAction.action.label === 'function'
                                         ? pendingDestructiveAction.action.label(pendingDestructiveAction.items)
