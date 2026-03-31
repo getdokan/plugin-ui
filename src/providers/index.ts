@@ -1,7 +1,9 @@
 export {
     ThemeProvider,
     useTheme,
-    useThemeOptional, type ThemeMode, type ThemeProviderProps,
-    type ThemeTokens
+    useThemeOptional,
+    defaultCssVariables,
+    type ThemeMode, type ThemeProviderProps,
+    type ThemeTokens, type ThemeContextValue
 } from "./theme-provider";
 

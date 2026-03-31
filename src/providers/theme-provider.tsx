@@ -189,12 +189,13 @@ export interface ThemeTokens {
 
 export type ThemeMode = "light" | "dark" | "system";
 
-interface ThemeContextValue {
+export interface ThemeContextValue {
   pluginId: string;
   mode: ThemeMode;
   setMode: (mode: ThemeMode) => void;
   tokens: ThemeTokens;
   resolvedMode: "light" | "dark";
+  cssVariables: Record<string, string>;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
@@ -495,8 +496,9 @@ export function ThemeProvider({
       setMode,
       tokens: mergedTokens,
       resolvedMode,
+      cssVariables,
     }),
-    [pluginId, mode, setMode, mergedTokens, resolvedMode],
+    [pluginId, mode, setMode, mergedTokens, resolvedMode, cssVariables],
   );
 
   return (
@@ -547,5 +549,11 @@ export function useTheme(): ThemeContextValue {
 export function useThemeOptional(): ThemeContextValue | null {
   return useContext(ThemeContext);
 }
+
+/**
+ * Pre-computed default light CSS variables for use in portals outside ThemeProvider.
+ */
+export const defaultCssVariables: Record<string, string> =
+  tokensToCssVariables(defaultLightTokens);
 
 export default ThemeProvider;

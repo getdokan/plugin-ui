@@ -3,7 +3,7 @@ import { CheckIcon, ChevronRightIcon } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
-import { useTheme } from "@/providers";
+import { useThemeOptional, defaultCssVariables } from "@/providers";
 
 function DropdownMenu({ ...props }: MenuPrimitive.Root.Props) {
   return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
@@ -29,9 +29,11 @@ function DropdownMenuContent({
     MenuPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset"
   >) {
-  const {mode} = useTheme();
+  const theme = useThemeOptional();
+  const mode = theme?.mode ?? 'light';
+  const cssVariables = theme?.cssVariables ?? defaultCssVariables;
   return (
-    <MenuPrimitive.Portal className={ cn('pui-root', mode) }>
+    <MenuPrimitive.Portal className={ cn('pui-root', mode) } style={cssVariables}>
       <MenuPrimitive.Positioner
         className="isolate z-50 outline-none"
         align={align}

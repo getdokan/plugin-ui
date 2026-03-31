@@ -17,18 +17,35 @@ interface User {
 }
 
 // Generate sample data
+const firstNames = [
+  "James", "Emma", "Liam", "Olivia", "Noah", "Ava", "William", "Sophia",
+  "Benjamin", "Isabella", "Lucas", "Mia", "Henry", "Charlotte", "Alexander",
+  "Amelia", "Daniel", "Harper", "Matthew", "Evelyn", "Sebastian", "Aria",
+  "Jack", "Chloe", "Owen",
+];
+const lastNames = [
+  "Anderson", "Martinez", "Thompson", "Garcia", "Robinson", "Clark", "Lewis",
+  "Walker", "Hall", "Young", "King", "Wright", "Lopez", "Hill", "Scott",
+  "Green", "Adams", "Baker", "Nelson", "Carter", "Mitchell", "Perez",
+  "Roberts", "Turner", "Phillips",
+];
+
 const generateUsers = (count: number): User[] => {
   const statuses: User["status"][] = ["active", "inactive", "pending"];
   const roles = ["Admin", "Editor", "Viewer", "Manager"];
-  
-  return Array.from({ length: count }, (_, i) => ({
-    id: `user-${i + 1}`,
-    name: `User ${i + 1}`,
-    email: `user${i + 1}@example.com`,
-    status: statuses[i % 3],
-    role: roles[i % 4],
-    joinedAt: new Date(2024, i % 12, (i % 28) + 1).toLocaleDateString(),
-  }));
+
+  return Array.from({ length: count }, (_, i) => {
+    const first = firstNames[i % firstNames.length];
+    const last = lastNames[i % lastNames.length];
+    return {
+      id: `user-${i + 1}`,
+      name: `${first} ${last}`,
+      email: `${first.toLowerCase()}.${last.toLowerCase()}@example.com`,
+      status: statuses[i % 3],
+      role: roles[i % 4],
+      joinedAt: new Date(2024, i % 12, (i % 28) + 1).toLocaleDateString(),
+    };
+  });
 };
 
 const allUsers = generateUsers(100);
@@ -106,9 +123,11 @@ const actions: DataViewAction<User>[] = [
     id: "delete",
     label: "Delete",
     icon: <Trash2 size={16} />,
+    isDestructive: true,
     supportsBulk: true,
-    callback: (items) => {
-      alert(`Deleting: ${items.map(i => i.name).join(", ")}`);
+    callback: async (items) => {
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      alert(`Deleted: ${items.map(i => i.name).join(", ")}`);
     },
   },
 ];
@@ -208,34 +227,8 @@ export const BasicWithPagination: StoryFn = () => {
 };
 BasicWithPagination.storyName = "Basic with Pagination";
 
-/** DataViews with row actions (view, edit, delete). Hover over rows to see actions. */
-export const WithActions: StoryFn = () => {
-  const [view, setView] = useState<DataViewState>(createDefaultView());
-
-  const paginatedData = paginateData(allUsers, view);
-
-  return (
-    <div className="p-4">
-      <DataViews<User>
-        namespace="dataviews-demo"
-        data={paginatedData}
-        fields={fields}
-        view={view}
-        onChangeView={setView}
-        actions={actions}
-        paginationInfo={{
-          totalItems: allUsers.length,
-          totalPages: getTotalPages(allUsers.length, view.perPage),
-        }}
-        getItemId={(item) => item.id}
-      />
-    </div>
-  );
-};
-WithActions.storyName = "With Actions";
-
 /** DataViews with selection and bulk actions. Select items and use bulk delete. */
-export const WithBulkSelection: StoryFn = () => {
+export const BulkActions: StoryFn = () => {
   const [view, setView] = useState<DataViewState>(createDefaultView());
   const [selection, setSelection] = useState<string[]>([]);
 
@@ -261,18 +254,62 @@ export const WithBulkSelection: StoryFn = () => {
     </div>
   );
 };
-WithBulkSelection.storyName = "With Bulk Selection";
+BulkActions.storyName = "Bulk Actions";
 
-/** DataViews with tabs for filtering by status. */
-export const WithTabs: StoryFn = () => {
+/** Destructive actions automatically show an AlertDialog confirmation before executing. Supports both single-row and bulk actions. */
+export const DestructiveActions: StoryFn = () => {
   const [view, setView] = useState<DataViewState>(createDefaultView());
-  const [activeTab, setActiveTab] = useState("all");
+  const [selection, setSelection] = useState<string[]>([]);
+  const [users, setUsers] = useState(allUsers);
 
-  const filteredUsers = activeTab === "all"
-    ? allUsers
-    : allUsers.filter(user => user.status === activeTab);
+  const paginatedData = paginateData(users, view);
 
-  const paginatedData = paginateData(filteredUsers, view);
+  const destructiveActions: DataViewAction<User>[] = [
+    {
+      id: "view",
+      label: "View",
+      icon: <Eye size={16} />,
+      callback: (items) => {
+        alert(`Viewing: ${items.map(i => i.name).join(", ")}`);
+      },
+    },
+    {
+      id: "edit",
+      label: "Edit",
+      icon: <Pencil size={16} />,
+      callback: (items) => {
+        alert(`Editing: ${items.map(i => i.name).join(", ")}`);
+      },
+    },
+    {
+      id: "delete",
+      label: "Delete",
+      icon: <Trash2 size={16} />,
+      isDestructive: true,
+      supportsBulk: true,
+      callback: async (items) => {
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        const ids = new Set(items.map(i => i.id));
+        setUsers(prev => prev.filter(u => !ids.has(u.id)));
+        setSelection([]);
+      },
+    },
+    {
+      id: "archive",
+      label: "Archive",
+      icon: <Archive size={16} />,
+      isDestructive: true,
+      confirmTitle: "Archive Users",
+      confirmMessage: "Archived users will be moved to the archive and can be restored later.",
+      confirmButtonLabel: "Yes, Archive",
+      cancelButtonLabel: "No, Keep",
+      supportsBulk: true,
+      callback: async (items) => {
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        alert(`Archived: ${items.map(i => i.name).join(", ")}`);
+      },
+    },
+  ];
 
   return (
     <div className="p-4">
@@ -282,33 +319,34 @@ export const WithTabs: StoryFn = () => {
         fields={fields}
         view={view}
         onChangeView={setView}
-        actions={actions}
+        actions={destructiveActions}
+        selection={selection}
+        onChangeSelection={setSelection}
         paginationInfo={{
-          totalItems: filteredUsers.length,
-          totalPages: getTotalPages(filteredUsers.length, view.perPage),
+          totalItems: users.length,
+          totalPages: getTotalPages(users.length, view.perPage),
         }}
         getItemId={(item) => item.id}
-        tabs={{
-          tabs: [
-            { label: "All", value: "all", icon: Users },
-            { label: "Active", value: "active", icon: UserCheck },
-            { label: "Inactive", value: "inactive", icon: UserX },
-            { label: "Pending", value: "pending", icon: Archive },
-          ],
-          initialTab: "all",
-          onSelect: (value) => {
-            setActiveTab(value);
-            setView(prev => ({ ...prev, page: 1 }));
-          },
-        }}
       />
     </div>
   );
 };
-WithTabs.storyName = "With Tabs";
+DestructiveActions.storyName = "Destructive Actions";
+DestructiveActions.parameters = {
+  docs: {
+    description: {
+      story: `Actions with \`isDestructive: true\` automatically show an AlertDialog confirmation before executing. Async callbacks show a loading spinner on the confirm button until the promise resolves.
+
+- **Delete** uses default confirmation (title = action label, message = generic warning)
+- **Archive** uses custom \`confirmTitle\`, \`confirmMessage\`, \`confirmButtonLabel\`, and \`cancelButtonLabel\`
+
+Both support bulk selection. Try selecting multiple rows and using the bulk toolbar. Both callbacks are async with a 1.5s delay to demonstrate the loading spinner.`,
+    },
+  },
+};
 
 /** DataViews with dynamic filters. Click "Add Filter" to add filters. */
-export const WithFilters: StoryFn = () => {
+export const TabAndFilters: StoryFn = () => {
   const [view, setView] = useState<DataViewState>(createDefaultView());
   const [activeTab, setActiveTab] = useState("all");
   const [nameFilter, setNameFilter] = useState("");
@@ -385,12 +423,12 @@ export const WithFilters: StoryFn = () => {
         }}
         getItemId={(item) => item.id}
         tabs={{
-          tabs: [
+          items: [
             { label: "All", value: "all", icon: Users },
             { label: "Active", value: "active", icon: UserCheck },
             { label: "Inactive", value: "inactive", icon: UserX },
           ],
-          initialTab: "all",
+          defaultValue: "all",
           onSelect: (value) => {
             setActiveTab(value);
             setView(prev => ({ ...prev, page: 1 }));
@@ -413,45 +451,10 @@ export const WithFilters: StoryFn = () => {
     </div>
   );
 };
-WithFilters.storyName = "With Filters";
-
-/** DataViews with search functionality enabled. */
-export const WithSearch: StoryFn = () => {
-  const [view, setView] = useState<DataViewState>(createDefaultView());
-
-  const searchTerm = view.search ?? "";
-  const filteredUsers = searchTerm
-    ? allUsers.filter(user =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : allUsers;
-
-  const paginatedData = paginateData(filteredUsers, view);
-
-  return (
-    <div className="p-4">
-      <DataViews<User>
-        namespace="dataviews-demo"
-        data={paginatedData}
-        fields={fields}
-        view={view}
-        onChangeView={setView}
-        search
-        searchPlaceholder="Search by name or email..."
-        paginationInfo={{
-          totalItems: filteredUsers.length,
-          totalPages: getTotalPages(filteredUsers.length, view.perPage),
-        }}
-        getItemId={(item) => item.id}
-      />
-    </div>
-  );
-};
-WithSearch.storyName = "With Search";
+TabAndFilters.storyName = "Tab and Filters";
 
 /** DataViews with tabs, search in header slot, and one filter (Status). */
-export const WithSearchInHeaderSlot: StoryFn = () => {
+export const SearchInHeaderSlot: StoryFn = () => {
   const [view, setView] = useState<DataViewState>(createDefaultView());
   const [activeTab, setActiveTab] = useState("all");
   const [statusFilter, setStatusFilter] = useState("");
@@ -516,13 +519,13 @@ export const WithSearchInHeaderSlot: StoryFn = () => {
         }}
         getItemId={(item) => item.id}
         tabs={{
-          tabs: [
+                items: [
             { label: "All", value: "all", icon: Users },
             { label: "Active", value: "active", icon: UserCheck },
             { label: "Inactive", value: "inactive", icon: UserX },
             { label: "Pending", value: "pending", icon: Archive },
           ],
-          initialTab: "all",
+          defaultValue: "all",
           onSelect: (value) => {
             setActiveTab(value);
             setView(prev => ({ ...prev, page: 1 }));
@@ -545,7 +548,7 @@ export const WithSearchInHeaderSlot: StoryFn = () => {
     </div>
   );
 };
-WithSearchInHeaderSlot.storyName = "With Search in Header Slot";
+SearchInHeaderSlot.storyName = "Search in Header Slot";
 
 /** DataViews showing empty state when no data is available. */
 export const EmptyState: StoryFn = () => {
@@ -572,9 +575,9 @@ export const EmptyState: StoryFn = () => {
 };
 EmptyState.storyName = "Empty State";
 
-/** DataViews in loading state. */
+/** DataViews skeleton loading state. Skeleton rows match `view.perPage` and columns match the number of fields. Header (tabs, search) stays visible. */
 export const Loading: StoryFn = () => {
-  const [view, setView] = useState<DataViewState>(createDefaultView());
+  const [view, setView] = useState<DataViewState>(createDefaultView(["name", "email", "status", "role", "joinedAt"]));
 
   return (
     <div className="p-4">
@@ -590,11 +593,189 @@ export const Loading: StoryFn = () => {
           totalPages: 0,
         }}
         getItemId={(item) => item.id}
+        search
+        searchPlaceholder="Search users..."
+        tabs={{
+          items: [
+            { label: "All Users", value: "all", icon: Users },
+            { label: "Active", value: "active", icon: UserCheck },
+            { label: "Inactive", value: "inactive", icon: UserX },
+          ],
+          defaultValue: "all",
+        }}
       />
     </div>
   );
 };
 Loading.storyName = "Loading State";
+
+/** DataViews with search functionality enabled. */
+export const SearchOnly: StoryFn = () => {
+  const [view, setView] = useState<DataViewState>(createDefaultView());
+
+  const searchTerm = view.search ?? "";
+  const filteredUsers = searchTerm
+    ? allUsers.filter(user =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : allUsers;
+
+  const paginatedData = paginateData(filteredUsers, view);
+
+  return (
+    <div className="p-4">
+      <DataViews<User>
+        namespace="dataviews-demo"
+        data={paginatedData}
+        fields={fields}
+        view={view}
+        onChangeView={setView}
+        search
+        searchPlaceholder="Search by name or email..."
+        paginationInfo={{
+          totalItems: filteredUsers.length,
+          totalPages: getTotalPages(filteredUsers.length, view.perPage),
+        }}
+        getItemId={(item) => item.id}
+      />
+    </div>
+  );
+};
+
+SearchOnly.storyName = "Search Only";
+
+/** DataViews with only filters and search — no tabs. Click "Add Filter" to add filters. */
+export const FiltersOnly: StoryFn = () => {
+  const [view, setView] = useState<DataViewState>(createDefaultView(["name", "email", "status", "role", "joinedAt"]));
+  const [nameFilter, setNameFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [roleFilter, setRoleFilter] = useState("");
+
+  let filteredUsers = [...allUsers];
+
+  // Apply search
+  const searchTerm = view.search ?? "";
+  if (searchTerm) {
+    filteredUsers = filteredUsers.filter(user =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
+
+  if (nameFilter) {
+    filteredUsers = filteredUsers.filter(user =>
+      user.name.toLowerCase().includes(nameFilter.toLowerCase())
+    );
+  }
+
+  if (statusFilter) {
+    filteredUsers = filteredUsers.filter(user => user.status === statusFilter);
+  }
+
+  if (roleFilter) {
+    filteredUsers = filteredUsers.filter(user => user.role === roleFilter);
+  }
+
+  const paginatedData = paginateData(filteredUsers, view);
+
+  const filterFields: DataViewFilterField[] = [
+    {
+      id: "name",
+      label: "Name",
+      field: (
+        <Input
+          placeholder="Filter by name..."
+          value={nameFilter}
+          onChange={(e) => {
+            setNameFilter(e.target.value);
+            setView(prev => ({ ...prev, page: 1 }));
+          }}
+          className="w-48"
+        />
+      ),
+    },
+    {
+      id: "status",
+      label: "Status",
+      field: (
+        <Select
+          value={statusFilter}
+          onValueChange={(value) => {
+            setStatusFilter(value ?? "");
+            setView(prev => ({ ...prev, page: 1 }));
+          }}
+        >
+          <SelectTrigger className="w-40">
+            <SelectValue placeholder="Select status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="active">Active</SelectItem>
+            <SelectItem value="inactive">Inactive</SelectItem>
+            <SelectItem value="pending">Pending</SelectItem>
+          </SelectContent>
+        </Select>
+      ),
+    },
+    {
+      id: "role",
+      label: "Role",
+      field: (
+        <Select
+          value={roleFilter}
+          onValueChange={(value) => {
+            setRoleFilter(value ?? "");
+            setView(prev => ({ ...prev, page: 1 }));
+          }}
+        >
+          <SelectTrigger className="w-40">
+            <SelectValue placeholder="Select role" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Admin">Admin</SelectItem>
+            <SelectItem value="Editor">Editor</SelectItem>
+            <SelectItem value="Viewer">Viewer</SelectItem>
+            <SelectItem value="Manager">Manager</SelectItem>
+          </SelectContent>
+        </Select>
+      ),
+    },
+  ];
+
+  return (
+    <div className="p-4">
+      <DataViews<User>
+        namespace="dataviews-demo"
+        data={paginatedData}
+        fields={fields}
+        view={view}
+        onChangeView={setView}
+        actions={actions}
+        paginationInfo={{
+          totalItems: filteredUsers.length,
+          totalPages: getTotalPages(filteredUsers.length, view.perPage),
+        }}
+        getItemId={(item) => item.id}
+        filter={{
+          fields: filterFields,
+          onReset: () => {
+            setNameFilter("");
+            setStatusFilter("");
+            setRoleFilter("");
+            setView(prev => ({ ...prev, page: 1 }));
+          },
+          onFilterRemove: (filterId) => {
+            if (filterId === "name") setNameFilter("");
+            if (filterId === "status") setStatusFilter("");
+            if (filterId === "role") setRoleFilter("");
+            setView(prev => ({ ...prev, page: 1 }));
+          },
+        }}
+      />
+    </div>
+  );
+};
+FiltersOnly.storyName = "Filters Only";
 
 /** Complete example with all features: tabs, filters, search, selection, and pagination. */
 export const FullFeatured: StoryFn = () => {
@@ -692,13 +873,13 @@ export const FullFeatured: StoryFn = () => {
         }}
         getItemId={(item) => item.id}
         tabs={{
-          tabs: [
+          items: [
             { label: "All Users", value: "all", icon: Users },
             { label: "Active", value: "active", icon: UserCheck },
             { label: "Inactive", value: "inactive", icon: UserX },
             { label: "Pending", value: "pending", icon: Archive },
           ],
-          initialTab: "all",
+          defaultValue: "all",
           onSelect: (value) => {
             setActiveTab(value);
             setSelection([]);
@@ -724,35 +905,125 @@ export const FullFeatured: StoryFn = () => {
 };
 FullFeatured.storyName = "Full Featured";
 
-/** Different page sizes with pagination. Use view controls to change perPage. */
-export const DifferentPageSizes: StoryFn = () => {
+/**
+ * Poster/hero style layout that displays items as large image cards
+ * with overlaid text content.
+ */
+function PosterGrid({ items }: { items: User[] }) {
+  return (
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4 py-4">
+      {items.map((item) => (
+        <div
+          key={item.id}
+          className="relative aspect-4/3 rounded-lg overflow-hidden bg-slate-300"
+        >
+          <div className="absolute bottom-0 left-0 right-0 pt-12 px-4 pb-4 bg-linear-to-t from-black/80 via-black/40 to-transparent text-white">
+            <h3 className="mb-1 text-lg font-semibold drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+              {item.name}
+            </h3>
+            <p className="mb-2 text-[13px] opacity-90 overflow-hidden text-ellipsis whitespace-nowrap">
+              {item.email}
+            </p>
+            <div className="flex gap-1.5">
+              <span className="text-[11px] px-2 py-0.5 rounded bg-white/20 capitalize">
+                {item.role}
+              </span>
+              <span className="text-[11px] px-2 py-0.5 rounded bg-white/20 capitalize">
+                {item.status}
+              </span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Demonstrates a custom poster/hero layout using free composition.
+ *
+ * This story shows how to:
+ * - Use `<DataViews>` as a context provider with custom children
+ * - Render a completely custom layout (poster grid) instead of `<DataViews.Layout />`
+ * - Still leverage DataViews sub-components for search and pagination
+ */
+export const LayoutCustomComponent: StoryFn = () => {
   const [view, setView] = useState<DataViewState>({
-    ...createDefaultView(["name", "email", "status"]),
-    perPage: 5,
+    type: "table",
+    search: "",
+    page: 1,
+    perPage: 10,
+    fields: ["name", "email", "status", "role"],
+  });
+
+  const searchTerm = view.search ?? "";
+  const filteredUsers = searchTerm
+    ? allUsers.filter(user =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : allUsers;
+
+  const paginatedData = paginateData(filteredUsers, view);
+
+  return (
+    <div className="p-4">
+      <DataViews<User>
+        getItemId={(item) => item.id}
+        namespace="dataviews-demo"
+        paginationInfo={{
+          totalItems: filteredUsers.length,
+          totalPages: getTotalPages(filteredUsers.length, view.perPage),
+        }}
+        data={paginatedData}
+        view={view}
+        fields={fields}
+        onChangeView={setView}
+      >
+        <div className="p-0.5">
+          {DataViews.Search && <DataViews.Search />}
+          <PosterGrid items={paginatedData} />
+        </div>
+        {DataViews.Pagination && (
+          <div className="flex items-center justify-between [&>div]:w-full [&>div]:flex [&>div]:justify-between! [&>div]:p-4">
+            <DataViews.Pagination />
+          </div>
+        )}
+      </DataViews>
+    </div>
+  );
+};
+LayoutCustomComponent.storyName = "Custom Layout Component";
+
+/** Demonstrates fixed and custom column widths using `view.layout.styles` with per-column `width`, `minWidth`, and `maxWidth`. */
+export const FixedWidthColumns: StoryFn = () => {
+  const [view, setView] = useState<DataViewState>({
+    type: "table",
+    page: 1,
+    perPage: 10,
+    fields: ["name", "email", "status", "role", "joinedAt"],
+    layout: {
+      styles: {
+        name: { width: "20%" },
+        email: { width: "30%" },
+        status: { width: "12%", minWidth: "100px", maxWidth: "150px" },
+        role: { width: "10%" },
+        joinedAt: { width: "15%" },
+      },
+    },
   });
 
   const paginatedData = paginateData(allUsers, view);
 
   return (
     <div className="p-4">
-      <div className="mb-4 flex items-center gap-2">
-        <span className="text-sm text-muted-foreground">Items per page:</span>
-        <select
-          value={String(view.perPage ?? 10)}
-          onChange={(e) => setView(prev => ({ ...prev, perPage: Number(e.target.value), page: 1 }))}
-        >
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-        </select>
-      </div>
       <DataViews<User>
         namespace="dataviews-demo"
         data={paginatedData}
-        fields={fields.filter(f => ["name", "email", "status"].includes(f.id))}
+        fields={fields}
         view={view}
         onChangeView={setView}
+        actions={actions}
         paginationInfo={{
           totalItems: allUsers.length,
           totalPages: getTotalPages(allUsers.length, view.perPage),
@@ -762,4 +1033,19 @@ export const DifferentPageSizes: StoryFn = () => {
     </div>
   );
 };
-DifferentPageSizes.storyName = "Different Page Sizes";
+FixedWidthColumns.storyName = "Fixed Width Columns";
+FixedWidthColumns.parameters = {
+  docs: {
+    description: {
+      story: `Column widths are controlled via \`view.layout.styles\`, keyed by field ID. Each entry accepts \`width\`, \`minWidth\`, and \`maxWidth\` as CSS string values.
+
+- **Name**: \`width: "20%"\`
+- **Email**: \`width: "30%"\`
+- **Status**: \`width: "12%"\` with \`minWidth: "100px"\` and \`maxWidth: "150px"\`
+- **Role**: \`width: "10%"\`
+- **Joined At**: \`width: "15%"\`
+
+Use string values like \`"30%"\`, \`"200px"\`, or \`"10em"\`.`,
+    },
+  },
+};

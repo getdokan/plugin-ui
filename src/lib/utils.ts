@@ -29,3 +29,25 @@ export function renderIcon(icon: React.ReactNode | React.ElementType | null | un
 
   return icon as React.ReactElement;
 }
+
+
+/** Convert string to snake_case (e.g. "myNamespace" -> "my_namespace"). */
+export function snakeCase(str: string): string {
+    if (!str) return '';
+    return str
+        .replace(/-/g, '_')
+        .replace(/\s+/g, '_')
+        .replace(/([a-z])([A-Z])/g, '$1_$2')
+        .toLowerCase()
+        .replace(/^_+|_+$/g, '');
+}
+
+/** Convert string to kebab-case (e.g. "myNamespace" -> "my-namespace"). */
+export function kebabCase(str: string): string {
+    if (!str) return '';
+    return str
+        .replace(/([a-z])([A-Z])/g, '$1-$2')
+        .replace(/[\s_]+/g, '-')
+        .toLowerCase()
+        .replace(/^-+|-+$/g, '');
+}

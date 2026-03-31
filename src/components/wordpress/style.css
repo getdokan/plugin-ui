@@ -1,50 +1,76 @@
 
 @import "@wordpress/components/build-style/style.css";
 @import "@wordpress/dataviews/build-style/style.css";
+@import '@wordpress/theme/design-tokens.css';
 
-
+.pui-root-dataviews,
 .pui-root-dataviews .dataviews-wrapper {
+    background-color: var(--background, #FFFFFF);
+}
+.pui-root-dataviews:not(.custom-layout) {
     border-radius: 6px;
-    border: 1px solid var(--border);
+    border: 1px solid var(--border, #E7E7E7);
     box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1019607843);
-    background-color: var(--background);
-    color: var(--foreground);
+    color: var(--foreground, #1D1D1D);
+  }
+  .pui-root-dataviews .dataviews-no-results {
+      border-top: 1px solid var(--border, #E7E7E7);
+      background-color: var(--background, #FFFFFF);
+  }
+  .pui-root-dataviews:not(.custom-layout) .dataviews-wrapper {
+    border-radius: 6px;
   }
   .pui-root-dataviews .dataviews-wrapper .dataviews-view-table {
     border-left: none;
     border-right: none;
-    background-color: var(--background);
+    border-top: none;
+    background-color: var(--background, #FFFFFF);
   }
   .pui-root-dataviews .dataviews-wrapper .dataviews-view-table thead {
     z-index: 0;
-    background-color: var(--muted);
+    background-color: var(--muted, #F5F5F5);
   }
   .pui-root-dataviews .dataviews-wrapper .dataviews-view-table thead th {
-    color: var(--foreground);
-    background-color: var(--background) !important;
+    color: var(--foreground, #1D1D1D);
+    background-color: var(--background, #FFFFFF) !important;
   }
-  
+
   .pui-root-dataviews .dataviews-view-table .dataviews-view-table-header-button:not(:hover) {
-    color: var(--foreground);
+    color: var(--foreground, #1D1D1D);
+    box-shadow: none;
   }
   .pui-root-dataviews .dataviews-wrapper .dataviews-view-table tbody tr {
-    background-color: var(--background);
+    background-color: var(--background, #FFFFFF);
   }
   .pui-root-dataviews .dataviews-wrapper .dataviews-view-table tbody tr.is-selected td,
   .pui-root-dataviews .dataviews-wrapper .dataviews-view-table tbody tr:hover td {
-    background-color: var(--accent);
+    background-color: var(--accent, #F5F5F5);
   }
   .pui-root-dataviews .dataviews-wrapper .dataviews-view-table tbody td {
-    color: var(--foreground);
-    border-bottom-color: var(--border);
-    background-color: var(--background);
+    color: var(--foreground, #1D1D1D);
+    border-bottom-color: var(--border, #E7E7E7);
+    background-color: var(--background, #FFFFFF);
+    vertical-align: middle;
+  }
+  .pui-root-dataviews .dataviews-wrapper .dataviews-view-table td,
+  .pui-root-dataviews .dataviews-wrapper .dataviews-view-table th {
+    border-top: none;
+    border-left: none;
+    border-right: none;
   }
   .pui-root-dataviews .dataviews-wrapper .dataviews-view-table tr {
-    border-color: var(--border);
+    border-color: var(--border, #E7E7E7);
   }
   .pui-root-dataviews .dataviews-wrapper .dataviews-pagination .components-input-control__container {
-    background-color: var(--background);
-    color: var(--foreground);
+    background-color: var(--background, #FFFFFF);
+    color: var(--foreground, #1D1D1D);
+  }
+  .pui-root-dataviews .dataviews-wrapper .dataviews-pagination {
+    width: 100%;
+    display: flex;
+    justify-content: space-between !important;
+    padding: 16px;
+    background-color: var(--background, #FFFFFF);
   }
   .pui-root-dataviews .dataviews-wrapper .dataviews-view-table tr td:first-child,
   .pui-root-dataviews .dataviews-wrapper .dataviews-view-table tr th:first-child {
@@ -71,37 +97,38 @@
     width: 100%;
     justify-content: space-between;
     padding: 15px 20px;
-    background-color: var(--background);
-    color: var(--foreground);
+    background-color: var(--background, #FFFFFF);
+    color: var(--foreground, #1D1D1D);
   }
   .pui-root-dataviews .dataviews-wrapper .dataviews-bulk-actions-footer__action-buttons {
     gap: 10px;
   }
   .pui-root-dataviews .dataviews-wrapper .dataviews-bulk-actions-footer__action-buttons .components-button.is-compact:not(:last-child) {
-    border: 1px solid var(--border);
+    border: 1px solid var(--border, #E7E7E7);
     border-radius: 6px;
     line-height: 1;
   }
   /* DataViews list view theming */
   .pui-root-dataviews .dataviews-view-list {
-    background-color: var(--background);
+    background-color: var(--background, #FFFFFF);
   }
-  .pui-root-dataviews .dataviews-view-list__item {
-    background-color: var(--background);
-    border-color: var(--border);
+  .pui-root-dataviews .dataviews-view-list [role="row"],
+  .pui-root-dataviews .dataviews-view-list [role="article"] {
+    background-color: var(--background, #FFFFFF);
+    border-color: var(--border, #E7E7E7);
   }
   .pui-root-dataviews .dataviews-loading {
     padding: 50px;
   }
   .pui-root-dataviews .dataviews-view-table.has-bulk-actions tr.is-selected td.dataviews-view-table__actions-column,
   .pui-root-dataviews .dataviews-view-table.has-bulk-actions tr:hover td.dataviews-view-table__actions-column {
-    background-color: var(--accent);
+    background-color: var(--accent, #F5F5F5);
   }
-  .pui-root-dataviews .dataviews-wrapper .dataviews-pagination .components-button svg, 
+  .pui-root-dataviews .dataviews-wrapper .dataviews-pagination .components-button svg,
   .pui-root-dataviews .dataviews-view-table__actions-column .components-button svg {
-    fill: var(--foreground);
+    fill: var(--foreground, #1D1D1D);
   }
   .pui-root-dataviews .dataviews-wrapper .dataviews-bulk-actions-footer__container .components-button,
   .pui-root-dataviews .dataviews-wrapper .dataviews-bulk-actions-footer__item-count {
-    color: var(--foreground);
+    color: var(--foreground, #1D1D1D);
   }

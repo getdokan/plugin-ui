@@ -8,7 +8,7 @@ export {
     ThemeProvider,
     useTheme,
     useThemeOptional, type ThemeMode, type ThemeProviderProps,
-    type ThemeTokens
+    type ThemeTokens, type ThemeContextValue
 } from "./providers";
 
 // ============================================

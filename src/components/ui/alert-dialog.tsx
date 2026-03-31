@@ -3,7 +3,7 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
-import { useTheme } from "@/providers";
+import { useThemeOptional, defaultCssVariables } from "@/providers";
 
 function AlertDialog({ ...props }: AlertDialogPrimitive.Root.Props) {
   return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />;
@@ -44,9 +44,11 @@ function AlertDialogContent({
 }: AlertDialogPrimitive.Popup.Props & {
   size?: "default" | "sm";
 }) {
-  const {mode} = useTheme();
+  const theme = useThemeOptional();
+  const mode = theme?.mode ?? 'light';
+  const cssVariables = theme?.cssVariables ?? defaultCssVariables;
   return (
-    <AlertDialogPortal className={ cn('pui-root', mode) }>
+    <AlertDialogPortal className={ cn('pui-root', mode) } style={cssVariables}>
       <AlertDialogOverlay />
       <AlertDialogPrimitive.Popup
         data-slot="alert-dialog-content"

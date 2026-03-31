@@ -1,7 +1,7 @@
 import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip"
 
 import { cn } from "@/lib/utils"
-import { useTheme } from "@/providers";
+import { useThemeOptional, defaultCssVariables } from "@/providers";
 
 function TooltipProvider({
   delay = 0,
@@ -50,9 +50,11 @@ function TooltipContent({
     TooltipPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset"
   >) {
-  const {mode} = useTheme();
+  const theme = useThemeOptional();
+  const mode = theme?.mode ?? 'light';
+  const cssVariables = theme?.cssVariables ?? defaultCssVariables;
   return (
-    <TooltipPrimitive.Portal className={ cn('pui-root', mode, portalClassName) }>
+    <TooltipPrimitive.Portal className={ cn('pui-root', mode, portalClassName) } style={cssVariables}>
       <TooltipPrimitive.Positioner
         align={align}
         alignOffset={alignOffset}
