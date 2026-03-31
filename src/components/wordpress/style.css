@@ -3,15 +3,19 @@
 @import "@wordpress/dataviews/build-style/style.css";
 @import '@wordpress/theme/design-tokens.css';
 
+.pui-root-dataviews,
+.pui-root-dataviews .dataviews-wrapper {
+    background-color: var(--background, #FFFFFF);
+}
 .pui-root-dataviews:not(.custom-layout) {
     border-radius: 6px;
     border: 1px solid var(--border, #E7E7E7);
     box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1019607843);
-    background-color: var(--background, #FFFFFF);
     color: var(--foreground, #1D1D1D);
   }
   .pui-root-dataviews .dataviews-no-results {
       border-top: 1px solid var(--border, #E7E7E7);
+      background-color: var(--background, #FFFFFF);
   }
   .pui-root-dataviews:not(.custom-layout) .dataviews-wrapper {
     border-radius: 6px;
