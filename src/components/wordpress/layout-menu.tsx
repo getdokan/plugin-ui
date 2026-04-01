@@ -379,9 +379,8 @@ function MenuItemRenderer({
   const handleClick = useCallback(() => {
     if (hasChildren) {
       setOpen((o) => !o);
-    } else {
-      item.onClick?.();
     }
+    item.onClick?.();
     onItemClick?.(item);
   }, [hasChildren, item, onItemClick]);
 
@@ -444,6 +443,7 @@ function MenuItemRenderer({
     return (
       <SidebarMenuItem data-testid={item.testId}>
         <SidebarMenuButton
+          render={item.href ? <a href={item.href} /> : undefined}
           tooltip={item.label}
           isActive={isActive}
           onClick={handleClick}
@@ -533,9 +533,8 @@ function SubMenuItemRenderer({
   const handleClick = useCallback(() => {
     if (hasChildren) {
       setOpen((o) => !o);
-    } else {
-      item.onClick?.();
     }
+    item.onClick?.();
     onItemClick?.(item);
   }, [hasChildren, item, onItemClick]);
 
@@ -580,7 +579,11 @@ function SubMenuItemRenderer({
   return (
     <SidebarMenuSubItem data-testid={item.testId}>
       <SidebarMenuSubButton
-        render={<button type="button" />}
+        render={
+          item.href
+            ? <a href={item.href} />
+            : <button type="button" disabled={item.disabled} />
+        }
         isActive={isActive}
         onClick={handleClick}
         className={cn(
@@ -589,6 +592,7 @@ function SubMenuItemRenderer({
           item.className,
         )}
         data-active={isActive || undefined}
+        aria-disabled={item.disabled || undefined}
         aria-expanded={open}
         aria-controls={submenuId}
       >
