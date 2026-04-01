@@ -1,6 +1,6 @@
 import type { Meta, StoryFn } from "@storybook/react";
 import { SlotFillProvider } from "@wordpress/components";
-import { Archive, Eye, Pencil, Trash2, UserCheck, Users, UserX } from "lucide-react";
+import { Archive, Ban, CheckCircle, Eye, Mail, Pencil, Trash2, UserCheck, Users, UserX } from "lucide-react";
 import React, { useState } from "react";
 import { Badge, Input } from "../ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
@@ -1034,6 +1034,121 @@ export const FixedWidthColumns: StoryFn = () => {
   );
 };
 FixedWidthColumns.storyName = "Fixed Width Columns";
+/** Demonstrates how the bulk action toolbar handles many actions with long descriptive labels. Select rows to see the toolbar. */
+export const LargeTextBulkActions: StoryFn = () => {
+  const [view, setView] = useState<DataViewState>(createDefaultView(["name", "email", "status", "role", "joinedAt"]));
+  const [selection, setSelection] = useState<string[]>([]);
+  const [users, setUsers] = useState(allUsers);
+
+  const paginatedData = paginateData(users, view);
+
+  const bulkActions: DataViewAction<User>[] = [
+    {
+      id: "approve-selected",
+      label: "Approve Selected Users",
+      icon: <CheckCircle size={16} />,
+      supportsBulk: true,
+      callback: async (items) => {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        alert(`Approved: ${items.map(i => i.name).join(", ")}`);
+      },
+    },
+    {
+      id: "send-notification",
+      label: "Send Email Notification",
+      icon: <Mail size={16} />,
+      supportsBulk: true,
+      callback: async (items) => {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        alert(`Notification sent to: ${items.map(i => i.email).join(", ")}`);
+      },
+    },
+    {
+      id: "suspend-accounts",
+      label: "Suspend User Accounts",
+      icon: <Ban size={16} />,
+      isDestructive: true,
+      supportsBulk: true,
+      confirmTitle: "Suspend User Accounts",
+      confirmMessage: "Suspended users will lose access to their accounts immediately. You can reactivate them later.",
+      confirmButtonLabel: "Yes, Suspend All",
+      cancelButtonLabel: "Keep Active",
+      callback: async (items) => {
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        alert(`Suspended: ${items.map(i => i.name).join(", ")}`);
+      },
+    },
+    {
+      id: "archive-permanently",
+      label: "Archive and Remove from List",
+      icon: <Archive size={16} />,
+      isDestructive: true,
+      supportsBulk: true,
+      confirmTitle: "Archive Users Permanently",
+      confirmMessage: "Archived users will be removed from all active lists and moved to the archive storage.",
+      confirmButtonLabel: "Archive Permanently",
+      callback: async (items) => {
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        const ids = new Set(items.map(i => i.id));
+        setUsers(prev => prev.filter(u => !ids.has(u.id)));
+        setSelection([]);
+      },
+    },
+    {
+      id: "delete-permanently",
+      label: "Delete Permanently from System",
+      icon: <Trash2 size={16} />,
+      isDestructive: true,
+      supportsBulk: true,
+      confirmTitle: "Permanently Delete Users",
+      confirmMessage: "This will permanently delete the selected users and all associated data. This action cannot be undone.",
+      confirmButtonLabel: "Delete Forever",
+      callback: async (items) => {
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        const ids = new Set(items.map(i => i.id));
+        setUsers(prev => prev.filter(u => !ids.has(u.id)));
+        setSelection([]);
+      },
+    },
+  ];
+
+  return (
+    <div className="p-4">
+      <DataViews<User>
+        namespace="dataviews-demo"
+        data={paginatedData}
+        fields={fields}
+        view={view}
+        onChangeView={setView}
+        actions={bulkActions}
+        selection={selection}
+        onChangeSelection={setSelection}
+        paginationInfo={{
+          totalItems: users.length,
+          totalPages: getTotalPages(users.length, view.perPage),
+        }}
+        getItemId={(item) => item.id}
+      />
+    </div>
+  );
+};
+LargeTextBulkActions.storyName = "Large Text Bulk Actions";
+LargeTextBulkActions.parameters = {
+  docs: {
+    description: {
+      story: `Demonstrates 5 bulk actions with long, descriptive labels to test how the bulk action toolbar handles large text. Select one or more rows to see the toolbar appear.
+
+- **Approve Selected Users** — non-destructive bulk approval
+- **Send Email Notification** — non-destructive bulk email
+- **Suspend User Accounts** — destructive with custom confirmation dialog
+- **Archive and Remove from List** — destructive, removes items from list
+- **Delete Permanently from System** — destructive, permanently removes items
+
+All actions support bulk selection and have async callbacks with loading states.`,
+    },
+  },
+};
+
 FixedWidthColumns.parameters = {
   docs: {
     description: {

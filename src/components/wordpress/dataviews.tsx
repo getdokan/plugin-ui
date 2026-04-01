@@ -11,7 +11,7 @@ import {
 import { __ } from '@wordpress/i18n';
 import { FileSearch, Funnel, Plus, Search, X } from 'lucide-react';
 import type React from 'react';
-import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -237,7 +237,9 @@ const FilterItems = ({
                             return null;
                         }
                         return (
-                            <div className="relative flex items-center pe-2 border rounded-md border-border **:border-0 **:shadow-none" key={id}>
+                            <div
+                                className="relative flex items-center pe-2 border rounded-md border-border **:border-0 **:shadow-none"
+                                key={id}>
                                 {field.field}
                                 <span
                                     role="button"
@@ -495,6 +497,26 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
         ...dataViewsTableProps
     } = props;
 
+    // --- Dynamic bulk action toolbar offset based on actual thead height ---
+    const tableContainerRef = useRef<HTMLDivElement>(null);
+    const [theadHeight, setTheadHeight] = useState(0);
+
+    useLayoutEffect(() => {
+        const container = tableContainerRef.current;
+        if (!container) return;
+
+        const thead = container.querySelector('thead');
+        if (!thead) return;
+
+        const observer = new ResizeObserver(([entry]) => {
+            setTheadHeight(entry.contentRect.height);
+        });
+        observer.observe(thead);
+        setTheadHeight(thead.offsetHeight);
+
+        return () => observer.disconnect();
+    }, [view.type]);
+
     // --- Destructive action confirmation via AlertDialog ---
     const [pendingDestructiveAction, setPendingDestructiveAction] = useState<{
         action: DataViewAction<Item> & { callback: (...args: any[]) => void };
@@ -747,6 +769,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
 
     return (
         <div
+            ref={tableContainerRef}
             className={cn('pui-root-dataviews', children && 'custom-layout')}
             id={tableNameSpace}
             data-filter-id={filterId}>
@@ -835,8 +858,9 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                         {view.type === 'table' && filteredProps?.selection?.length > 0 && (
                             <div
                                 className={cn(
-                                    'animate-in fade-in-0 slide-in-from-top-1 duration-200 transition-all ease-in-out -mb-13 flex items-center bg-background z-1 border-b px-5 h-13 justify-between border-border w-full'
-                                )}>
+                                    'animate-in py-1.5 fade-in-0 slide-in-from-top-1 duration-200 transition-all ease-in-out flex items-center bg-background z-1 border-b px-6 min-h-13 justify-between border-border w-full'
+                                )}
+                                style={theadHeight ? { marginBottom: -theadHeight, minHeight: theadHeight } : undefined}>
                                 <DataViewsTable.BulkActionToolbar />
                             </div>
                         )}
