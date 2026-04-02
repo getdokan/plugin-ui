@@ -96,6 +96,22 @@ export {
   SelectValue,
 } from "./select";
 
+// AsyncCombobox component
+export { default as AsyncCombobox } from "./async-combobox";
+
+// Command component (cmdk)
+export {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "./command";
+
 // Combobox component
 export { CombineInput, type CombineInputProps } from "./combine-input";
 export {
