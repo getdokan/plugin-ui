@@ -310,3 +310,51 @@ function CustomTextsDemo() {
 export const CustomTexts: Story = {
   render: () => <CustomTextsDemo />,
 };
+
+// ─── Static (no server request) ────────────────────────
+
+function StaticOptionsDemo() {
+  const [value, setValue] = useState<string[]>([]);
+
+  return (
+    <AsyncMultiCombobox
+      options={allFrameworks}
+      value={value}
+      onValueChange={setValue}
+      placeholder="Select frameworks..."
+      searchPlaceholder="Filter frameworks..."
+    />
+  );
+}
+
+export const StaticOptions: Story = {
+  render: () => <StaticOptionsDemo />,
+};
+
+// ─── Static with few options ────────────────────────
+
+const statusOptions: AsyncMultiComboboxOption[] = [
+  { value: "active", label: "Active" },
+  { value: "inactive", label: "Inactive" },
+  { value: "pending", label: "Pending" },
+];
+
+function FewStaticOptionsDemo() {
+  const [value, setValue] = useState<string[]>([]);
+
+  return (
+    <AsyncMultiCombobox
+      options={statusOptions}
+      value={value}
+      onValueChange={setValue}
+      placeholder="Select status..."
+      hideSelectAll
+      className="w-[200px]"
+      contentClassName="w-[200px]"
+    />
+  );
+}
+
+export const FewStaticOptions: Story = {
+  render: () => <FewStaticOptionsDemo />,
+};

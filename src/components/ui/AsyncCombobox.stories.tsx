@@ -363,3 +363,65 @@ function AsyncComboboxPreselectedDemo() {
 export const Preselected: Story = {
   render: () => <AsyncComboboxPreselectedDemo />,
 };
+
+// ─── Static (no server request) ────────────────────────
+
+const staticOptions: AsyncComboboxOption[] = [
+  { value: "active", label: "Active" },
+  { value: "inactive", label: "Inactive" },
+];
+
+function AsyncComboboxStaticDemo() {
+  const [value, setValue] = useState("");
+  const [options, setOptions] = useState(allFrameworks);
+
+  return (
+    <AsyncCombobox
+      onSearch={(query) => {
+        if (!query) {
+          setOptions(allFrameworks);
+          return;
+        }
+        setOptions(
+          allFrameworks.filter((f) =>
+            f.label.toLowerCase().includes(query.toLowerCase())
+          )
+        );
+      }}
+      options={options}
+      value={value}
+      onValueChange={setValue}
+      placeholder="Select framework..."
+      idleMessage="All frameworks"
+      showClear
+    />
+  );
+}
+
+export const StaticOptions: Story = {
+  render: () => <AsyncComboboxStaticDemo />,
+};
+
+// ─── Static with few options ────────────────────────
+
+function AsyncComboboxFewOptionsDemo() {
+  const [value, setValue] = useState("");
+
+  return (
+    <AsyncCombobox
+      onSearch={() => {}}
+      options={staticOptions}
+      value={value}
+      onValueChange={setValue}
+      placeholder="Select status..."
+      idleMessage="Choose a status"
+      showClear
+      className="w-[180px]"
+      contentClassName="w-[180px]"
+    />
+  );
+}
+
+export const FewStaticOptions: Story = {
+  render: () => <AsyncComboboxFewOptionsDemo />,
+};
