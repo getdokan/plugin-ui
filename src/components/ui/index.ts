@@ -152,6 +152,20 @@ export {
 // ColorPicker component
 export { ColorPicker, type ColorPickerProps } from "./color-picker";
 
+// Dialog component
+export {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+  DialogTrigger,
+} from "./dialog";
+
 // Sheet component
 export {
   Sheet,
