@@ -484,8 +484,11 @@ function SmartSelectCreateDefaultDemo() {
 
       onCreate={(name, done) => {
         const newOption = { value: name.toLowerCase(), label: name };
-        setOptions((prev) => [...prev, newOption]);
-        setFilteredOptions((prev) => [...prev, newOption]);
+        setOptions((prev) => {
+          const updated = [...prev, newOption];
+          setFilteredOptions(updated);
+          return updated;
+        });
         done(newOption.value);
       }}
       selectOnCreate

@@ -187,8 +187,7 @@ function SmartSelect({
   const clearSearch = React.useCallback(() => {
     setSearch("")
     setShowCreate(false)
-    onSearch("")
-  }, [onSearch])
+  }, [])
 
   const createCtx: SmartSelectCreateContext = React.useMemo(
     () => ({
