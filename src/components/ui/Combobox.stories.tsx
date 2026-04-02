@@ -30,15 +30,14 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
+  CommandDialog,
 } from "./index";
 import {
   CheckIcon,
   ChevronsUpDownIcon,
   MoreHorizontalIcon,
+  TagIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -368,68 +367,68 @@ const labels = [
 
 function ComboboxDropdownMenuDemo() {
   const [label, setLabel] = useState("feature");
-  const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [labelDialogOpen, setLabelDialogOpen] = useState(false);
 
   return (
-    <div className="flex w-full flex-col items-start justify-between rounded-md border border-border px-4 py-3 sm:flex-row sm:items-center">
-      <p className="text-sm leading-none font-medium">
-        <span className="mr-2 rounded-lg bg-primary px-2 py-1 text-xs text-primary-foreground">
-          {label}
-        </span>
-        <span className="text-muted-foreground">Create a new project</span>
-      </p>
-      <DropdownMenu open={open} onOpenChange={setOpen}>
-        <DropdownMenuTrigger
-          render={<Button variant="ghost" size="sm" />}
-        >
-          <MoreHorizontalIcon />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-[200px]">
-          <DropdownMenuGroup>
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Assign to...</DropdownMenuItem>
-            <DropdownMenuItem>Set due date...</DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>Apply label</DropdownMenuSubTrigger>
-            <DropdownMenuSubContent className="p-0">
-              {/* Stop keyboard event propagation to prevent base-ui Menu from intercepting input */}
-              <div onKeyDown={(e) => e.stopPropagation()}>
-                <Command>
-                  <CommandInput
-                    placeholder="Filter label..."
-                    autoFocus={true}
-                    className="h-9"
-                  />
-                  <CommandList>
-                    <CommandEmpty>No label found.</CommandEmpty>
-                    <CommandGroup>
-                      {labels.map((l) => (
-                        <CommandItem
-                          key={l}
-                          value={l}
-                          onSelect={(val) => {
-                            setLabel(val);
-                            setOpen(false);
-                          }}
-                        >
-                          {l}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </div>
-            </DropdownMenuSubContent>
-          </DropdownMenuSub>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem className="text-destructive">
-            Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+    <>
+      <div className="flex w-full flex-col items-start justify-between rounded-md border border-border px-4 py-3 sm:flex-row sm:items-center">
+        <p className="text-sm leading-none font-medium">
+          <span className="mr-2 rounded-lg bg-primary px-2 py-1 text-xs text-primary-foreground">
+            {label}
+          </span>
+          <span className="text-muted-foreground">Create a new project</span>
+        </p>
+        <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
+          <DropdownMenuTrigger
+            render={<Button variant="ghost" size="sm" />}
+          >
+            <MoreHorizontalIcon />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-[200px]">
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem>Assign to...</DropdownMenuItem>
+              <DropdownMenuItem>Set due date...</DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onSelect={() => {
+                setMenuOpen(false);
+                setTimeout(() => setLabelDialogOpen(true), 100);
+              }}
+            >
+              <TagIcon />
+              Apply label
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="text-destructive">
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <CommandDialog open={labelDialogOpen} onOpenChange={setLabelDialogOpen}>
+        <CommandInput placeholder="Filter label..." />
+        <CommandList>
+          <CommandEmpty>No label found.</CommandEmpty>
+          <CommandGroup heading="Labels">
+            {labels.map((l) => (
+              <CommandItem
+                key={l}
+                value={l}
+                onSelect={(val) => {
+                  setLabel(val);
+                  setLabelDialogOpen(false);
+                }}
+              >
+                {l}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </CommandList>
+      </CommandDialog>
+    </>
   );
 }
 
