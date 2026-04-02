@@ -72,6 +72,17 @@ export {
     CurrencyInput, DesignSystemSection,
     // DataViews
     DataViews,
+    // Dialog
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogOverlay,
+    DialogPortal,
+    DialogTitle,
+    DialogTrigger,
     // DropdownMenu
     DropdownMenu,
     DropdownMenuCheckboxItem,
