@@ -96,20 +96,20 @@ export {
   SelectValue,
 } from "./select";
 
-// AsyncMultiCombobox component
+// SmartMultiSelect component
 export {
-  AsyncMultiCombobox,
-  type AsyncMultiComboboxOption,
-  type AsyncMultiComboboxProps,
-  type AsyncMultiComboboxRef,
-} from "./async-multi-combobox";
+  SmartMultiSelect,
+  type SmartMultiSelectOption,
+  type SmartMultiSelectProps,
+  type SmartMultiSelectRef,
+} from "./smart-multi-select";
 
-// AsyncCombobox component
+// SmartSelect component
 export {
-  AsyncCombobox,
-  type AsyncComboboxOption,
-  type AsyncComboboxProps,
-} from "./async-combobox";
+  SmartSelect,
+  type SmartSelectOption,
+  type SmartSelectProps,
+} from "./smart-select";
 
 // Command component (cmdk)
 export {

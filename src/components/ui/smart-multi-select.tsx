@@ -19,16 +19,16 @@ import {
 } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 
-export interface AsyncMultiComboboxOption {
+export interface SmartMultiSelectOption {
   /** The display text for the option */
   label: string
   /** The unique identifier for the option. Should be unique and not empty */
   value: string
 }
 
-export interface AsyncMultiComboboxProps {
+export interface SmartMultiSelectProps {
   /** An array of options to display */
-  options: AsyncMultiComboboxOption[]
+  options: SmartMultiSelectOption[]
   /** Whether the select is async. If true, filtering is handled externally */
   async?: boolean
   /** Whether options are currently loading. Works only when async is true */
@@ -65,7 +65,7 @@ export interface AsyncMultiComboboxProps {
   invalid?: boolean
   /** Custom label function for rendering each option */
   labelFunc?: (
-    option: AsyncMultiComboboxOption,
+    option: SmartMultiSelectOption,
     isSelected: boolean,
     index: number
   ) => React.ReactNode
@@ -75,16 +75,16 @@ export interface AsyncMultiComboboxProps {
   onSearch?: (value: string) => void
 }
 
-export interface AsyncMultiComboboxRef {
+export interface SmartMultiSelectRef {
   /** Programmatically control the popover open/close state */
   setIsPopoverOpen: (open: boolean) => void
   /** Programmatically set the search input value */
   setSearchValue: (value: string) => void
 }
 
-const AsyncMultiCombobox = React.forwardRef<
-  AsyncMultiComboboxRef,
-  AsyncMultiComboboxProps
+const SmartMultiSelect = React.forwardRef<
+  SmartMultiSelectRef,
+  SmartMultiSelectProps
 >(
   (
     {
@@ -120,9 +120,9 @@ const AsyncMultiCombobox = React.forwardRef<
     )
     // Cache options for async mode so selected labels remain visible after search changes
     const [reserveOptions, setReserveOptions] = React.useState<
-      Record<string, AsyncMultiComboboxOption>
+      Record<string, SmartMultiSelectOption>
     >({})
-    const optionsRef = React.useRef<Record<string, AsyncMultiComboboxOption>>({})
+    const optionsRef = React.useRef<Record<string, SmartMultiSelectOption>>({})
     const isInit = React.useRef(false)
 
     const handleInputKeyDown = (
@@ -175,7 +175,7 @@ const AsyncMultiCombobox = React.forwardRef<
           acc[option.value] = option
           return acc
         },
-        {} as Record<string, AsyncMultiComboboxOption>
+        {} as Record<string, SmartMultiSelectOption>
       )
       if (async) {
         if (!isInit.current) {
@@ -191,7 +191,7 @@ const AsyncMultiCombobox = React.forwardRef<
               }
               return acc
             },
-            {} as Record<string, AsyncMultiComboboxOption>
+            {} as Record<string, SmartMultiSelectOption>
           )
           optionsRef.current = { ...temp, ...selectedCache }
           setReserveOptions({ ...temp, ...selectedCache })
@@ -241,7 +241,7 @@ const AsyncMultiCombobox = React.forwardRef<
               role="combobox"
               aria-expanded={isPopoverOpen}
               aria-invalid={invalid || undefined}
-              data-slot="async-multi-combobox-trigger"
+              data-slot="smart-multi-select-trigger"
               className={cn(
                 "cursor-pointer flex h-auto min-h-9 w-[250px] items-center justify-between rounded-md border border-input bg-transparent px-2 py-1 text-sm shadow-xs transition-[color,box-shadow] focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]",
                 invalid &&
@@ -324,7 +324,7 @@ const AsyncMultiCombobox = React.forwardRef<
           )}
         </PopoverTrigger>
         <PopoverContent
-          data-slot="async-multi-combobox-content"
+          data-slot="smart-multi-select-content"
           className={cn("w-[250px] gap-0 p-0", contentClassName)}
           align="start"
         >
@@ -438,6 +438,6 @@ const AsyncMultiCombobox = React.forwardRef<
   }
 )
 
-AsyncMultiCombobox.displayName = "AsyncMultiCombobox"
+SmartMultiSelect.displayName = "SmartMultiSelect"
 
-export { AsyncMultiCombobox }
+export { SmartMultiSelect }

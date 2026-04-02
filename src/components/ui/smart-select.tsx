@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 
-export interface AsyncComboboxOption {
+export interface SmartSelectOption {
   /** Unique value for the option */
   value: string
   /** Display label */
@@ -32,11 +32,11 @@ export interface AsyncComboboxOption {
   group?: string
 }
 
-export interface AsyncComboboxProps {
+export interface SmartSelectProps {
   /** Async callback triggered on search input change (after debounce) */
   onSearch: (query: string) => void | Promise<void>
   /** Options to display in the dropdown */
-  options: AsyncComboboxOption[]
+  options: SmartSelectOption[]
   /** Currently selected value */
   value?: string
   /** Callback when selection changes */
@@ -64,10 +64,10 @@ export interface AsyncComboboxProps {
   /** Width class for the popover content @default "w-[250px]" */
   contentClassName?: string
   /** Custom render function for each option */
-  renderOption?: (option: AsyncComboboxOption, isSelected: boolean) => React.ReactNode
+  renderOption?: (option: SmartSelectOption, isSelected: boolean) => React.ReactNode
 }
 
-function AsyncCombobox({
+function SmartSelect({
   onSearch,
   options,
   value = "",
@@ -84,7 +84,7 @@ function AsyncCombobox({
   className,
   contentClassName,
   renderOption,
-}: AsyncComboboxProps) {
+}: SmartSelectProps) {
   const [open, setOpen] = React.useState(false)
   const [search, setSearch] = React.useState("")
   const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -125,8 +125,8 @@ function AsyncCombobox({
 
   // Group options by group name
   const groupedOptions = React.useMemo(() => {
-    const groups = new Map<string, AsyncComboboxOption[]>()
-    const ungrouped: AsyncComboboxOption[] = []
+    const groups = new Map<string, SmartSelectOption[]>()
+    const ungrouped: SmartSelectOption[] = []
 
     for (const opt of options) {
       if (opt.group) {
@@ -149,7 +149,7 @@ function AsyncCombobox({
     [onValueChange]
   )
 
-  const renderItems = (items: AsyncComboboxOption[]) =>
+  const renderItems = (items: SmartSelectOption[]) =>
     items.map((option) => {
       const isSelected = value === option.value
       return (
@@ -219,7 +219,7 @@ function AsyncCombobox({
             aria-expanded={open}
             aria-invalid={invalid || undefined}
             disabled={disabled}
-            data-slot="async-combobox-trigger"
+            data-slot="smart-select-trigger"
             className={cn(
               "w-[250px] justify-between border-input text-foreground font-normal",
               invalid &&
@@ -256,7 +256,7 @@ function AsyncCombobox({
         </div>
       </PopoverTrigger>
       <PopoverContent
-        data-slot="async-combobox-content"
+        data-slot="smart-select-content"
         className={cn("w-[250px] gap-0 p-0", contentClassName)}
         align="start"
       >
@@ -292,5 +292,5 @@ function AsyncCombobox({
   )
 }
 
-export { AsyncCombobox }
-export type { AsyncComboboxOption as AsyncComboboxOptionType }
+export { SmartSelect }
+export type { SmartSelectOption as SmartSelectOptionType }

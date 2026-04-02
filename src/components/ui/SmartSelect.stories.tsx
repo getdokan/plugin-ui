@@ -1,11 +1,11 @@
 import { useState, useCallback } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
-  AsyncCombobox,
-  type AsyncComboboxOption,
-} from "./async-combobox";
+  SmartSelect,
+  type SmartSelectOption,
+} from "./smart-select";
 
-const allFrameworks: AsyncComboboxOption[] = [
+const allFrameworks: SmartSelectOption[] = [
   { value: "next.js", label: "Next.js" },
   { value: "remix", label: "Remix" },
   { value: "astro", label: "Astro" },
@@ -19,10 +19,10 @@ const allFrameworks: AsyncComboboxOption[] = [
 ];
 
 function useAsyncSearch(
-  data: AsyncComboboxOption[],
+  data: SmartSelectOption[],
   delay = 500
 ) {
-  const [options, setOptions] = useState<AsyncComboboxOption[]>([]);
+  const [options, setOptions] = useState<SmartSelectOption[]>([]);
   const [loading, setLoading] = useState(false);
 
   const handleSearch = useCallback(
@@ -48,11 +48,11 @@ function useAsyncSearch(
 }
 
 const meta = {
-  title: "UI/AsyncCombobox",
-  component: AsyncCombobox,
+  title: "UI/SmartSelect",
+  component: SmartSelect,
   parameters: { layout: "centered" },
   tags: ["autodocs"],
-} satisfies Meta<typeof AsyncCombobox>;
+} satisfies Meta<typeof SmartSelect>;
 
 export default meta;
 
@@ -60,12 +60,12 @@ type Story = StoryObj<typeof meta>;
 
 // ─── Basic ────────────────────────
 
-function AsyncComboboxBasicDemo() {
+function SmartSelectBasicDemo() {
   const [value, setValue] = useState("");
   const { options, loading, handleSearch } = useAsyncSearch(allFrameworks);
 
   return (
-    <AsyncCombobox
+    <SmartSelect
       onSearch={handleSearch}
       options={options}
       value={value}
@@ -78,17 +78,17 @@ function AsyncComboboxBasicDemo() {
 }
 
 export const Basic: Story = {
-  render: () => <AsyncComboboxBasicDemo />,
+  render: () => <SmartSelectBasicDemo />,
 };
 
 // ─── Clear Button ────────────────────────
 
-function AsyncComboboxClearDemo() {
+function SmartSelectClearDemo() {
   const [value, setValue] = useState("");
   const { options, loading, handleSearch } = useAsyncSearch(allFrameworks);
 
   return (
-    <AsyncCombobox
+    <SmartSelect
       onSearch={handleSearch}
       options={options}
       value={value}
@@ -101,12 +101,12 @@ function AsyncComboboxClearDemo() {
 }
 
 export const ClearButton: Story = {
-  render: () => <AsyncComboboxClearDemo />,
+  render: () => <SmartSelectClearDemo />,
 };
 
 // ─── Custom Items (with description) ────────────────────────
 
-const frameworksWithDesc: AsyncComboboxOption[] = [
+const frameworksWithDesc: SmartSelectOption[] = [
   { value: "next.js", label: "Next.js", description: "The React Framework" },
   { value: "remix", label: "Remix", description: "Build better websites" },
   { value: "astro", label: "Astro", description: "The web framework for content" },
@@ -114,12 +114,12 @@ const frameworksWithDesc: AsyncComboboxOption[] = [
   { value: "sveltekit", label: "SvelteKit", description: "Web development, streamlined" },
 ];
 
-function AsyncComboboxCustomItemsDemo() {
+function SmartSelectCustomItemsDemo() {
   const [value, setValue] = useState("");
   const { options, loading, handleSearch } = useAsyncSearch(frameworksWithDesc);
 
   return (
-    <AsyncCombobox
+    <SmartSelect
       onSearch={handleSearch}
       options={options}
       value={value}
@@ -133,17 +133,17 @@ function AsyncComboboxCustomItemsDemo() {
 }
 
 export const CustomItems: Story = {
-  render: () => <AsyncComboboxCustomItemsDemo />,
+  render: () => <SmartSelectCustomItemsDemo />,
 };
 
 // ─── Custom Render ────────────────────────
 
-function AsyncComboboxCustomRenderDemo() {
+function SmartSelectCustomRenderDemo() {
   const [value, setValue] = useState("");
   const { options, loading, handleSearch } = useAsyncSearch(frameworksWithDesc);
 
   return (
-    <AsyncCombobox
+    <SmartSelect
       onSearch={handleSearch}
       options={options}
       value={value}
@@ -177,12 +177,12 @@ function AsyncComboboxCustomRenderDemo() {
 }
 
 export const CustomRender: Story = {
-  render: () => <AsyncComboboxCustomRenderDemo />,
+  render: () => <SmartSelectCustomRenderDemo />,
 };
 
 // ─── Groups ────────────────────────
 
-const groupedFrameworks: AsyncComboboxOption[] = [
+const groupedFrameworks: SmartSelectOption[] = [
   { value: "next.js", label: "Next.js", group: "React" },
   { value: "remix", label: "Remix", group: "React" },
   { value: "gatsby", label: "Gatsby", group: "React" },
@@ -192,12 +192,12 @@ const groupedFrameworks: AsyncComboboxOption[] = [
   { value: "angular", label: "Angular", group: "Standalone" },
 ];
 
-function AsyncComboboxGroupsDemo() {
+function SmartSelectGroupsDemo() {
   const [value, setValue] = useState("");
   const { options, loading, handleSearch } = useAsyncSearch(groupedFrameworks);
 
   return (
-    <AsyncCombobox
+    <SmartSelect
       onSearch={handleSearch}
       options={options}
       value={value}
@@ -209,17 +209,17 @@ function AsyncComboboxGroupsDemo() {
 }
 
 export const Groups: Story = {
-  render: () => <AsyncComboboxGroupsDemo />,
+  render: () => <SmartSelectGroupsDemo />,
 };
 
 // ─── Custom Messages ────────────────────────
 
-function AsyncComboboxCustomMessagesDemo() {
+function SmartSelectCustomMessagesDemo() {
   const [value, setValue] = useState("");
   const { options, loading, handleSearch } = useAsyncSearch(allFrameworks, 800);
 
   return (
-    <AsyncCombobox
+    <SmartSelect
       onSearch={handleSearch}
       options={options}
       value={value}
@@ -234,14 +234,14 @@ function AsyncComboboxCustomMessagesDemo() {
 }
 
 export const CustomMessages: Story = {
-  render: () => <AsyncComboboxCustomMessagesDemo />,
+  render: () => <SmartSelectCustomMessagesDemo />,
 };
 
 // ─── User Search (with disabled items) ────────────────────────
 
-function AsyncComboboxUsersDemo() {
+function SmartSelectUsersDemo() {
   const [value, setValue] = useState("");
-  const [options, setOptions] = useState<AsyncComboboxOption[]>([]);
+  const [options, setOptions] = useState<SmartSelectOption[]>([]);
   const [loading, setLoading] = useState(false);
 
   const handleSearch = useCallback((query: string) => {
@@ -266,7 +266,7 @@ function AsyncComboboxUsersDemo() {
   }, []);
 
   return (
-    <AsyncCombobox
+    <SmartSelect
       onSearch={handleSearch}
       options={options}
       value={value}
@@ -284,17 +284,17 @@ function AsyncComboboxUsersDemo() {
 }
 
 export const UserSearch: Story = {
-  render: () => <AsyncComboboxUsersDemo />,
+  render: () => <SmartSelectUsersDemo />,
 };
 
 // ─── Invalid ────────────────────────
 
-function AsyncComboboxInvalidDemo() {
+function SmartSelectInvalidDemo() {
   const [value, setValue] = useState("");
   const { options, loading, handleSearch } = useAsyncSearch(allFrameworks);
 
   return (
-    <AsyncCombobox
+    <SmartSelect
       onSearch={handleSearch}
       options={options}
       value={value}
@@ -307,14 +307,14 @@ function AsyncComboboxInvalidDemo() {
 }
 
 export const Invalid: Story = {
-  render: () => <AsyncComboboxInvalidDemo />,
+  render: () => <SmartSelectInvalidDemo />,
 };
 
 // ─── Disabled ────────────────────────
 
 export const Disabled: Story = {
   render: () => (
-    <AsyncCombobox
+    <SmartSelect
       onSearch={() => {}}
       options={[]}
       disabled
@@ -325,9 +325,9 @@ export const Disabled: Story = {
 
 // ─── Preselected ────────────────────────
 
-function AsyncComboboxPreselectedDemo() {
+function SmartSelectPreselectedDemo() {
   const [value, setValue] = useState("react");
-  const [options, setOptions] = useState<AsyncComboboxOption[]>(allFrameworks);
+  const [options, setOptions] = useState<SmartSelectOption[]>(allFrameworks);
   const [loading, setLoading] = useState(false);
 
   const handleSearch = useCallback((query: string) => {
@@ -347,7 +347,7 @@ function AsyncComboboxPreselectedDemo() {
   }, []);
 
   return (
-    <AsyncCombobox
+    <SmartSelect
       onSearch={handleSearch}
       options={options}
       value={value}
@@ -361,22 +361,22 @@ function AsyncComboboxPreselectedDemo() {
 }
 
 export const Preselected: Story = {
-  render: () => <AsyncComboboxPreselectedDemo />,
+  render: () => <SmartSelectPreselectedDemo />,
 };
 
 // ─── Static (no server request) ────────────────────────
 
-const staticOptions: AsyncComboboxOption[] = [
+const staticOptions: SmartSelectOption[] = [
   { value: "active", label: "Active" },
   { value: "inactive", label: "Inactive" },
 ];
 
-function AsyncComboboxStaticDemo() {
+function SmartSelectStaticDemo() {
   const [value, setValue] = useState("");
   const [options, setOptions] = useState(allFrameworks);
 
   return (
-    <AsyncCombobox
+    <SmartSelect
       onSearch={(query) => {
         if (!query) {
           setOptions(allFrameworks);
@@ -399,16 +399,16 @@ function AsyncComboboxStaticDemo() {
 }
 
 export const StaticOptions: Story = {
-  render: () => <AsyncComboboxStaticDemo />,
+  render: () => <SmartSelectStaticDemo />,
 };
 
 // ─── Static with few options ────────────────────────
 
-function AsyncComboboxFewOptionsDemo() {
+function SmartSelectFewOptionsDemo() {
   const [value, setValue] = useState("");
 
   return (
-    <AsyncCombobox
+    <SmartSelect
       onSearch={() => {}}
       options={staticOptions}
       value={value}
@@ -423,5 +423,5 @@ function AsyncComboboxFewOptionsDemo() {
 }
 
 export const FewStaticOptions: Story = {
-  render: () => <AsyncComboboxFewOptionsDemo />,
+  render: () => <SmartSelectFewOptionsDemo />,
 };

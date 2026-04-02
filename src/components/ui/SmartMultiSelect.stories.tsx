@@ -1,11 +1,11 @@
 import { useState, useCallback } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
-  AsyncMultiCombobox,
-  type AsyncMultiComboboxOption,
-} from "./async-multi-combobox";
+  SmartMultiSelect,
+  type SmartMultiSelectOption,
+} from "./smart-multi-select";
 
-const allFrameworks: AsyncMultiComboboxOption[] = [
+const allFrameworks: SmartMultiSelectOption[] = [
   { value: "next.js", label: "Next.js" },
   { value: "remix", label: "Remix" },
   { value: "astro", label: "Astro" },
@@ -19,11 +19,11 @@ const allFrameworks: AsyncMultiComboboxOption[] = [
 ];
 
 const meta = {
-  title: "UI/AsyncMultiCombobox",
-  component: AsyncMultiCombobox,
+  title: "UI/SmartMultiSelect",
+  component: SmartMultiSelect,
   parameters: { layout: "centered" },
   tags: ["autodocs"],
-} satisfies Meta<typeof AsyncMultiCombobox>;
+} satisfies Meta<typeof SmartMultiSelect>;
 
 export default meta;
 
@@ -35,7 +35,7 @@ function BasicDemo() {
   const [value, setValue] = useState<string[]>([]);
 
   return (
-    <AsyncMultiCombobox
+    <SmartMultiSelect
       options={allFrameworks}
       value={value}
       onValueChange={setValue}
@@ -54,7 +54,7 @@ function DefaultValueDemo() {
   const [value, setValue] = useState<string[]>(["react", "vue", "next.js"]);
 
   return (
-    <AsyncMultiCombobox
+    <SmartMultiSelect
       options={allFrameworks}
       value={value}
       onValueChange={setValue}
@@ -79,7 +79,7 @@ function MaxCountDemo() {
   ]);
 
   return (
-    <AsyncMultiCombobox
+    <SmartMultiSelect
       options={allFrameworks}
       value={value}
       onValueChange={setValue}
@@ -101,7 +101,7 @@ function HideSelectAllDemo() {
   const [value, setValue] = useState<string[]>([]);
 
   return (
-    <AsyncMultiCombobox
+    <SmartMultiSelect
       options={allFrameworks}
       value={value}
       onValueChange={setValue}
@@ -121,7 +121,7 @@ function CustomLabelDemo() {
   const [value, setValue] = useState<string[]>([]);
 
   return (
-    <AsyncMultiCombobox
+    <SmartMultiSelect
       options={allFrameworks}
       value={value}
       onValueChange={setValue}
@@ -153,7 +153,7 @@ export const CustomLabel: Story = {
 
 function AsyncSearchDemo() {
   const [value, setValue] = useState<string[]>([]);
-  const [options, setOptions] = useState<AsyncMultiComboboxOption[]>([]);
+  const [options, setOptions] = useState<SmartMultiSelectOption[]>([]);
   const [loading, setLoading] = useState(false);
 
   const handleSearch = useCallback((query: string) => {
@@ -173,7 +173,7 @@ function AsyncSearchDemo() {
   }, []);
 
   return (
-    <AsyncMultiCombobox
+    <SmartMultiSelect
       async
       options={options}
       value={value}
@@ -197,7 +197,7 @@ function AsyncErrorDemo() {
   const [value, setValue] = useState<string[]>([]);
 
   return (
-    <AsyncMultiCombobox
+    <SmartMultiSelect
       async
       options={[]}
       value={value}
@@ -216,7 +216,7 @@ export const AsyncError: Story = {
 
 function AsyncPreselectedDemo() {
   const [value, setValue] = useState<string[]>(["react", "vue"]);
-  const [options, setOptions] = useState<AsyncMultiComboboxOption[]>(
+  const [options, setOptions] = useState<SmartMultiSelectOption[]>(
     allFrameworks
   );
   const [loading, setLoading] = useState(false);
@@ -238,7 +238,7 @@ function AsyncPreselectedDemo() {
   }, []);
 
   return (
-    <AsyncMultiCombobox
+    <SmartMultiSelect
       async
       options={options}
       value={value}
@@ -261,7 +261,7 @@ function InvalidDemo() {
   const [value, setValue] = useState<string[]>([]);
 
   return (
-    <AsyncMultiCombobox
+    <SmartMultiSelect
       options={allFrameworks}
       value={value}
       onValueChange={setValue}
@@ -279,7 +279,7 @@ export const Invalid: Story = {
 
 export const Disabled: Story = {
   render: () => (
-    <AsyncMultiCombobox
+    <SmartMultiSelect
       options={allFrameworks}
       value={["react", "vue"]}
       onValueChange={() => {}}
@@ -295,7 +295,7 @@ function CustomTextsDemo() {
   const [value, setValue] = useState<string[]>(["react"]);
 
   return (
-    <AsyncMultiCombobox
+    <SmartMultiSelect
       options={allFrameworks}
       value={value}
       onValueChange={setValue}
@@ -317,7 +317,7 @@ function StaticOptionsDemo() {
   const [value, setValue] = useState<string[]>([]);
 
   return (
-    <AsyncMultiCombobox
+    <SmartMultiSelect
       options={allFrameworks}
       value={value}
       onValueChange={setValue}
@@ -333,7 +333,7 @@ export const StaticOptions: Story = {
 
 // ─── Static with few options ────────────────────────
 
-const statusOptions: AsyncMultiComboboxOption[] = [
+const statusOptions: SmartMultiSelectOption[] = [
   { value: "active", label: "Active" },
   { value: "inactive", label: "Inactive" },
   { value: "pending", label: "Pending" },
@@ -343,7 +343,7 @@ function FewStaticOptionsDemo() {
   const [value, setValue] = useState<string[]>([]);
 
   return (
-    <AsyncMultiCombobox
+    <SmartMultiSelect
       options={statusOptions}
       value={value}
       onValueChange={setValue}
