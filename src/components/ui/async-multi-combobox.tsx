@@ -258,7 +258,7 @@ const AsyncMultiCombobox = React.forwardRef<
                   <Badge
                     key={val}
                     variant="outline"
-                    className="h-6 gap-1 px-2 text-xs font-normal max-w-[120px]"
+                    className="h-6 gap-1 rounded-md px-2 text-xs font-normal max-w-[120px]"
                   >
                     <span className="truncate">{getOptionLabel(val)}</span>
                     <XIcon
@@ -275,7 +275,7 @@ const AsyncMultiCombobox = React.forwardRef<
                 {selectedValues.length > maxCount && (
                   <Badge
                     variant="outline"
-                    className="h-6 gap-1 px-2 text-xs font-normal"
+                    className="h-6 gap-1 rounded-md px-2 text-xs font-normal"
                   >
                     <span>{`+${selectedValues.length - maxCount}`}</span>
                     <XIcon
