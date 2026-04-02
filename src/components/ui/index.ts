@@ -96,6 +96,14 @@ export {
   SelectValue,
 } from "./select";
 
+// AsyncMultiCombobox component
+export {
+  AsyncMultiCombobox,
+  type AsyncMultiComboboxOption,
+  type AsyncMultiComboboxProps,
+  type AsyncMultiComboboxRef,
+} from "./async-multi-combobox";
+
 // AsyncCombobox component
 export {
   AsyncCombobox,
