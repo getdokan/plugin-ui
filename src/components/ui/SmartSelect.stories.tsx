@@ -547,8 +547,11 @@ function SmartSelectCreateCustomSimpleDemo() {
   ]);
 
   const addOption = (opt: SmartSelectOption) => {
-    setOptions((prev) => [...prev, opt]);
-    setFilteredOptions((prev) => [...prev, opt]);
+    setOptions((prev) => {
+      const updated = [...prev, opt];
+      setFilteredOptions(updated);
+      return updated;
+    });
     setValue(opt.value);
   };
 
@@ -659,8 +662,11 @@ function SmartSelectCreateCustomComplexDemo() {
   ]);
 
   const addOption = (opt: SmartSelectOption) => {
-    setOptions((prev) => [...prev, opt]);
-    setFilteredOptions((prev) => [...prev, opt]);
+    setOptions((prev) => {
+      const updated = [...prev, opt];
+      setFilteredOptions(updated);
+      return updated;
+    });
     setValue(opt.value);
   };
 
