@@ -91,6 +91,9 @@ const config: StorybookConfig = {
     const babelLoaderForStories = {
       loader: require.resolve("babel-loader"),
       options: {
+        plugins: [
+          require.resolve("./babel-plugin-story-source"),
+        ],
         presets: [
           [require.resolve("@babel/preset-react"), { runtime: "automatic" }],
           [require.resolve("@babel/preset-typescript"), { allowDeclareFields: true }],

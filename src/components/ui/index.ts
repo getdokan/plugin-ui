@@ -96,6 +96,36 @@ export {
   SelectValue,
 } from "./select";
 
+// SmartMultiSelect component
+export {
+  SmartMultiSelect,
+  type SmartMultiSelectOption,
+  type SmartMultiSelectProps,
+  type SmartMultiSelectRef,
+  type SmartMultiSelectCreateContext,
+} from "./smart-multi-select";
+
+// SmartSelect component
+export {
+  SmartSelect,
+  type SmartSelectOption,
+  type SmartSelectProps,
+  type SmartSelectCreateContext,
+} from "./smart-select";
+
+// Command component (cmdk)
+export {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "./command";
+
 // Combobox component
 export { CombineInput, type CombineInputProps } from "./combine-input";
 export {
