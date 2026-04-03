@@ -221,6 +221,11 @@ export {
     // Selection Type
     SelectionItem,
     SelectionType,
+    // SmartSelect
+    SmartSelect,
+    type SmartSelectOption,
+    type SmartSelectProps,
+    type SmartSelectCreateContext,
     // Separator
     Separator,
     // Slider
