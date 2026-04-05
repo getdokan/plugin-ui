@@ -346,7 +346,7 @@ const SmartMultiSelect = React.forwardRef<
               aria-invalid={invalid || undefined}
               data-slot="smart-multi-select-trigger"
               className={cn(
-                "cursor-pointer flex h-auto min-h-9 w-[250px] items-center justify-between rounded-md border border-input bg-transparent px-2 py-1 text-sm shadow-xs transition-[color,box-shadow] focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]",
+                "cursor-pointer flex h-auto min-h-9 w-full items-center justify-between rounded-md border border-input bg-transparent px-2 py-1 text-sm shadow-xs transition-[color,box-shadow] focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]",
                 invalid &&
                   "border-destructive ring-destructive/20 ring-[3px] dark:ring-destructive/40",
                 disabled && "cursor-not-allowed opacity-50 pointer-events-none",

@@ -260,6 +260,14 @@ export {
     useComboboxAnchor,
     // Rich Text Editor
     RichTextEditor,
+    // Pagination
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
     // Sonner (toast notifications)
     Toaster,
     // Calendar & DatePicker
@@ -315,7 +323,8 @@ export {
     type LayoutMenuItemData,
     type LayoutMenuGroupData,
     type LayoutMenuProps,
-    type LayoutMenuSearchProps
+    type LayoutMenuSearchProps,
+    type PaginationLinkProps,
 } from "./components/ui";
 
 export { MatricsCard, type MatricsCardProps } from './components/matrics-card';

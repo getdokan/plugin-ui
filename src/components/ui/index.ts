@@ -333,6 +333,18 @@ export {
   type LayoutContextValue,
 } from "../wordpress/layout";
 
+// Pagination
+export {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+  type PaginationLinkProps,
+} from "./pagination";
+
 // Sonner (toast notifications)
 export { Toaster } from "./sonner";
 
