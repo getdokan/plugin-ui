@@ -72,7 +72,7 @@ export interface SmartSelectProps {
   debounceMs?: number
   /** Additional class for the trigger button */
   className?: string
-  /** Width class for the popover content @default "w-[250px]" */
+  /** Additional class for the popover content */
   contentClassName?: string
   /** Custom render function for each option */
   renderOption?: (option: SmartSelectOption, isSelected: boolean) => React.ReactNode
@@ -230,6 +230,7 @@ function SmartSelect({
         <CommandItem
           key={option.value}
           value={option.value}
+          keywords={[option.label, ...(option.description ? [option.description] : [])]}
           disabled={option.disabled}
           onSelect={(currentValue) => {
             onValueChange?.(currentValue === value ? "" : currentValue)
@@ -323,7 +324,7 @@ function SmartSelect({
             disabled={disabled}
             data-slot="smart-select-trigger"
             className={cn(
-              "w-[250px] justify-between border-input text-foreground font-normal",
+              "w-full justify-between border-input text-foreground font-normal",
               invalid &&
                 "border-destructive ring-destructive/20 ring-[3px] dark:ring-destructive/40",
               className
@@ -368,7 +369,7 @@ function SmartSelect({
         className={cn("!w-(--anchor-width) gap-0 p-0", contentClassName)}
         align="start"
       >
-        <Command shouldFilter={false}>
+        <Command shouldFilter={!onSearch}>
           {!disableSearch && (
             <div className="flex w-full items-center [&>[data-slot=command-input-wrapper]]:flex-1 [&>[data-slot=command-input-wrapper]]:border-b-0 border-b border-border">
               <CommandInput

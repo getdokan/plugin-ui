@@ -226,6 +226,12 @@ export {
     type SmartSelectOption,
     type SmartSelectProps,
     type SmartSelectCreateContext,
+    // SmartMultiSelect
+    SmartMultiSelect,
+    type SmartMultiSelectOption,
+    type SmartMultiSelectProps,
+    type SmartMultiSelectRef,
+    type SmartMultiSelectCreateContext,
     // Separator
     Separator,
     // Slider
