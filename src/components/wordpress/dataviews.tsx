@@ -640,7 +640,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
             return;
         }
 
-        const targetType = windowWidth <= 768 ? 'list' : 'table';
+        const targetType = windowWidth! <= 768 ? 'list' : 'table';
 
         if (view.type !== targetType) {
             onChangeView({
@@ -720,7 +720,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
 
     const searchTerm = (view as View & { search?: string }).search ?? '';
     const [localSearch, setLocalSearch] = useState(searchTerm);
-    const debounceRef = useRef<ReturnType<typeof setTimeout>>(null);
+    const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     // Sync local state when the external view search changes (e.g. tab reset)
     useEffect(() => {
@@ -784,43 +784,50 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                             'border-b border-border p-4 md:px-4 md:py-0'
                     )}>
                     {tabItems.length > 0 && (
-                        <Tabs
-                            defaultValue={defaultTabValue}
-                            onValueChange={(value) => {
-                                // When a tab changes, reflect that in the view state
-                                const nextView = {
-                                    ...view,
-                                    [tabViewKey]: value,
-                                    page: 1
-                                } as View & { [key: string]: string | number };
+                        <div className="min-w-0 overflow-x-auto no-scrollbar">
+                            <Tabs
+                                defaultValue={defaultTabValue}
+                                className="w-max"
+                                onValueChange={(value) => {
+                                    // When a tab changes, reflect that in the view state
+                                    const nextView = {
+                                        ...view,
+                                        [tabViewKey]: value,
+                                        page: 1
+                                    } as View & { [key: string]: string | number };
 
-                                handleViewChange(nextView);
+                                    handleViewChange(nextView);
 
-                                tabs?.onSelect?.(value);
-                                filteredProps.onChangeSelection?.([]);
-                            }}>
-                            <TabsList variant="line" className="p-0 flex-wrap md:flex-nowrap">
-                                {tabItems.map((tab) => (
-                                    <TabsTrigger
-                                        key={tab.value}
-                                        value={tab.value}
-                                        disabled={tab.disabled}
-                                        className={cn(
-                                            'cursor-pointer! flex! py-2! px-2! text-xs! md:py-6! md:px-4! md:text-sm! text-muted-foreground! bg-transparent! rounded-none! hover:bg-transparent!',
-                                            'focus:outline-none! shadow-none!',
-                                            tab.className
-                                        )}>
-                                        {tab.icon && <tab.icon className="size-4" />}
-                                        {tab.label}{' '}
-                                        {tab.count !== undefined && (
-                                            <span className="text-muted-foreground">({tab.count})</span>
-                                        )}
-                                    </TabsTrigger>
-                                ))}
-                            </TabsList>
-                        </Tabs>
+                                    tabs?.onSelect?.(value);
+                                    filteredProps.onChangeSelection?.([]);
+                                }}>
+                                <TabsList variant="line" className="p-0">
+                                    {tabItems.map((tab) => (
+                                        <TabsTrigger
+                                            key={tab.value}
+                                            value={tab.value}
+                                            disabled={tab.disabled}
+                                            className={cn(
+                                                'cursor-pointer! flex! py-2! px-2! text-xs! md:py-6! md:px-4! md:text-sm! text-muted-foreground! bg-transparent! rounded-none! hover:bg-transparent!',
+                                                'focus:outline-none! shadow-none!',
+                                                tab.className
+                                            )}>
+                                            {tab.icon && <tab.icon className="size-4" />}
+                                            {tab.label}{' '}
+                                            {tab.count !== undefined && (
+                                                <span className="text-muted-foreground">({tab.count})</span>
+                                            )}
+                                        </TabsTrigger>
+                                    ))}
+                                </TabsList>
+                            </Tabs>
+                        </div>
                     )}
-                    <div className={cn('flex items-center gap-2', showFullWidthHeader && 'justify-end w-full py-2')}>
+                    <div
+                        className={cn(
+                            'flex items-center gap-2 shrink-0',
+                            showFullWidthHeader && 'justify-end w-full py-2'
+                        )}>
                         {searchInput}
                         {headerContent.map((node, index) => (
                             <Fragment key={index}>{node}</Fragment>
@@ -835,6 +842,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                         }`}>
                         <FilterItems
                             {...filter}
+                            fields={filter?.fields ?? []}
                             openSelectorSignal={openSelectorSignal}
                             onFirstFilterAdded={() => setShowFilters(true)}
                             onReset={() => {
@@ -855,7 +863,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                     children
                 ) : (
                     <Fragment>
-                        {view.type === 'table' && filteredProps?.selection?.length > 0 && (
+                        {view.type === 'table' && filteredProps?.selection?.length! > 0 && (
                             <div
                                 className={cn(
                                     'animate-in py-1.5 fade-in-0 slide-in-from-top-1 duration-200 transition-all ease-in-out flex items-center bg-background z-1 border-b px-6 min-h-13 justify-between border-border w-full'
@@ -927,8 +935,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     );
 }
 
-DataViews.Pagination = DataViewsTable.Pagination as React.ComponentType<any>;
-DataViews.Layout = DataViewsTable.Layout as React.ComponentType<any>;
-DataViews.Search = DataViewsTable.Search as React.ComponentType<any>;
-DataViews.Filters = DataViewsTable.Filters as React.ComponentType<any>;
-DataViews.BulkActionToolbar = DataViewsTable.BulkActionToolbar as React.ComponentType<any>;
+DataViews.Pagination = DataViewsTable.Pagination;
+DataViews.Layout = DataViewsTable.Layout;
+DataViews.Filters = DataViewsTable.Filters;
+DataViews.BulkActionToolbar = DataViewsTable.BulkActionToolbar;
