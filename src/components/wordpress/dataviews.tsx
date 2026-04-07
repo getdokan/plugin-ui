@@ -525,6 +525,25 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     } | null>(null);
     const [isConfirming, setIsConfirming] = useState(false);
 
+    // Ariakit (WP Menu) and base-ui (AlertDialog) both manipulate body scroll
+    // styles independently. When one saves the other's overflow:hidden as the
+    // "original" state, closing the dialog restores that instead of the clean
+    // state. Force-clear after all their scheduled cleanups have run.
+    const prevPendingRef = useRef(pendingDestructiveAction);
+    useEffect(() => {
+        const wasOpen = prevPendingRef.current !== null;
+        const isClosed = pendingDestructiveAction === null;
+        prevPendingRef.current = pendingDestructiveAction;
+
+        if (wasOpen && isClosed) {
+            const timer = setTimeout(() => {
+                document.body.style.overflow = '';
+                document.documentElement.style.overflow = '';
+            }, 0);
+            return () => clearTimeout(timer);
+        }
+    }, [pendingDestructiveAction]);
+
     const handleDestructiveConfirm = useCallback(async () => {
         if (pendingDestructiveAction) {
             setIsConfirming(true);
@@ -890,37 +909,39 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
             <Slot name={afterSlotId} fillProps={{ ...filteredProps }} />
 
             {/* Destructive action confirmation AlertDialog */}
-            <AlertDialog open={!!pendingDestructiveAction} onOpenChange={(open) => !open && !isConfirming && handleDestructiveCancel()}>
-                <AlertDialogContent size="default">
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>
-                            {pendingDestructiveAction?.action.confirmTitle ||
-                                (typeof pendingDestructiveAction?.action.label === 'function'
-                                    ? pendingDestructiveAction.action.label(pendingDestructiveAction.items)
-                                    : pendingDestructiveAction?.action.label)}
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                            {pendingDestructiveAction?.action.confirmMessage ||
-                                __('Are you sure? This action cannot be undone.', 'default')}
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel onClick={handleDestructiveCancel} disabled={isConfirming}>
-                            {pendingDestructiveAction?.action.cancelButtonLabel || __('Cancel', 'default')}
-                        </AlertDialogCancel>
-                        <AlertDialogAction
-                            variant="destructive"
-                            onClick={handleDestructiveConfirm}
-                            disabled={isConfirming}>
-                            {isConfirming && <Spinner className="mr-2" />}
-                            {pendingDestructiveAction?.action.confirmButtonLabel ||
-                                (typeof pendingDestructiveAction?.action.label === 'function'
-                                    ? pendingDestructiveAction.action.label(pendingDestructiveAction.items)
-                                    : pendingDestructiveAction?.action.label)}
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            {pendingDestructiveAction && (
+                <AlertDialog open onOpenChange={(open) => !open && !isConfirming && handleDestructiveCancel()}>
+                    <AlertDialogContent size="default">
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>
+                                {pendingDestructiveAction.action.confirmTitle ||
+                                    (typeof pendingDestructiveAction.action.label === 'function'
+                                        ? pendingDestructiveAction.action.label(pendingDestructiveAction.items)
+                                        : pendingDestructiveAction.action.label)}
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                                {pendingDestructiveAction.action.confirmMessage ||
+                                    __('Are you sure? This action cannot be undone.', 'default')}
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel disabled={isConfirming}>
+                                {pendingDestructiveAction.action.cancelButtonLabel || __('Cancel', 'default')}
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                                variant="destructive"
+                                onClick={handleDestructiveConfirm}
+                                disabled={isConfirming}>
+                                {isConfirming && <Spinner className="mr-2" />}
+                                {pendingDestructiveAction.action.confirmButtonLabel ||
+                                    (typeof pendingDestructiveAction.action.label === 'function'
+                                        ? pendingDestructiveAction.action.label(pendingDestructiveAction.items)
+                                        : pendingDestructiveAction.action.label)}
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            )}
         </div>
     );
 }
