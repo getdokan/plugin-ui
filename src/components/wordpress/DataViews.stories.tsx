@@ -1,6 +1,6 @@
 import type { Meta, StoryFn } from "@storybook/react";
 import { SlotFillProvider } from "@wordpress/components";
-import { Archive, Ban, CheckCircle, Eye, Mail, Pencil, Trash2, UserCheck, Users, UserX } from "lucide-react";
+import { Archive, Ban, CheckCircle, Clock, Eye, Mail, Pencil, ShieldCheck, Star, Trash2, UserCheck, UserCog, Users, UserX } from "lucide-react";
 import React, { useState } from "react";
 import { Badge, Input } from "../ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
@@ -1145,6 +1145,172 @@ LargeTextBulkActions.parameters = {
 - **Delete Permanently from System** — destructive, permanently removes items
 
 All actions support bulk selection and have async callbacks with loading states.`,
+    },
+  },
+};
+
+/** Demonstrates many tabs that wrap responsively on smaller screens. Resize the browser to see tabs stack on mobile and stay inline on desktop. */
+export const MultipleTabs: StoryFn = () => {
+  const [view, setView] = useState<DataViewState>(createDefaultView(["name", "email", "status", "role", "joinedAt"]));
+  const [selection, setSelection] = useState<string[]>([]);
+  const [activeTab, setActiveTab] = useState("all");
+  const [nameFilter, setNameFilter] = useState("");
+  const [roleFilter, setRoleFilter] = useState("");
+
+  // Extended status set for more tabs
+  const statusMap: Record<string, (user: User) => boolean> = {
+    all: () => true,
+    active: (u) => u.status === "active",
+    inactive: (u) => u.status === "inactive",
+    pending: (u) => u.status === "pending",
+    admin: (u) => u.role === "Admin",
+    editor: (u) => u.role === "Editor",
+    viewer: (u) => u.role === "Viewer",
+    manager: (u) => u.role === "Manager",
+  };
+
+  const filterFn = statusMap[activeTab] ?? statusMap.all;
+  let filteredUsers = allUsers.filter(filterFn);
+
+  // Apply search
+  const searchTerm = view.search ?? "";
+  if (searchTerm) {
+    filteredUsers = filteredUsers.filter(
+      (user) =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
+
+  // Apply filters
+  if (nameFilter) {
+    filteredUsers = filteredUsers.filter((user) =>
+      user.name.toLowerCase().includes(nameFilter.toLowerCase())
+    );
+  }
+  if (roleFilter) {
+    filteredUsers = filteredUsers.filter((user) => user.role === roleFilter);
+  }
+
+  const paginatedData = paginateData(filteredUsers, view);
+
+  const filterFields: DataViewFilterField[] = [
+    {
+      id: "name",
+      label: "Name",
+      field: (
+        <Input
+          placeholder="Filter by name..."
+          value={nameFilter}
+          onChange={(e) => {
+            setNameFilter(e.target.value);
+            setView((prev) => ({ ...prev, page: 1 }));
+          }}
+          className="w-48"
+        />
+      ),
+    },
+    {
+      id: "role",
+      label: "Role",
+      field: (
+        <Select
+          value={roleFilter}
+          onValueChange={(value) => {
+            setRoleFilter(value ?? "");
+            setView((prev) => ({ ...prev, page: 1 }));
+          }}
+        >
+          <SelectTrigger className="w-40">
+            <SelectValue placeholder="Select role" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Admin">Admin</SelectItem>
+            <SelectItem value="Editor">Editor</SelectItem>
+            <SelectItem value="Viewer">Viewer</SelectItem>
+            <SelectItem value="Manager">Manager</SelectItem>
+          </SelectContent>
+        </Select>
+      ),
+    },
+  ];
+
+  // Counts per tab
+  const tabCounts = {
+    all: allUsers.length,
+    active: allUsers.filter((u) => u.status === "active").length,
+    inactive: allUsers.filter((u) => u.status === "inactive").length,
+    pending: allUsers.filter((u) => u.status === "pending").length,
+    admin: allUsers.filter((u) => u.role === "Admin").length,
+    editor: allUsers.filter((u) => u.role === "Editor").length,
+    viewer: allUsers.filter((u) => u.role === "Viewer").length,
+    manager: allUsers.filter((u) => u.role === "Manager").length,
+  };
+
+  return (
+    <div className="p-4">
+      <DataViews<User>
+        namespace="dataviews-demo"
+        data={paginatedData}
+        fields={fields}
+        view={view}
+        onChangeView={setView}
+        search
+        searchPlaceholder="Search users..."
+        actions={actions}
+        selection={selection}
+        onChangeSelection={setSelection}
+        paginationInfo={{
+          totalItems: filteredUsers.length,
+          totalPages: getTotalPages(filteredUsers.length, view.perPage),
+        }}
+        getItemId={(item) => item.id}
+        tabs={{
+          items: [
+            { label: "All", value: "all", icon: Users, count: tabCounts.all },
+            { label: "Active", value: "active", icon: UserCheck, count: tabCounts.active },
+            { label: "Inactive", value: "inactive", icon: UserX, count: tabCounts.inactive },
+            { label: "Pending", value: "pending", icon: Clock, count: tabCounts.pending },
+            { label: "Admins", value: "admin", icon: ShieldCheck, count: tabCounts.admin },
+            { label: "Editors", value: "editor", icon: UserCog, count: tabCounts.editor },
+            { label: "Viewers", value: "viewer", icon: Eye, count: tabCounts.viewer },
+            { label: "Managers", value: "manager", icon: Star, count: tabCounts.manager },
+          ],
+          defaultValue: "all",
+          onSelect: (value) => {
+            setActiveTab(value);
+            setSelection([]);
+            setView((prev) => ({ ...prev, page: 1 }));
+          },
+        }}
+        filter={{
+          fields: filterFields,
+          onReset: () => {
+            setNameFilter("");
+            setRoleFilter("");
+            setView((prev) => ({ ...prev, page: 1 }));
+          },
+          onFilterRemove: (filterId) => {
+            if (filterId === "name") setNameFilter("");
+            if (filterId === "role") setRoleFilter("");
+            setView((prev) => ({ ...prev, page: 1 }));
+          },
+        }}
+      />
+    </div>
+  );
+};
+MultipleTabs.storyName = "Multiple Tabs (Responsive)";
+MultipleTabs.parameters = {
+  docs: {
+    description: {
+      story: `Demonstrates 8 tabs with icons, counts, and filters. On mobile viewports the tabs wrap into multiple rows; on desktop they stay in a single line.
+
+- **Status tabs**: All, Active, Inactive, Pending
+- **Role tabs**: Admins, Editors, Viewers, Managers
+- **Filters**: Name (text input) and Role (select dropdown)
+
+Each tab shows its item count as a badge. Click the filter icon next to the tabs to add filters. Resize the viewport or use the Storybook viewport addon to see the responsive wrapping behavior.`,
     },
   },
 };
