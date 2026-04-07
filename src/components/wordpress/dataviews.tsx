@@ -640,7 +640,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
             return;
         }
 
-        const targetType = windowWidth! <= 768 ? 'list' : 'table';
+        const targetType = windowWidth !== null && windowWidth <= 768 ? 'list' : 'table';
 
         if (view.type !== targetType) {
             onChangeView({
@@ -863,7 +863,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                     children
                 ) : (
                     <Fragment>
-                        {view.type === 'table' && filteredProps?.selection?.length! > 0 && (
+                        {view.type === 'table' && (filteredProps?.selection?.length ?? 0) > 0 && (
                             <div
                                 className={cn(
                                     'animate-in py-1.5 fade-in-0 slide-in-from-top-1 duration-200 transition-all ease-in-out flex items-center bg-background z-1 border-b px-6 min-h-13 justify-between border-border w-full'
