@@ -1154,6 +1154,8 @@ export const MultipleTabs: StoryFn = () => {
   const [view, setView] = useState<DataViewState>(createDefaultView(["name", "email", "status", "role", "joinedAt"]));
   const [selection, setSelection] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState("all");
+  const [nameFilter, setNameFilter] = useState("");
+  const [roleFilter, setRoleFilter] = useState("");
 
   // Extended status set for more tabs
   const statusMap: Record<string, (user: User) => boolean> = {
@@ -1180,7 +1182,58 @@ export const MultipleTabs: StoryFn = () => {
     );
   }
 
+  // Apply filters
+  if (nameFilter) {
+    filteredUsers = filteredUsers.filter((user) =>
+      user.name.toLowerCase().includes(nameFilter.toLowerCase())
+    );
+  }
+  if (roleFilter) {
+    filteredUsers = filteredUsers.filter((user) => user.role === roleFilter);
+  }
+
   const paginatedData = paginateData(filteredUsers, view);
+
+  const filterFields: DataViewFilterField[] = [
+    {
+      id: "name",
+      label: "Name",
+      field: (
+        <Input
+          placeholder="Filter by name..."
+          value={nameFilter}
+          onChange={(e) => {
+            setNameFilter(e.target.value);
+            setView((prev) => ({ ...prev, page: 1 }));
+          }}
+          className="w-48"
+        />
+      ),
+    },
+    {
+      id: "role",
+      label: "Role",
+      field: (
+        <Select
+          value={roleFilter}
+          onValueChange={(value) => {
+            setRoleFilter(value ?? "");
+            setView((prev) => ({ ...prev, page: 1 }));
+          }}
+        >
+          <SelectTrigger className="w-40">
+            <SelectValue placeholder="Select role" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Admin">Admin</SelectItem>
+            <SelectItem value="Editor">Editor</SelectItem>
+            <SelectItem value="Viewer">Viewer</SelectItem>
+            <SelectItem value="Manager">Manager</SelectItem>
+          </SelectContent>
+        </Select>
+      ),
+    },
+  ];
 
   // Counts per tab
   const tabCounts = {
@@ -1230,6 +1283,19 @@ export const MultipleTabs: StoryFn = () => {
             setView((prev) => ({ ...prev, page: 1 }));
           },
         }}
+        filter={{
+          fields: filterFields,
+          onReset: () => {
+            setNameFilter("");
+            setRoleFilter("");
+            setView((prev) => ({ ...prev, page: 1 }));
+          },
+          onFilterRemove: (filterId) => {
+            if (filterId === "name") setNameFilter("");
+            if (filterId === "role") setRoleFilter("");
+            setView((prev) => ({ ...prev, page: 1 }));
+          },
+        }}
       />
     </div>
   );
@@ -1238,12 +1304,13 @@ MultipleTabs.storyName = "Multiple Tabs (Responsive)";
 MultipleTabs.parameters = {
   docs: {
     description: {
-      story: `Demonstrates 8 tabs with icons and counts. On mobile viewports the tabs wrap into multiple rows; on desktop they stay in a single line.
+      story: `Demonstrates 8 tabs with icons, counts, and filters. On mobile viewports the tabs wrap into multiple rows; on desktop they stay in a single line.
 
 - **Status tabs**: All, Active, Inactive, Pending
 - **Role tabs**: Admins, Editors, Viewers, Managers
+- **Filters**: Name (text input) and Role (select dropdown)
 
-Each tab shows its item count as a badge. Resize the viewport or use the Storybook viewport addon to see the responsive wrapping behavior.`,
+Each tab shows its item count as a badge. Click the filter icon next to the tabs to add filters. Resize the viewport or use the Storybook viewport addon to see the responsive wrapping behavior.`,
     },
   },
 };
