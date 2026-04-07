@@ -75,12 +75,7 @@
 .pui-root-dataviews .dataviews-wrapper .dataviews-view-table tr th:first-child {
     padding-left: 20px !important;
 }
-.pui-root-dataviews
-    .dataviews-wrapper
-    .dataviews-view-table.has-bulk-actions
-    .components-checkbox-control__input.components-checkbox-control__input {
-    opacity: 1;
-}
+
 .pui-root-dataviews .dataviews-wrapper .dataviews-view-table tr td:last-child,
 .pui-root-dataviews .dataviews-wrapper .dataviews-view-table tr th:last-child {
     padding-right: 20px !important;
