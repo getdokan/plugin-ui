@@ -82,7 +82,7 @@ function updateUrlQueryParams(params: Record<string, string | number | null | un
  */
 function getQueryParamsFromView(view: View, tabViewKey: string): Record<string, string | number | null | undefined> {
     const v = view as View & {
-        [key: string]: any;
+        [key: string]: unknown;
     };
 
     const perPage = v.perPage ?? v.per_page;
@@ -91,13 +91,13 @@ function getQueryParamsFromView(view: View, tabViewKey: string): Record<string, 
         typeof v.filters === 'object' && Object.keys(v.filters).length > 0 ? JSON.stringify(v.filters) : null;
 
     // Start with the core pieces of state we always want in the URL.
-    const params: Record<string, any> = {
+    const params: Record<string, string | number | null | undefined> = {
         // Use `current_page` instead of `page` so we don't conflict with
         // WordPress admin's own `page` query param (e.g. ?page=plugin-ui-test).
         current_page: v.page ?? null,
-        per_page: perPage ?? null,
+        per_page: (perPage as number) ?? null,
         search: v.search ?? '',
-        [tabViewKey]: v[tabViewKey] ?? '',
+        [tabViewKey]: (v[tabViewKey] as string) ?? '',
         filters
     };
 
@@ -519,9 +519,9 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
 
     // --- Destructive action confirmation via AlertDialog ---
     const [pendingDestructiveAction, setPendingDestructiveAction] = useState<{
-        action: DataViewAction<Item> & { callback: (...args: any[]) => void };
+        action: DataViewAction<Item> & { callback: (items: Item[], context: unknown) => void };
         items: Item[];
-        context: any;
+        context: unknown;
     } | null>(null);
     const [isConfirming, setIsConfirming] = useState(false);
 
@@ -560,8 +560,9 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                 const originalCallback = action.callback;
                 return {
                     ...action,
-                    callback: (items: Item[], context: any) => {
+                    callback: (items: Item[], context: unknown) => {
                         setPendingDestructiveAction({
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             action: { ...action, callback: originalCallback } as any,
                             items,
                             context
@@ -594,11 +595,13 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
         fields: view.fields?.length ? view.fields : fields.map((f) => f.id)
     };
 
-    const handleViewChange = (nextView: View) => {
+    const tabViewKey = tabs?.viewKey ?? 'status';
+
+    const handleViewChange = useCallback((nextView: View) => {
         // Sync key pieces of state into the URL so that the UI is shareable and bookmarkable.
         updateUrlQueryParams(getQueryParamsFromView(nextView, tabViewKey));
         onChangeView(nextView);
-    };
+    }, [tabViewKey, onChangeView]);
 
     const baseProps = {
         ...dataViewsTableProps,
@@ -694,7 +697,6 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     // Backward compatibility: prefer modern keys and fallback to deprecated aliases.
     const tabItems = resolvedTabsConfig?.items ?? resolvedTabsConfig?.tabs ?? [];
     const defaultTabValue = resolvedTabsConfig?.defaultValue ?? tabItems[0]?.value;
-    const tabViewKey = resolvedTabsConfig?.viewKey ?? 'status';
     const headerContent = resolvedTabsConfig?.headerContent ?? resolvedTabsConfig?.headerSlot ?? [];
 
     const paginationDetails = filteredProps.paginationInfo;
@@ -937,5 +939,6 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
 
 DataViews.Pagination = DataViewsTable.Pagination;
 DataViews.Layout = DataViewsTable.Layout;
+DataViews.Search = DataViewsTable.Search as React.NamedExoticComponent<{ label?: string }>;
 DataViews.Filters = DataViewsTable.Filters;
 DataViews.BulkActionToolbar = DataViewsTable.BulkActionToolbar;
