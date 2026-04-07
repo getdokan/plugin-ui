@@ -537,8 +537,15 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
 
         if (wasOpen && isClosed) {
             const timer = setTimeout(() => {
-                document.body.style.overflow = '';
-                document.documentElement.style.overflow = '';
+                const hasOpenOverlay =
+                    document.documentElement.hasAttribute('data-base-ui-scroll-locked') ||
+                    document.documentElement.classList.contains('lockscroll') ||
+                    document.querySelector('[data-dialog-prevent-body-scroll]') !== null;
+
+                if (!hasOpenOverlay) {
+                    document.body.style.overflow = '';
+                    document.documentElement.style.overflow = '';
+                }
             }, 0);
             return () => clearTimeout(timer);
         }
