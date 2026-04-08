@@ -5,6 +5,7 @@ import { Dialog as SheetPrimitive } from "@base-ui/react/dialog"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { useThemeOptional, defaultCssVariables } from "@/providers"
 import { XIcon } from "lucide-react"
 
 function Sheet({ ...props }: SheetPrimitive.Root.Props) {
@@ -43,8 +44,12 @@ function SheetContent({
   side?: "top" | "right" | "bottom" | "left"
   showCloseButton?: boolean
 }) {
+  const theme = useThemeOptional();
+  const mode = theme?.mode ?? "light";
+  const cssVariables = theme?.cssVariables ?? defaultCssVariables;
+
   return (
-    <SheetPortal className="pui-root">
+    <SheetPortal className={cn("pui-root", mode)} style={cssVariables}>
       <SheetOverlay />
       <SheetPrimitive.Popup
         data-slot="sheet-content"
