@@ -868,7 +868,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                         {view.type === 'table' && (filteredProps?.selection?.length ?? 0) > 0 && (
                             <div
                                 className={cn(
-                                    'animate-in py-1.5 fade-in-0 slide-in-from-top-1 duration-200 transition-all ease-in-out flex items-center bg-background z-1 border-b px-5 min-h-13 justify-between border-border w-full'
+                                    'animate-in py-1.5 fade-in-0 slide-in-from-top-1 duration-200 transition-all ease-in-out flex items-center bg-background z-1 border-b px-5 min-h-13 justify-between border-border rounded-t-md w-full'
                                 )}
                                 style={theadHeight ? { marginBottom: -theadHeight, minHeight: theadHeight } : undefined}>
                                 <DataViewsTable.BulkActionToolbar />
