@@ -526,26 +526,15 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     const [isConfirming, setIsConfirming] = useState(false);
 
     // Ariakit (WP Menu) and base-ui (AlertDialog) both manipulate body scroll
-    // styles independently. When one saves the other's overflow:hidden as the
-    // "original" state, closing the dialog restores that instead of the clean
-    // state. Force-clear after all their scheduled cleanups have run.
-    const prevPendingRef = useRef(pendingDestructiveAction);
+    // styles independently. Force hidden when open, clear when closed.
     useEffect(() => {
-        const wasOpen = prevPendingRef.current !== null;
-        const isClosed = pendingDestructiveAction === null;
-        prevPendingRef.current = pendingDestructiveAction;
-
-        if (wasOpen && isClosed) {
+        if (pendingDestructiveAction) {
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
+        } else {
             const timer = setTimeout(() => {
-                const hasOpenOverlay =
-                    document.documentElement.hasAttribute('data-base-ui-scroll-locked') ||
-                    document.documentElement.classList.contains('lockscroll') ||
-                    document.querySelector('[data-dialog-prevent-body-scroll]') !== null;
-
-                if (!hasOpenOverlay) {
-                    document.body.style.overflow = '';
-                    document.documentElement.style.overflow = '';
-                }
+                document.body.style.overflow = '';
+                document.documentElement.style.overflow = '';
             }, 0);
             return () => clearTimeout(timer);
         }
@@ -623,11 +612,14 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
 
     const tabViewKey = tabs?.viewKey ?? 'status';
 
-    const handleViewChange = useCallback((nextView: View) => {
-        // Sync key pieces of state into the URL so that the UI is shareable and bookmarkable.
-        updateUrlQueryParams(getQueryParamsFromView(nextView, tabViewKey));
-        onChangeView(nextView);
-    }, [tabViewKey, onChangeView]);
+    const handleViewChange = useCallback(
+        (nextView: View) => {
+            // Sync key pieces of state into the URL so that the UI is shareable and bookmarkable.
+            updateUrlQueryParams(getQueryParamsFromView(nextView, tabViewKey));
+            onChangeView(nextView);
+        },
+        [tabViewKey, onChangeView]
+    );
 
     const baseProps = {
         ...dataViewsTableProps,
@@ -896,7 +888,9 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                                 className={cn(
                                     'animate-in py-1.5 fade-in-0 slide-in-from-top-1 duration-200 transition-all ease-in-out flex items-center bg-background z-1 border-b px-5 min-h-13 justify-between border-border rounded-t-md w-full'
                                 )}
-                                style={theadHeight ? { marginBottom: -theadHeight, minHeight: theadHeight } : undefined}>
+                                style={
+                                    theadHeight ? { marginBottom: -theadHeight, minHeight: theadHeight } : undefined
+                                }>
                                 <DataViewsTable.BulkActionToolbar />
                             </div>
                         )}
@@ -928,7 +922,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
             {/* Destructive action confirmation AlertDialog */}
             {pendingDestructiveAction && (
                 <AlertDialog open onOpenChange={(open) => !open && !isConfirming && handleDestructiveCancel()}>
-                    <AlertDialogContent size="default">
+                    <AlertDialogContent className="pui-dataview-alert-dialog" size="default">
                         <AlertDialogHeader>
                             <AlertDialogTitle>
                                 {pendingDestructiveAction.action.confirmTitle ||
