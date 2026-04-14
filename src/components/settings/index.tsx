@@ -24,6 +24,8 @@ export function Settings({
     hookPrefix = 'plugin_ui',
     className,
     applyFilters,
+    initialPage,
+    onNavigate,
 }: SettingsProps) {
     return (
         <SettingsProvider
@@ -35,6 +37,8 @@ export function Settings({
             loading={loading}
             hookPrefix={hookPrefix}
             applyFilters={applyFilters}
+            initialPage={initialPage}
+            onNavigate={onNavigate}
         >
             <SettingsInner
                 title={title}

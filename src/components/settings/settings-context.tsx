@@ -96,6 +96,10 @@ export interface SettingsProviderProps {
     hookPrefix?: string;
     /** Optional filter function for extensibility (e.g. @wordpress/hooks applyFilters) */
     applyFilters?: ApplyFiltersFunction;
+    /** Page ID to activate on mount (e.g. read from a URL query param). Falls back to the first page. */
+    initialPage?: string;
+    /** Called whenever the active page changes. Use to sync a URL query param. */
+    onNavigate?: (pageId: string) => void;
 }
 
 export function SettingsProvider({
@@ -108,6 +112,8 @@ export function SettingsProvider({
     loading = false,
     hookPrefix = 'plugin_ui',
     applyFilters: applyFiltersProp,
+    initialPage,
+    onNavigate,
 }: SettingsProviderProps) {
     // Format schema (handles both flat and hierarchical)
     const schema = useMemo(() => formatSettingsData(rawSchema), [rawSchema]);
@@ -198,21 +204,21 @@ export function SettingsProvider({
         setPrevLoading(loading);
     }, [defaultValues, externalValues, loading, prevLoading]);
 
-    // Auto-select first page/subpage on schema load
+    // Auto-select page/subpage on schema load.
+    // Prefers initialPage (e.g. from a URL query param) over the first page.
     useEffect(() => {
         if (schema.length > 0 && !activePage) {
-            const firstPage = schema[0];
-            setActivePage(firstPage.id);
+            const targetPage = (initialPage && schema.find((p) => p.id === initialPage)) || schema[0];
+            setActivePage(targetPage.id);
 
-            const firstSubpage = firstPage.children?.find((c) => c.type === 'subpage');
+            const firstSubpage = targetPage.children?.find((c) => c.type === 'subpage');
             if (firstSubpage) {
                 setActiveSubpage(firstSubpage.id);
                 const firstTab = firstSubpage.children?.find((c) => c.type === 'tab');
                 if (firstTab) setActiveTab(firstTab.id);
             } else {
-                // Page without subpages — check for direct tabs
                 setActiveSubpage('');
-                const firstTab = firstPage.children?.find((c) => c.type === 'tab');
+                const firstTab = targetPage.children?.find((c) => c.type === 'tab');
                 setActiveTab(firstTab?.id || '');
             }
         }
@@ -361,6 +367,7 @@ export function SettingsProvider({
     const handleSetActivePage = useCallback(
         (pageId: string) => {
             setActivePage(pageId);
+            onNavigate?.(pageId);
             const page = schema.find((p) => p.id === pageId);
             if (page?.children?.length) {
                 const firstSubpage = page.children.find((c) => c.type === 'subpage');
@@ -376,7 +383,7 @@ export function SettingsProvider({
                 }
             }
         },
-        [schema]
+        [schema, onNavigate]
     );
 
     const handleSetActiveSubpage = useCallback(
