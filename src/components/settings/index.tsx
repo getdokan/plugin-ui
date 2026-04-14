@@ -4,6 +4,7 @@ import { Button } from '../ui/button';
 import { SettingsProvider } from './settings-context';
 import { SettingsSidebar } from './settings-sidebar';
 import { SettingsContent } from './settings-content';
+import { SettingsSkeleton } from './settings-skeleton';
 import { useSettings } from './settings-context';
 import type { SettingsProps } from './settings-types';
 import { Menu, X } from 'lucide-react';
@@ -71,13 +72,7 @@ function SettingsInner({
     }, [activeSubpage, prevSubpage]);
 
     if (loading) {
-        return (
-            <div className={cn('flex items-center justify-center min-h-96', className)}>
-                <div className="flex flex-col items-center gap-3">
-                    <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent" />
-                </div>
-            </div>
-        );
+        return <SettingsSkeleton className={className} />;
     }
 
     return (

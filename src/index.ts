@@ -362,6 +362,7 @@ export {
     type SettingsElement,
     type FieldComponentProps,
 } from './components/settings';
+export { SettingsSkeleton } from './components/settings/settings-skeleton';
 
 // ============================================
 // Theme Presets
