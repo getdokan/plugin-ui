@@ -333,6 +333,12 @@ export { MatricsPill, type MatricsPillProps } from './components/matrics-pill';
 export { FileUpload, type FileUploadProps } from './components/file-upload';
 export { FileView, type FileViewProps, } from './components/file-view';
 export {
+    WpMediaUpload,
+    type WpMediaUploadProps,
+    WpMediaUploadMultiple,
+    type WpMediaUploadMultipleProps,
+} from './components/wordpress/WpMediaUpload';
+export {
     Logo,
     type LogoProps,
     YoutubeCircleLightLogo,

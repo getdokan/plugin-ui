@@ -51,41 +51,27 @@ export default function wpMedia(
     callback: ( media: IWpMediaData ) => void,
     media?: null
 ) {
-    let fileFrame = null;
-
-    if ( fileFrame ) {
-        fileFrame.open();
-        return;
-    }
-
     const mediaOptions = {
         title: 'Select',
         button: {
             text: 'Select',
-            close: false,
         },
         multiple: false,
     };
 
     // @ts-expect-error wp.media is not defined in the global scope
-    fileFrame = media ? media : wp.media( mediaOptions );
+    const fileFrame = media ? media : wp.media( mediaOptions );
 
-    fileFrame.on( 'select', () => {
+    fileFrame.once( 'select', () => {
         const selection = fileFrame.state().get( 'selection' );
 
-        const files = selection.map( ( attachment ) => {
+        const files = selection.map( ( attachment: { toJSON: () => IWpMedia } ) => {
             return attachment.toJSON();
         } );
 
         const file = files.pop();
 
         callback( file );
-        console.log(fileFrame);
-        fileFrame = null;
-    } );
-
-    fileFrame.on( 'close', () => {
-        fileFrame = null;
     } );
 
     fileFrame.open();

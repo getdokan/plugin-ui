@@ -4,6 +4,7 @@ import { FieldRenderer } from './field-renderer';
 import { cn } from '@/lib/utils';
 import { FileText, Info } from "lucide-react";
 import { ScrollArea, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 import { RawHTML } from "@wordpress/element";
 
 // ============================================
@@ -137,7 +138,14 @@ export function SettingsContent({ className }: { className?: string }) {
               >
                   {renderSaveButton
                     ? renderSaveButton({ scopeId, dirty, hasErrors, onSave: handleSave })
-                    : null}
+                    : (
+                      <Button
+                        onClick={handleSave}
+                        disabled={!dirty || hasErrors}
+                      >
+                        Save Changes
+                      </Button>
+                    )}
               </div>
             )}
 

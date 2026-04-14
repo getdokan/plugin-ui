@@ -21,6 +21,8 @@ import {
     RichTextField,
     GoogleAnalyticsField,
     CombineInputField,
+    WpMediaUploadField,
+    WpMediaUploadMultipleField,
 } from './fields';
 
 // ============================================
@@ -221,6 +223,20 @@ export function FieldRenderer({
             return applyFilters(
                 `${filterPrefix}_settings_info_field`,
                 <InfoField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'wp_media_upload':
+            return applyFilters(
+                `${filterPrefix}_settings_wp_media_upload_field`,
+                <WpMediaUploadField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'wp_media_upload_multiple':
+            return applyFilters(
+                `${filterPrefix}_settings_wp_media_upload_multiple_field`,
+                <WpMediaUploadMultipleField {...fieldProps} />,
                 mergedElement
             );
 
