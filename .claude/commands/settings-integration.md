@@ -272,8 +272,6 @@ const MyApp = () => {
     );
     const { initialPage, onNavigate } = useSettingsPage();
 
-    if (isLoading) return <div className="p-6"><p>{__('Loading...', 'my-plugin')}</p></div>;
-
     return (
         <ThemeProvider pluginId="my-plugin" tokens={{ primary: '#6366f1', primaryForeground: '#ffffff' }}>
             <div className="pui-root your-plugin-root">
@@ -281,6 +279,7 @@ const MyApp = () => {
                     title={__('My Plugin Settings', 'my-plugin')}
                     schema={schema}
                     values={values}
+                    loading={isLoading}
                     onChange={onChange}
                     onSave={onSave}
                     initialPage={initialPage}
@@ -292,6 +291,8 @@ const MyApp = () => {
     );
 };
 ```
+
+Pass `loading={isLoading}` directly to `<Settings>` — it renders a `<SettingsSkeleton>` automatically while data loads. No manual loading guard needed.
 
 ### 2. useSettings Hook
 
