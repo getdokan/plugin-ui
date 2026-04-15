@@ -5328,7 +5328,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "dependency_key": "vendor_onboarding.vendor_setup_wizard_logo",
                                 "dependencies": [],
                                 "validations": [],
-                                "variant": "file_upload",
+                                "variant": "wp_media_upload",
                                 "value": "",
                                 "default": "",
                                 "placeholder": "+ Choose File",

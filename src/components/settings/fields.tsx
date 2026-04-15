@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { WpMediaUpload, WpMediaUploadMultiple } from '../wordpress/WpMediaUpload';
 import { cn } from "@/lib/utils";
 import * as LucideIcons from "lucide-react";
 import { FileText, Info, Eye, EyeOff, ArrowUpRight, RefreshCcw } from "lucide-react";
@@ -926,6 +927,40 @@ export function CombineInputField({ element, onChange, ...rest }: FieldComponent
         onNumberChange={(val) =>
           onChange(element.dependency_key!, { ...value, [numberKey]: val })
         }
+      />
+    </FieldWrapper>
+  );
+}
+
+// ============================================
+// WP Media Upload Fields
+// ============================================
+
+export function WpMediaUploadField({ element, onChange, ...rest }: FieldComponentProps) {
+  return (
+    <FieldWrapper element={element} layout={element.layout ?? 'horizontal'} {...rest}>
+      <WpMediaUpload
+        value={String(element.value ?? '')}
+        onChange={(url) => onChange(element.dependency_key!, url)}
+        btnText={element.placeholder ? String(element.placeholder) : undefined}
+        disabled={element.disabled}
+      />
+    </FieldWrapper>
+  );
+}
+
+export function WpMediaUploadMultipleField({ element, onChange, ...rest }: FieldComponentProps) {
+  const currentValue = Array.isArray(element.value)
+    ? (element.value as string[])
+    : element.value ? [String(element.value)] : [];
+
+  return (
+    <FieldWrapper element={element} layout={element.layout ?? 'horizontal'} {...rest}>
+      <WpMediaUploadMultiple
+        value={currentValue}
+        onChange={(urls) => onChange(element.dependency_key!, urls)}
+        btnText={element.placeholder ? String(element.placeholder) : undefined}
+        disabled={element.disabled}
       />
     </FieldWrapper>
   );

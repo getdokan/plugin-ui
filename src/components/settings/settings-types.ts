@@ -174,6 +174,10 @@ export interface SettingsProps {
      * If not provided, fields render without filtering.
      */
     applyFilters?: (hookName: string, value: any, ...args: any[]) => any;
+    /** Page ID to activate on mount (e.g. read from a URL query param). Falls back to the first page. */
+    initialPage?: string;
+    /** Called whenever the active page changes. Use to sync a URL query param. */
+    onNavigate?: (pageId: string) => void;
 }
 
 export interface FieldComponentProps {

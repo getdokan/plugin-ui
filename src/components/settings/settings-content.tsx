@@ -4,6 +4,7 @@ import { FieldRenderer } from './field-renderer';
 import { cn } from '@/lib/utils';
 import { FileText, Info } from "lucide-react";
 import { ScrollArea, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 import { RawHTML } from "@wordpress/element";
 
 // ============================================
@@ -42,7 +43,8 @@ export function SettingsContent({ className }: { className?: string }) {
     };
 
     // Determine whether to show a save area
-    const showSaveArea = Boolean(save);
+    // Hidden when the active page/subpage sets hide_save: true (e.g. License page)
+    const showSaveArea = Boolean(save) && !contentSource?.hide_save;
 
     if (!contentSource) {
         return (
@@ -54,6 +56,7 @@ export function SettingsContent({ className }: { className?: string }) {
         <ScrollArea className={cn('flex flex-col overflow-y-auto', className)} data-testid="settings-content">
             <div className="flex-1">
                 {/* Heading */}
+                {!contentSource.hide_heading && (
                 <div className="px-6 pt-6 pb-4" data-testid={`settings-heading-${contentSource.id}`}>
                     <div className="flex justify-between items-start">
                         <div className="flex flex-col gap-2">
@@ -81,6 +84,7 @@ export function SettingsContent({ className }: { className?: string }) {
                         )}
                     </div>
                 </div>
+                )}
 
                 {/* Tabs */}
                 {tabs.length > 0 && (
@@ -137,7 +141,14 @@ export function SettingsContent({ className }: { className?: string }) {
               >
                   {renderSaveButton
                     ? renderSaveButton({ scopeId, dirty, hasErrors, onSave: handleSave })
-                    : null}
+                    : (
+                      <Button
+                        onClick={handleSave}
+                        disabled={!dirty || hasErrors}
+                      >
+                        Save Changes
+                      </Button>
+                    )}
               </div>
             )}
 
@@ -168,8 +179,12 @@ function ContentBlock({ element }: { element: SettingsElementType }) {
             );
 
         case 'field':
-            // Direct field under a subpage (no section wrapper)
-            // Wrap in a minimal card for consistent styling
+            // Direct field under a page (no section wrapper).
+            // Fields with no_wrap skip the card — e.g. the license variant
+            // which brings its own full-width card UI.
+            if (element.no_wrap) {
+                return <FieldRenderer element={element} />;
+            }
             return (
                 <div className="rounded-lg border border-border bg-card overflow-hidden" data-testid={`settings-field-block-${element.id}`}>
                     <FieldRenderer element={element} />

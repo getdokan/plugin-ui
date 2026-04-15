@@ -354,9 +354,13 @@ export function License({
               {hasActive ? (
                 <>
                   <AlertDialog open={deactivateDialogOpen} onOpenChange={(open) => { if (!loading) setDeactivateDialogOpen(open); }}>
-                    <AlertDialogTrigger>
-                      <Button variant="destructive" size="sm" disabled={loading}>{labels.deactivateButton}</Button>
-                    </AlertDialogTrigger>
+                    <AlertDialogTrigger
+                      render={ ( props ) => (
+                        <Button { ...props } variant="destructive" size="sm" disabled={ loading }>
+                          { labels.deactivateButton }
+                        </Button>
+                      ) }
+                    />
                     <AlertDialogContent>
                       <AlertDialogHeader>
                         <AlertDialogTitle className="p-0! m-0!">

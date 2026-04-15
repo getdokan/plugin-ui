@@ -16,6 +16,7 @@ Reusable UI components for WordPress plugins. Built with React and designed to w
 - [Project Structure](#project-structure)
 - [Available Scripts](#available-scripts)
 - [Peer Dependencies](#peer-dependencies)
+- [Claude Code Integration](#claude-code-integration)
 - [License](#license)
 
 ## Installation
@@ -523,6 +524,72 @@ npm run lint
    rm -rf node_modules package-lock.json
    npm install
    ```
+
+## Claude Code Integration
+
+This repository ships a **Claude Code skill** that provides AI-assisted guidance for integrating plugin-ui's `<Settings>` component into a WordPress plugin.
+
+### What the skill covers
+
+- First-time setup (install from GitHub or local path)
+- PHP backend: `AbstractSettingsSchema`, field definitions, section-grouped save payload, WP REST arg alignment, partial save / merge pattern
+- Frontend: `useSettings` hook, `useSettingsPage` hook, app structure with `ThemeProvider + Settings + Toaster`
+- CSS: scoped Tailwind preflight/utilities, WordPress admin heading/paragraph resets, Tailwind v3/v4 transform conflict fix
+- Extending fields via filter hooks (`applyFilters`, custom variants)
+- PHPUnit REST API testing (`WP_Test_REST_TestCase`)
+- Common pitfalls checklist
+
+### Requirements
+
+[Claude Code](https://claude.ai/code) CLI installed and running inside your WordPress plugin project.
+
+### Usage
+
+The skill is available as `/settings-integration`. Open Claude Code in your WordPress plugin project and run:
+
+```
+/settings-integration
+```
+
+Claude will read your current codebase to understand the integration state, then guide, scaffold, or fix whatever you ask — for example:
+
+```
+/settings-integration Add a new "Appearance" settings page with color picker fields
+```
+
+```
+/settings-integration Why is my onesignal save returning a 400 error?
+```
+
+```
+/settings-integration Generate the PHPUnit tests for my SettingsController
+```
+
+### Skill file location
+
+The skill file lives in this repository:
+
+```
+plugin-ui/.claude/commands/settings-integration.md
+```
+
+Claude Code only loads slash commands from the `.claude/commands/` directory of the **currently open project**. To use this skill in your plugin, copy it in:
+
+```bash
+mkdir -p .claude/commands
+cp node_modules/@wedevs/plugin-ui/.claude/commands/settings-integration.md .claude/commands/
+```
+
+Or if plugin-ui is a local sibling:
+
+```bash
+mkdir -p .claude/commands
+cp ../plugin-ui/.claude/commands/settings-integration.md .claude/commands/
+```
+
+After copying, the `/settings-integration` command will appear in Claude Code when working in your plugin. Re-copy whenever plugin-ui releases an updated version of the skill.
+
+---
 
 ## License
 
