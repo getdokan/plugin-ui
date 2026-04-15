@@ -102,40 +102,34 @@ export const Disabled: SingleStory = {
 };
 
 /** Interactive — click "Upload Image" to simulate a media library selection. */
+function InteractiveRender( args: React.ComponentProps<typeof WpMediaUpload> ) {
+    const [ value, setValue ] = useState( args.value ?? '' );
+    return <WpMediaUpload { ...args } value={ value } onChange={ setValue } />;
+}
+
 export const Interactive: SingleStory = {
-    render: ( args ) => {
-        const [ value, setValue ] = useState( args.value ?? '' );
-        return <WpMediaUpload { ...args } value={ value } onChange={ setValue } />;
-    },
+    render: ( args ) => <InteractiveRender { ...args } />,
     args: {},
 };
 
 // ── Multiple ──────────────────────────────────────────────────────────────────
 
+function MultipleRender( { initial = [] }: { initial?: string[] } ) {
+    const [ values, setValues ] = useState<string[]>( initial );
+    mockWpMedia( true );
+    return (
+        <WpMediaUploadMultiple
+            value={ values }
+            onChange={ setValues }
+            btnText="Add Images"
+        />
+    );
+}
+
 export const Multiple: StoryObj<typeof WpMediaUploadMultiple> = {
-    render: () => {
-        const [ values, setValues ] = useState<string[]>( [] );
-        mockWpMedia( true );
-        return (
-            <WpMediaUploadMultiple
-                value={ values }
-                onChange={ setValues }
-                btnText="Add Images"
-            />
-        );
-    },
+    render: () => <MultipleRender />,
 };
 
 export const MultipleWithExisting: StoryObj<typeof WpMediaUploadMultiple> = {
-    render: () => {
-        const [ values, setValues ] = useState<string[]>( SAMPLE_IMAGES );
-        mockWpMedia( true );
-        return (
-            <WpMediaUploadMultiple
-                value={ values }
-                onChange={ setValues }
-                btnText="Add Images"
-            />
-        );
-    },
+    render: () => <MultipleRender initial={ SAMPLE_IMAGES } />,
 };
