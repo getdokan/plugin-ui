@@ -18,6 +18,16 @@ import {
 
 import { cn } from "@/lib/utils";
 
+interface RichTextEditorContentAction {
+  show?: boolean;
+  showContent?: boolean;
+  title?: string;
+  icon?: React.ReactNode;
+  content?: React.ReactNode;
+  onClick?: () => void;
+  className?: string;
+}
+
 interface RichTextEditorProps {
   value?: string;
   defaultValue?: string;
@@ -25,6 +35,7 @@ interface RichTextEditorProps {
   placeholder?: string;
   className?: string;
   variant?: "full" | "simple";
+  contentAction?: RichTextEditorContentAction;
 }
 
 function RichTextEditor({
@@ -34,6 +45,7 @@ function RichTextEditor({
   placeholder = "Start typing...",
   className = "",
   variant = "full",
+  contentAction,
 }: RichTextEditorProps) {
   const editorRef = React.useRef<HTMLDivElement>(null);
   const [fontSize, setFontSize] = React.useState("14 px");
@@ -89,6 +101,12 @@ function RichTextEditor({
     };
     executeCommand("formatBlock", formatMap[e.target.value] || "p");
   };
+
+  const showContentAction = contentAction?.show ?? false;
+  const showContentActionContent = contentAction?.showContent ?? false;
+  const contentActionIcon = contentAction?.icon === undefined
+    ? <Sparkles className="size-4 text-muted-foreground" />
+    : contentAction.icon;
 
   return (
     <div
@@ -312,12 +330,20 @@ function RichTextEditor({
             minHeight: variant === "full" ? "100px" : "120px",
           }}
         />
-        <button
-          type="button"
-          className="absolute bottom-2 right-2 p-1.5 hover:bg-muted rounded"
-        >
-          <Sparkles className="size-4 text-muted-foreground" />
-        </button>
+        {showContentAction && (
+          <button
+            type="button"
+            className={cn(
+              "absolute bottom-2 right-2 inline-flex items-center gap-1.5 p-1.5 hover:bg-muted rounded",
+              contentAction?.className,
+            )}
+            title={contentAction?.title ?? "AI Assist"}
+            onClick={contentAction?.onClick}
+          >
+            {contentActionIcon}
+            {showContentActionContent ? contentAction?.content : null}
+          </button>
+        )}
       </div>
 
       <style>{`
@@ -334,4 +360,8 @@ function RichTextEditor({
   );
 }
 
-export { RichTextEditor, type RichTextEditorProps };
+export {
+  RichTextEditor,
+  type RichTextEditorProps,
+  type RichTextEditorContentAction,
+};
