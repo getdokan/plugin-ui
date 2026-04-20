@@ -74,7 +74,11 @@ export {
 } from "./sortable";
 export { Switch, LabeledSwitch, SwitchCard, type SwitchProps, type LabeledSwitchProps, type SwitchCardProps } from "./switch";
 export { Textarea } from "./textarea";
-export { RichTextEditor, type RichTextEditorProps } from "./rich-text-editor";
+export {
+  RichTextEditor,
+  type RichTextEditorProps,
+  type RichTextEditorContentAction,
+} from "./rich-text-editor";
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 export { Toggle } from './toggle'
 export { ToggleGroup, ToggleGroupItem } from './toggle-group'

@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { WandSparkles } from "lucide-react";
+import { fn } from "storybook/test";
 import { RichTextEditor } from "./rich-text-editor";
 import { Label } from "./label";
 
@@ -14,6 +16,7 @@ const meta = {
     },
     placeholder: { control: "text" },
     defaultValue: { control: "text" },
+    contentAction: { control: false },
   },
   decorators: [
     (Story) => (
@@ -28,7 +31,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-/** Full toolbar variant with all formatting options including font size, image, undo/redo, and more. */
+/** Full toolbar variant with all formatting options. Content action is hidden by default. */
 export const Default: Story = {
   args: {
     variant: "full",
@@ -73,5 +76,34 @@ export const WithLabel: Story = {
   args: {
     variant: "full",
     placeholder: "Enter your description here...",
+  },
+};
+
+/** Show the bottom-right content action button with default sparkles icon (no text). */
+export const ContentActionIconOnly: Story = {
+  args: {
+    variant: "full",
+    placeholder: "Icon-only content action...",
+    contentAction: {
+      show: true,
+      onClick: fn(),
+    },
+  },
+};
+
+/** Replace the default sparkles button with custom icon, label, and click handler. */
+export const ContentActionCustom: Story = {
+  args: {
+    variant: "full",
+    placeholder: "Try the custom AI action...",
+    contentAction: {
+      show: true,
+      title: "Rewrite with AI",
+      showContent: true,
+      icon: <WandSparkles className="size-4 text-sky-600" />,
+      content: <span className="text-xs">Rewrite</span>,
+      className: "border border-border bg-background px-2",
+      onClick: fn(),
+    },
   },
 };
