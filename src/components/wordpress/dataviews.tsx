@@ -9,7 +9,7 @@ import {
     type View
 } from '@wordpress/dataviews/wp';
 import { __ } from '@wordpress/i18n';
-import { FileSearch, Funnel, Plus, Search, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, FileSearch, Funnel, Plus, Search, X } from 'lucide-react';
 import type React from 'react';
 import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
@@ -32,7 +32,11 @@ import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 
 declare global {
     interface Window {
-        wp?: { hooks?: { applyFilters: (hookName: string, value: unknown, ...args: unknown[]) => unknown } };
+        wp?: {
+            hooks?: {
+                applyFilters: (hookName: string, value: unknown, ...args: unknown[]) => unknown;
+            };
+        };
     }
 }
 
@@ -51,57 +55,6 @@ function applyFiltersToTableElements<Item>(
     }
     const hookName = `${snakeCase(namespace)}_dataviews_${elementName}`;
     return window.wp.hooks.applyFilters(hookName, element, props) as unknown;
-}
-
-/**
- * Update the current URL's query parameters without causing a full page reload.
- */
-function updateUrlQueryParams(params: Record<string, string | number | null | undefined>): void {
-    if (typeof window === 'undefined') {
-        return;
-    }
-
-    const url = new URL(window.location.href);
-
-    Object.entries(params).forEach(([key, value]) => {
-        if (value === undefined || value === null || value === '') {
-            url.searchParams.delete(key);
-        } else {
-            url.searchParams.set(key, String(value));
-        }
-    });
-
-    window.history.replaceState({}, '', url.toString());
-}
-
-/**
- * Extract query-param friendly values from a DataViews `View`.
- *
- * We intentionally support both camelCase (`perPage`) and snake_case (`per_page`)
- * so that whatever the upstream shape is, we can still sync it into the URL.
- */
-function getQueryParamsFromView(view: View, tabViewKey: string): Record<string, string | number | null | undefined> {
-    const v = view as View & {
-        [key: string]: unknown;
-    };
-
-    const perPage = v.perPage ?? v.per_page;
-
-    const filters =
-        typeof v.filters === 'object' && Object.keys(v.filters).length > 0 ? JSON.stringify(v.filters) : null;
-
-    // Start with the core pieces of state we always want in the URL.
-    const params: Record<string, string | number | null | undefined> = {
-        // Use `current_page` instead of `page` so we don't conflict with
-        // WordPress admin's own `page` query param (e.g. ?page=plugin-ui-test).
-        current_page: v.page ?? null,
-        per_page: (perPage as number) ?? null,
-        search: v.search ?? '',
-        [tabViewKey]: (v[tabViewKey] as string) ?? '',
-        filters
-    };
-
-    return params;
 }
 
 // Extended action type with automatic destructive confirmation support
@@ -345,7 +298,9 @@ export type DataViewsProps<Item> = {
     filter?: DataViewFilterProps;
     tabs?: TabsProps;
     children?: React.ReactNode;
-} & (Item extends ItemWithId ? { getItemId?: (item: Item) => string } : { getItemId: (item: Item) => string });
+} & (Item extends ItemWithId
+    ? { getItemId?: (item: Item) => string }
+    : { getItemId: (item: Item) => string });
 
 interface ListEmptyProps {
     icon?: JSX.Element;
@@ -390,7 +345,9 @@ function SkeletonTable({
         return (
             <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4 p-4">
                 {Array.from({ length: rows }, (_, i) => (
-                    <div key={i} className="rounded-lg border border-border bg-background p-4 space-y-3">
+                    <div
+                        key={i}
+                        className="rounded-lg border border-border bg-background p-4 space-y-3">
                         <Skeleton className="aspect-video w-full rounded-md" />
                         <Skeleton className="h-4 w-3/4" />
                         <Skeleton className="h-3 w-1/2" />
@@ -459,7 +416,9 @@ function SkeletonTable({
                             return (
                                 <td key={colIdx} className="h-12 px-5 align-middle">
                                     <div className={cn(isActions && 'flex justify-end')}>
-                                        <Skeleton className={cn('h-4', widths[colIdx % widths.length])} />
+                                        <Skeleton
+                                            className={cn('h-4', widths[colIdx % widths.length])}
+                                        />
                                     </div>
                                 </td>
                             );
@@ -477,6 +436,9 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     const [openSelectorSignal, setOpenSelectorSignal] = useState(0);
     const [buttonRef, setButtonRef] = useState<HTMLButtonElement | null>();
     const [activeFilterCount, setActiveFilterCount] = useState(0);
+    const tabsScrollRef = useRef<HTMLDivElement>(null);
+    const [canScrollTabsLeft, setCanScrollTabsLeft] = useState(false);
+    const [canScrollTabsRight, setCanScrollTabsRight] = useState(false);
     const {
         responsive = true,
         namespace,
@@ -568,7 +530,11 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
             if (!actions) return actions;
 
             return actions.map((action) => {
-                if (!action.isDestructive || !('callback' in action) || typeof action.callback !== 'function') {
+                if (
+                    !action.isDestructive ||
+                    !('callback' in action) ||
+                    typeof action.callback !== 'function'
+                ) {
                     return action as Action<Item>;
                 }
 
@@ -614,11 +580,9 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
 
     const handleViewChange = useCallback(
         (nextView: View) => {
-            // Sync key pieces of state into the URL so that the UI is shareable and bookmarkable.
-            updateUrlQueryParams(getQueryParamsFromView(nextView, tabViewKey));
             onChangeView(nextView);
         },
-        [tabViewKey, onChangeView]
+        [onChangeView]
     );
 
     const baseProps = {
@@ -628,13 +592,18 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
         view: normalizedView,
         fields: normalizedFields,
         defaultLayouts: props.defaultLayouts || defaultLayouts,
-        empty: empty || <ListEmpty icon={emptyIcon} title={emptyTitle} description={emptyDescription} />
+        empty: empty || (
+            <ListEmpty icon={emptyIcon} title={emptyTitle} description={emptyDescription} />
+        )
     };
 
     // Run WordPress filter hooks on table elements (only applies when wp.hooks exists)
-    const filteredActions = applyFiltersToTableElements(namespace, 'actions', baseProps.actions, props) as
-        | DataViewAction<Item>[]
-        | undefined;
+    const filteredActions = applyFiltersToTableElements(
+        namespace,
+        'actions',
+        baseProps.actions,
+        props
+    ) as DataViewAction<Item>[] | undefined;
 
     const viewPerPageValue =
         (view as View & { perPage?: number; per_page?: number }).perPage ??
@@ -643,9 +612,24 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
 
     const filteredProps = {
         ...baseProps,
-        data: applyFiltersToTableElements(namespace, 'data', baseProps.data, props) as typeof baseProps.data,
-        view: applyFiltersToTableElements(namespace, 'view', baseProps.view, props) as typeof baseProps.view,
-        fields: applyFiltersToTableElements(namespace, 'fields', baseProps.fields, props) as typeof baseProps.fields,
+        data: applyFiltersToTableElements(
+            namespace,
+            'data',
+            baseProps.data,
+            props
+        ) as typeof baseProps.data,
+        view: applyFiltersToTableElements(
+            namespace,
+            'view',
+            baseProps.view,
+            props
+        ) as typeof baseProps.view,
+        fields: applyFiltersToTableElements(
+            namespace,
+            'fields',
+            baseProps.fields,
+            props
+        ) as typeof baseProps.fields,
         actions: wrapDestructiveActions(filteredActions),
         defaultLayouts: applyFiltersToTableElements(
             namespace,
@@ -717,15 +701,73 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
     const defaultTabValue = resolvedTabsConfig?.defaultValue ?? tabItems[0]?.value;
     const headerContent = resolvedTabsConfig?.headerContent ?? resolvedTabsConfig?.headerSlot ?? [];
 
+    const updateTabsScrollState = useCallback(() => {
+        const tabsScroller = tabsScrollRef.current;
+        if (!tabsScroller) {
+            setCanScrollTabsLeft(false);
+            setCanScrollTabsRight(false);
+            return;
+        }
+
+        const { scrollLeft, scrollWidth, clientWidth } = tabsScroller;
+        setCanScrollTabsLeft(scrollLeft > 0);
+        setCanScrollTabsRight(scrollLeft + clientWidth < scrollWidth - 1);
+    }, []);
+
+    const scrollTabsByArrow = useCallback((direction: 'left' | 'right') => {
+        const tabsScroller = tabsScrollRef.current;
+        if (!tabsScroller) {
+            return;
+        }
+
+        const scrollAmount = Math.max(tabsScroller.clientWidth * 0.7, 140);
+        tabsScroller.scrollBy({
+            left: direction === 'left' ? -scrollAmount : scrollAmount,
+            behavior: 'smooth'
+        });
+    }, []);
+
+    useEffect(() => {
+        const tabsScroller = tabsScrollRef.current;
+        if (!tabsScroller || tabItems.length === 0) {
+            setCanScrollTabsLeft(false);
+            setCanScrollTabsRight(false);
+            return;
+        }
+
+        updateTabsScrollState();
+
+        const handleScroll = () => updateTabsScrollState();
+        tabsScroller.addEventListener('scroll', handleScroll, { passive: true });
+
+        const resizeObserver = new ResizeObserver(() => {
+            updateTabsScrollState();
+        });
+        resizeObserver.observe(tabsScroller);
+
+        const tabsListElement = tabsScroller.querySelector('[role="tablist"]');
+        if (tabsListElement instanceof HTMLElement) {
+            resizeObserver.observe(tabsListElement);
+        }
+
+        return () => {
+            tabsScroller.removeEventListener('scroll', handleScroll);
+            resizeObserver.disconnect();
+        };
+    }, [tabItems.length, updateTabsScrollState]);
+
     const paginationDetails = filteredProps.paginationInfo;
     const explicitTotalPages = paginationDetails?.totalPages;
     const perPage = viewPerPageValue;
     const computedTotalPages =
-        typeof paginationDetails?.totalItems === 'number' && typeof perPage === 'number' && perPage > 0
+        typeof paginationDetails?.totalItems === 'number' &&
+        typeof perPage === 'number' &&
+        perPage > 0
             ? Math.ceil(paginationDetails.totalItems / perPage)
             : 0;
     const shouldShowPagination =
-        !isLoading && (typeof explicitTotalPages === 'number' ? explicitTotalPages : computedTotalPages) > 1;
+        !isLoading &&
+        (typeof explicitTotalPages === 'number' ? explicitTotalPages : computedTotalPages) > 1;
     const showFullWidthHeader = !tabItems.length && (search || hasFilters);
 
     const tableNameSpace = kebabCase(namespace);
@@ -804,43 +846,71 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                             'border-b border-border p-4 md:px-4 md:py-0'
                     )}>
                     {tabItems.length > 0 && (
-                        <div className="min-w-0 overflow-x-auto no-scrollbar">
-                            <Tabs
-                                defaultValue={defaultTabValue}
-                                className="w-max"
-                                onValueChange={(value) => {
-                                    // When a tab changes, reflect that in the view state
-                                    const nextView = {
-                                        ...view,
-                                        [tabViewKey]: value,
-                                        page: 1
-                                    } as View & { [key: string]: string | number };
+                        <div className="min-w-0 flex items-center gap-1">
+                            {canScrollTabsLeft && (
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    className="shrink-0 h-8 w-8 text-muted-foreground hover:text-foreground"
+                                    onClick={() => scrollTabsByArrow('left')}
+                                    aria-label={__('Scroll tabs left', 'default')}>
+                                    <ChevronLeft size={16} />
+                                </Button>
+                            )}
+                            <div
+                                ref={tabsScrollRef}
+                                className="min-w-0 overflow-x-auto no-scrollbar scroll-smooth">
+                                <Tabs
+                                    defaultValue={defaultTabValue}
+                                    className="w-max"
+                                    onValueChange={(value) => {
+                                        // When a tab changes, reflect that in the view state
+                                        const nextView = {
+                                            ...view,
+                                            [tabViewKey]: value,
+                                            page: 1
+                                        } as View & { [key: string]: string | number };
 
-                                    handleViewChange(nextView);
+                                        handleViewChange(nextView);
 
-                                    tabs?.onSelect?.(value);
-                                    filteredProps.onChangeSelection?.([]);
-                                }}>
-                                <TabsList variant="line" className="p-0">
-                                    {tabItems.map((tab) => (
-                                        <TabsTrigger
-                                            key={tab.value}
-                                            value={tab.value}
-                                            disabled={tab.disabled}
-                                            className={cn(
-                                                'cursor-pointer! flex! py-2! px-2! text-xs! md:py-6! md:px-4! md:text-sm! text-muted-foreground! bg-transparent! rounded-none! hover:bg-transparent!',
-                                                'focus:outline-none! shadow-none!',
-                                                tab.className
-                                            )}>
-                                            {tab.icon && <tab.icon className="size-4" />}
-                                            {tab.label}{' '}
-                                            {tab.count !== undefined && (
-                                                <span className="text-muted-foreground">({tab.count})</span>
-                                            )}
-                                        </TabsTrigger>
-                                    ))}
-                                </TabsList>
-                            </Tabs>
+                                        tabs?.onSelect?.(value);
+                                        filteredProps.onChangeSelection?.([]);
+                                    }}>
+                                    <TabsList variant="line" className="p-0">
+                                        {tabItems.map((tab) => (
+                                            <TabsTrigger
+                                                key={tab.value}
+                                                value={tab.value}
+                                                disabled={tab.disabled}
+                                                className={cn(
+                                                    'cursor-pointer! flex! py-2! px-2! text-xs! md:py-6! md:px-4! md:text-sm! text-muted-foreground! bg-transparent! rounded-none! hover:bg-transparent!',
+                                                    'focus:outline-none! shadow-none!',
+                                                    tab.className
+                                                )}>
+                                                {tab.icon && <tab.icon className="size-4" />}
+                                                {tab.label}{' '}
+                                                {tab.count !== undefined && (
+                                                    <span className="text-muted-foreground">
+                                                        ({tab.count})
+                                                    </span>
+                                                )}
+                                            </TabsTrigger>
+                                        ))}
+                                    </TabsList>
+                                </Tabs>
+                            </div>
+                            {canScrollTabsRight && (
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    className="shrink-0 h-8 w-8 text-muted-foreground hover:text-foreground"
+                                    onClick={() => scrollTabsByArrow('right')}
+                                    aria-label={__('Scroll tabs right', 'default')}>
+                                    <ChevronRight size={16} />
+                                </Button>
+                            )}
                         </div>
                     )}
                     <div
@@ -889,7 +959,9 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                                     'animate-in py-1.5 fade-in-0 slide-in-from-top-1 duration-200 transition-all ease-in-out flex items-center bg-background z-1 border-b px-5 min-h-13 justify-between border-border rounded-t-md w-full'
                                 )}
                                 style={
-                                    theadHeight ? { marginBottom: -theadHeight, minHeight: theadHeight } : undefined
+                                    theadHeight
+                                        ? { marginBottom: -theadHeight, minHeight: theadHeight }
+                                        : undefined
                                 }>
                                 <DataViewsTable.BulkActionToolbar />
                             </div>
@@ -921,13 +993,17 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
 
             {/* Destructive action confirmation AlertDialog */}
             {pendingDestructiveAction && (
-                <AlertDialog open onOpenChange={(open) => !open && !isConfirming && handleDestructiveCancel()}>
+                <AlertDialog
+                    open
+                    onOpenChange={(open) => !open && !isConfirming && handleDestructiveCancel()}>
                     <AlertDialogContent className="pui-dataview-alert-dialog" size="default">
                         <AlertDialogHeader>
                             <AlertDialogTitle>
                                 {pendingDestructiveAction.action.confirmTitle ||
                                     (typeof pendingDestructiveAction.action.label === 'function'
-                                        ? pendingDestructiveAction.action.label(pendingDestructiveAction.items)
+                                        ? pendingDestructiveAction.action.label(
+                                              pendingDestructiveAction.items
+                                          )
                                         : pendingDestructiveAction.action.label)}
                             </AlertDialogTitle>
                             <AlertDialogDescription>
@@ -937,7 +1013,8 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                             <AlertDialogCancel disabled={isConfirming}>
-                                {pendingDestructiveAction.action.cancelButtonLabel || __('Cancel', 'default')}
+                                {pendingDestructiveAction.action.cancelButtonLabel ||
+                                    __('Cancel', 'default')}
                             </AlertDialogCancel>
                             <AlertDialogAction
                                 variant="destructive"
@@ -946,7 +1023,9 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                                 {isConfirming && <Spinner className="mr-2" />}
                                 {pendingDestructiveAction.action.confirmButtonLabel ||
                                     (typeof pendingDestructiveAction.action.label === 'function'
-                                        ? pendingDestructiveAction.action.label(pendingDestructiveAction.items)
+                                        ? pendingDestructiveAction.action.label(
+                                              pendingDestructiveAction.items
+                                          )
                                         : pendingDestructiveAction.action.label)}
                             </AlertDialogAction>
                         </AlertDialogFooter>
