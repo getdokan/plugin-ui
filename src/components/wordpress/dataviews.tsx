@@ -57,62 +57,6 @@ function applyFiltersToTableElements<Item>(
     return window.wp.hooks.applyFilters(hookName, element, props) as unknown;
 }
 
-/**
- * Update the current URL's query parameters without causing a full page reload.
- */
-function updateUrlQueryParams(params: Record<string, string | number | null | undefined>): void {
-    if (typeof window === 'undefined') {
-        return;
-    }
-
-    const url = new URL(window.location.href);
-
-    Object.entries(params).forEach(([key, value]) => {
-        if (value === undefined || value === null || value === '') {
-            url.searchParams.delete(key);
-        } else {
-            url.searchParams.set(key, String(value));
-        }
-    });
-
-    window.history.replaceState({}, '', url.toString());
-}
-
-/**
- * Extract query-param friendly values from a DataViews `View`.
- *
- * We intentionally support both camelCase (`perPage`) and snake_case (`per_page`)
- * so that whatever the upstream shape is, we can still sync it into the URL.
- */
-function getQueryParamsFromView(
-    view: View,
-    tabViewKey: string
-): Record<string, string | number | null | undefined> {
-    const v = view as View & {
-        [key: string]: unknown;
-    };
-
-    const perPage = v.perPage ?? v.per_page;
-
-    const filters =
-        typeof v.filters === 'object' && Object.keys(v.filters).length > 0
-            ? JSON.stringify(v.filters)
-            : null;
-
-    // Start with the core pieces of state we always want in the URL.
-    const params: Record<string, string | number | null | undefined> = {
-        // Use `current_page` instead of `page` so we don't conflict with
-        // WordPress admin's own `page` query param (e.g. ?page=plugin-ui-test).
-        current_page: v.page ?? null,
-        per_page: (perPage as number) ?? null,
-        search: v.search ?? '',
-        [tabViewKey]: (v[tabViewKey] as string) ?? '',
-        filters
-    };
-
-    return params;
-}
-
 // Extended action type with automatic destructive confirmation support
 export type DestructiveActionConfig = {
     /** When true, shows an AlertDialog confirmation before executing the action callback. */
@@ -636,11 +580,9 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
 
     const handleViewChange = useCallback(
         (nextView: View) => {
-            // Sync key pieces of state into the URL so that the UI is shareable and bookmarkable.
-            updateUrlQueryParams(getQueryParamsFromView(nextView, tabViewKey));
             onChangeView(nextView);
         },
-        [tabViewKey, onChangeView]
+        [onChangeView]
     );
 
     const baseProps = {
