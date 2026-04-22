@@ -852,7 +852,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                                     type="button"
                                     variant="ghost"
                                     size="icon"
-                                    className="shrink-0 h-8 w-8 text-muted-foreground hover:text-foreground"
+                                    className="shrink-0 h-8 w-8 text-muted-foreground hover:text-foreground bg-transparent! rounded-none! hover:bg-transparent!"
                                     onClick={() => scrollTabsByArrow('left')}
                                     aria-label={__('Scroll tabs left', 'default')}>
                                     <ChevronLeft size={16} />
@@ -905,7 +905,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                                     type="button"
                                     variant="ghost"
                                     size="icon"
-                                    className="shrink-0 h-8 w-8 text-muted-foreground hover:text-foreground"
+                                    className="shrink-0 h-8 w-8 text-muted-foreground hover:text-foreground bg-transparent! rounded-none! hover:bg-transparent!"
                                     onClick={() => scrollTabsByArrow('right')}
                                     aria-label={__('Scroll tabs right', 'default')}>
                                     <ChevronRight size={16} />
