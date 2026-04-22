@@ -33,12 +33,13 @@ export type SettingsElementOption = {
     endIcon?: string;
     image?: string;
     preview?: boolean;
+    [key: string]: any;
 };
 
 export type SettingsElement = {
     id: string;
     type: 'page' | 'subpage' | 'tab' | 'section' | 'subsection' | 'field' | 'fieldgroup' | string;
-    is_danger: boolean;
+    is_danger?: boolean;
     variant?: string;
     icon?: string;
     /** Primary display text (preferred over `title`). */
@@ -54,7 +55,7 @@ export type SettingsElement = {
 
     // Field-specific
     value?: string | number | boolean | Array<string | number> | Record<string, any>;
-    default?: string | number | boolean | Array<string | number>;
+    default?: string | number | boolean | Array<string | number> | Record<string, any>;
     options?: SettingsElementOption[];
     readonly?: boolean;
     disabled?: boolean;

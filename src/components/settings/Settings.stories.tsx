@@ -3576,7 +3576,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                         "dependencies": [],
                         "validations": [],
                         "variant": "notice",
-                        "value": null,
+                        "value": '',
                         "notice_type": "warning",
                         "notice_icon": "Info",
                         "notice_title": "",
@@ -3600,7 +3600,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                         "dependencies": [],
                         "validations": [],
                         "variant": "notice",
-                        "value": null,
+                        "value": '',
                         "notice_type": "warning",
                         "notice_icon": "Info",
                         "notice_title": "Size Guide Title",
@@ -4926,7 +4926,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "prefix": "",
                                         "image_url": "https://brandlogos.net/wp-content/uploads/2025/05/leonardo_ai-logo_brandlogos.net_ctjsa.png",
                                         "suffix": "",
-                                        "doc_link": null
+                                        "doc_link": 'null'
                                     },
                                     {
                                         "id": "leonardo_api_notice",
@@ -5121,7 +5121,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                         "doc_link": ""
                     }
                 ],
-                "description": "Set up AI to elevate your platform with enhanced capabilities.",
                 "dependency_key": "product_generation",
                 "dependencies": [],
                 "validations": [],
@@ -8434,12 +8433,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     {
                                         "value": "twilio",
                                         "title": "Twilio",
-                                        "icon": ""
+                                        "icon_name": ""
                                     },
                                     {
                                         "value": "nexmo",
                                         "title": "Vonage",
-                                        "icon": ""
+                                        "icon_name": ""
                                     }
                                 ]
                             },
