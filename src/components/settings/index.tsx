@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { SettingsProvider } from './settings-context';
@@ -59,6 +59,28 @@ function SettingsInner({
 }: {
     title?: string;
     className?: string;
+}) {
+    return (
+        <SettingsShell title={title} className={className}>
+            <SettingsContent className="flex-1" />
+        </SettingsShell>
+    );
+}
+
+// ============================================
+// SettingsShell — reusable card + sidebar layout
+// (Used by both <Settings> and <ConnectorSettings>.
+//  The only thing callers vary is the content pane.)
+// ============================================
+
+export function SettingsShell({
+    title,
+    className,
+    children,
+}: {
+    title?: string;
+    className?: string;
+    children: ReactNode;
 }) {
     const { loading, activeSubpage, isSidebarVisible } = useSettings();
     const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -158,7 +180,7 @@ function SettingsInner({
                     </div>
                 )}
 
-                <SettingsContent className="flex-1" />
+                {children}
             </div>
         </div>
     );
@@ -184,7 +206,10 @@ function usePrevious<T>(value: T): T | undefined {
 // Re-exports
 // ============================================
 
-export { useSettings } from './settings-context';
-export type { ApplyFiltersFunction } from './settings-context';
+export { useSettings, SettingsProvider } from './settings-context';
+export type { ApplyFiltersFunction, SettingsProviderProps } from './settings-context';
 export { formatSettingsData, extractValues } from './settings-formatter';
 export type { SettingsElement, SettingsProps, FieldComponentProps, SaveButtonRenderProps } from './settings-types';
+export { FieldRenderer } from './field-renderer';
+export { SettingsSidebar } from './settings-sidebar';
+export { SettingsContent } from './settings-content';
