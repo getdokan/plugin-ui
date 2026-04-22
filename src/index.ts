@@ -354,10 +354,16 @@ export { License, type LicenseProps, type LicenseLabels, type LicenseStatus, typ
 // Settings (schema-driven settings page)
 export {
     Settings,
+    SettingsShell,
+    SettingsContent,
+    SettingsSidebar,
+    SettingsProvider,
+    FieldRenderer,
     useSettings,
     formatSettingsData,
     extractValues,
     type ApplyFiltersFunction,
+    type SettingsProviderProps,
     type SettingsProps,
     type SettingsElement,
     type FieldComponentProps,
