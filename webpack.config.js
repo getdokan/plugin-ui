@@ -26,8 +26,6 @@ module.exports = {
         '@wordpress/date': '@wordpress/date',
         '@wordpress/hooks': '@wordpress/hooks',
         '@wordpress/i18n': '@wordpress/i18n',
-        '@wordpress/dataviews': '@wordpress/dataviews',
-        '@wordpress/dataviews/wp': '@wordpress/dataviews/wp',
         quill: 'quill',
     },
     module: {
