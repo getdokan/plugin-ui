@@ -3,7 +3,6 @@
   "version": "2.0.0",
   "description": "Scoped, themeable UI components for WordPress plugins - ShadCN style",
   "main": "dist/index.js",
-  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "sideEffects": [
     "**/*.css"
@@ -11,33 +10,33 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./components/ui": {
       "types": "./dist/components/ui/index.d.ts",
-      "import": "./dist/components/ui/index.js",
-      "require": "./dist/components/ui/index.js"
+      "require": "./dist/components/ui/index.js",
+      "default": "./dist/components/ui/index.js"
     },
     "./providers": {
       "types": "./dist/providers/index.d.ts",
-      "import": "./dist/providers/index.js",
-      "require": "./dist/providers/index.js"
+      "require": "./dist/providers/index.js",
+      "default": "./dist/providers/index.js"
     },
     "./themes": {
       "types": "./dist/themes/index.d.ts",
-      "import": "./dist/themes/index.js",
-      "require": "./dist/themes/index.js"
+      "require": "./dist/themes/index.js",
+      "default": "./dist/themes/index.js"
     },
     "./utils": {
       "types": "./dist/utils/index.d.ts",
-      "import": "./dist/utils/index.js",
-      "require": "./dist/utils/index.js"
+      "require": "./dist/utils/index.js",
+      "default": "./dist/utils/index.js"
     },
     "./settings": {
       "types": "./dist/components/settings/index.d.ts",
-      "import": "./dist/components/settings/index.js",
-      "require": "./dist/components/settings/index.js"
+      "require": "./dist/components/settings/index.js",
+      "default": "./dist/components/settings/index.js"
     },
     "./styles.css": "./dist/styles.css"
   },

@@ -4,6 +4,10 @@ const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 
 module.exports = {
     ...defaultConfig,
+    experiments: {
+        ...( defaultConfig.experiments || {} ),
+        outputModule: true,
+    },
     entry: {
         index: './src/index.ts',
     },
@@ -12,8 +16,9 @@ module.exports = {
         path: path.resolve( __dirname, 'dist' ),
         filename: '[name].js',
         library: {
-            type: 'commonjs2',
+            type: 'module',
         },
+        module: true,
         clean: true,
     },
     externals: {
@@ -26,8 +31,6 @@ module.exports = {
         '@wordpress/date': '@wordpress/date',
         '@wordpress/hooks': '@wordpress/hooks',
         '@wordpress/i18n': '@wordpress/i18n',
-        '@wordpress/dataviews': '@wordpress/dataviews',
-        '@wordpress/dataviews/wp': '@wordpress/dataviews/wp',
         quill: 'quill',
     },
     module: {

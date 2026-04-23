@@ -289,6 +289,21 @@ export {
   FieldTitle,
 } from "./field";
 export { DataViews, type DataViewAction, type DataViewField, type DataViewFilterField, type DataViewFilterProps, type DataViewLayouts, type DataViewsProps, type DataViewState } from '../wordpress/dataviews';
+export { DataForm, useFormValidity } from '@wordpress/dataviews/wp';
+export type {
+    DataFormProps,
+    Form as DataFormSchema,
+    FormField as DataFormField,
+    FormValidity as DataFormValidity,
+    Layout as DataFormLayout,
+    LayoutType as DataFormLayoutType,
+    LabelPosition as DataFormLabelPosition,
+    RegularLayout as DataFormRegularLayout,
+    PanelLayout as DataFormPanelLayout,
+    CardLayout as DataFormCardLayout,
+    RowLayout as DataFormRowLayout,
+    DetailsLayout as DataFormDetailsLayout,
+} from '@wordpress/dataviews';
 
 // Calendar component (react-day-picker + WordPress timezone/locale)
 export { Calendar, type CalendarProps } from "./calendar";
