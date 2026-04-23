@@ -180,7 +180,7 @@ Supports WordPress filter hooks: `{snakeNamespace}_dataviews_{elementName}`
 - **Composition pattern**: All components use compound component pattern (e.g., `Card` + `CardHeader` + `CardContent`)
 - **`cn()` utility**: Use for merging Tailwind classes — combines `clsx` + `tailwind-merge`
 - **`Field` wrapper**: Use to wrap form controls with consistent label, description, and error display
-- **No WordPress dependency in UI components**: Only `Layout`, `DataViews`, and `Settings` (via `applyFilters`) touch WordPress APIs
+- **No WordPress dependency in UI components**: Only `Layout`, `DataViews`, `DataForm`, and `Settings` (via `applyFilters`) touch WordPress APIs
 - **Externals**: React, ReactDOM, and WordPress packages (`@wordpress/components`, `@wordpress/dataviews`, `@wordpress/hooks`, `@wordpress/i18n`, `@wordpress/date`) are externalized — consumers must provide them
 
 ## Before Committing & Pushing

@@ -1,5 +1,7 @@
-// Core UI Components following ShadCN pattern
-// All components are pure React - no WordPress dependencies
+// Core UI Components following ShadCN pattern.
+// Most components are pure React; the sanctioned WordPress-integrated
+// exceptions (Layout, DataViews, DataForm, LayoutMenu, AdminNotice) are
+// re-exported from here to keep a single UI barrel for consumers.
 
 export { Alert, AlertDescription, AlertTitle, AlertAction } from "./alert";
 export { default as AdminNotice } from "../wordpress/AdminNotice";
