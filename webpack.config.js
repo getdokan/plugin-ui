@@ -4,10 +4,6 @@ const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 
 module.exports = {
     ...defaultConfig,
-    experiments: {
-        ...( defaultConfig.experiments || {} ),
-        outputModule: true,
-    },
     entry: {
         index: './src/index.ts',
     },
@@ -16,9 +12,8 @@ module.exports = {
         path: path.resolve( __dirname, 'dist' ),
         filename: '[name].js',
         library: {
-            type: 'module',
+            type: 'commonjs2',
         },
-        module: true,
         clean: true,
     },
     externals: {
