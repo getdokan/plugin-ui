@@ -7,12 +7,23 @@ module.exports = {
     entry: {
         index: './src/index.ts',
     },
+    experiments: {
+        ...( defaultConfig.experiments || {} ),
+        outputModule: true,
+    },
     output: {
         ...defaultConfig.output,
         path: path.resolve( __dirname, 'dist' ),
-        filename: '[name].js',
+        filename: '[name].mjs',
         library: {
-            type: 'commonjs2',
+            type: 'module',
+        },
+        module: true,
+        chunkFormat: 'module',
+        environment: {
+            ...( defaultConfig.output?.environment || {} ),
+            module: true,
+            dynamicImport: true,
         },
         clean: true,
     },
