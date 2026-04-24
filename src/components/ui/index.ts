@@ -1,5 +1,7 @@
-// Core UI Components following ShadCN pattern
-// All components are pure React - no WordPress dependencies
+// Core UI Components following ShadCN pattern.
+// Most components are pure React; the sanctioned WordPress-integrated
+// exceptions (Layout, DataViews, DataForm, LayoutMenu, AdminNotice) are
+// re-exported from here to keep a single UI barrel for consumers.
 
 export { Alert, AlertDescription, AlertTitle, AlertAction } from "./alert";
 export { default as AdminNotice } from "../wordpress/AdminNotice";
@@ -289,6 +291,21 @@ export {
   FieldTitle,
 } from "./field";
 export { DataViews, type DataViewAction, type DataViewField, type DataViewFilterField, type DataViewFilterProps, type DataViewLayouts, type DataViewsProps, type DataViewState } from '../wordpress/dataviews';
+export { DataForm, useFormValidity } from '@wordpress/dataviews/wp';
+export type {
+    DataFormProps,
+    Form as DataFormSchema,
+    FormField as DataFormField,
+    FormValidity as DataFormValidity,
+    Layout as DataFormLayout,
+    LayoutType as DataFormLayoutType,
+    LabelPosition as DataFormLabelPosition,
+    RegularLayout as DataFormRegularLayout,
+    PanelLayout as DataFormPanelLayout,
+    CardLayout as DataFormCardLayout,
+    RowLayout as DataFormRowLayout,
+    DetailsLayout as DataFormDetailsLayout,
+} from '@wordpress/dataviews';
 
 // Calendar component (react-day-picker + WordPress timezone/locale)
 export { Calendar, type CalendarProps } from "./calendar";
