@@ -191,7 +191,8 @@ function usePrevious<T>(value: T): T | undefined {
 // Re-exports
 // ============================================
 
-export { useSettings } from './settings-context';
+export { SettingsProvider, useSettings } from './settings-context';
 export type { ApplyFiltersFunction } from './settings-context';
+export { FieldRenderer } from './field-renderer';
 export { formatSettingsData, extractValues } from './settings-formatter';
 export type { SettingsElement, SettingsProps, FieldComponentProps, SaveButtonRenderProps } from './settings-types';
