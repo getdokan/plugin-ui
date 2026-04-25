@@ -53,7 +53,13 @@ function collectSearchableText(element: SettingsElement): string {
     return texts.join(' ').toLowerCase();
 }
 
-export function SettingsSidebar({ className }: { className?: string }) {
+export function SettingsSidebar({
+    className,
+    searchPlaceholder,
+}: {
+    className?: string;
+    searchPlaceholder?: string;
+}) {
     const {
         schema,
         activePage,
@@ -160,6 +166,7 @@ export function SettingsSidebar({ className }: { className?: string }) {
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         className="h-8 pl-8"
+                        placeholder={searchPlaceholder}
                         aria-label="Search settings"
                         data-testid="settings-search"
                     />

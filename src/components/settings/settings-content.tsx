@@ -1,8 +1,9 @@
+import { useState } from 'react';
 import type { SettingsElement as SettingsElementType } from './settings-types';
 import { useSettings } from './settings-context';
 import { FieldRenderer } from './field-renderer';
 import { cn } from '@/lib/utils';
-import { FileText, Info } from "lucide-react";
+import { ChevronDown, FileText, Info } from "lucide-react";
 import { ScrollArea, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui";
 import { Button } from "@/components/ui/button";
 import { RawHTML } from "@wordpress/element";
@@ -43,8 +44,12 @@ export function SettingsContent({ className }: { className?: string }) {
     };
 
     // Determine whether to show a save area
-    // Hidden when the active page/subpage sets hide_save: true (e.g. License page)
-    const showSaveArea = Boolean(save) && !contentSource?.hide_save;
+    // Hidden when the active page/subpage — or the currently-active tab — sets
+    // hide_save: true. Tab-level hide_save lets a single tab under a shared
+    // scope (e.g. an action-only tab) opt out without affecting siblings.
+    const activeTabElement = tabs.find((t) => t.id === activeTab);
+    const showSaveArea =
+        Boolean(save) && !contentSource?.hide_save && !activeTabElement?.hide_save;
 
     if (!contentSource) {
         return (
@@ -209,6 +214,8 @@ function ContentBlock({ element }: { element: SettingsElementType }) {
 
 function SettingsSection({ section }: { section: SettingsElementType }) {
     const { shouldDisplay } = useSettings();
+    const collapsible = section.collapsible === true;
+    const [open, setOpen] = useState(!section.collapsed);
 
     if (!shouldDisplay(section)) {
         return null;
@@ -217,11 +224,44 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
     const sectionLabel = section.label || section.title || '';
     const hasHeading = Boolean(sectionLabel || section.description);
     const tooltip = section?.tooltip || '';
+    const hasChildren = (section.children?.length ?? 0) > 0;
+    const contentId = `settings-section-content-${section.id}`;
+    const bodyVisible = !collapsible || open;
+
+    const toggle = () => setOpen((o) => !o);
+    const onHeadingKeyDown = (e: React.KeyboardEvent) => {
+        if (!collapsible) return;
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggle();
+        }
+    };
+
+    // Always a <div> so nested interactive children (doc links, tooltip triggers,
+    // field controls) keep their native behavior — a <button> would invalidate
+    // them. When collapsible, we add role="button" + keyboard handlers for a11y.
+    const HeadingTag: keyof JSX.IntrinsicElements = 'div';
 
     return (
         <div className={ cn( 'rounded-lg border overflow-hidden', section.is_danger ? 'bg-destructive/10 border-destructive/20' : 'border-border bg-card' ) } data-testid={`settings-section-${section.id}`}>
             {hasHeading && (
-                <div className={ cn( 'px-5 pt-5 pb-3 flex justify-between items-start', section?.children?.length > 0 && 'border-b border-border' ) }>
+                <HeadingTag
+                    {...(collapsible
+                        ? {
+                              role: 'button' as const,
+                              tabIndex: 0,
+                              onClick: toggle,
+                              onKeyDown: onHeadingKeyDown,
+                              'aria-expanded': open,
+                              'aria-controls': contentId,
+                          }
+                        : {})}
+                    className={ cn(
+                        'px-5 pt-5 pb-3 flex justify-between items-start w-full text-left',
+                        hasChildren && bodyVisible && 'border-b border-border',
+                        collapsible && 'cursor-pointer select-none hover:bg-muted/30 transition-colors'
+                    ) }
+                >
                     <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2">
                             {sectionLabel && (
@@ -234,9 +274,12 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
                               <TooltipProvider>
                                   <Tooltip>
                                       <TooltipTrigger>
-                                          <button type="button" className="inline-flex">
+                                          <span
+                                              className="inline-flex"
+                                              onClick={(e) => e.stopPropagation()}
+                                          >
                                               <Info className="size-3.5 text-muted-foreground cursor-help" />
-                                          </button>
+                                          </span>
                                       </TooltipTrigger>
                                       <TooltipContent>
                                           <p className="max-w-xs text-xs">{tooltip}</p>
@@ -252,25 +295,38 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
                             </p>
                         )}
                     </div>
-                    {section.doc_link && (
-                        <a
-                            href={section.doc_link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-muted-foreground flex gap-1 items-center text-sm hover:text-foreground transition-colors shrink-0"
-                        >
-                            <FileText className="size-4" />
-                            { section.doc_link_text ?? '' }
-                        </a>
-                    )}
-                </div>
+                    <div className="flex items-center gap-3 shrink-0 self-center">
+                        {section.doc_link && (
+                            <a
+                                href={section.doc_link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="text-muted-foreground flex gap-1 items-center text-sm hover:text-foreground transition-colors"
+                            >
+                                <FileText className="size-4" />
+                                { section.doc_link_text ?? '' }
+                            </a>
+                        )}
+                        {collapsible && (
+                            <ChevronDown
+                                className={ cn(
+                                    'size-5 text-muted-foreground transition-transform duration-200',
+                                    open && 'rotate-180'
+                                ) }
+                            />
+                        )}
+                    </div>
+                </HeadingTag>
             )}
 
-            <div className="divide-y divide-border">
-                {section.children?.map((child) => (
-                    <ElementRenderer key={child.id} element={child} />
-                ))}
-            </div>
+            {hasChildren && bodyVisible && (
+                <div id={contentId} className="divide-y divide-border">
+                    {section.children?.map((child) => (
+                        <ElementRenderer key={child.id} element={child} />
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

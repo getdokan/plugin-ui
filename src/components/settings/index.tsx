@@ -27,6 +27,7 @@ export function Settings({
     applyFilters,
     initialPage,
     onNavigate,
+    searchPlaceholder,
 }: SettingsProps) {
     return (
         <SettingsProvider
@@ -44,6 +45,7 @@ export function Settings({
             <SettingsInner
                 title={title}
                 className={className}
+                searchPlaceholder={searchPlaceholder}
             />
         </SettingsProvider>
     );
@@ -56,9 +58,11 @@ export function Settings({
 function SettingsInner({
     title,
     className,
+    searchPlaceholder,
 }: {
     title?: string;
     className?: string;
+    searchPlaceholder?: string;
 }) {
     const { loading, activeSubpage, isSidebarVisible } = useSettings();
     const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -133,7 +137,10 @@ function SettingsInner({
                         </div>
                     )}
 
-                    <SettingsSidebar className="flex-1 overflow-y-auto" />
+                    <SettingsSidebar
+                        className="flex-1 overflow-y-auto"
+                        searchPlaceholder={searchPlaceholder}
+                    />
                 </aside>
             )}
 

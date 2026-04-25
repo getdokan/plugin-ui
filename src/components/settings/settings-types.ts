@@ -108,6 +108,11 @@ export type SettingsElement = {
     field_group_id?: string;
     priority?: number;
 
+    /** Section-only: render the card with a collapse toggle in its header. */
+    collapsible?: boolean;
+    /** Section-only: initial collapsed state when `collapsible` is true. */
+    collapsed?: boolean;
+
     // Validation error (runtime)
     validationError?: string;
 
@@ -178,6 +183,8 @@ export interface SettingsProps {
     initialPage?: string;
     /** Called whenever the active page changes. Use to sync a URL query param. */
     onNavigate?: (pageId: string) => void;
+    /** Placeholder text for the sidebar search input. */
+    searchPlaceholder?: string;
 }
 
 export interface FieldComponentProps {
