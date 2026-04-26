@@ -148,6 +148,8 @@ export {
     ModalFooter, ModalHeader, ModalOverlay, ModalTitle,
     // Notice
     Notice, NoticeAction, NoticeTitle,
+    // AdminNotice (WP-style admin notice card)
+    AdminNotice,
     // Popover
     Popover,
     PopoverContent,
