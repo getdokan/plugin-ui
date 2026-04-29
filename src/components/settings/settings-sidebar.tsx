@@ -158,7 +158,7 @@ export function SettingsSidebar({
     return (
         <div className={cn('flex flex-col h-full', className)} data-testid="settings-sidebar">
             {/* Deep-search input */}
-            <div className="shrink-0 p-2">
+            <div className="shrink-0 p-2 px-4">
                 <div className="relative">
                     <Search className="text-muted-foreground pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2" />
                     <Input

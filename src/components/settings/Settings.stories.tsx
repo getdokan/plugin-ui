@@ -3576,7 +3576,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                         "dependencies": [],
                         "validations": [],
                         "variant": "notice",
-                        "value": null,
+                        "value": '',
                         "notice_type": "warning",
                         "notice_icon": "Info",
                         "notice_title": "",
@@ -3600,7 +3600,7 @@ const dokanSettingsSchema: SettingsElement[] = [
                         "dependencies": [],
                         "validations": [],
                         "variant": "notice",
-                        "value": null,
+                        "value": '',
                         "notice_type": "warning",
                         "notice_icon": "Info",
                         "notice_title": "Size Guide Title",
@@ -5121,7 +5121,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                         "doc_link": ""
                     }
                 ],
-                "description": "Set up AI to elevate your platform with enhanced capabilities.",
                 "dependency_key": "product_generation",
                 "dependencies": [],
                 "validations": [],
