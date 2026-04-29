@@ -28,6 +28,7 @@ export function Settings({
     initialPage,
     onNavigate,
     searchPlaceholder,
+    searchable = true,
 }: SettingsProps) {
     return (
         <SettingsProvider
@@ -46,6 +47,7 @@ export function Settings({
                 title={title}
                 className={className}
                 searchPlaceholder={searchPlaceholder}
+                searchable={searchable}
             />
         </SettingsProvider>
     );
@@ -59,10 +61,12 @@ function SettingsInner({
     title,
     className,
     searchPlaceholder,
+    searchable,
 }: {
     title?: string;
     className?: string;
     searchPlaceholder?: string;
+    searchable?: boolean;
 }) {
     const { loading, activeSubpage, isSidebarVisible } = useSettings();
     const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -82,7 +86,7 @@ function SettingsInner({
     return (
         <div
             className={cn(
-                'relative flex min-h-[500px] rounded-lg border border-border bg-background overflow-hidden',
+                'relative flex min-h-125 rounded-lg border border-border bg-background overflow-hidden',
                 className
             )}
             data-testid="settings-root"
@@ -140,6 +144,7 @@ function SettingsInner({
                     <SettingsSidebar
                         className="flex-1 overflow-y-auto"
                         searchPlaceholder={searchPlaceholder}
+                        searchable={searchable}
                     />
                 </aside>
             )}

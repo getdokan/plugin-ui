@@ -56,9 +56,11 @@ function collectSearchableText(element: SettingsElement): string {
 export function SettingsSidebar({
     className,
     searchPlaceholder,
+    searchable = true,
 }: {
     className?: string;
     searchPlaceholder?: string;
+    searchable?: boolean;
 }) {
     const {
         schema,
@@ -158,24 +160,25 @@ export function SettingsSidebar({
     return (
         <div className={cn('flex flex-col h-full', className)} data-testid="settings-sidebar">
             {/* Deep-search input */}
-            <div className="shrink-0 p-2 px-4">
-                <div className="relative">
-                    <Search className="text-muted-foreground pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2" />
-                    <Input
-                        type="search"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="h-8 pl-8"
-                        placeholder={searchPlaceholder}
-                        aria-label="Search settings"
-                        data-testid="settings-search"
-                    />
+            {searchable && (
+                <div className="shrink-0 p-2 px-4">
+                    <div className="relative">
+                        <Search className="text-muted-foreground pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2" />
+                        <Input
+                            type="search"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            className="h-8 pl-8"
+                            placeholder={searchPlaceholder}
+                            aria-label="Search settings"
+                            data-testid="settings-search"
+                        />
+                    </div>
                 </div>
-            </div>
+            )}
 
             <LayoutMenu
                 items={filteredItems}
-                searchable={false}
                 activeItemId={activeItemId}
                 onItemClick={(item) => {
                     const isPage = schema.some((p) => p.id === item.id);

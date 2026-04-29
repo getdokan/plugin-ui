@@ -185,6 +185,8 @@ export interface SettingsProps {
     onNavigate?: (pageId: string) => void;
     /** Placeholder text for the sidebar search input. */
     searchPlaceholder?: string;
+    /** Show the sidebar search input. Default: true. */
+    searchable?: boolean;
 }
 
 export interface FieldComponentProps {
