@@ -150,7 +150,7 @@ export const LayoutMenuSearch = forwardRef<
       <div
         ref={ref}
         data-slot="layout-menu-search"
-        className={cn("shrink-0 p-2", className)}
+        className={cn("shrink-0 p-2 px-4", className)}
         {...props}
       >
         <div className="relative">

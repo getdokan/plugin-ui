@@ -2,7 +2,7 @@ import { RawHTML, useState } from '@wordpress/element';
 import { ShieldAlert, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNotices } from '@/hooks/use-notices';
 import { cn } from '@/lib/utils';
-import { Modal, ModalDescription, ModalFooter, ModalHeader, ModalTitle } from '../ui/modal';
+import { Modal, ModalDescription, ModalFooter } from '../ui/modal';
 import { Button } from '../ui/button';
 
 export interface NoticeAction {
@@ -12,7 +12,7 @@ export interface NoticeAction {
     ajax_data?: {
         action: string;
         nonce: string;
-        [key: string]: any;
+        [key: string]: unknown;
     };
     target?: '_self' | '_blank';
     class?: string;
@@ -33,7 +33,7 @@ export interface Notice {
     ajax_data?: {
         action: string;
         nonce: string;
-        [key: string]: any;
+        [key: string]: unknown;
     };
     priority?: number;
 }
@@ -211,8 +211,8 @@ const AdminNotice = ({ interval = 5000, notices: initialNotices = [], noticesUrl
     };
 
     return (
-        <div className="w-full overflow-hidden rounded-lg border border-border bg-[#f3f3f3] p-4 shadow-sm">
-            <div className="min-h-40" onMouseEnter={pauseAutoSlide} onMouseLeave={resumeAutoSlide}>
+        <div className="w-full overflow-hidden rounded-lg border border-border bg-[#f3f3f3] shadow-sm">
+            <div onMouseEnter={pauseAutoSlide} onMouseLeave={resumeAutoSlide}>
                 <div
                     className={cn(
                         'overflow-hidden rounded-md flex border-l-4 bg-white p-2 transition-all items-start duration-300 ease-in-out md:p-4',

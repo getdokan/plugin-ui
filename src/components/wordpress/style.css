@@ -84,6 +84,9 @@
     border-bottom-left-radius: var(--pui-dataviews-radius, 6px);
     border-bottom-right-radius: var(--pui-dataviews-radius, 6px);
 }
+.pui-root-dataviews .dataviews-pagination .components-select-control {
+    margin: 0 !important;
+}
 .pui-root-dataviews .dataviews-wrapper .dataviews-view-table tr td:first-child,
 .pui-root-dataviews .dataviews-wrapper .dataviews-view-table tr th:first-child {
     padding-left: 20px !important;

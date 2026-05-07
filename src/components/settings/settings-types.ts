@@ -38,7 +38,7 @@ export type SettingsElementOption = {
 export type SettingsElement = {
     id: string;
     type: 'page' | 'subpage' | 'tab' | 'section' | 'subsection' | 'field' | 'fieldgroup' | string;
-    is_danger: boolean;
+    is_danger?: boolean;
     variant?: string;
     icon?: string;
     /** Primary display text (preferred over `title`). */
@@ -54,7 +54,7 @@ export type SettingsElement = {
 
     // Field-specific
     value?: string | number | boolean | Array<string | number> | Record<string, any>;
-    default?: string | number | boolean | Array<string | number>;
+    default?: string | number | boolean | Array<string | number> | Record<string, any>;
     options?: SettingsElementOption[];
     readonly?: boolean;
     disabled?: boolean;
@@ -107,6 +107,11 @@ export type SettingsElement = {
     subsection_id?: string;
     field_group_id?: string;
     priority?: number;
+
+    /** Section-only: render the card with a collapse toggle in its header. */
+    collapsible?: boolean;
+    /** Section-only: initial collapsed state when `collapsible` is true. */
+    collapsed?: boolean;
 
     // Validation error (runtime)
     validationError?: string;
@@ -178,6 +183,10 @@ export interface SettingsProps {
     initialPage?: string;
     /** Called whenever the active page changes. Use to sync a URL query param. */
     onNavigate?: (pageId: string) => void;
+    /** Placeholder text for the sidebar search input. */
+    searchPlaceholder?: string;
+    /** Show the sidebar search input. Default: true. */
+    searchable?: boolean;
 }
 
 export interface FieldComponentProps {

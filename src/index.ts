@@ -151,6 +151,8 @@ export {
     ModalFooter, ModalHeader, ModalOverlay, ModalTitle,
     // Notice
     Notice, NoticeAction, NoticeTitle,
+    // AdminNotice (WP-style admin notice card)
+    AdminNotice,
     // Popover
     Popover,
     PopoverContent,
@@ -369,13 +371,16 @@ export { License, type LicenseProps, type LicenseLabels, type LicenseStatus, typ
 // Settings (schema-driven settings page)
 export {
     Settings,
+    SettingsProvider,
     useSettings,
+    FieldRenderer,
     formatSettingsData,
     extractValues,
     type ApplyFiltersFunction,
     type SettingsProps,
     type SettingsElement,
     type FieldComponentProps,
+    type SaveButtonRenderProps,
 } from './components/settings';
 export { SettingsSkeleton } from './components/settings/settings-skeleton';
 

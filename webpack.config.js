@@ -21,6 +21,7 @@ module.exports = {
         'react-dom': 'react-dom',
         'react/jsx-runtime': 'react/jsx-runtime',
         '@wordpress/element': '@wordpress/element',
+        '@wordpress/api-fetch': '@wordpress/api-fetch',
         '@wordpress/components': '@wordpress/components',
         '@wordpress/block-editor': '@wordpress/block-editor',
         '@wordpress/date': '@wordpress/date',

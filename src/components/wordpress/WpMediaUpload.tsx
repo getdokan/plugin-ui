@@ -29,7 +29,7 @@ export function WpMediaUpload( {
     };
 
     return (
-        <div className={ cn( 'flex flex-col items-end gap-2', className ) }>
+        <div className={ cn( 'flex flex-col items-end gap-2 pui-media-upload', className ) }>
             { value && (
                 <div className="relative inline-flex">
                     <img
@@ -105,7 +105,7 @@ export function WpMediaUploadMultiple( {
     };
 
     return (
-        <div className={ cn( 'flex flex-col items-end gap-2', className ) }>
+        <div className={ cn( 'flex flex-col items-end gap-2 pui-media-upload-multiple', className ) }>
             { value.length > 0 && (
                 <div className="flex flex-wrap justify-end gap-2">
                     { value.map( ( url, i ) => (
