@@ -149,7 +149,7 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
             element.description = element.description || '';
             element.hook_key =
                 element.hook_key || `settings_${element.id}`;
-            element.dependency_key = '';
+            element.dependency_key = element.dependency_key || element.id;
             roots.push(element);
             continue;
         }
@@ -185,9 +185,11 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
             child.display =
                 child.display !== undefined ? child.display : true;
             child.hook_key = `${parent.hook_key}_${child.id}`;
-            child.dependency_key = [parent.dependency_key, child.id]
-                .filter(Boolean)
-                .join('.');
+            // Prefer the server-supplied dependency_key; fall back to the
+            // element id when missing. The legacy behavior reconstructed a
+            // dot-path from the parent chain, which silently overwrote the
+            // server value (see Phase 1 dependency_key cleanup).
+            child.dependency_key = child.dependency_key || child.id;
 
             // ── Field-specific defaults ──
             if (child.type === 'field') {
