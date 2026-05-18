@@ -295,11 +295,63 @@ export function extractValues(
 }
 
 /**
+ * Builds a `{ field_id: dependency_key }` map from a hierarchical schema.
+ *
+ * Used by `evaluateDependencies` to resolve a dependency `key` that is
+ * declared as a plain field id (e.g. `"product_info_generate"`) instead
+ * of the full reconstructed dot-path (e.g.
+ * `"product_generation.product_image_section.product_info_generate"`).
+ *
+ * Consumers may pass id-keyed dependencies when their backend already
+ * guarantees globally-unique field ids; the dot-path remains supported
+ * for backwards compatibility.
+ */
+export function buildIdIndex(
+    schema: SettingsElement[]
+): Record<string, string> {
+    const idIndex: Record<string, string> = {};
+
+    const walk = (elements: SettingsElement[]) => {
+        for (const el of elements) {
+            if (
+                el.type === 'field' &&
+                el.id &&
+                el.dependency_key &&
+                el.id !== el.dependency_key
+            ) {
+                // First writer wins — if two fields share an id (a schema
+                // bug consumers should detect with their own validator),
+                // we don't silently clobber the earlier mapping.
+                if (!(el.id in idIndex)) {
+                    idIndex[el.id] = el.dependency_key;
+                }
+            }
+            if (el.children && el.children.length > 0) {
+                walk(el.children);
+            }
+        }
+    };
+
+    walk(schema);
+    return idIndex;
+}
+
+/**
  * Evaluates whether a field should be displayed based on its dependencies.
+ *
+ * Dependency `key` resolution:
+ * 1. Look up `values[dep.key]` directly (existing dot-path behavior).
+ * 2. If that yields `undefined` and an `idIndex` is supplied, treat
+ *    `dep.key` as a plain field id and resolve via `idIndex[dep.key]`
+ *    to its real `dependency_key` before reading from `values`.
+ *
+ * The `idIndex` is optional. When omitted, behavior is identical to the
+ * previous version of this function.
  */
 export function evaluateDependencies(
     element: SettingsElement,
-    values: Record<string, any>
+    values: Record<string, any>,
+    idIndex?: Record<string, string>
 ): boolean {
     if (!element.dependencies || element.dependencies.length === 0) {
         return element.display !== false;
@@ -308,7 +360,18 @@ export function evaluateDependencies(
     return element.dependencies.every((dep) => {
         if (!dep.key) return true;
 
-        const currentValue = values[dep.key];
+        let currentValue = values[dep.key];
+
+        // Field-id fallback: dep.key may be a plain id (not a dot-path).
+        // Resolve it through the idIndex to the underlying dependency_key
+        // and re-read from values.
+        if (currentValue === undefined && idIndex) {
+            const resolved = idIndex[dep.key];
+            if (resolved !== undefined) {
+                currentValue = values[resolved];
+            }
+        }
+
         const comparison = dep.comparison || '==';
         const expectedValue = dep.value;
         const effect = dep.effect || 'show';
