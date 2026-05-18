@@ -139,7 +139,7 @@ export interface SaveButtonRenderProps {
 export interface SettingsProps {
     /** Settings schema — JSON array (flat or hierarchical) */
     schema: SettingsElement[];
-    /** Current values, keyed by dependency_key */
+    /** Current values, keyed by element id */
     values?: Record<string, any>;
     /** Called when a field value changes. Receives the scope ID (subpage/page), field key, and new value. */
     onChange?: (scopeId: string, key: string, value: any) => void;

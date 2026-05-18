@@ -173,7 +173,7 @@ export function TextField({ element, onChange, ...rest }: FieldComponentProps) {
     <FieldWrapper element={element} layout={ element.layout ?? "horizontal" } {...rest}>
       <Input
         value={String(element.value ?? element.default ?? "")}
-        onChange={(e) => onChange(element.dependency_key!, e.target.value)}
+        onChange={(e) => onChange(element.id, e.target.value)}
         placeholder={
           element.placeholder ? String(element.placeholder) : undefined
         }
@@ -197,7 +197,7 @@ export function ShowHideField({ element, onChange }: FieldComponentProps) {
         <Input
           type={show ? "text" : "password"}
           value={String(element.value ?? element.default ?? "")}
-          onChange={(e) => onChange(element.dependency_key!, e.target.value)}
+          onChange={(e) => onChange(element.id, e.target.value)}
           placeholder={
             element.placeholder ? String(element.placeholder) : undefined
           }
@@ -235,7 +235,7 @@ export function NumberField({ element, onChange, ...rest }: FieldComponentProps)
           value={String(element.value ?? element.default ?? "")}
           onChange={(e) =>
             onChange(
-              element.dependency_key!,
+              element.id,
               e.target.value === "" ? "" : Number(e.target.value),
             )
           }
@@ -267,7 +267,7 @@ export function TextareaField({ element, onChange, ...rest }: FieldComponentProp
     <FieldWrapper element={element} layout="full-width" {...rest}>
       <Textarea
         value={String(element.value ?? element.default ?? "")}
-        onChange={(e) => onChange(element.dependency_key!, e.target.value)}
+        onChange={(e) => onChange(element.id, e.target.value)}
         placeholder={
           element.placeholder ? String(element.placeholder) : undefined
         }
@@ -287,7 +287,7 @@ export function RichTextField({ element, onChange, ...rest }: FieldComponentProp
     <FieldWrapper element={element} layout="full-width" {...rest}>
       <RichTextEditor
         value={String(element.value ?? element.default ?? "")}
-        onChange={(value) => onChange(element.dependency_key!, value)}
+        onChange={(value) => onChange(element.id, value)}
         placeholder={
           element.placeholder ? String(element.placeholder) : undefined
         }
@@ -372,7 +372,7 @@ export function GoogleAnalyticsField({ element, onChange, ...rest }: FieldCompon
           <Select
             value={String(value?.profile_id || "")}
             onValueChange={(val) =>
-              onChange(element.dependency_key!, { ...value, profile_id: val })
+              onChange(element.id, { ...value, profile_id: val })
             }
           >
             <SelectTrigger className="w-full sm:w-[200px]">
@@ -413,7 +413,7 @@ export function SelectField({ element, onChange, ...rest }: FieldComponentProps)
     <FieldWrapper element={element} {...rest}>
       <Select
         value={currentValue}
-        onValueChange={(val) => onChange(element.dependency_key!, val)}
+        onValueChange={(val) => onChange(element.id, val)}
         disabled={element.disabled}
       >
         <SelectTrigger className="sm:max-w-56">
@@ -448,7 +448,7 @@ export function ColorPickerField({ element, onChange }: FieldComponentProps) {
     <FieldWrapper element={element} layout={element.layout ?? "horizontal"}>
       <ColorPicker
         value={value}
-        onChange={(newColor) => onChange(element.dependency_key!, newColor)}
+        onChange={(newColor) => onChange(element.id, newColor)}
         disabled={element.disabled}
         aria-label={element.label || element.title}
       />
@@ -468,11 +468,11 @@ export function SwitchField({ element, onChange, ...rest }: FieldComponentProps)
   const handleChange = (checked: boolean) => {
     if (element.enable_state && element.disable_state) {
       onChange(
-        element.dependency_key!,
+        element.id,
         checked ? element.enable_state.value : element.disable_state.value,
       );
     } else {
-      onChange(element.dependency_key!, checked);
+      onChange(element.id, checked);
     }
   };
 
@@ -512,7 +512,7 @@ export function RadioCapsuleField({ element, onChange, ...rest }: FieldComponent
       <ButtonToggleGroup
         items={items}
         value={currentValue}
-        onChange={(val) => onChange(element.dependency_key!, val)}
+        onChange={(val) => onChange(element.id, val)}
         variant="outline"
       />
     </FieldWrapper>
@@ -534,7 +534,7 @@ export function MulticheckField({ element, onChange, ...rest }: FieldComponentPr
     const updated = checked
       ? [...currentValues, optionValue]
       : currentValues.filter((v) => v !== optionValue);
-    onChange(element.dependency_key!, updated);
+    onChange(element.id, updated);
   };
 
   return (
@@ -588,13 +588,13 @@ export function PreviewMulticheckField({ element, onChange, ...rest }: FieldComp
         const updated = checked
           ? [...vals, optionValue]
           : vals.filter((v) => v !== optionValue);
-        onChange(element.dependency_key!, updated);
+        onChange(element.id, updated);
     } else {
         const updated = {
             ...(typeof currentValues === 'object' && currentValues !== null ? currentValues : {}),
             [optionValue]: checked
         } as Record<string, boolean>;
-        onChange(element.dependency_key!, updated);
+        onChange(element.id, updated);
     }
   };
 
@@ -723,7 +723,7 @@ export function CustomizeRadioField({
     <FieldWrapper element={element} layout="full-width" {...rest}>
       <RadioGroup
         value={currentValue}
-        onValueChange={(val) => onChange(element.dependency_key!, val)}
+        onValueChange={(val) => onChange(element.id, val)}
         className={cn(
           "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3",
           "[&>[data-slot=field-group]]:h-full",
@@ -922,10 +922,10 @@ export function CombineInputField({ element, onChange, ...rest }: FieldComponent
         percentagePlaceholder={element.percentage_placeholder}
         numberPlaceholder={element.number_placeholder}
         onPercentageChange={(val) =>
-          onChange(element.dependency_key!, { ...value, [percentageKey]: val })
+          onChange(element.id, { ...value, [percentageKey]: val })
         }
         onNumberChange={(val) =>
-          onChange(element.dependency_key!, { ...value, [numberKey]: val })
+          onChange(element.id, { ...value, [numberKey]: val })
         }
       />
     </FieldWrapper>
@@ -941,7 +941,7 @@ export function WpMediaUploadField({ element, onChange, ...rest }: FieldComponen
     <FieldWrapper element={element} layout={element.layout ?? 'horizontal'} {...rest}>
       <WpMediaUpload
         value={String(element.value ?? '')}
-        onChange={(url) => onChange(element.dependency_key!, url)}
+        onChange={(url) => onChange(element.id, url)}
         btnText={element.placeholder ? String(element.placeholder) : undefined}
         disabled={element.disabled}
       />
@@ -958,7 +958,7 @@ export function WpMediaUploadMultipleField({ element, onChange, ...rest }: Field
     <FieldWrapper element={element} layout={element.layout ?? 'horizontal'} {...rest}>
       <WpMediaUploadMultiple
         value={currentValue}
-        onChange={(urls) => onChange(element.dependency_key!, urls)}
+        onChange={(urls) => onChange(element.id, urls)}
         btnText={element.placeholder ? String(element.placeholder) : undefined}
         disabled={element.disabled}
       />

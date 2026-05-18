@@ -243,7 +243,7 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
                     rules: v.rules || '',
                     message: v.message || '',
                     params: v.params || {},
-                    self: child.dependency_key,
+                    self: child.id,
                 }));
             }
 
@@ -251,7 +251,7 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
             if (child.dependencies) {
                 child.dependencies = child.dependencies.map((d) => ({
                     ...d,
-                    self: child.dependency_key,
+                    self: child.id,
                     to_self: d.to_self ?? true,
                     attribute: d.attribute || 'display',
                     effect: d.effect || 'show',
@@ -283,8 +283,8 @@ export function extractValues(
 
     const walk = (elements: SettingsElement[]) => {
         for (const el of elements) {
-            if (el.type === 'field' && el.dependency_key) {
-                values[el.dependency_key] = el.value;
+            if (el.type === 'field' && el.id) {
+                values[el.id] = el.value;
             }
             if (el.children && el.children.length > 0) {
                 walk(el.children);
@@ -297,16 +297,17 @@ export function extractValues(
 }
 
 /**
- * Builds a `{ field_id: dependency_key }` map from a hierarchical schema.
+ * Builds a `{ field_id: field_id }` identity map from a hierarchical schema.
  *
- * Used by `evaluateDependencies` to resolve a dependency `key` that is
- * declared as a plain field id (e.g. `"product_info_generate"`) instead
- * of the full reconstructed dot-path (e.g.
- * `"product_generation.product_image_section.product_info_generate"`).
+ * Historically this returned a `{ field_id: dependency_key }` map used by
+ * `evaluateDependencies` to translate plain field ids into reconstructed
+ * dot-path keys. Since the migration to id-keyed values (Phase 2 of the
+ * dependency_key cleanup) dependency keys ARE element ids, so the map
+ * collapses to identity and is effectively a no-op.
  *
- * Consumers may pass id-keyed dependencies when their backend already
- * guarantees globally-unique field ids; the dot-path remains supported
- * for backwards compatibility.
+ * Kept temporarily for API stability; `evaluateDependencies` reads
+ * `values[dep.key]` directly and falls back through this index only when
+ * a key is missing. Slated for removal in Task 11 of the cleanup plan.
  */
 export function buildIdIndex(
     schema: SettingsElement[]
@@ -315,17 +316,9 @@ export function buildIdIndex(
 
     const walk = (elements: SettingsElement[]) => {
         for (const el of elements) {
-            if (
-                el.type === 'field' &&
-                el.id &&
-                el.dependency_key &&
-                el.id !== el.dependency_key
-            ) {
-                // First writer wins — if two fields share an id (a schema
-                // bug consumers should detect with their own validator),
-                // we don't silently clobber the earlier mapping.
+            if (el.type === 'field' && el.id) {
                 if (!(el.id in idIndex)) {
-                    idIndex[el.id] = el.dependency_key;
+                    idIndex[el.id] = el.id;
                 }
             }
             if (el.children && el.children.length > 0) {

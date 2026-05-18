@@ -48,11 +48,11 @@ export function FieldRenderer({
         return null;
     }
 
-    // Merge current value from context
+    // Merge current value from context (keyed by element id)
     const mergedElement: SettingsElement = {
         ...element,
-        value: element.dependency_key ? (values[element.dependency_key] ?? element.value) : element.value,
-        validationError: element.dependency_key ? errors[element.dependency_key] : undefined,
+        value: element.id ? (values[element.id] ?? element.value) : element.value,
+        validationError: element.id ? errors[element.id] : undefined,
     };
 
     const fieldProps: FieldComponentProps = {

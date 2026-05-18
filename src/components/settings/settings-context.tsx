@@ -27,9 +27,9 @@ export type ApplyFiltersFunction = (hookName: string, value: any, ...args: any[]
 export interface SettingsContextValue {
     /** Parsed hierarchical settings tree */
     schema: SettingsElement[];
-    /** Flat map of field values keyed by dependency_key */
+    /** Flat map of field values keyed by element id */
     values: Record<string, any>;
-    /** Validation errors keyed by dependency_key */
+    /** Validation errors keyed by element id */
     errors: Record<string, string>;
     /** Currently active page ID */
     activePage: string;
@@ -136,15 +136,15 @@ export function SettingsProvider({
     const [activeSubpage, setActiveSubpage] = useState<string>('');
     const [activeTab, setActiveTab] = useState<string>('');
 
-    // Build a memoized map of scopeId → [dependency_keys...] for per-subpage dirty tracking.
+    // Build a memoized map of scopeId → [element ids...] for per-subpage dirty tracking.
     // The scope ID is the subpage ID when a subpage exists, otherwise the page ID itself.
     const scopeFieldKeysMap = useMemo(() => {
         const map = new Map<string, string[]>();
         const collectKeys = (elements: SettingsElement[]): string[] => {
             const keys: string[] = [];
             for (const el of elements) {
-                if (el.type === 'field' && el.dependency_key) {
-                    keys.push(el.dependency_key);
+                if (el.type === 'field' && el.id) {
+                    keys.push(el.id);
                 }
                 if (el.children?.length) {
                     keys.push(...collectKeys(el.children));
@@ -175,7 +175,7 @@ export function SettingsProvider({
         return map;
     }, [schema]);
 
-    // Reverse lookup: dependency_key → scopeId (subpage ID or page ID)
+    // Reverse lookup: element id → scopeId (subpage ID or page ID)
     const keyToScopeMap = useMemo(() => {
         const map = new Map<string, string>();
         for (const [scopeId, keys] of scopeFieldKeysMap.entries()) {
@@ -309,7 +309,7 @@ export function SettingsProvider({
                 console.error('[Settings] onSave error caught:', error);
                 // If the error contains field-level errors (e.g. from a 400 response),
                 // merge them into the errors state so they display on the relevant fields.
-                // Error keys should match field dependency_key values.
+                // Error keys should match field element id values.
                 if (error && typeof error === 'object' && error.errors && typeof error.errors === 'object') {
                     setErrors((prev) => ({ ...prev, ...error.errors }));
                 }
@@ -326,7 +326,7 @@ export function SettingsProvider({
             // Find the element to validate
             const findElement = (elements: SettingsElement[]): SettingsElement | undefined => {
                 for (const el of elements) {
-                    if (el.dependency_key === key) return el;
+                    if (el.id === key) return el;
                     if (el.children) {
                         const found = findElement(el.children);
                         if (found) return found;
