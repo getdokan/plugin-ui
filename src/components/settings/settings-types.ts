@@ -49,7 +49,6 @@ export type SettingsElement = {
     tooltip?: string;
     display?: boolean;
     hook_key?: string;
-    dependency_key?: string;
     children?: SettingsElement[];
 
     // Field-specific

@@ -55,7 +55,6 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
             children: [],
             display: item.display !== undefined ? item.display : true,
             hook_key: item.hook_key || '',
-            dependency_key: item.dependency_key || '',
             validations: Array.isArray(item.validations) ? item.validations : [],
             dependencies: Array.isArray(item.dependencies)
                 ? item.dependencies
@@ -149,7 +148,6 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
             element.description = element.description || '';
             element.hook_key =
                 element.hook_key || `settings_${element.id}`;
-            element.dependency_key = element.dependency_key || element.id;
             roots.push(element);
             continue;
         }
@@ -166,9 +164,9 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
 
     // ── Step 4: Recursive enrichment ────────────────────────────────────
     //
-    // Walk the tree top-down to compute hook_key, dependency_key, apply
-    // field-specific defaults, transform validations/dependencies, and
-    // sort children at each level.
+    // Walk the tree top-down to compute hook_key, apply field-specific
+    // defaults, transform validations/dependencies, and sort children at
+    // each level.
     const enrichNode = (parent: SettingsElement) => {
         if (!parent.children || parent.children.length === 0) return;
 
@@ -185,11 +183,6 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
             child.display =
                 child.display !== undefined ? child.display : true;
             child.hook_key = `${parent.hook_key}_${child.id}`;
-            // Prefer the server-supplied dependency_key; fall back to the
-            // element id when missing. The legacy behavior reconstructed a
-            // dot-path from the parent chain, which silently overwrote the
-            // server value (see Phase 1 dependency_key cleanup).
-            child.dependency_key = child.dependency_key || child.id;
 
             // ── Field-specific defaults ──
             if (child.type === 'field') {
@@ -297,56 +290,14 @@ export function extractValues(
 }
 
 /**
- * Builds a `{ field_id: field_id }` identity map from a hierarchical schema.
- *
- * Historically this returned a `{ field_id: dependency_key }` map used by
- * `evaluateDependencies` to translate plain field ids into reconstructed
- * dot-path keys. Since the migration to id-keyed values (Phase 2 of the
- * dependency_key cleanup) dependency keys ARE element ids, so the map
- * collapses to identity and is effectively a no-op.
- *
- * Kept temporarily for API stability; `evaluateDependencies` reads
- * `values[dep.key]` directly and falls back through this index only when
- * a key is missing. Slated for removal in Task 11 of the cleanup plan.
- */
-export function buildIdIndex(
-    schema: SettingsElement[]
-): Record<string, string> {
-    const idIndex: Record<string, string> = {};
-
-    const walk = (elements: SettingsElement[]) => {
-        for (const el of elements) {
-            if (el.type === 'field' && el.id) {
-                if (!(el.id in idIndex)) {
-                    idIndex[el.id] = el.id;
-                }
-            }
-            if (el.children && el.children.length > 0) {
-                walk(el.children);
-            }
-        }
-    };
-
-    walk(schema);
-    return idIndex;
-}
-
-/**
  * Evaluates whether a field should be displayed based on its dependencies.
  *
- * Dependency `key` resolution:
- * 1. Look up `values[dep.key]` directly (existing dot-path behavior).
- * 2. If that yields `undefined` and an `idIndex` is supplied, treat
- *    `dep.key` as a plain field id and resolve via `idIndex[dep.key]`
- *    to its real `dependency_key` before reading from `values`.
- *
- * The `idIndex` is optional. When omitted, behavior is identical to the
- * previous version of this function.
+ * Dependency keys are plain field ids (post-dependency_key cleanup). The
+ * value is read directly from the flat `values` map keyed by id.
  */
 export function evaluateDependencies(
     element: SettingsElement,
-    values: Record<string, any>,
-    idIndex?: Record<string, string>
+    values: Record<string, any>
 ): boolean {
     if (!element.dependencies || element.dependencies.length === 0) {
         return element.display !== false;
@@ -355,17 +306,7 @@ export function evaluateDependencies(
     return element.dependencies.every((dep) => {
         if (!dep.key) return true;
 
-        let currentValue = values[dep.key];
-
-        // Field-id fallback: dep.key may be a plain id (not a dot-path).
-        // Resolve it through the idIndex to the underlying dependency_key
-        // and re-read from values.
-        if (currentValue === undefined && idIndex) {
-            const resolved = idIndex[dep.key];
-            if (resolved !== undefined) {
-                currentValue = values[resolved];
-            }
-        }
+        const currentValue = values[dep.key];
 
         const comparison = dep.comparison || '==';
         const expectedValue = dep.value;

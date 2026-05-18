@@ -10,7 +10,6 @@ import {
 } from 'react';
 import type { SaveButtonRenderProps, SettingsElement } from './settings-types';
 import {
-    buildIdIndex,
     evaluateDependencies,
     extractValues,
     formatSettingsData,
@@ -356,18 +355,13 @@ export function SettingsProvider({
         [schema, onChange, keyToScopeMap, activeSubpage, activePage]
     );
 
-    // Field-id → dependency_key index, used as a fallback when a dependency
-    // declares its `key` as a plain field id instead of the reconstructed
-    // dot-path. Memoized on the schema since ids and dep_keys don't change
-    // at runtime.
-    const idIndex = useMemo(() => buildIdIndex(schema), [schema]);
-
-    // Dependency evaluation
+    // Dependency evaluation — dep keys are plain field ids, read directly
+    // from the flat values map.
     const shouldDisplay = useCallback(
         (element: SettingsElement): boolean => {
-            return evaluateDependencies(element, values, idIndex);
+            return evaluateDependencies(element, values);
         },
-        [values, idIndex]
+        [values]
     );
 
     // Navigation helpers
