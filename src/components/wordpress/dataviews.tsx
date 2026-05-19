@@ -278,6 +278,7 @@ export type DataViewsProps<Item> = {
     search?: boolean;
     searchLabel?: string;
     searchPlaceholder?: string;
+    actionsLabel?: string;
     actions?: DataViewAction<Item>[];
     data: Item[];
     isLoading?: boolean;
@@ -455,6 +456,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
         tabs,
         search,
         searchPlaceholder = __('Search', 'default'),
+        actionsLabel = __('Actions', 'default'),
         children,
         ...dataViewsTableProps
     } = props;
@@ -974,7 +976,7 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                                 hasBulkActions={!!props.onChangeSelection}
                                 headers={[
                                     ...fields.map((f) => f.label ?? f.id),
-                                    ...(props.actions?.length ? [__('Actions', 'default')] : [])
+                                    ...(props.actions?.length ? [actionsLabel] : [])
                                 ]}
                             />
                         ) : (
