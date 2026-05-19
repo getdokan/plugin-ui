@@ -17,6 +17,15 @@ import {
   SelectTrigger,
   SelectValue,
   Switch,
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+  AlertDialogCancel,
+  Checkbox,
   Textarea,
   Tooltip,
   TooltipContent,
@@ -34,6 +43,7 @@ import {
 } from "../ui";
 import { ButtonToggleGroup } from "../button-toggle-group";
 import type { FieldComponentProps, SettingsElement } from "./settings-types";
+import { useSettings } from "./settings-context";
 import { RawHTML } from '@wordpress/element';
 
 // ============================================
@@ -484,6 +494,218 @@ export function SwitchField({ element, onChange, ...rest }: FieldComponentProps)
         disabled={element.disabled}
       />
     </FieldWrapper>
+  );
+}
+
+// ============================================
+// Info Preview Field
+// ============================================
+//
+// Generic field for "pick a few things to display" with an optional preview
+// on the right. Value shape: `Record<string, boolean>` keyed by `option.value`.
+// Preview slot resolution order:
+//   1. Filter `${hookPrefix}_settings_info_preview_field_preview` — receives
+//      (null, element, currentValue) and may return a React node.
+//   2. `element.image_url` — rendered as an <img>.
+//   3. Nothing.
+
+type InfoPreviewValue = Record<string, boolean>;
+
+export function InfoPreviewField({ element, onChange }: FieldComponentProps) {
+  const { applyFilters, hookPrefix } = useSettings();
+
+  const value: InfoPreviewValue =
+    (element.value as InfoPreviewValue) ||
+    (element.default as InfoPreviewValue) ||
+    {};
+
+  const handleToggle = (key: string, checked: boolean) => {
+    onChange(element.id, { ...value, [key]: checked });
+  };
+
+  const filterPrefix = hookPrefix || 'plugin_ui';
+  const customPreview = applyFilters(
+    `${filterPrefix}_settings_info_preview_field_preview`,
+    null,
+    element,
+    value,
+  );
+  const preview =
+    customPreview ??
+    (element.image_url ? (
+      <img
+        src={element.image_url}
+        alt=""
+        className="max-w-[200px] h-auto rounded border border-border"
+      />
+    ) : null);
+
+  const displayLabel = element.label || element.title || '';
+  const options = element.options ?? [];
+
+  return (
+    <div className="p-5">
+      <div className="flex items-start justify-between gap-8">
+        <div className="flex-1 min-w-0 max-w-lg">
+          {displayLabel && (
+            <div className="text-sm font-semibold text-foreground">
+              {displayLabel}
+            </div>
+          )}
+          {element.description && (
+            <div className="text-xs text-muted-foreground leading-relaxed mt-1">
+              <RawHTML>{element.description}</RawHTML>
+            </div>
+          )}
+          {options.length > 0 && (
+            <div className="mt-4 flex flex-col gap-3">
+              {options.map((option) => {
+                const key = String(option.value);
+                return (
+                  <LabeledCheckbox
+                    key={key}
+                    label={option.label ?? key}
+                    checked={Boolean(value[key])}
+                    onCheckedChange={(checked) =>
+                      handleToggle(key, Boolean(checked))
+                    }
+                  />
+                );
+              })}
+            </div>
+          )}
+        </div>
+        {preview && <div className="shrink-0">{preview}</div>}
+      </div>
+    </div>
+  );
+}
+
+// ============================================
+// Danger Switch Field
+// ============================================
+//
+// A dedicated variant for destructive toggles (e.g. "Clear all data on
+// uninstall"). Always renders in a destructive-tinted card, always confirms
+// the off → on transition via an AlertDialog. Reads `confirm_modal` from the
+// schema for modal copy and an optional acknowledgement checkbox.
+
+export function DangerSwitchField({ element, onChange }: FieldComponentProps) {
+  const isEnabled = element.enable_state
+    ? element.value === element.enable_state.value
+    : Boolean(element.value);
+
+  const modal = (element.confirm_modal ?? {}) as {
+    title?: string;
+    confirmationTitle?: string;
+    description?: string;
+    confirmText?: string;
+    cancelText?: string;
+    checkboxLabel?: string;
+  };
+
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [ack, setAck] = useState(false);
+
+  const commit = (checked: boolean) => {
+    if (element.enable_state && element.disable_state) {
+      onChange(
+        element.id,
+        checked ? element.enable_state.value : element.disable_state.value,
+      );
+    } else {
+      onChange(element.id, checked);
+    }
+  };
+
+  const handleChange = (checked: boolean) => {
+    // Only intercept the off → on transition (enabling the danger action).
+    if (checked && !isEnabled) {
+      setAck(false);
+      setConfirmOpen(true);
+      return;
+    }
+    commit(checked);
+  };
+
+  const displayLabel = element.label || element.title || '';
+  const IconComponent = element.icon
+    ? (LucideIcons[element.icon as keyof typeof LucideIcons] as React.ElementType)
+    : null;
+  const confirmTitle = modal.confirmationTitle ?? modal.title ?? '';
+  const requiresAck = typeof modal.checkboxLabel === 'string' && modal.checkboxLabel !== '';
+  const ackId = `${element.id}-confirm-ack`;
+
+  return (
+    <div className="rounded-lg border border-destructive/20 bg-destructive/10 p-5 flex items-start justify-between gap-4">
+      <div className="flex flex-col gap-1 flex-1 min-w-0">
+        <div className="flex items-center gap-2">
+          {displayLabel && (
+            <span className="text-sm font-semibold text-destructive">{displayLabel}</span>
+          )}
+          {IconComponent && <IconComponent className="size-4 text-destructive" />}
+        </div>
+        {element.description && (
+          <div className="text-xs leading-relaxed text-destructive">
+            <RawHTML>{element.description}</RawHTML>
+          </div>
+        )}
+      </div>
+      <div className="shrink-0 self-center">
+        <Switch
+          checked={isEnabled}
+          onCheckedChange={handleChange}
+          disabled={element.disabled}
+          className={cn(isEnabled && 'data-checked:bg-destructive')}
+        />
+      </div>
+      <AlertDialog
+        open={confirmOpen}
+        onOpenChange={(open) => {
+          setConfirmOpen(open);
+          if (!open) setAck(false);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            {confirmTitle && (
+              <AlertDialogTitle className="p-0! m-0!">{confirmTitle}</AlertDialogTitle>
+            )}
+            {modal.description && (
+              <AlertDialogDescription className="p-0! m-0!">
+                {modal.description}
+              </AlertDialogDescription>
+            )}
+          </AlertDialogHeader>
+          {requiresAck && (
+            <div className="flex items-center gap-2 mt-2">
+              <Checkbox
+                id={ackId}
+                checked={ack}
+                onCheckedChange={(v) => setAck(Boolean(v))}
+              />
+              <label htmlFor={ackId} className="text-sm cursor-pointer">
+                {modal.checkboxLabel}
+              </label>
+            </div>
+          )}
+          <AlertDialogFooter>
+            <AlertDialogCancel>{modal.cancelText ?? 'Cancel'}</AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              disabled={requiresAck && !ack}
+              onClick={() => {
+                commit(true);
+                setConfirmOpen(false);
+                setAck(false);
+              }}
+            >
+              {modal.confirmText ?? 'Confirm'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
   );
 }
 

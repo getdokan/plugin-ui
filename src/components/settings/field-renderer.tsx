@@ -6,6 +6,8 @@ import {
     TextareaField,
     SelectField,
     SwitchField,
+    DangerSwitchField,
+    InfoPreviewField,
     RadioCapsuleField,
     CustomizeRadioField,
     MulticheckField,
@@ -130,6 +132,20 @@ export function FieldRenderer({
             return applyFilters(
                 `${filterPrefix}_settings_switch_field`,
                 <SwitchField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'danger_switch':
+            return applyFilters(
+                `${filterPrefix}_settings_danger_switch_field`,
+                <DangerSwitchField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'info_preview':
+            return applyFilters(
+                `${filterPrefix}_settings_info_preview_field`,
+                <InfoPreviewField {...fieldProps} />,
                 mergedElement
             );
 
