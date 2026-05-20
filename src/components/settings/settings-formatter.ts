@@ -352,10 +352,15 @@ export function evaluateDependencies(
  * Validates a field value against its validation rules.
  * Supports pipe-delimited rules: "not_empty|min_value|max_value"
  * Returns an error message string or null if valid.
+ *
+ * `allValues` is an optional snapshot of every field's current value, keyed
+ * by element id. It enables cross-field rules like `sum_max` to read sibling
+ * values without callers having to plumb them through manually.
  */
 export function validateField(
     element: SettingsElement,
-    value: any
+    value: any,
+    allValues?: Record<string, any>
 ): string | null {
     if (!element.validations || element.validations.length === 0) {
         return null;
@@ -445,6 +450,51 @@ export function validateField(
                             validation.message ||
                             `Value must be at most ${max}.`
                         );
+                    }
+                    break;
+                }
+                case 'sum_max': {
+                    // Cross-field: this value + value(each id in params.fields)
+                    // must be <= params.max. Accepts either `field: 'id'`
+                    // (legacy single-sibling form) or `fields: ['a','b',...]`
+                    // (multi-sibling form). Silently passes when allValues is
+                    // not supplied (defensive — callers that don't plumb the
+                    // values snapshot won't trigger false negatives).
+                    const max = Number(params.max);
+                    const siblingIds: string[] = Array.isArray(params.fields)
+                        ? params.fields.map((f: unknown) => String(f)).filter(Boolean)
+                        : params.field
+                          ? [ String(params.field) ]
+                          : [];
+                    if (
+                        siblingIds.length > 0 &&
+                        !isNaN(max) &&
+                        allValues
+                    ) {
+                        const selfNum = Number(value);
+                        if (!isNaN(selfNum)) {
+                            let total = selfNum;
+                            for (const id of siblingIds) {
+                                if (!Object.prototype.hasOwnProperty.call(allValues, id)) {
+                                    // Missing sibling value — bail to avoid
+                                    // false positive on partial snapshots.
+                                    total = NaN;
+                                    break;
+                                }
+                                const n = Number(allValues[id]);
+                                if (isNaN(n)) {
+                                    total = NaN;
+                                    break;
+                                }
+                                total += n;
+                            }
+                            if (!isNaN(total) && total > max) {
+                                return (
+                                    validation.message ||
+                                    `Combined value with ${siblingIds.map((s) => `"${s}"`).join(', ')} must not exceed ${max}.`
+                                );
+                            }
+                        }
                     }
                     break;
                 }

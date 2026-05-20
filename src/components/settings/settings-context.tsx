@@ -320,6 +320,10 @@ export function SettingsProvider({
     // Update a field value
     const updateValue = useCallback(
         (key: string, value: any) => {
+            // Compute the next values snapshot locally — used both for
+            // setInternalValues and for cross-field validators (e.g. sum_max)
+            // that need to see the post-update value of the sibling.
+            const nextValues: Record<string, any> = { ...values, [key]: value };
             setInternalValues((prev) => ({ ...prev, [key]: value }));
 
             // Find the element to validate
@@ -334,25 +338,58 @@ export function SettingsProvider({
                 return undefined;
             };
 
-            const element = findElement(schema);
-            if (element) {
-                const error = validateField(element, value);
-                setErrors((prev) => {
-                    const next = { ...prev };
-                    if (error) {
-                        next[key] = error;
-                    } else {
-                        delete next[key];
+            // Walk the flat tree and collect every field whose validations
+            // reference the just-changed key via a cross-field rule. We
+            // re-validate these so a sibling's error clears when this field
+            // moves into a passing state.
+            //
+            // A rule references `key` when params.field === key OR `key`
+            // appears in params.fields (multi-sibling form).
+            const findCrossLinked = (elements: SettingsElement[], out: SettingsElement[] = []): SettingsElement[] => {
+                for (const el of elements) {
+                    if (el.id !== key && Array.isArray(el.validations)) {
+                        for (const v of el.validations) {
+                            const params = (v?.params as any) || {};
+                            const linkedToKey =
+                                String(params.field || '') === key ||
+                                (Array.isArray(params.fields) &&
+                                    params.fields.map(String).includes(key));
+                            if (linkedToKey) {
+                                out.push(el);
+                                break;
+                            }
+                        }
                     }
-                    return next;
-                });
-            }
+                    if (el.children) findCrossLinked(el.children, out);
+                }
+                return out;
+            };
+
+            setErrors((prev) => {
+                const next = { ...prev };
+
+                const element = findElement(schema);
+                if (element) {
+                    const error = validateField(element, value, nextValues);
+                    if (error) next[key] = error;
+                    else delete next[key];
+                }
+
+                for (const linked of findCrossLinked(schema)) {
+                    const linkedValue = nextValues[linked.id];
+                    const linkedError = validateField(linked, linkedValue, nextValues);
+                    if (linkedError) next[linked.id] = linkedError;
+                    else delete next[linked.id];
+                }
+
+                return next;
+            });
 
             // Pass scopeId (subpage ID if exists, otherwise page ID) along with key and value
             const scopeId = keyToScopeMap.get(key) || activeSubpage || activePage;
             onChange?.(scopeId, key, value);
         },
-        [schema, onChange, keyToScopeMap, activeSubpage, activePage]
+        [schema, values, onChange, keyToScopeMap, activeSubpage, activePage]
     );
 
     // Dependency evaluation — dep keys are plain field ids, read directly
