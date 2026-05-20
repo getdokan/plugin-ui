@@ -1,5 +1,16 @@
 # @wedevs/plugin-ui
 
+> **Note (DOKAN_NEXT_MAJOR):** The `dependency_key` attribute has been removed
+> from the settings schema. Use the field's `id` directly. `show_if` and
+> `dependencies` rule keys are now flat field ids — dot-paths are no longer
+> supported.
+>
+> **Migration:** drop `dependency_key` from schema elements (consumers read
+> `element.id`), and replace any dot-path keys in `show_if` / `dependencies`
+> with the target field's plain id. The `idIndex` argument on
+> `evaluateDependencies()` is kept as an optional no-op for source
+> compatibility; the resolver no longer uses it.
+
 Scoped, themeable React component library for WordPress plugins. Built on ShadCN patterns, Tailwind CSS v4, and Base-UI primitives.
 
 ## Architecture
@@ -55,15 +66,15 @@ import { Settings } from '@wedevs/plugin-ui';
 
 <Settings
   schema={settingsSchema}        // SettingsElement[] (flat or hierarchical)
-  values={values}                // Record<string, any> keyed by dependency_key
+  values={values}                // Record<string, any> keyed by field id
   onChange={(scopeId, key, value) => {
     setValues(prev => ({ ...prev, [key]: value }));
   }}
   onSave={async (scopeId, treeValues, flatValues) => {
-    // treeValues: nested object built from dot-separated keys
-    //   e.g. { dokan: { general: { store_name: "..." } } }
-    // flatValues: original flat dot-keyed values
-    //   e.g. { "dokan.general.store_name": "..." }
+    // treeValues: object keyed by field id
+    //   e.g. { store_name: "...", enable_tax: true }
+    // flatValues: same shape — flat id-keyed values
+    //   e.g. { store_name: "...", enable_tax: true }
     await api.post(`/settings/${scopeId}`, treeValues);
   }}
   renderSaveButton={({ dirty, hasErrors, onSave }) => (
@@ -76,7 +87,7 @@ import { Settings } from '@wedevs/plugin-ui';
 
 ### Key Concepts
 
-- **`dependency_key`**: Unique key on each field element, used as the key in `values` and `flatValues`
+- **`id`**: Unique key on each field element, used as the key in `values` and `flatValues`
 - **Dependencies**: Elements can conditionally show/hide based on other field values via `dependencies` array
 - **Validation**: Per-field `validations` array with rules and error messages
 - **Dirty tracking**: Per-scope (subpage/page) dirty state; resets only on successful save

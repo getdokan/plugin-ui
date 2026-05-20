@@ -1,5 +1,16 @@
 # @wedevs/plugin-ui — Developer Guide
 
+> **Note (DOKAN_NEXT_MAJOR):** The `dependency_key` attribute has been removed
+> from the settings schema. Use the field's `id` directly. `show_if` and
+> `dependencies` rule keys are now flat field ids — dot-paths are no longer
+> supported.
+>
+> **Migration:** drop `dependency_key` from schema elements (consumers read
+> `element.id`), and replace any dot-path keys in `show_if` / `dependencies`
+> with the target field's plain id. The `idIndex` argument on
+> `evaluateDependencies()` is kept as an optional no-op for source
+> compatibility; the resolver no longer uses it.
+
 A ShadCN-style React component library built for WordPress plugins. Provides 50+ themed, accessible UI components powered by Tailwind CSS v4, `@base-ui/react` headless primitives, and first-class WordPress integration.
 
 ---
@@ -1088,7 +1099,6 @@ const schema: SettingsElement[] = [
                 type: 'field',
                 variant: 'text',
                 label: __('Store Name', 'my-plugin'),
-                dependency_key: 'store_name',
                 default: '',
               },
               {
@@ -1096,7 +1106,6 @@ const schema: SettingsElement[] = [
                 type: 'field',
                 variant: 'switch',
                 label: __('Enable Tax', 'my-plugin'),
-                dependency_key: 'enable_tax',
                 default: false,
               },
               {
@@ -1104,7 +1113,6 @@ const schema: SettingsElement[] = [
                 type: 'field',
                 variant: 'number',
                 label: __('Tax Rate (%)', 'my-plugin'),
-                dependency_key: 'tax_rate',
                 dependencies: [{ key: 'enable_tax', value: true, comparison: '=' }],
               },
             ],

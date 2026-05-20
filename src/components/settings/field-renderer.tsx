@@ -6,6 +6,8 @@ import {
     TextareaField,
     SelectField,
     SwitchField,
+    DangerSwitchField,
+    InfoPreviewField,
     RadioCapsuleField,
     CustomizeRadioField,
     MulticheckField,
@@ -48,11 +50,11 @@ export function FieldRenderer({
         return null;
     }
 
-    // Merge current value from context
+    // Merge current value from context (keyed by element id)
     const mergedElement: SettingsElement = {
         ...element,
-        value: element.dependency_key ? (values[element.dependency_key] ?? element.value) : element.value,
-        validationError: element.dependency_key ? errors[element.dependency_key] : undefined,
+        value: element.id ? (values[element.id] ?? element.value) : element.value,
+        validationError: element.id ? errors[element.id] : undefined,
     };
 
     const fieldProps: FieldComponentProps = {
@@ -130,6 +132,20 @@ export function FieldRenderer({
             return applyFilters(
                 `${filterPrefix}_settings_switch_field`,
                 <SwitchField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'danger_switch':
+            return applyFilters(
+                `${filterPrefix}_settings_danger_switch_field`,
+                <DangerSwitchField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'info_preview':
+            return applyFilters(
+                `${filterPrefix}_settings_info_preview_field`,
+                <InfoPreviewField {...fieldProps} />,
                 mergedElement
             );
 

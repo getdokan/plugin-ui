@@ -55,7 +55,6 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
             children: [],
             display: item.display !== undefined ? item.display : true,
             hook_key: item.hook_key || '',
-            dependency_key: item.dependency_key || '',
             validations: Array.isArray(item.validations) ? item.validations : [],
             dependencies: Array.isArray(item.dependencies)
                 ? item.dependencies
@@ -149,7 +148,6 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
             element.description = element.description || '';
             element.hook_key =
                 element.hook_key || `settings_${element.id}`;
-            element.dependency_key = '';
             roots.push(element);
             continue;
         }
@@ -166,9 +164,9 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
 
     // ── Step 4: Recursive enrichment ────────────────────────────────────
     //
-    // Walk the tree top-down to compute hook_key, dependency_key, apply
-    // field-specific defaults, transform validations/dependencies, and
-    // sort children at each level.
+    // Walk the tree top-down to compute hook_key, apply field-specific
+    // defaults, transform validations/dependencies, and sort children at
+    // each level.
     const enrichNode = (parent: SettingsElement) => {
         if (!parent.children || parent.children.length === 0) return;
 
@@ -185,9 +183,6 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
             child.display =
                 child.display !== undefined ? child.display : true;
             child.hook_key = `${parent.hook_key}_${child.id}`;
-            child.dependency_key = [parent.dependency_key, child.id]
-                .filter(Boolean)
-                .join('.');
 
             // ── Field-specific defaults ──
             if (child.type === 'field') {
@@ -241,7 +236,7 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
                     rules: v.rules || '',
                     message: v.message || '',
                     params: v.params || {},
-                    self: child.dependency_key,
+                    self: child.id,
                 }));
             }
 
@@ -249,7 +244,7 @@ export function formatSettingsData(data: SettingsElement[]): SettingsElement[] {
             if (child.dependencies) {
                 child.dependencies = child.dependencies.map((d) => ({
                     ...d,
-                    self: child.dependency_key,
+                    self: child.id,
                     to_self: d.to_self ?? true,
                     attribute: d.attribute || 'display',
                     effect: d.effect || 'show',
@@ -281,8 +276,8 @@ export function extractValues(
 
     const walk = (elements: SettingsElement[]) => {
         for (const el of elements) {
-            if (el.type === 'field' && el.dependency_key) {
-                values[el.dependency_key] = el.value;
+            if (el.type === 'field' && el.id) {
+                values[el.id] = el.value;
             }
             if (el.children && el.children.length > 0) {
                 walk(el.children);
@@ -339,14 +334,12 @@ export function buildIdIndex(
 /**
  * Evaluates whether a field should be displayed based on its dependencies.
  *
- * Dependency `key` resolution:
- * 1. Look up `values[dep.key]` directly (existing dot-path behavior).
- * 2. If that yields `undefined` and an `idIndex` is supplied, treat
- *    `dep.key` as a plain field id and resolve via `idIndex[dep.key]`
- *    to its real `dependency_key` before reading from `values`.
+ * Dependency keys are plain field ids (post-dependency_key cleanup). The
+ * value is read directly from the flat `values` map keyed by id.
  *
- * The `idIndex` is optional. When omitted, behavior is identical to the
- * previous version of this function.
+ * `idIndex` is kept as an optional parameter for backwards compatibility with
+ * call sites in main that pass it; it's unused now that dependency_key is
+ * gone and `dep.key` always equals the field id.
  */
 export function evaluateDependencies(
     element: SettingsElement,
@@ -360,17 +353,7 @@ export function evaluateDependencies(
     return element.dependencies.every((dep) => {
         if (!dep.key) return true;
 
-        let currentValue = values[dep.key];
-
-        // Field-id fallback: dep.key may be a plain id (not a dot-path).
-        // Resolve it through the idIndex to the underlying dependency_key
-        // and re-read from values.
-        if (currentValue === undefined && idIndex) {
-            const resolved = idIndex[dep.key];
-            if (resolved !== undefined) {
-                currentValue = values[resolved];
-            }
-        }
+        const currentValue = values[dep.key];
 
         const comparison = dep.comparison || '==';
         const expectedValue = dep.value;
@@ -416,10 +399,15 @@ export function evaluateDependencies(
  * Validates a field value against its validation rules.
  * Supports pipe-delimited rules: "not_empty|min_value|max_value"
  * Returns an error message string or null if valid.
+ *
+ * `allValues` is an optional snapshot of every field's current value, keyed
+ * by element id. It enables cross-field rules like `sum_max` to read sibling
+ * values without callers having to plumb them through manually.
  */
 export function validateField(
     element: SettingsElement,
-    value: any
+    value: any,
+    allValues?: Record<string, any>
 ): string | null {
     if (!element.validations || element.validations.length === 0) {
         return null;
@@ -509,6 +497,51 @@ export function validateField(
                             validation.message ||
                             `Value must be at most ${max}.`
                         );
+                    }
+                    break;
+                }
+                case 'sum_max': {
+                    // Cross-field: this value + value(each id in params.fields)
+                    // must be <= params.max. Accepts either `field: 'id'`
+                    // (legacy single-sibling form) or `fields: ['a','b',...]`
+                    // (multi-sibling form). Silently passes when allValues is
+                    // not supplied (defensive — callers that don't plumb the
+                    // values snapshot won't trigger false negatives).
+                    const max = Number(params.max);
+                    const siblingIds: string[] = Array.isArray(params.fields)
+                        ? params.fields.map((f: unknown) => String(f)).filter(Boolean)
+                        : params.field
+                          ? [ String(params.field) ]
+                          : [];
+                    if (
+                        siblingIds.length > 0 &&
+                        !isNaN(max) &&
+                        allValues
+                    ) {
+                        const selfNum = Number(value);
+                        if (!isNaN(selfNum)) {
+                            let total = selfNum;
+                            for (const id of siblingIds) {
+                                if (!Object.prototype.hasOwnProperty.call(allValues, id)) {
+                                    // Missing sibling value — bail to avoid
+                                    // false positive on partial snapshots.
+                                    total = NaN;
+                                    break;
+                                }
+                                const n = Number(allValues[id]);
+                                if (isNaN(n)) {
+                                    total = NaN;
+                                    break;
+                                }
+                                total += n;
+                            }
+                            if (!isNaN(total) && total > max) {
+                                return (
+                                    validation.message ||
+                                    `Combined value with ${siblingIds.map((s) => `"${s}"`).join(', ')} must not exceed ${max}.`
+                                );
+                            }
+                        }
                     }
                     break;
                 }

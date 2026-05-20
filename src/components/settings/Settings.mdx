@@ -6,6 +6,21 @@ import { Meta } from "@storybook/addon-docs/blocks";
 
 # Settings Component
 
+> **Note (DOKAN_NEXT_MAJOR):** The `dependency_key` attribute has been removed
+> from the settings schema. Use the field's `id` directly. `show_if` and
+> `dependencies` rule keys are now flat field ids — dot-paths are no longer
+> supported.
+>
+> **Migration:**
+> - Drop any `dependency_key` attribute from schema elements; consumers should
+>   read `element.id`.
+> - Anywhere a dependency or `show_if` rule referenced a dot-path
+>   (e.g. `"general.marketplace.commission"`), replace it with the target
+>   field's plain id (`"commission"`).
+> - The `idIndex` parameter on `evaluateDependencies(element, values, idIndex?)`
+>   is kept as an optional no-op for source compatibility with older callers
+>   and is unused by the resolver.
+
 A reusable, schema-driven settings page that renders a full UI from a JSON structure.
 Designed for WordPress plugin settings with built-in extensibility.
 
@@ -51,11 +66,10 @@ const schema: SettingsElement[] = [
             label: "Main",
             children: [
               {
-                id: "site_name_field",
+                id: "site_name",
                 type: "field",
                 variant: "text",
                 label: "Site Name",
-                dependency_key: "site_name",
                 default: "",
               },
             ],
@@ -78,8 +92,8 @@ function MySettingsPage() {
         setValues((prev) => ({ ...prev, [key]: value }));
       }}
       onSave={(scopeId, treeValues, flatValues) => {
-        // treeValues: nested object from dot-separated keys
-        // flatValues: original flat dot-keyed values
+        // treeValues: object keyed by field id
+        // flatValues: same shape — flat id-keyed values
         console.log("Saving", scopeId, treeValues, flatValues);
       }}
       renderSaveButton={({ dirty, hasErrors, onSave }) => (
@@ -277,15 +291,13 @@ Groups multiple fields in a horizontal row (e.g. min/max pair).
       "id": "min_price",
       "type": "field",
       "variant": "number",
-      "label": "Min",
-      "dependency_key": "min_price"
+      "label": "Min"
     },
     {
       "id": "max_price",
       "type": "field",
       "variant": "number",
-      "label": "Max",
-      "dependency_key": "max_price"
+      "label": "Max"
     }
   ]
 }
@@ -297,13 +309,12 @@ An individual form input. The `variant` determines which UI control renders.
 
 ```json
 {
-  "id": "store_name_field",
+  "id": "store_name",
   "type": "field",
   "variant": "text",
   "label": "Store Name",
   "description": "The display name of your store.",
   "tooltip": "Visible to customers.",
-  "dependency_key": "store_name",
   "default": "My Store",
   "placeholder": "Enter store name"
 }
@@ -346,6 +357,16 @@ An individual form input. The `variant` determines which UI control renders.
       <td><code>switch</code></td>
       <td>Toggle switch</td>
       <td><code>enable_state</code>, <code>disable_state</code></td>
+    </tr>
+    <tr>
+      <td><code>danger_switch</code></td>
+      <td>Destructive toggle in a red card; off→on opens a confirm dialog</td>
+      <td><code>enable_state</code>, <code>disable_state</code>, <code>confirm_modal</code> (<code>title</code>, <code>description</code>, <code>confirmText</code>, <code>cancelText</code>, <code>checkboxLabel</code>)</td>
+    </tr>
+    <tr>
+      <td><code>info_preview</code></td>
+      <td>Checkbox list + optional preview pane on the right</td>
+      <td><code>options[]</code>, <code>image_url</code> (static preview) or filter <code>{`${hookPrefix}_settings_info_preview_field_preview`}</code> returning a React node (dynamic preview)</td>
     </tr>
     <tr>
       <td><code>radio_capsule</code></td>
@@ -400,8 +421,8 @@ Used by `select`, `radio_capsule`, `customize_radio`, and `multicheck`:
 
 ```json
 {
+  "id": "enable_feature",
   "variant": "switch",
-  "dependency_key": "enable_feature",
   "enable_state": { "value": "on", "title": "Enabled" },
   "disable_state": { "value": "off", "title": "Disabled" }
 }
@@ -430,11 +451,10 @@ const flatData = [
   { id: "basic_tab", type: "tab", label: "Basic", subpage_id: "store" },
   { id: "main_section", type: "section", label: "Main", tab_id: "basic_tab" },
   {
-    id: "name_field",
+    id: "store_name",
     type: "field",
     variant: "text",
     label: "Store Name",
-    dependency_key: "store_name",
     section_id: "main_section",
   },
 ];
@@ -510,7 +530,7 @@ Fired whenever a field value changes.
     <tr>
       <td><code>key</code></td>
       <td><code>string</code></td>
-      <td>The field's <code>dependency_key</code></td>
+      <td>The field's <code>id</code></td>
     </tr>
     <tr>
       <td><code>value</code></td>
@@ -550,12 +570,12 @@ Fired when the save button is clicked. Only receives values **scoped to the acti
     <tr>
       <td><code>treeValues</code></td>
       <td><code>{'Record<string, any>'}</code></td>
-      <td>Nested object built from dot-separated keys (e.g. <code>{'{"dokan":{"general":{"store_name":"..."}}}'}</code>)</td>
+      <td>Object keyed by field id (e.g. <code>{'{"store_name":"...","enable_tax":true}'}</code>)</td>
     </tr>
     <tr>
       <td><code>flatValues</code></td>
       <td><code>{'Record<string, any>'}</code></td>
-      <td>Original flat dot-keyed values (e.g. <code>{'{"dokan.general.store_name":"..."}'}</code>)</td>
+      <td>Same shape — flat id-keyed values (e.g. <code>{'{"store_name":"...","enable_tax":true}'}</code>)</td>
     </tr>
   </tbody>
 </table>
@@ -574,7 +594,7 @@ Fired when the save button is clicked. Only receives values **scoped to the acti
 ### Server-Side Validation Errors
 
 If your API returns field-level validation errors, **throw an object** with an `errors` property
-from `onSave`. The keys must match field `dependency_key` values:
+from `onSave`. The keys must match field `id` values:
 
 ```tsx
 <Settings
@@ -587,9 +607,9 @@ from `onSave`. The keys must match field `dependency_key` values:
 
     if (!res.ok) {
       const data = await res.json();
-      // Throw with { errors: { [dependency_key]: "message" } }
+      // Throw with { errors: { [fieldId]: "message" } }
       throw { errors: data.errors };
-      // e.g. { errors: { "dokan.general.store_name": "Store name already taken" } }
+      // e.g. { errors: { "store_name": "Store name already taken" } }
     }
   }}
 />
@@ -714,11 +734,10 @@ Fields can be conditionally shown/hidden based on other field values using the
 
 ```json
 {
-  "id": "tax_rate_field",
+  "id": "tax_rate",
   "type": "field",
   "variant": "number",
   "label": "Tax Rate (%)",
-  "dependency_key": "tax_rate",
   "dependencies": [
     {
       "key": "enable_tax",
@@ -745,7 +764,7 @@ This field only appears when `enable_tax` is `true`.
     <tr>
       <td><code>key</code></td>
       <td><code>string</code></td>
-      <td><code>dependency_key</code> of the field to watch</td>
+      <td><code>id</code> of the field to watch</td>
     </tr>
     <tr>
       <td><code>value</code></td>
@@ -784,7 +803,37 @@ Fields can declare validation rules via the `validations` array:
 }
 ```
 
-Supported rules: `required`, `not_empty`, `min` / `min_value`, `max` / `max_value`.
+Supported rules: `required`, `not_empty`, `min` / `min_value`, `max` / `max_value`, `not_in`, `sum_max`.
+
+### `sum_max` — cross-field constraint
+
+Validates that `self + sibling(s) <= max`. Use either form:
+
+```json
+{
+  "validations": [
+    {
+      "rules": "sum_max",
+      "message": "A + B must not exceed 28.",
+      "params": { "field": "sibling_id", "max": 28 }
+    },
+    {
+      "rules": "sum_max",
+      "message": "A + B + C must not exceed 100.",
+      "params": { "fields": ["sib_a", "sib_b"], "max": 100 }
+    }
+  ]
+}
+```
+
+Attach the same rule to both (or all N) fields with the symmetric `field`/`fields`
+list excluding self — when the user fixes one side of the constraint, the
+other side's stale error auto-clears (the context re-validates every sibling
+referenced via `params.field` / `params.fields[]` when a key changes).
+
+If `allValues` isn't supplied or a referenced sibling is missing/non-numeric,
+the rule passes silently — defensive against partial value snapshots during
+hydration.
 
 ---
 
@@ -803,7 +852,7 @@ const schema = formatSettingsData(flatApiResponse);
 
 ### `extractValues(schema)`
 
-Walks a hierarchical schema and extracts all `dependency_key` to `value` pairs into a flat object.
+Walks a hierarchical schema and extracts all `id` to `value` pairs into a flat object.
 Useful for initializing the `values` prop.
 
 ```tsx
@@ -839,7 +888,7 @@ const initialValues = extractValues(schema);
       <td><code>values</code></td>
       <td><code>{'Record<string, any>'}</code></td>
       <td><code>{'{}'}</code></td>
-      <td>Current field values keyed by <code>dependency_key</code></td>
+      <td>Current field values keyed by <code>id</code></td>
     </tr>
     <tr>
       <td><code>onChange</code></td>

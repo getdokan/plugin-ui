@@ -21,7 +21,10 @@ function SelectValue({ className, ...props }: SelectPrimitive.Value.Props) {
   return (
     <SelectPrimitive.Value
       data-slot="select-value"
-      className={cn("flex flex-1 text-start", className)}
+      // `min-w-0` is required so the value can shrink inside a fixed-width
+      // trigger; without it long text pushes the sibling chevron out of the
+      // flex track and renders over the value.
+      className={cn("flex flex-1 min-w-0 text-start truncate", className)}
       {...props}
     />
   );
@@ -62,7 +65,15 @@ function SelectContent({
   sideOffset = 4,
   align = "center",
   alignOffset = 0,
-  alignItemWithTrigger = true,
+  // base-ui's iOS-style "align the selected option over the trigger" mode
+  // measures item heights before they paint. With wrap-enabled items
+  // (whitespace-normal in SelectItem) the measurement is off on first open,
+  // pushing the popup above the viewport and clipping the top option;
+  // subsequent opens use settled heights and look fine. Defaulting to false
+  // makes the popup open below the trigger like a standard dropdown, which
+  // is consistent across opens and matches user expectation for a list
+  // picker. Callers can still opt back into anchored mode explicitly.
+  alignItemWithTrigger = false,
   ...props
 }: SelectPrimitive.Popup.Props &
   Pick<
@@ -127,7 +138,13 @@ function SelectItem({
       )}
       {...props}
     >
-      <SelectPrimitive.ItemText className="flex flex-1 gap-2 shrink-0 whitespace-nowrap">
+      {/* Long option titles wrap onto multiple lines so the user can read
+          the full content (truncating with an ellipsis in a picker hides
+          information the user needs to make a choice). `min-w-0` lets the
+          flex item shrink to the popup width before wrapping; `break-words`
+          handles tokens with no natural break. The trigger value keeps its
+          own single-line truncate — different UX surface, different rule. */}
+      <SelectPrimitive.ItemText className="flex flex-1 gap-2 min-w-0 whitespace-normal break-words text-start">
         {children}
       </SelectPrimitive.ItemText>
       <SelectPrimitive.ItemIndicator
