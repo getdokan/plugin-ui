@@ -3,10 +3,13 @@
 > **Note (DOKAN_NEXT_MAJOR):** The `dependency_key` attribute has been removed
 > from the settings schema. Use the field's `id` directly. `show_if` and
 > `dependencies` rule keys are now flat field ids — dot-paths are no longer
-> supported. See the [dependency_key cleanup plan][cleanup-plan] for migration
-> context.
+> supported.
 >
-> [cleanup-plan]: https://github.com/getdokan/dokan/blob/refactor/simplify-settings-to-flat-array/docs/superpowers/plans/2026-05-18-dependency-key-cleanup.md
+> **Migration:** drop `dependency_key` from schema elements (consumers read
+> `element.id`), and replace any dot-path keys in `show_if` / `dependencies`
+> with the target field's plain id. The `idIndex` argument on
+> `evaluateDependencies()` is kept as an optional no-op for source
+> compatibility; the resolver no longer uses it.
 
 A ShadCN-style React component library built for WordPress plugins. Provides 50+ themed, accessible UI components powered by Tailwind CSS v4, `@base-ui/react` headless primitives, and first-class WordPress integration.
 
