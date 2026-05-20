@@ -350,6 +350,16 @@ An individual form input. The `variant` determines which UI control renders.
       <td><code>enable_state</code>, <code>disable_state</code></td>
     </tr>
     <tr>
+      <td><code>danger_switch</code></td>
+      <td>Destructive toggle in a red card; off→on opens a confirm dialog</td>
+      <td><code>enable_state</code>, <code>disable_state</code>, <code>confirm_modal</code> (<code>title</code>, <code>description</code>, <code>confirmText</code>, <code>cancelText</code>, <code>checkboxLabel</code>)</td>
+    </tr>
+    <tr>
+      <td><code>info_preview</code></td>
+      <td>Checkbox list + optional preview pane on the right</td>
+      <td><code>options[]</code>, <code>image_url</code> (static preview) or filter <code>{`${hookPrefix}_settings_info_preview_field_preview`}</code> returning a React node (dynamic preview)</td>
+    </tr>
+    <tr>
       <td><code>radio_capsule</code></td>
       <td>Segmented toggle</td>
       <td><code>options[]</code></td>
@@ -784,7 +794,37 @@ Fields can declare validation rules via the `validations` array:
 }
 ```
 
-Supported rules: `required`, `not_empty`, `min` / `min_value`, `max` / `max_value`.
+Supported rules: `required`, `not_empty`, `min` / `min_value`, `max` / `max_value`, `not_in`, `sum_max`.
+
+### `sum_max` — cross-field constraint
+
+Validates that `self + sibling(s) <= max`. Use either form:
+
+```json
+{
+  "validations": [
+    {
+      "rules": "sum_max",
+      "message": "A + B must not exceed 28.",
+      "params": { "field": "sibling_id", "max": 28 }
+    },
+    {
+      "rules": "sum_max",
+      "message": "A + B + C must not exceed 100.",
+      "params": { "fields": ["sib_a", "sib_b"], "max": 100 }
+    }
+  ]
+}
+```
+
+Attach the same rule to both (or all N) fields with the symmetric `field`/`fields`
+list excluding self — when the user fixes one side of the constraint, the
+other side's stale error auto-clears (the context re-validates every sibling
+referenced via `params.field` / `params.fields[]` when a key changes).
+
+If `allValues` isn't supplied or a referenced sibling is missing/non-numeric,
+the rule passes silently — defensive against partial value snapshots during
+hydration.
 
 ---
 
