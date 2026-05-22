@@ -30,9 +30,9 @@
       "require": "./dist/themes/index.js"
     },
     "./utils": {
-      "types": "./dist/utils/index.d.ts",
-      "import": "./dist/utils/index.js",
-      "require": "./dist/utils/index.js"
+      "types": "./dist/lib/utils.d.ts",
+      "import": "./dist/lib/utils.js",
+      "require": "./dist/lib/utils.js"
     },
     "./settings": {
       "types": "./dist/components/settings/index.d.ts",
