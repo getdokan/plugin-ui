@@ -169,7 +169,7 @@ export function SettingsSidebar({
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             className="h-8 pl-8"
-                            placeholder={searchPlaceholder}
+                            placeholder={searchPlaceholder || 'Search...'}
                             aria-label="Search settings"
                             data-testid="settings-search"
                         />

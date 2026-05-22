@@ -290,7 +290,7 @@ export {
   FieldContent,
   FieldTitle,
 } from "./field";
-export { DataViews, type DataViewAction, type DataViewField, type DataViewFilterField, type DataViewFilterProps, type DataViewLayouts, type DataViewsProps, type DataViewState } from '../wordpress/dataviews';
+export { DataViews, type ConfirmActionTone, type DataViewAction, type DataViewField, type DataViewFilterField, type DataViewFilterProps, type DataViewLayouts, type DataViewsProps, type DataViewState, type DestructiveActionConfig } from '../wordpress/dataviews';
 export { DataForm, useFormValidity } from '@wordpress/dataviews/wp';
 export type {
     DataFormProps,

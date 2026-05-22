@@ -54,7 +54,7 @@ function TooltipContent({
   const mode = theme?.mode ?? 'light';
   const cssVariables = theme?.cssVariables ?? defaultCssVariables;
   return (
-    <TooltipPrimitive.Portal className={ cn('pui-root', mode, portalClassName) } style={cssVariables}>
+    <TooltipPrimitive.Portal className={ cn('pui-root', mode, portalClassName, theme?.className) } style={cssVariables}>
       <TooltipPrimitive.Positioner
         align={align}
         alignOffset={alignOffset}

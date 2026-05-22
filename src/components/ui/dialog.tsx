@@ -52,7 +52,7 @@ function DialogContent({
   const mode = theme?.mode ?? "light"
   const cssVariables = theme?.cssVariables ?? defaultCssVariables
   return (
-    <DialogPortal className={cn("pui-root", mode)} style={cssVariables}>
+    <DialogPortal className={cn("pui-root", mode, theme?.className)} style={cssVariables}>
       <DialogOverlay />
       <DialogPrimitive.Popup
         data-slot="dialog-content"

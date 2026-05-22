@@ -32,7 +32,7 @@ function PopoverContent({
   const mode = theme?.mode ?? 'light';
   const cssVariables = theme?.cssVariables ?? defaultCssVariables;
   return (
-    <PopoverPrimitive.Portal className={cn("pui-root", mode)} style={cssVariables}>
+    <PopoverPrimitive.Portal className={cn("pui-root", mode, theme?.className)} style={cssVariables}>
       <PopoverPrimitive.Positioner
         align={align}
         alignOffset={alignOffset}

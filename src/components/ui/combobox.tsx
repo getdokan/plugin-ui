@@ -120,7 +120,7 @@ function ComboboxContent({
   const mode = theme?.mode ?? 'light';
   const cssVariables = theme?.cssVariables ?? defaultCssVariables;
   return (
-    <ComboboxPrimitive.Portal className={ cn('pui-root', mode) } style={cssVariables}>
+    <ComboboxPrimitive.Portal className={ cn('pui-root', mode, theme?.className) } style={cssVariables}>
       <ComboboxPrimitive.Positioner
         side={side}
         sideOffset={sideOffset}

@@ -314,7 +314,7 @@ export function Modal({
 
     const container = document.createElement("div");
     container.setAttribute("data-pui-modal-root", "true");
-    container.className = cn("pui-root", mode);
+    container.className = cn("pui-root", mode, theme?.className);
     Object.assign(container.style, cssVariables);
 
     document.body.appendChild(container);
@@ -331,15 +331,15 @@ export function Modal({
         previousActiveElement.current.focus();
       }
     };
-  }, [open]);
+  }, [open, mode, cssVariables, theme?.className]);
 
   // Keep portal container class and CSS variables in sync with theme
   useEffect(() => {
     if (portalContainer) {
-      portalContainer.className = cn("pui-root", mode);
+      portalContainer.className = cn("pui-root", mode, theme?.className);
       Object.assign(portalContainer.style, cssVariables);
     }
-  }, [mode, cssVariables, portalContainer]);
+  }, [mode, cssVariables, portalContainer, theme?.className]);
 
   // Handle escape key
   useEffect(() => {

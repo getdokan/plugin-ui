@@ -84,7 +84,7 @@ function SelectContent({
   const mode = theme?.mode ?? 'light';
   const cssVariables = theme?.cssVariables ?? defaultCssVariables;
   return (
-    <SelectPrimitive.Portal className={ cn('pui-root', mode) } style={cssVariables}>
+    <SelectPrimitive.Portal className={ cn('pui-root', mode, theme?.className) } style={cssVariables}>
       <SelectPrimitive.Positioner
         side={side}
         sideOffset={sideOffset}

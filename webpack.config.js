@@ -6,6 +6,11 @@ module.exports = {
     ...defaultConfig,
     entry: {
         index: './src/index.ts',
+        'components/ui/index': './src/components/ui/index.ts',
+        'components/settings/index': './src/components/settings/index.tsx',
+        'providers/index': './src/providers/index.ts',
+        'themes/index': './src/themes/index.ts',
+        'lib/utils': './src/lib/utils.ts',
     },
     output: {
         ...defaultConfig.output,
