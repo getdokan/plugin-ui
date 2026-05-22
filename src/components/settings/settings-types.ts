@@ -49,7 +49,6 @@ export type SettingsElement = {
     tooltip?: string;
     display?: boolean;
     hook_key?: string;
-    dependency_key?: string;
     children?: SettingsElement[];
 
     // Field-specific
@@ -79,9 +78,16 @@ export type SettingsElement = {
     // Switch-specific
     enable_state?: { value: string | number; title: string };
     disable_state?: { value: string | number; title: string };
-    switcher_type?: string | null;
+    switcher_type?: 'error' | 'default' | string | null;
     should_confirm?: boolean;
-    confirm_modal?: Record<string, any>;
+    confirm_modal?: {
+        title?: string;
+        confirmationTitle?: string;
+        description?: string;
+        confirmText?: string;
+        cancelText?: string;
+        checkboxLabel?: string;
+    } | Record<string, any>;
 
     // Radio-specific
     radio_variant?: 'simple' | 'card' | 'template' | string;
@@ -139,7 +145,7 @@ export interface SaveButtonRenderProps {
 export interface SettingsProps {
     /** Settings schema — JSON array (flat or hierarchical) */
     schema: SettingsElement[];
-    /** Current values, keyed by dependency_key */
+    /** Current values, keyed by element id */
     values?: Record<string, any>;
     /** Called when a field value changes. Receives the scope ID (subpage/page), field key, and new value. */
     onChange?: (scopeId: string, key: string, value: any) => void;
