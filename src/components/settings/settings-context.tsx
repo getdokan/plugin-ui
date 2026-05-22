@@ -10,6 +10,7 @@ import {
 } from 'react';
 import type { SaveButtonRenderProps, SettingsElement } from './settings-types';
 import {
+    buildIdIndex,
     evaluateDependencies,
     extractValues,
     formatSettingsData,
@@ -393,12 +394,15 @@ export function SettingsProvider({
     );
 
     // Dependency evaluation — dep keys are plain field ids, read directly
-    // from the flat values map.
+    // from the flat values map. `idIndex` kept around (memoized cheaply) so
+    // call sites that still pass it remain compatible; the resolver no
+    // longer uses it.
+    const idIndex = useMemo(() => buildIdIndex(schema), [schema]);
     const shouldDisplay = useCallback(
         (element: SettingsElement): boolean => {
-            return evaluateDependencies(element, values);
+            return evaluateDependencies(element, values, idIndex);
         },
-        [values]
+        [values, idIndex]
     );
 
     // Navigation helpers
