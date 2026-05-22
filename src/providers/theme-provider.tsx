@@ -196,6 +196,7 @@ export interface ThemeContextValue {
   tokens: ThemeTokens;
   resolvedMode: "light" | "dark";
   cssVariables: Record<string, string>;
+  className?: string;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
@@ -497,8 +498,9 @@ export function ThemeProvider({
       tokens: mergedTokens,
       resolvedMode,
       cssVariables,
+      className,
     }),
-    [pluginId, mode, setMode, mergedTokens, resolvedMode, cssVariables],
+    [pluginId, mode, setMode, mergedTokens, resolvedMode, cssVariables, className],
   );
 
   return (

@@ -33,7 +33,7 @@ function DropdownMenuContent({
   const mode = theme?.mode ?? 'light';
   const cssVariables = theme?.cssVariables ?? defaultCssVariables;
   return (
-    <MenuPrimitive.Portal className={ cn('pui-root', mode) } style={cssVariables}>
+    <MenuPrimitive.Portal className={ cn('pui-root', mode, theme?.className) } style={cssVariables}>
       <MenuPrimitive.Positioner
         className="isolate z-50 outline-none"
         align={align}

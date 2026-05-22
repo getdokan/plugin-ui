@@ -48,7 +48,7 @@ function AlertDialogContent({
   const mode = theme?.mode ?? 'light';
   const cssVariables = theme?.cssVariables ?? defaultCssVariables;
   return (
-    <AlertDialogPortal className={ cn('pui-root', mode) } style={cssVariables}>
+    <AlertDialogPortal className={ cn('pui-root', mode, theme?.className) } style={cssVariables}>
       <AlertDialogOverlay />
       <AlertDialogPrimitive.Popup
         data-slot="alert-dialog-content"

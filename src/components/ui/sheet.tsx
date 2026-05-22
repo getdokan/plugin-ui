@@ -49,7 +49,7 @@ function SheetContent({
   const cssVariables = theme?.cssVariables ?? defaultCssVariables;
 
   return (
-    <SheetPortal className={cn("pui-root", mode)} style={cssVariables}>
+    <SheetPortal className={cn("pui-root", mode, theme?.className)} style={cssVariables}>
       <SheetOverlay />
       <SheetPrimitive.Popup
         data-slot="sheet-content"
