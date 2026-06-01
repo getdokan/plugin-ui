@@ -1,3 +1,5 @@
+"use client";
+
 import { Combobox as ComboboxPrimitive } from "@base-ui/react";
 import { CheckIcon, ChevronDownIcon, XIcon } from "lucide-react";
 import * as React from "react";
@@ -103,6 +105,17 @@ const ComboboxInput = React.forwardRef<
 );
 ComboboxInput.displayName = "ComboboxInput";
 
+function ComboboxPortal({
+  children,
+  ...props
+}: ComboboxPrimitive.Portal.Props) {
+  return (
+    <ComboboxPrimitive.Portal data-slot="combobox-portal" {...props}>
+      {children}
+    </ComboboxPrimitive.Portal>
+  );
+}
+
 function ComboboxContent({
   className,
   side = "bottom",
@@ -116,30 +129,30 @@ function ComboboxContent({
     ComboboxPrimitive.Positioner.Props,
     "side" | "align" | "sideOffset" | "alignOffset" | "anchor"
   >) {
-  const theme = useThemeOptional();
-  const mode = theme?.mode ?? 'light';
-  const cssVariables = theme?.cssVariables ?? defaultCssVariables;
+  const { resolvedMode, cssVariables, className: themeClassName } = useThemeOptional();
   return (
-    <ComboboxPrimitive.Portal className={ cn('pui-root', mode, theme?.className) } style={cssVariables}>
-      <ComboboxPrimitive.Positioner
-        side={side}
-        sideOffset={sideOffset}
-        align={align}
-        alignOffset={alignOffset}
-        anchor={anchor}
-        className="isolate z-50"
-      >
-        <ComboboxPrimitive.Popup
-          data-slot="combobox-content"
-          data-chips={!!anchor}
-          className={cn(
-            "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 max-h-72 min-w-36 overflow-hidden rounded-md shadow-md ring-1 duration-100 data-[side=inline-start]:slide-in-from-end-2 data-[side=inline-end]:slide-in-from-start-2 group/combobox-content relative max-h-(--available-height) w-(--anchor-width) max-w-(--available-width) min-w-[calc(var(--anchor-width)+--spacing(7))] origin-(--transform-origin) data-[chips=true]:min-w-(--anchor-width)",
-            className
-          )}
-          {...props}
-        />
-      </ComboboxPrimitive.Positioner>
-    </ComboboxPrimitive.Portal>
+    <ComboboxPortal>
+      <div className={ cn('pui-root', resolvedMode, themeClassName) } style={cssVariables}>
+        <ComboboxPrimitive.Positioner
+          side={side}
+          sideOffset={sideOffset}
+          align={align}
+          alignOffset={alignOffset}
+          anchor={anchor}
+          className="isolate z-50"
+        >
+          <ComboboxPrimitive.Popup
+            data-slot="combobox-content"
+            data-chips={!!anchor}
+            className={cn(
+              "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 max-h-72 min-w-36 overflow-hidden rounded-md shadow-md ring-1 duration-100 data-[side=inline-start]:slide-in-from-end-2 data-[side=inline-end]:slide-in-from-start-2 group/combobox-content relative max-h-(--available-height) w-(--anchor-width) max-w-(--available-width) min-w-[calc(var(--anchor-width)+--spacing(7))] origin-(--transform-origin) data-[chips=true]:min-w-(--anchor-width)",
+              className
+            )}
+            {...props}
+          />
+        </ComboboxPrimitive.Positioner>
+      </div>
+    </ComboboxPortal>
   );
 }
 

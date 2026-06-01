@@ -296,9 +296,7 @@ export function Modal({
   className,
   size = "default",
 }: ModalProps) {
-  const theme = useThemeOptional();
-  const mode = theme?.mode ?? 'light';
-  const cssVariables = theme?.cssVariables ?? defaultCssVariables;
+  const { resolvedMode, cssVariables, className: themeClassName } = useThemeOptional();
   const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(
     null,
   );
@@ -314,7 +312,7 @@ export function Modal({
 
     const container = document.createElement("div");
     container.setAttribute("data-pui-modal-root", "true");
-    container.className = cn("pui-root", mode, theme?.className);
+    container.className = cn("pui-root", resolvedMode, themeClassName);
     Object.assign(container.style, cssVariables);
 
     document.body.appendChild(container);
@@ -331,15 +329,15 @@ export function Modal({
         previousActiveElement.current.focus();
       }
     };
-  }, [open, mode, cssVariables, theme?.className]);
+  }, [open, resolvedMode, cssVariables, themeClassName]);
 
   // Keep portal container class and CSS variables in sync with theme
   useEffect(() => {
     if (portalContainer) {
-      portalContainer.className = cn("pui-root", mode, theme?.className);
+      portalContainer.className = cn("pui-root", resolvedMode, themeClassName);
       Object.assign(portalContainer.style, cssVariables);
     }
-  }, [mode, cssVariables, portalContainer, theme?.className]);
+  }, [resolvedMode, cssVariables, portalContainer, themeClassName]);
 
   // Handle escape key
   useEffect(() => {

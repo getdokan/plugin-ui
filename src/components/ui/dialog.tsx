@@ -20,8 +20,15 @@ function DialogClose({ ...props }: DialogPrimitive.Close.Props) {
   return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
 }
 
-function DialogPortal({ ...props }: DialogPrimitive.Portal.Props) {
-  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />
+function DialogPortal({
+  children,
+  ...props
+}: DialogPrimitive.Portal.Props) {
+  return (
+    <DialogPrimitive.Portal data-slot="dialog-portal" {...props}>
+      {children}
+    </DialogPrimitive.Portal>
+  )
 }
 
 function DialogOverlay({
@@ -48,37 +55,37 @@ function DialogContent({
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
 }) {
-  const theme = useThemeOptional()
-  const mode = theme?.mode ?? "light"
-  const cssVariables = theme?.cssVariables ?? defaultCssVariables
+  const { resolvedMode, cssVariables, className: themeClassName } = useThemeOptional()
   return (
-    <DialogPortal className={cn("pui-root", mode, theme?.className)} style={cssVariables}>
-      <DialogOverlay />
-      <DialogPrimitive.Popup
-        data-slot="dialog-content"
-        className={cn(
-          "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 bg-background ring-foreground/10 gap-4 rounded-lg border border-border p-6 shadow-lg duration-150 fixed top-1/2 start-1/2 z-50 grid w-full max-w-lg -translate-x-1/2 rtl:translate-x-1/2 -translate-y-1/2 outline-none",
-          className
-        )}
-        {...props}
-      >
-        {children}
-        {showCloseButton && (
-          <DialogPrimitive.Close
-            data-slot="dialog-close"
-            render={
-              <Button
-                variant="ghost"
-                className="absolute top-4 end-4"
-                size="icon-sm"
-              />
-            }
-          >
-            <XIcon />
-            <span className="sr-only">Close</span>
-          </DialogPrimitive.Close>
-        )}
-      </DialogPrimitive.Popup>
+    <DialogPortal>
+      <div className={cn("pui-root", resolvedMode, themeClassName)} style={cssVariables}>
+        <DialogOverlay />
+        <DialogPrimitive.Popup
+          data-slot="dialog-content"
+          className={cn(
+            "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 bg-background ring-foreground/10 gap-4 rounded-lg border border-border p-6 shadow-lg duration-150 fixed top-1/2 start-1/2 z-50 grid w-full max-w-lg -translate-x-1/2 rtl:translate-x-1/2 -translate-y-1/2 outline-none",
+            className
+          )}
+          {...props}
+        >
+          {children}
+          {showCloseButton && (
+            <DialogPrimitive.Close
+              data-slot="dialog-close"
+              render={
+                <Button
+                  variant="ghost"
+                  className="absolute top-4 end-4"
+                  size="icon-sm"
+                />
+              }
+            >
+              <XIcon />
+              <span className="sr-only">Close</span>
+            </DialogPrimitive.Close>
+          )}
+        </DialogPrimitive.Popup>
+      </div>
     </DialogPortal>
   )
 }

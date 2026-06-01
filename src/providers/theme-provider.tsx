@@ -387,25 +387,55 @@ const defaultDarkTokens: ThemeTokens = {
 };
 
 /**
+ * Global registry to store the active theme context for use across disconnected React roots.
+ * This is particularly useful in WordPress environments where multiple bundles or roots may exist.
+ * We use window to ensure the state is shared even if the library is bundled multiple times.
+ */
+const GLOBAL_THEME_KEY = "__PUI_THEME__";
+
+function getGlobalTheme(): ThemeContextValue | null {
+  if (typeof window === "undefined") return null;
+  return (window as any)[GLOBAL_THEME_KEY] || null;
+}
+
+const themeListeners = new Set<(context: ThemeContextValue) => void>();
+
+function subscribeToGlobalTheme(listener: (context: ThemeContextValue) => void) {
+  themeListeners.add(listener);
+  return () => {
+    themeListeners.delete(listener);
+  };
+}
+
+function setGlobalTheme(context: ThemeContextValue) {
+  if (typeof window !== "undefined") {
+    (window as any)[GLOBAL_THEME_KEY] = context;
+  }
+  themeListeners.forEach((listener) => listener(context));
+}
+
+/**
+ * Pre-computed default light CSS variables for use in portals outside ThemeProvider.
+ */
+export const defaultCssVariables: Record<string, string> =
+  tokensToCssVariables(defaultLightTokens);
+
+/**
+ * Default context value used when components are rendered outside a ThemeProvider
+ * and no global theme has been registered yet.
+ */
+const DEFAULT_CONTEXT: ThemeContextValue = {
+  pluginId: "pui-default",
+  mode: "light",
+  setMode: () => {},
+  tokens: defaultLightTokens,
+  resolvedMode: "light",
+  cssVariables: defaultCssVariables,
+  className: "",
+};
+
+/**
  * ThemeProvider component for scoped theming across plugins
- *
- * @example
- * ```tsx
- * import { ThemeProvider } from '@wedevs/plugin-ui';
- *
- * const dokanTokens = {
- *   primary: 'oklch(0.5410 0.2120 265.7540)', // Purple
- *   radius: '0.375rem',
- * };
- *
- * function DokanApp() {
- *   return (
- *     <ThemeProvider pluginId="dokan" tokens={dokanTokens}>
- *       <YourComponents />
- *     </ThemeProvider>
- *   );
- * }
- * ```
  */
 export function ThemeProvider({
   pluginId,
@@ -503,13 +533,18 @@ export function ThemeProvider({
     [pluginId, mode, setMode, mergedTokens, resolvedMode, cssVariables, className],
   );
 
+  // Track active theme globally
+  useEffect(() => {
+    setGlobalTheme(contextValue);
+  }, [contextValue]);
+
   return (
     <ThemeContext.Provider value={contextValue}>
       <div
         data-pui-plugin={pluginId}
         data-pui-mode={resolvedMode}
         className={`pui-root ${
-          resolvedMode === "dark" ? "dark" : ""
+          resolvedMode
         } ${className}`.trim()}
         style={{ ...cssVariables, ...style }}
       >
@@ -521,19 +556,6 @@ export function ThemeProvider({
 
 /**
  * Hook to access theme context
- *
- * @example
- * ```tsx
- * function MyComponent() {
- *   const { mode, setMode, tokens, pluginId } = useTheme();
- *
- *   return (
- *     <button onClick={() => setMode(mode === 'dark' ? 'light' : 'dark')}>
- *       Toggle theme
- *     </button>
- *   );
- * }
- * ```
  */
 export function useTheme(): ThemeContextValue {
   const context = useContext(ThemeContext);
@@ -546,16 +568,27 @@ export function useTheme(): ThemeContextValue {
 }
 
 /**
- * Hook to check if component is within a ThemeProvider
+ * Hook to check if component is within a ThemeProvider.
+ * If not, falls back to the most recently registered global theme,
+ * or the default light theme if none exists.
  */
-export function useThemeOptional(): ThemeContextValue | null {
-  return useContext(ThemeContext);
-}
+export function useThemeOptional(): ThemeContextValue {
+  const context = useContext(ThemeContext);
+  const [fallbackContext, setFallbackContext] = useState<ThemeContextValue>(
+    getGlobalTheme() ?? DEFAULT_CONTEXT,
+  );
 
-/**
- * Pre-computed default light CSS variables for use in portals outside ThemeProvider.
- */
-export const defaultCssVariables: Record<string, string> =
-  tokensToCssVariables(defaultLightTokens);
+  useEffect(() => {
+    // If we have a local context, we don't need the global fallback
+    if (context) return;
+
+    // Subscribe to global theme changes
+    return subscribeToGlobalTheme((newContext) => {
+      setFallbackContext(newContext);
+    });
+  }, [context]);
+
+  return context ?? fallbackContext;
+}
 
 export default ThemeProvider;

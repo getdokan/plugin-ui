@@ -1,3 +1,5 @@
+"use client";
+
 import { Menu as MenuPrimitive } from "@base-ui/react/menu";
 import { CheckIcon, ChevronRightIcon } from "lucide-react";
 import * as React from "react";
@@ -9,8 +11,15 @@ function DropdownMenu({ ...props }: MenuPrimitive.Root.Props) {
   return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
 }
 
-function DropdownMenuPortal({ ...props }: MenuPrimitive.Portal.Props) {
-  return <MenuPrimitive.Portal data-slot="dropdown-menu-portal" {...props} />;
+function DropdownMenuPortal({
+  children,
+  ...props
+}: MenuPrimitive.Portal.Props) {
+  return (
+    <MenuPrimitive.Portal data-slot="dropdown-menu-portal" {...props}>
+      {children}
+    </MenuPrimitive.Portal>
+  );
 }
 
 function DropdownMenuTrigger({ ...props }: MenuPrimitive.Trigger.Props) {
@@ -29,28 +38,28 @@ function DropdownMenuContent({
     MenuPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset"
   >) {
-  const theme = useThemeOptional();
-  const mode = theme?.mode ?? 'light';
-  const cssVariables = theme?.cssVariables ?? defaultCssVariables;
+  const { resolvedMode, cssVariables, className: themeClassName } = useThemeOptional();
   return (
-    <MenuPrimitive.Portal className={ cn('pui-root', mode, theme?.className) } style={cssVariables}>
-      <MenuPrimitive.Positioner
-        className="isolate z-50 outline-none"
-        align={align}
-        alignOffset={alignOffset}
-        side={side}
-        sideOffset={sideOffset}
-      >
-        <MenuPrimitive.Popup
-          data-slot="dropdown-menu-content"
-          className={cn(
-            "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 bg-popover text-popover-foreground min-w-32 rounded-md p-1 shadow-md ring-1 duration-100 data-[side=inline-start]:slide-in-from-end-2 data-[side=inline-end]:slide-in-from-start-2 z-50 max-h-(--available-height) w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto outline-none data-closed:overflow-hidden",
-            className
-          )}
-          {...props}
-        />
-      </MenuPrimitive.Positioner>
-    </MenuPrimitive.Portal>
+    <DropdownMenuPortal>
+      <div className={ cn('pui-root', resolvedMode, themeClassName) } style={cssVariables}>
+        <MenuPrimitive.Positioner
+          className="isolate z-50 outline-none"
+          align={align}
+          alignOffset={alignOffset}
+          side={side}
+          sideOffset={sideOffset}
+        >
+          <MenuPrimitive.Popup
+            data-slot="dropdown-menu-content"
+            className={cn(
+              "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 bg-popover text-popover-foreground min-w-32 rounded-md p-1 shadow-md ring-1 duration-100 data-[side=inline-start]:slide-in-from-end-2 data-[side=inline-end]:slide-in-from-start-2 z-50 max-h-(--available-height) w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto outline-none data-closed:overflow-hidden",
+              className
+            )}
+            {...props}
+          />
+        </MenuPrimitive.Positioner>
+      </div>
+    </DropdownMenuPortal>
   );
 }
 
