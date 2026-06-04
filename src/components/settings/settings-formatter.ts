@@ -334,12 +334,13 @@ export function buildIdIndex(
 /**
  * Evaluates whether a field should be displayed based on its dependencies.
  *
- * Dependency keys are plain field ids (post-dependency_key cleanup). The
- * value is read directly from the flat `values` map keyed by id.
- *
- * `idIndex` is kept as an optional parameter for backwards compatibility with
- * call sites that still pass it; it's unused now that dependency_key is
- * gone and `dep.key` always equals the field id.
+ * Dependency keys are authored as plain field ids. The flat `values` map is
+ * keyed by field id (current contract), so a direct lookup normally resolves.
+ * For resilience against older/alternate payloads that key `values` by the
+ * reconstructed dot-path (e.g. `page.section.field`), the lookup falls back to:
+ *   1. an explicit `idIndex` mapping (field id → stored key), when supplied; then
+ *   2. matching a stored key whose last dot-path segment equals the field id.
+ * This keeps id-keyed dependencies working regardless of how `values` is keyed.
  */
 export function evaluateDependencies(
     element: SettingsElement,
@@ -353,7 +354,18 @@ export function evaluateDependencies(
     return element.dependencies.every((dep) => {
         if (!dep.key) return true;
 
-        const currentValue = values[dep.key];
+        let currentValue = values[dep.key];
+        if (currentValue === undefined) {
+            const mapped = idIndex?.[dep.key];
+            if (mapped !== undefined && values[mapped] !== undefined) {
+                currentValue = values[mapped];
+            } else {
+                const match = Object.keys(values).find(
+                    (k) => k === dep.key || k.split('.').pop() === dep.key
+                );
+                if (match !== undefined) currentValue = values[match];
+            }
+        }
 
         const comparison = dep.comparison || '==';
         const expectedValue = dep.value;
