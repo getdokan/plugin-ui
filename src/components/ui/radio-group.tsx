@@ -143,7 +143,7 @@ function RadioImageCard({
   return (
     <FieldGroup className={cn(disabled && "opacity-50")}>
       <FieldLabel className={cn(
-        "transition-colors has-data-checked:bg-transparent dark:has-data-checked:bg-transparent p-0 group cursor-pointer group",
+        "transition-colors has-data-checked:bg-transparent dark:has-data-checked:bg-transparent p-0 group cursor-pointer rounded-xl overflow-hidden",
         currentValue === props.value && 'border-primary!',
         !disabled && "hover:border-primary"
       )}>
@@ -153,18 +153,18 @@ function RadioImageCard({
           className="flex flex-col p-0!"
           data-testid={`settings-field-${props.id}`}
         >
-          <div className={cn( 'w-full flex flex-row items-center justify-between gap-3 border-b border-border group-hover:border-primary p-3', position === "right" && "flex-row-reverse", currentValue === props.value && 'border-primary!')}>
+          <div className={cn( 'w-full flex flex-row items-center justify-between gap-3 border-b border-border group-hover:border-primary px-5 py-4', position === "right" && "flex-row-reverse", currentValue === props.value && 'border-primary!')}>
             <RadioGroupItem
               className={cn("disabled:opacity-100", className)}
               disabled={disabled}
               {...props}
             />
-            <FieldTitle className="font-bold">
+            <FieldTitle className="font-bold text-base text-foreground">
               {typeof label === 'string' ? <RawHTML>{label}</RawHTML> : label}
             </FieldTitle>
           </div>
-          <FieldContent className={cn('p-3 flex items-center justify-center')} >
-            <div className="flex flex-col items-start gap-3 w-full">
+          <FieldContent className={cn('p-5 flex items-center justify-center')} >
+            <div className="flex flex-col items-center gap-3 w-full">
               {description && (
                 <FieldDescription className="text-center">
                   {description}
