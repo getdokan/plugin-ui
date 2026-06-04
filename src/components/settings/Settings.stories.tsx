@@ -17820,3 +17820,89 @@ export const DokanSettings: Story = {
     },
     render: (args) => <SettingsStoryWrapper {...args} />,
 };
+
+// ============================================
+// Collapsible Switch — toggle + chevron header revealing nested config
+// ============================================
+
+const collapsibleSwitchSchema: SettingsElement[] = [
+    { id: 'integrations', type: 'page', label: 'Integrations', icon: 'Plug', priority: 10 },
+    {
+        id: 'social_connect',
+        type: 'section',
+        label: 'Social Connect',
+        description: 'Let users verify their identity through social providers.',
+        page_id: 'integrations',
+        priority: 10,
+    },
+
+    // ── Facebook (collapsible_switch) ──
+    {
+        id: 'facebook_enabled',
+        type: 'field',
+        variant: 'collapsible_switch',
+        section_id: 'social_connect',
+        title: 'Facebook',
+        description: 'Configure your Facebook API settings.',
+        image_url: image,
+        collapsed: true,
+        default: 'off',
+        enable_state: { label: 'Enabled', value: 'on' },
+        disable_state: { label: 'Disabled', value: 'off' },
+    },
+    {
+        id: 'facebook_notice',
+        type: 'field',
+        variant: 'info',
+        field_group_id: 'facebook_enabled',
+        title: "Create an App if you don't have one, then fill in the App ID and Secret below.",
+        link_title: 'Create an App',
+        link_url: 'https://developers.facebook.com/apps/',
+        show_icon: true,
+    },
+    { id: 'facebook_app_id', type: 'field', variant: 'show_hide', field_group_id: 'facebook_enabled', title: 'App ID' },
+    { id: 'facebook_app_secret', type: 'field', variant: 'show_hide', field_group_id: 'facebook_enabled', title: 'App Secret' },
+    {
+        id: 'facebook_redirect_url',
+        type: 'field',
+        variant: 'copy_field',
+        field_group_id: 'facebook_enabled',
+        title: 'Site URL',
+        description: 'Your store URL, which will be required in creating the App.',
+        readonly: true,
+        default: 'https://example.com/wc-api/social-verification/',
+    },
+
+    // ── Google (collapsible_switch) ──
+    {
+        id: 'google_enabled',
+        type: 'field',
+        variant: 'collapsible_switch',
+        section_id: 'social_connect',
+        title: 'Google',
+        description: 'Configure your Google API settings.',
+        image_url: image2,
+        collapsed: true,
+        default: 'off',
+        enable_state: { label: 'Enabled', value: 'on' },
+        disable_state: { label: 'Disabled', value: 'off' },
+    },
+    { id: 'google_client_id', type: 'field', variant: 'show_hide', field_group_id: 'google_enabled', title: 'Client ID' },
+    { id: 'google_client_secret', type: 'field', variant: 'show_hide', field_group_id: 'google_enabled', title: 'Client Secret' },
+];
+
+/**
+ * `collapsible_switch` — a settings field whose header row carries an icon,
+ * title, description, an enable **toggle**, AND a **chevron**. The toggle
+ * persists the field value; the chevron expands/collapses the nested children
+ * (attached in the flat schema via `field_group_id` pointing at the switch's
+ * id). Initial collapsed state comes from `collapsed`.
+ */
+export const CollapsibleSwitch: Story = {
+    args: {
+        schema: collapsibleSwitchSchema,
+        title: 'Integrations',
+        hookPrefix: 'my_plugin',
+    },
+    render: (args) => <SettingsStoryWrapper {...args} />,
+};
