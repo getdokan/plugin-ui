@@ -1076,7 +1076,7 @@ export function InfoField({ element, ...rest }: FieldComponentProps) {
 
   return (
     <Notice
-      className={ cn( 'bg-primary/10 border-primary mx-4', element.css_class, rest.isNested && "!pt-0 !border-t-0 !border-none", rest.isGroupParent && "!pb-0" ) }
+      className={ cn( 'bg-primary/10 border-primary', element.css_class, rest.isNested && "!pt-0 !border-t-0 !border-none", rest.isGroupParent && "!pb-0" ) }
       id={element.id}
       data-testid={`settings-field-${element.id}`}
     >
