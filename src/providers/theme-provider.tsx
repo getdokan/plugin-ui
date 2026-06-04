@@ -393,9 +393,13 @@ const defaultDarkTokens: ThemeTokens = {
  */
 const GLOBAL_THEME_KEY = "__PUI_THEME__";
 
+type ThemeWindow = Window & {
+  [GLOBAL_THEME_KEY]?: ThemeContextValue | null;
+};
+
 function getGlobalTheme(): ThemeContextValue | null {
   if (typeof window === "undefined") return null;
-  return (window as any)[GLOBAL_THEME_KEY] || null;
+  return (window as ThemeWindow)[GLOBAL_THEME_KEY] || null;
 }
 
 const themeListeners = new Set<(context: ThemeContextValue) => void>();
@@ -409,7 +413,7 @@ function subscribeToGlobalTheme(listener: (context: ThemeContextValue) => void) 
 
 function setGlobalTheme(context: ThemeContextValue) {
   if (typeof window !== "undefined") {
-    (window as any)[GLOBAL_THEME_KEY] = context;
+    (window as ThemeWindow)[GLOBAL_THEME_KEY] = context;
   }
   themeListeners.forEach((listener) => listener(context));
 }

@@ -3,7 +3,7 @@
 import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip"
 
 import { cn } from "@/lib/utils"
-import { useThemeOptional, defaultCssVariables } from "@/providers";
+import { useThemeOptional } from "@/providers";
 
 function TooltipProvider({
   delay = 0,

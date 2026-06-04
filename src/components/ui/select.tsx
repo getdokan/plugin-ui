@@ -5,7 +5,7 @@ import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
-import { useThemeOptional, defaultCssVariables } from "@/providers";
+import { useThemeOptional } from "@/providers";
 
 const Select = SelectPrimitive.Root;
 

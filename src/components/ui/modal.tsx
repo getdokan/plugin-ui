@@ -8,7 +8,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
-import { useThemeOptional, defaultCssVariables } from "@/providers";
+import { useThemeOptional } from "@/providers";
 
 /* ============================================
    Modal Overlay

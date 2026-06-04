@@ -7,7 +7,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
 import { Input } from "./input";
-import { useThemeOptional, defaultCssVariables } from "@/providers";
+import { useThemeOptional } from "@/providers";
 
 const Combobox = ComboboxPrimitive.Root;
 
