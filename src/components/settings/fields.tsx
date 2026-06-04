@@ -419,6 +419,16 @@ export function SelectField({ element, onChange, ...rest }: FieldComponentProps)
   );
   const selectedLabel = selectedOption?.label ?? selectedOption?.title;
 
+  // Resolve a per-option icon by lucide name (same convention as `element.icon`).
+  const renderOptionIcon = (iconName?: string) => {
+    if (!iconName) return null;
+    const Icon = LucideIcons[
+      iconName as keyof typeof LucideIcons
+    ] as React.ElementType | undefined;
+    return Icon ? <Icon className="size-4 shrink-0" /> : null;
+  };
+  const selectedIcon = (selectedOption as { icon?: string } | undefined)?.icon;
+
   return (
     <FieldWrapper element={element} {...rest}>
       <Select
@@ -432,12 +442,14 @@ export function SelectField({ element, onChange, ...rest }: FieldComponentProps)
               element.placeholder ? String(element.placeholder) : "Select..."
             }
           >
+            {renderOptionIcon(selectedIcon)}
             {selectedLabel}
           </SelectValue>
         </SelectTrigger>
         <SelectContent>
           {element.options?.map((option) => (
             <SelectItem key={String(option.value)} value={String(option.value)}>
+              {renderOptionIcon((option as { icon?: string }).icon)}
               {option.label ?? option.title}
             </SelectItem>
           ))}
