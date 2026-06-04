@@ -163,8 +163,8 @@ function RadioImageCard({
               {typeof label === 'string' ? <RawHTML>{label}</RawHTML> : label}
             </FieldTitle>
           </div>
-          <FieldContent className={cn('p-0 flex items-center justify-center')} >
-            <div className="flex flex-col items-center gap-3 w-full">
+          <FieldContent className={cn('p-0 w-full')} >
+            <div className="flex flex-col gap-3 w-full">
               {description && (
                 <FieldDescription className="text-center">
                   {description}
@@ -172,7 +172,7 @@ function RadioImageCard({
               )}
               {image && (
                 typeof image === 'string' ? (
-                  <img src={image} alt={typeof label === 'string' ? label : 'Option image'} className="w-full h-auto object-contain" />
+                  <img src={image} alt={typeof label === 'string' ? label : 'Option image'} className="block w-full h-auto object-contain" />
                 ) : (
                   image
                 )
