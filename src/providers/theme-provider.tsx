@@ -387,25 +387,121 @@ const defaultDarkTokens: ThemeTokens = {
 };
 
 /**
+ * Global registry of every mounted ThemeProvider, used as a fallback theme for
+ * components rendered in a disconnected React root (no ThemeProvider ancestor) —
+ * common in WordPress where multiple bundles/roots coexist.
+ *
+ * Notes on multi-plugin / multi-instance safety:
+ * - Components *inside* a ThemeProvider (including portaled ones) already get the
+ *   correct theme via React context — context flows through `createPortal`. This
+ *   registry is only consulted when there is no provider in the React tree.
+ * - The registry (entries + listeners) lives on `window`, so it is shared even
+ *   when the library is bundled multiple times by different plugins.
+ * - Entries are keyed per provider instance and ordered, so the "active" fallback
+ *   is the most-recently mounted/updated provider, and it self-heals when that
+ *   provider unmounts (falls back to the next most recent, or the default light
+ *   theme when none remain). This avoids the stale / last-writer-wins problems of
+ *   a single shared slot when two plugins mount providers on the same page.
+ */
+const GLOBAL_THEME_KEY = "__PUI_THEME__";
+
+interface ThemeRegistry {
+  entries: Map<symbol, ThemeContextValue>;
+  listeners: Set<(context: ThemeContextValue | null) => void>;
+}
+
+type ThemeWindow = Window & {
+  [GLOBAL_THEME_KEY]?: ThemeRegistry;
+};
+
+function isThemeRegistry(value: unknown): value is ThemeRegistry {
+  return (
+    !!value &&
+    (value as ThemeRegistry).entries instanceof Map &&
+    (value as ThemeRegistry).listeners instanceof Set
+  );
+}
+
+function getRegistry(): ThemeRegistry {
+  // On the server there is no shared window; return an ephemeral registry.
+  // (Effects that register/subscribe never run during SSR, so this is only
+  // ever read as "empty" via getGlobalTheme's lazy initializer.)
+  if (typeof window === "undefined") {
+    return { entries: new Map(), listeners: new Set() };
+  }
+  const w = window as ThemeWindow;
+  // Guard the shape: an older library version (pre-registry) stored a bare
+  // ThemeContextValue at this key. If another plugin on the page ships that
+  // version, don't crash trying to read `.entries` off it — re-initialize.
+  if (!isThemeRegistry(w[GLOBAL_THEME_KEY])) {
+    w[GLOBAL_THEME_KEY] = { entries: new Map(), listeners: new Set() };
+  }
+  return w[GLOBAL_THEME_KEY] as ThemeRegistry;
+}
+
+/** The most-recently registered (mounted/updated) provider's context, or null. */
+function getGlobalTheme(): ThemeContextValue | null {
+  const { entries } = getRegistry();
+  let latest: ThemeContextValue | null = null;
+  for (const value of entries.values()) latest = value;
+  return latest;
+}
+
+function notifyGlobalThemeListeners() {
+  const { listeners } = getRegistry();
+  const current = getGlobalTheme();
+  listeners.forEach((listener) => listener(current));
+}
+
+/** Register/refresh a provider instance and make it the active fallback. */
+function registerGlobalTheme(id: symbol, context: ThemeContextValue) {
+  const { entries } = getRegistry();
+  // Re-insert so the latest update moves to the end (becomes "current").
+  entries.delete(id);
+  entries.set(id, context);
+  notifyGlobalThemeListeners();
+}
+
+/** Remove a provider instance (on unmount); active fallback falls back. */
+function unregisterGlobalTheme(id: symbol) {
+  const { entries } = getRegistry();
+  if (entries.delete(id)) {
+    notifyGlobalThemeListeners();
+  }
+}
+
+function subscribeToGlobalTheme(
+  listener: (context: ThemeContextValue | null) => void,
+) {
+  const { listeners } = getRegistry();
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
+/**
+ * Pre-computed default light CSS variables for use in portals outside ThemeProvider.
+ */
+export const defaultCssVariables: Record<string, string> =
+  tokensToCssVariables(defaultLightTokens);
+
+/**
+ * Default context value used when components are rendered outside a ThemeProvider
+ * and no global theme has been registered yet.
+ */
+const DEFAULT_CONTEXT: ThemeContextValue = {
+  pluginId: "pui-default",
+  mode: "light",
+  setMode: () => {},
+  tokens: defaultLightTokens,
+  resolvedMode: "light",
+  cssVariables: defaultCssVariables,
+  className: "",
+};
+
+/**
  * ThemeProvider component for scoped theming across plugins
- *
- * @example
- * ```tsx
- * import { ThemeProvider } from '@wedevs/plugin-ui';
- *
- * const dokanTokens = {
- *   primary: 'oklch(0.5410 0.2120 265.7540)', // Purple
- *   radius: '0.375rem',
- * };
- *
- * function DokanApp() {
- *   return (
- *     <ThemeProvider pluginId="dokan" tokens={dokanTokens}>
- *       <YourComponents />
- *     </ThemeProvider>
- *   );
- * }
- * ```
  */
 export function ThemeProvider({
   pluginId,
@@ -503,13 +599,24 @@ export function ThemeProvider({
     [pluginId, mode, setMode, mergedTokens, resolvedMode, cssVariables, className],
   );
 
+  // Stable per-instance id so multiple providers (same or different plugin)
+  // each get their own slot in the global registry.
+  const [instanceId] = useState(() => Symbol(pluginId));
+
+  // Publish this provider to the global registry so disconnected roots can fall
+  // back to it; unregister on unmount so the fallback never goes stale.
+  useEffect(() => {
+    registerGlobalTheme(instanceId, contextValue);
+    return () => unregisterGlobalTheme(instanceId);
+  }, [instanceId, contextValue]);
+
   return (
     <ThemeContext.Provider value={contextValue}>
       <div
         data-pui-plugin={pluginId}
         data-pui-mode={resolvedMode}
         className={`pui-root ${
-          resolvedMode === "dark" ? "dark" : ""
+          resolvedMode
         } ${className}`.trim()}
         style={{ ...cssVariables, ...style }}
       >
@@ -521,19 +628,6 @@ export function ThemeProvider({
 
 /**
  * Hook to access theme context
- *
- * @example
- * ```tsx
- * function MyComponent() {
- *   const { mode, setMode, tokens, pluginId } = useTheme();
- *
- *   return (
- *     <button onClick={() => setMode(mode === 'dark' ? 'light' : 'dark')}>
- *       Toggle theme
- *     </button>
- *   );
- * }
- * ```
  */
 export function useTheme(): ThemeContextValue {
   const context = useContext(ThemeContext);
@@ -546,16 +640,29 @@ export function useTheme(): ThemeContextValue {
 }
 
 /**
- * Hook to check if component is within a ThemeProvider
+ * Hook to check if component is within a ThemeProvider.
+ * If not, falls back to the most recently registered global theme,
+ * or the default light theme if none exists.
  */
-export function useThemeOptional(): ThemeContextValue | null {
-  return useContext(ThemeContext);
-}
+export function useThemeOptional(): ThemeContextValue {
+  const context = useContext(ThemeContext);
+  const [fallbackContext, setFallbackContext] = useState<ThemeContextValue>(
+    () => getGlobalTheme() ?? DEFAULT_CONTEXT,
+  );
 
-/**
- * Pre-computed default light CSS variables for use in portals outside ThemeProvider.
- */
-export const defaultCssVariables: Record<string, string> =
-  tokensToCssVariables(defaultLightTokens);
+  useEffect(() => {
+    // If we have a local context, we don't need the global fallback.
+    if (context) return;
+
+    // Sync immediately in case a provider registered between render and effect,
+    // then subscribe to subsequent global theme changes.
+    setFallbackContext(getGlobalTheme() ?? DEFAULT_CONTEXT);
+    return subscribeToGlobalTheme((newContext) => {
+      setFallbackContext(newContext ?? DEFAULT_CONTEXT);
+    });
+  }, [context]);
+
+  return context ?? fallbackContext;
+}
 
 export default ThemeProvider;
