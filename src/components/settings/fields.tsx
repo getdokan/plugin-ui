@@ -131,12 +131,12 @@ function FieldLabel({ element }: { element: SettingsElement }) {
   const IconComponent = element.icon ? (LucideIcons[element.icon as keyof typeof LucideIcons] as React.ElementType) : null;
 
   return (
-    <div className="flex items-start gap-3">
+    <div className="flex items-center gap-3">
       {element.image_url && (
         <img
           src={element.image_url}
-          alt=""
-          className="w-11 h-11 object-contain border border-border rounded-md p-2"
+          alt="FL"
+          className="w-11 h-11 object-contain"
         />
       )}
       <div className="flex flex-col gap-1 w-full">
