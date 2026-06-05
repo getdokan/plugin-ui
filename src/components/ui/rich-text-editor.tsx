@@ -52,12 +52,22 @@ function RichTextEditor({
   const [fontFamily, setFontFamily] = React.useState("Sans Serif");
   const [textStyle, setTextStyle] = React.useState("Paragraph");
 
-  // Sync internal content with value prop if it changes and is different
+  // Sync the contentEditable DOM with the value/defaultValue prop.
+  //
+  // The contentEditable is intentionally NOT bound via dangerouslySetInnerHTML:
+  // React would re-apply innerHTML on every keystroke-driven re-render and
+  // collapse the selection to the start, so each typed character appears to
+  // prepend (the "reversed / RTL" typing effect). Here we only write innerHTML
+  // when the incoming content actually differs AND the editor is not focused,
+  // so external/programmatic updates still land but active typing keeps its caret.
   React.useEffect(() => {
-    if (value !== undefined && editorRef.current && value !== editorRef.current.innerHTML) {
-      editorRef.current.innerHTML = value;
-    }
-  }, [value]);
+    const el = editorRef.current;
+    if (!el) return;
+    const next = value ?? defaultValue ?? "";
+    if (next === el.innerHTML) return;
+    if (document.activeElement === el) return;
+    el.innerHTML = next;
+  }, [value, defaultValue]);
 
   const executeCommand = (command: string, value?: string) => {
     document.execCommand(command, false, value);
@@ -315,7 +325,6 @@ function RichTextEditor({
           ref={editorRef}
           contentEditable
           className="w-full h-full px-3 py-2 text-sm outline-none bg-transparent prose prose-sm max-w-none"
-          dangerouslySetInnerHTML={{ __html: value ?? defaultValue }}
           suppressContentEditableWarning
           data-placeholder={placeholder}
           onInput={(e) => {

@@ -143,28 +143,33 @@ function RadioImageCard({
   return (
     <FieldGroup className={cn(disabled && "opacity-50")}>
       <FieldLabel className={cn(
-        "transition-colors has-data-checked:bg-transparent dark:has-data-checked:bg-transparent p-0 group cursor-pointer group",
+        // The base FieldLabel injects `*:data-[slot=field]:p-3`, which targets the
+        // child Field with higher specificity than a `p-0!` on the Field itself, so
+        // it can't be overridden there (esp. under the global !important strategy).
+        // Neutralise it at the root via the same child-targeting utility — twMerge
+        // collapses p-3 -> p-0 so the illustration sits flush to the card edges.
+        "transition-colors has-data-checked:bg-transparent dark:has-data-checked:bg-transparent p-0 *:data-[slot=field]:p-0 group cursor-pointer rounded-xl overflow-hidden",
         currentValue === props.value && 'border-primary!',
         !disabled && "hover:border-primary"
       )}>
         <Field
           orientation={orientation}
           data-disabled={disabled}
-          className="flex flex-col p-0!"
+          className="flex flex-col"
           data-testid={`settings-field-${props.id}`}
         >
-          <div className={cn( 'w-full flex flex-row items-center justify-between gap-3 border-b border-border group-hover:border-primary p-3', position === "right" && "flex-row-reverse", currentValue === props.value && 'border-primary!')}>
+          <div className={cn( 'w-full flex flex-row items-center justify-between gap-3 border-b border-border group-hover:border-primary px-5 py-4', position === "right" && "flex-row-reverse", currentValue === props.value && 'border-primary!')}>
             <RadioGroupItem
               className={cn("disabled:opacity-100", className)}
               disabled={disabled}
               {...props}
             />
-            <FieldTitle className="font-bold">
+            <FieldTitle className="font-bold text-base text-foreground">
               {typeof label === 'string' ? <RawHTML>{label}</RawHTML> : label}
             </FieldTitle>
           </div>
-          <FieldContent className={cn('p-3 flex items-center justify-center')} >
-            <div className="flex flex-col items-start gap-3 w-full">
+          <FieldContent className={cn('px-5 py-4 w-full')} >
+            <div className="flex flex-col gap-3 w-full">
               {description && (
                 <FieldDescription className="text-center">
                   {description}
@@ -172,7 +177,7 @@ function RadioImageCard({
               )}
               {image && (
                 typeof image === 'string' ? (
-                  <img src={image} alt={typeof label === 'string' ? label : 'Option image'} className="w-full h-auto object-contain" />
+                  <img src={image} alt={typeof label === 'string' ? label : 'Option image'} className="block w-full h-auto object-contain" />
                 ) : (
                   image
                 )
