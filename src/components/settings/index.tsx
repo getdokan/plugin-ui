@@ -27,6 +27,8 @@ export function Settings({
     applyFilters,
     initialPage,
     onNavigate,
+    searchPlaceholder,
+    searchable = true,
 }: SettingsProps) {
     return (
         <SettingsProvider
@@ -44,6 +46,8 @@ export function Settings({
             <SettingsInner
                 title={title}
                 className={className}
+                searchPlaceholder={searchPlaceholder}
+                searchable={searchable}
             />
         </SettingsProvider>
     );
@@ -56,9 +60,13 @@ export function Settings({
 function SettingsInner({
     title,
     className,
+    searchPlaceholder,
+    searchable,
 }: {
     title?: string;
     className?: string;
+    searchPlaceholder?: string;
+    searchable?: boolean;
 }) {
     const { loading, activeSubpage, isSidebarVisible } = useSettings();
     const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -78,7 +86,7 @@ function SettingsInner({
     return (
         <div
             className={cn(
-                'relative flex min-h-[500px] rounded-lg border border-border bg-background overflow-hidden',
+                'relative flex min-h-125 rounded-lg border border-border bg-background overflow-hidden',
                 className
             )}
             data-testid="settings-root"
@@ -89,7 +97,7 @@ function SettingsInner({
                     className={cn(
                         'fixed inset-0 z-40 bg-black/50 lg:hidden transition-opacity duration-200',
                         mobileSidebarOpen
-                            ? 'opacity-100'
+                            ? 'opacity-100 z-99999'
                             : 'pointer-events-none opacity-0'
                     )}
                     aria-hidden
@@ -106,7 +114,7 @@ function SettingsInner({
                         // Mobile: fixed slide-in drawer
                         'max-lg:fixed max-lg:inset-y-0 max-lg:left-0 max-lg:z-50 max-lg:w-72 max-lg:flex max-lg:flex-col max-lg:bg-background max-lg:shadow-xl',
                         'max-lg:transition-transform max-lg:duration-200 max-lg:ease-out',
-                        mobileSidebarOpen ? 'max-lg:translate-x-0' : 'max-lg:-translate-x-full',
+                        mobileSidebarOpen ? 'max-lg:translate-x-0 max-lg:z-99999' : 'max-lg:-translate-x-full',
                     )}
                 >
                     {/* Mobile close button */}
@@ -133,7 +141,11 @@ function SettingsInner({
                         </div>
                     )}
 
-                    <SettingsSidebar className="flex-1 overflow-y-auto" />
+                    <SettingsSidebar
+                        className="flex-1 overflow-y-auto"
+                        searchPlaceholder={searchPlaceholder}
+                        searchable={searchable}
+                    />
                 </aside>
             )}
 
@@ -184,7 +196,8 @@ function usePrevious<T>(value: T): T | undefined {
 // Re-exports
 // ============================================
 
-export { useSettings } from './settings-context';
+export { SettingsProvider, useSettings } from './settings-context';
 export type { ApplyFiltersFunction } from './settings-context';
+export { FieldRenderer } from './field-renderer';
 export { formatSettingsData, extractValues } from './settings-formatter';
 export type { SettingsElement, SettingsProps, FieldComponentProps, SaveButtonRenderProps } from './settings-types';

@@ -1,11 +1,24 @@
+"use client";
+
 import { Select as SelectPrimitive } from "@base-ui/react/select";
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
-import { useThemeOptional, defaultCssVariables } from "@/providers";
+import { useThemeOptional } from "@/providers";
 
 const Select = SelectPrimitive.Root;
+
+function SelectPortal({
+  children,
+  ...props
+}: SelectPrimitive.Portal.Props) {
+  return (
+    <SelectPrimitive.Portal data-slot="select-portal" {...props}>
+      {children}
+    </SelectPrimitive.Portal>
+  );
+}
 
 function SelectGroup({ className, ...props }: SelectPrimitive.Group.Props) {
   return (
@@ -21,7 +34,10 @@ function SelectValue({ className, ...props }: SelectPrimitive.Value.Props) {
   return (
     <SelectPrimitive.Value
       data-slot="select-value"
-      className={cn("flex flex-1 text-start", className)}
+      // `min-w-0` is required so the value can shrink inside a fixed-width
+      // trigger; without it long text pushes the sibling chevron out of the
+      // flex track and renders over the value.
+      className={cn("flex flex-1 min-w-0 text-start truncate", className)}
       {...props}
     />
   );
@@ -62,41 +78,49 @@ function SelectContent({
   sideOffset = 4,
   align = "center",
   alignOffset = 0,
-  alignItemWithTrigger = true,
+  // base-ui's iOS-style "align the selected option over the trigger" mode
+  // measures item heights before they paint. With wrap-enabled items
+  // (whitespace-normal in SelectItem) the measurement is off on first open,
+  // pushing the popup above the viewport and clipping the top option;
+  // subsequent opens use settled heights and look fine. Defaulting to false
+  // makes the popup open below the trigger like a standard dropdown, which
+  // is consistent across opens and matches user expectation for a list
+  // picker. Callers can still opt back into anchored mode explicitly.
+  alignItemWithTrigger = false,
   ...props
 }: SelectPrimitive.Popup.Props &
   Pick<
     SelectPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset" | "alignItemWithTrigger"
   >) {
-  const theme = useThemeOptional();
-  const mode = theme?.mode ?? 'light';
-  const cssVariables = theme?.cssVariables ?? defaultCssVariables;
+  const { resolvedMode, cssVariables, className: themeClassName } = useThemeOptional();
   return (
-    <SelectPrimitive.Portal className={ cn('pui-root', mode) } style={cssVariables}>
-      <SelectPrimitive.Positioner
-        side={side}
-        sideOffset={sideOffset}
-        align={align}
-        alignOffset={alignOffset}
-        alignItemWithTrigger={alignItemWithTrigger}
-        className="isolate z-50"
-      >
-        <SelectPrimitive.Popup
-          data-slot="select-content"
-          data-align-trigger={alignItemWithTrigger}
-          className={cn(
-            "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 min-w-36 rounded-md shadow-md ring-1 duration-100 data-[side=inline-start]:slide-in-from-end-2 data-[side=inline-end]:slide-in-from-start-2 relative isolate z-50 max-h-(--available-height) w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto data-[align-trigger=true]:animate-none",
-            className
-          )}
-          {...props}
+    <SelectPortal>
+      <div className={ cn('pui-root', resolvedMode, themeClassName) } style={cssVariables}>
+        <SelectPrimitive.Positioner
+          side={side}
+          sideOffset={sideOffset}
+          align={align}
+          alignOffset={alignOffset}
+          alignItemWithTrigger={alignItemWithTrigger}
+          className="isolate z-50"
         >
-          <SelectScrollUpButton />
-          <SelectPrimitive.List>{children}</SelectPrimitive.List>
-          <SelectScrollDownButton />
-        </SelectPrimitive.Popup>
-      </SelectPrimitive.Positioner>
-    </SelectPrimitive.Portal>
+          <SelectPrimitive.Popup
+            data-slot="select-content"
+            data-align-trigger={alignItemWithTrigger}
+            className={cn(
+              "bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 min-w-36 rounded-md shadow-md ring-1 duration-100 data-[side=inline-start]:slide-in-from-end-2 data-[side=inline-end]:slide-in-from-start-2 relative isolate z-50 max-h-(--available-height) w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto data-[align-trigger=true]:animate-none",
+              className
+            )}
+            {...props}
+          >
+            <SelectScrollUpButton />
+            <SelectPrimitive.List>{children}</SelectPrimitive.List>
+            <SelectScrollDownButton />
+          </SelectPrimitive.Popup>
+        </SelectPrimitive.Positioner>
+      </div>
+    </SelectPortal>
   );
 }
 
@@ -127,7 +151,13 @@ function SelectItem({
       )}
       {...props}
     >
-      <SelectPrimitive.ItemText className="flex flex-1 gap-2 shrink-0 whitespace-nowrap">
+      {/* Long option titles wrap onto multiple lines so the user can read
+          the full content (truncating with an ellipsis in a picker hides
+          information the user needs to make a choice). `min-w-0` lets the
+          flex item shrink to the popup width before wrapping; `break-words`
+          handles tokens with no natural break. The trigger value keeps its
+          own single-line truncate — different UX surface, different rule. */}
+      <SelectPrimitive.ItemText className="flex flex-1 gap-2 min-w-0 whitespace-normal break-words text-start">
         {children}
       </SelectPrimitive.ItemText>
       <SelectPrimitive.ItemIndicator

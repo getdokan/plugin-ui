@@ -38,7 +38,7 @@ export type SettingsElementOption = {
 export type SettingsElement = {
     id: string;
     type: 'page' | 'subpage' | 'tab' | 'section' | 'subsection' | 'field' | 'fieldgroup' | string;
-    is_danger: boolean;
+    is_danger?: boolean;
     variant?: string;
     icon?: string;
     /** Primary display text (preferred over `title`). */
@@ -49,12 +49,11 @@ export type SettingsElement = {
     tooltip?: string;
     display?: boolean;
     hook_key?: string;
-    dependency_key?: string;
     children?: SettingsElement[];
 
     // Field-specific
     value?: string | number | boolean | Array<string | number> | Record<string, any>;
-    default?: string | number | boolean | Array<string | number>;
+    default?: string | number | boolean | Array<string | number> | Record<string, any>;
     options?: SettingsElementOption[];
     readonly?: boolean;
     disabled?: boolean;
@@ -79,9 +78,16 @@ export type SettingsElement = {
     // Switch-specific
     enable_state?: { value: string | number; title: string };
     disable_state?: { value: string | number; title: string };
-    switcher_type?: string | null;
+    switcher_type?: 'error' | 'default' | string | null;
     should_confirm?: boolean;
-    confirm_modal?: Record<string, any>;
+    confirm_modal?: {
+        title?: string;
+        confirmationTitle?: string;
+        description?: string;
+        confirmText?: string;
+        cancelText?: string;
+        checkboxLabel?: string;
+    } | Record<string, any>;
 
     // Radio-specific
     radio_variant?: 'simple' | 'card' | 'template' | string;
@@ -107,6 +113,11 @@ export type SettingsElement = {
     subsection_id?: string;
     field_group_id?: string;
     priority?: number;
+
+    /** Section-only: render the card with a collapse toggle in its header. */
+    collapsible?: boolean;
+    /** Section-only: initial collapsed state when `collapsible` is true. */
+    collapsed?: boolean;
 
     // Validation error (runtime)
     validationError?: string;
@@ -134,7 +145,7 @@ export interface SaveButtonRenderProps {
 export interface SettingsProps {
     /** Settings schema — JSON array (flat or hierarchical) */
     schema: SettingsElement[];
-    /** Current values, keyed by dependency_key */
+    /** Current values, keyed by element id */
     values?: Record<string, any>;
     /** Called when a field value changes. Receives the scope ID (subpage/page), field key, and new value. */
     onChange?: (scopeId: string, key: string, value: any) => void;
@@ -178,6 +189,10 @@ export interface SettingsProps {
     initialPage?: string;
     /** Called whenever the active page changes. Use to sync a URL query param. */
     onNavigate?: (pageId: string) => void;
+    /** Placeholder text for the sidebar search input. */
+    searchPlaceholder?: string;
+    /** Show the sidebar search input. Default: true. */
+    searchable?: boolean;
 }
 
 export interface FieldComponentProps {

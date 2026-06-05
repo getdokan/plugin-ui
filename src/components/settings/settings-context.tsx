@@ -10,6 +10,7 @@ import {
 } from 'react';
 import type { SaveButtonRenderProps, SettingsElement } from './settings-types';
 import {
+    buildIdIndex,
     evaluateDependencies,
     extractValues,
     formatSettingsData,
@@ -26,9 +27,9 @@ export type ApplyFiltersFunction = (hookName: string, value: any, ...args: any[]
 export interface SettingsContextValue {
     /** Parsed hierarchical settings tree */
     schema: SettingsElement[];
-    /** Flat map of field values keyed by dependency_key */
+    /** Flat map of field values keyed by element id */
     values: Record<string, any>;
-    /** Validation errors keyed by dependency_key */
+    /** Validation errors keyed by element id */
     errors: Record<string, string>;
     /** Currently active page ID */
     activePage: string;
@@ -135,15 +136,15 @@ export function SettingsProvider({
     const [activeSubpage, setActiveSubpage] = useState<string>('');
     const [activeTab, setActiveTab] = useState<string>('');
 
-    // Build a memoized map of scopeId → [dependency_keys...] for per-subpage dirty tracking.
+    // Build a memoized map of scopeId → [element ids...] for per-subpage dirty tracking.
     // The scope ID is the subpage ID when a subpage exists, otherwise the page ID itself.
     const scopeFieldKeysMap = useMemo(() => {
         const map = new Map<string, string[]>();
         const collectKeys = (elements: SettingsElement[]): string[] => {
             const keys: string[] = [];
             for (const el of elements) {
-                if (el.type === 'field' && el.dependency_key) {
-                    keys.push(el.dependency_key);
+                if (el.type === 'field' && el.id) {
+                    keys.push(el.id);
                 }
                 if (el.children?.length) {
                     keys.push(...collectKeys(el.children));
@@ -174,7 +175,7 @@ export function SettingsProvider({
         return map;
     }, [schema]);
 
-    // Reverse lookup: dependency_key → scopeId (subpage ID or page ID)
+    // Reverse lookup: element id → scopeId (subpage ID or page ID)
     const keyToScopeMap = useMemo(() => {
         const map = new Map<string, string>();
         for (const [scopeId, keys] of scopeFieldKeysMap.entries()) {
@@ -308,7 +309,7 @@ export function SettingsProvider({
                 console.error('[Settings] onSave error caught:', error);
                 // If the error contains field-level errors (e.g. from a 400 response),
                 // merge them into the errors state so they display on the relevant fields.
-                // Error keys should match field dependency_key values.
+                // Error keys should match field element id values.
                 if (error && typeof error === 'object' && error.errors && typeof error.errors === 'object') {
                     setErrors((prev) => ({ ...prev, ...error.errors }));
                 }
@@ -320,12 +321,16 @@ export function SettingsProvider({
     // Update a field value
     const updateValue = useCallback(
         (key: string, value: any) => {
+            // Compute the next values snapshot locally — used both for
+            // setInternalValues and for cross-field validators (e.g. sum_max)
+            // that need to see the post-update value of the sibling.
+            const nextValues: Record<string, any> = { ...values, [key]: value };
             setInternalValues((prev) => ({ ...prev, [key]: value }));
 
             // Find the element to validate
             const findElement = (elements: SettingsElement[]): SettingsElement | undefined => {
                 for (const el of elements) {
-                    if (el.dependency_key === key) return el;
+                    if (el.id === key) return el;
                     if (el.children) {
                         const found = findElement(el.children);
                         if (found) return found;
@@ -334,33 +339,70 @@ export function SettingsProvider({
                 return undefined;
             };
 
-            const element = findElement(schema);
-            if (element) {
-                const error = validateField(element, value);
-                setErrors((prev) => {
-                    const next = { ...prev };
-                    if (error) {
-                        next[key] = error;
-                    } else {
-                        delete next[key];
+            // Walk the flat tree and collect every field whose validations
+            // reference the just-changed key via a cross-field rule. We
+            // re-validate these so a sibling's error clears when this field
+            // moves into a passing state.
+            //
+            // A rule references `key` when params.field === key OR `key`
+            // appears in params.fields (multi-sibling form).
+            const findCrossLinked = (elements: SettingsElement[], out: SettingsElement[] = []): SettingsElement[] => {
+                for (const el of elements) {
+                    if (el.id !== key && Array.isArray(el.validations)) {
+                        for (const v of el.validations) {
+                            const params = (v?.params as any) || {};
+                            const linkedToKey =
+                                String(params.field || '') === key ||
+                                (Array.isArray(params.fields) &&
+                                    params.fields.map(String).includes(key));
+                            if (linkedToKey) {
+                                out.push(el);
+                                break;
+                            }
+                        }
                     }
-                    return next;
-                });
-            }
+                    if (el.children) findCrossLinked(el.children, out);
+                }
+                return out;
+            };
+
+            setErrors((prev) => {
+                const next = { ...prev };
+
+                const element = findElement(schema);
+                if (element) {
+                    const error = validateField(element, value, nextValues);
+                    if (error) next[key] = error;
+                    else delete next[key];
+                }
+
+                for (const linked of findCrossLinked(schema)) {
+                    const linkedValue = nextValues[linked.id];
+                    const linkedError = validateField(linked, linkedValue, nextValues);
+                    if (linkedError) next[linked.id] = linkedError;
+                    else delete next[linked.id];
+                }
+
+                return next;
+            });
 
             // Pass scopeId (subpage ID if exists, otherwise page ID) along with key and value
             const scopeId = keyToScopeMap.get(key) || activeSubpage || activePage;
             onChange?.(scopeId, key, value);
         },
-        [schema, onChange, keyToScopeMap, activeSubpage, activePage]
+        [schema, values, onChange, keyToScopeMap, activeSubpage, activePage]
     );
 
-    // Dependency evaluation
+    // Dependency evaluation — dep keys are plain field ids, read directly
+    // from the flat values map. `idIndex` kept around (memoized cheaply) so
+    // call sites that still pass it remain compatible; the resolver no
+    // longer uses it.
+    const idIndex = useMemo(() => buildIdIndex(schema), [schema]);
     const shouldDisplay = useCallback(
         (element: SettingsElement): boolean => {
-            return evaluateDependencies(element, values);
+            return evaluateDependencies(element, values, idIndex);
         },
-        [values]
+        [values, idIndex]
     );
 
     // Navigation helpers

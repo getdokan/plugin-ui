@@ -58,9 +58,13 @@ function applyFiltersToTableElements<Item>(
 }
 
 // Extended action type with automatic destructive confirmation support
+export type ConfirmActionTone = 'destructive' | 'positive' | 'default';
+
 export type DestructiveActionConfig = {
     /** When true, shows an AlertDialog confirmation before executing the action callback. */
     isDestructive?: boolean;
+    /** Tone of the confirm button. Defaults to 'destructive'. Use 'positive' for approvals, 'default' for neutral confirmations. */
+    confirmTone?: ConfirmActionTone;
     /** Custom title for the confirmation dialog. Defaults to the action label. */
     confirmTitle?: string;
     /** Custom message for the confirmation dialog. */
@@ -69,6 +73,15 @@ export type DestructiveActionConfig = {
     confirmButtonLabel?: string;
     /** Custom label for the cancel button. Defaults to "Cancel". */
     cancelButtonLabel?: string;
+};
+
+const CONFIRM_TONE_VARIANT: Record<
+    ConfirmActionTone,
+    React.ComponentProps<typeof Button>['variant']
+> = {
+    destructive: 'destructive',
+    positive: 'success',
+    default: 'default'
 };
 
 // Re-export types from @wordpress/dataviews with prefixed names to avoid conflicts
@@ -1017,7 +1030,12 @@ export function DataViews<Item>(props: DataViewsProps<Item>) {
                                     __('Cancel', 'default')}
                             </AlertDialogCancel>
                             <AlertDialogAction
-                                variant="destructive"
+                                variant={
+                                    CONFIRM_TONE_VARIANT[
+                                        pendingDestructiveAction.action.confirmTone ??
+                                            'destructive'
+                                    ]
+                                }
                                 onClick={handleDestructiveConfirm}
                                 disabled={isConfirming}>
                                 {isConfirming && <Spinner className="mr-2" />}

@@ -375,6 +375,105 @@ Both support bulk selection. Try selecting multiple rows and using the bulk tool
   },
 };
 
+/**
+ * Confirm-button color controlled by `confirmTone`:
+ * - `destructive` (default) — red button for delete/remove
+ * - `positive` — green button for approve/publish
+ * - `default` — neutral primary button
+ */
+export const ConfirmActionTones: StoryFn = () => {
+  const [view, setView] = useState<DataViewState>(createDefaultView());
+  const [selection, setSelection] = useState<string[]>([]);
+  const [users, setUsers] = useState(allUsers);
+
+  const paginatedData = paginateData(users, view);
+
+  const tonedActions: DataViewAction<User>[] = [
+    {
+      id: "approve",
+      label: "Approve",
+      icon: <CheckCircle size={16} />,
+      isDestructive: true,
+      confirmTone: "positive",
+      confirmTitle: "Approve users?",
+      confirmMessage: "Approved users gain access immediately.",
+      confirmButtonLabel: "Approve",
+      supportsBulk: true,
+      callback: async (items) => {
+        await new Promise((r) => setTimeout(r, 1000));
+        setUsers((prev) =>
+          prev.map((u) =>
+            items.some((i) => i.id === u.id) ? { ...u, status: "active" } : u
+          )
+        );
+        setSelection([]);
+      },
+    },
+    {
+      id: "mark-reviewed",
+      label: "Mark Reviewed",
+      icon: <ShieldCheck size={16} />,
+      isDestructive: true,
+      confirmTone: "default",
+      confirmTitle: "Mark as reviewed?",
+      confirmMessage: "Logs the review timestamp. Reversible.",
+      confirmButtonLabel: "Mark Reviewed",
+      supportsBulk: true,
+      callback: async (items) => {
+        await new Promise((r) => setTimeout(r, 800));
+        alert(`Marked reviewed: ${items.map((i) => i.name).join(", ")}`);
+      },
+    },
+    {
+      id: "delete",
+      label: "Delete",
+      icon: <Trash2 size={16} />,
+      isDestructive: true,
+      supportsBulk: true,
+      callback: async (items) => {
+        await new Promise((r) => setTimeout(r, 1000));
+        const ids = new Set(items.map((i) => i.id));
+        setUsers((prev) => prev.filter((u) => !ids.has(u.id)));
+        setSelection([]);
+      },
+    },
+  ];
+
+  return (
+    <div className="p-4">
+      <DataViews<User>
+        namespace="dataviews-demo"
+        data={paginatedData}
+        fields={fields}
+        view={view}
+        onChangeView={setView}
+        actions={tonedActions}
+        selection={selection}
+        onChangeSelection={setSelection}
+        paginationInfo={{
+          totalItems: users.length,
+          totalPages: getTotalPages(users.length, view.perPage),
+        }}
+        getItemId={(item) => item.id}
+      />
+    </div>
+  );
+};
+ConfirmActionTones.storyName = "Confirm Action Tones";
+ConfirmActionTones.parameters = {
+  docs: {
+    description: {
+      story: `Set \`confirmTone\` on any \`isDestructive\` action to color the confirm button.
+
+- **Approve** → \`confirmTone: "positive"\` (green / success)
+- **Mark Reviewed** → \`confirmTone: "default"\` (neutral primary)
+- **Delete** → omitted, defaults to \`"destructive"\` (red)
+
+Useful for non-destructive actions that still need a confirmation step.`,
+    },
+  },
+};
+
 /** DataViews with dynamic filters. Click "Add Filter" to add filters. */
 export const TabAndFilters: StoryFn = () => {
   const [view, setView] = useState<DataViewState>(createDefaultView());

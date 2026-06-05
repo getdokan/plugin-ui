@@ -1,5 +1,6 @@
 import { Notice, NoticeAction } from '@/components/wordpress/AdminNotice';
-import { useEffect, useState } from 'react';
+import apiFetch from '@wordpress/api-fetch';
+import { useCallback, useEffect, useState } from 'react';
 
 interface NoticesOptions {
     interval?: number;
@@ -27,8 +28,9 @@ export const useNotices = ({
         [key: number]: boolean;
     }>({});
 
-    const fetchNotices = async () => {
+    const fetchNotices = useCallback(async () => {
         setIsLoading(true);
+        setError(null);
 
         try {
             const url = new URL(noticesUrl as string, window.location.href);
@@ -39,13 +41,10 @@ export const useNotices = ({
                 });
             }
 
-            const res = await fetch(url.toString());
+            const data = await apiFetch<Notice[] | { success: boolean; data: Notice[] }>({
+                url: url.toString()
+            });
 
-            if (!res.ok) {
-                throw new Error(`Failed to fetch notices: ${res.status}`);
-            }
-
-            const data: Notice[] | { success: boolean; data: Notice[] } = await res.json();
             const fetched = Array.isArray(data) ? data : data.data;
             setNotices(fetched);
         } catch (err) {
@@ -53,7 +52,7 @@ export const useNotices = ({
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [noticesUrl, noticesUrlArgs]);
 
     useEffect(() => {
         if (!noticesUrl) {
@@ -61,7 +60,7 @@ export const useNotices = ({
         }
 
         fetchNotices();
-    }, [noticesUrl, noticesUrlArgs]);
+    }, [noticesUrl, noticesUrlArgs, fetchNotices]);
 
     useEffect(() => {
         if (!isAutoSliding || notices.length <= 1) {
@@ -122,15 +121,12 @@ export const useNotices = ({
                     body.append(key, String(value));
                 });
 
-                const response = await fetch(actionUrl, {
+                await apiFetch({
+                    url: actionUrl,
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body
+                    body,
+                    parse: false
                 });
-
-                if (!response.ok) {
-                    throw new Error(`Request failed: ${response.status}`);
-                }
 
                 removeNoticeAt(noticeIndex);
             } else {

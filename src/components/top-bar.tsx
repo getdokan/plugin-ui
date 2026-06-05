@@ -51,12 +51,14 @@ function TopBar({className, logo, versions = [], rightSideComponents = <></>}: T
                 );
               }
 
-              return <>
-              { Component }
-              {
-                versions.length - 1 !== index && <Separator orientation="vertical" className="w-px! h-full! md:hidden! bg-muted-foreground!" />
-              }
-              </>
+              return (
+                <React.Fragment key={index}>
+                  { Component }
+                  {
+                    versions.length - 1 !== index && <Separator orientation="vertical" className="w-px! h-full! md:hidden! bg-muted-foreground!" />
+                  }
+                </React.Fragment>
+              );
             })
           }
         </div>

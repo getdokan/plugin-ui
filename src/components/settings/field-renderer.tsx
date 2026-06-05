@@ -1,11 +1,18 @@
+import { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Switch } from '../ui';
 import type { SettingsElement, FieldComponentProps } from './settings-types';
 import { useSettings } from './settings-context';
 import {
+    FieldWrapper,
     TextField,
     NumberField,
     TextareaField,
     SelectField,
     SwitchField,
+    DangerSwitchField,
+    InfoPreviewField,
     RadioCapsuleField,
     CustomizeRadioField,
     MulticheckField,
@@ -48,11 +55,11 @@ export function FieldRenderer({
         return null;
     }
 
-    // Merge current value from context
+    // Merge current value from context (keyed by element id)
     const mergedElement: SettingsElement = {
         ...element,
-        value: element.dependency_key ? (values[element.dependency_key] ?? element.value) : element.value,
-        validationError: element.dependency_key ? errors[element.dependency_key] : undefined,
+        value: element.id ? (values[element.id] ?? element.value) : element.value,
+        validationError: element.id ? errors[element.id] : undefined,
     };
 
     const fieldProps: FieldComponentProps = {
@@ -67,6 +74,13 @@ export function FieldRenderer({
 
     // Dispatch by variant — each wrapped with applyFilters
     switch (variant) {
+        case 'collapsible_switch':
+            return applyFilters(
+                `${filterPrefix}_settings_collapsible_switch_field`,
+                <CollapsibleSwitchField element={mergedElement} isNested={isNested} isGroupParent={isGroupParent} />,
+                mergedElement
+            );
+
         case 'switch_group': {
             const isEnabled = element.enable_state
                 ? mergedElement.value === element.enable_state.value
@@ -130,6 +144,20 @@ export function FieldRenderer({
             return applyFilters(
                 `${filterPrefix}_settings_switch_field`,
                 <SwitchField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'danger_switch':
+            return applyFilters(
+                `${filterPrefix}_settings_danger_switch_field`,
+                <DangerSwitchField {...fieldProps} />,
+                mergedElement
+            );
+
+        case 'info_preview':
+            return applyFilters(
+                `${filterPrefix}_settings_info_preview_field`,
+                <InfoPreviewField {...fieldProps} />,
                 mergedElement
             );
 
@@ -248,4 +276,76 @@ export function FieldRenderer({
                 mergedElement
             );
     }
+}
+
+// ============================================
+// Collapsible Switch Field
+// ============================================
+//
+// A row with BOTH a toggle and a chevron in its header (icon + title +
+// description via FieldWrapper), revealing its nested children when expanded.
+// The toggle persists the field value; the chevron controls a local
+// expand/collapse state (default from `element.collapsed`, defaulting to
+// collapsed). Children attach in the flat schema via `field_group_id` pointing
+// at this element's id.
+function CollapsibleSwitchField({
+    element,
+    isNested,
+    isGroupParent,
+}: {
+    element: SettingsElement;
+    isNested?: boolean;
+    isGroupParent?: boolean;
+}) {
+    const { updateValue } = useSettings();
+    const [open, setOpen] = useState( element.collapsed === false );
+
+    const isEnabled = element.enable_state
+        ? element.value === element.enable_state.value
+        : Boolean( element.value );
+
+    const childCount = element.children?.length ?? 0;
+    const hasChildren = childCount > 0;
+    const bodyVisible = open && hasChildren;
+
+    const handleChange = ( checked: boolean ) => {
+        if ( element.enable_state && element.disable_state ) {
+            updateValue( element.id, checked ? element.enable_state.value : element.disable_state.value );
+        } else {
+            updateValue( element.id, checked );
+        }
+    };
+
+    return (
+        <div className="flex flex-col">
+            <FieldWrapper element={ element } isNested={ isNested } isGroupParent={ isGroupParent || bodyVisible }>
+                <div className="flex items-center gap-3 sm:justify-end">
+                    <Switch
+                        checked={ isEnabled }
+                        onCheckedChange={ handleChange }
+                        disabled={ element.disabled }
+                    />
+                    { hasChildren && (
+                        <button
+                            type="button"
+                            onClick={ () => setOpen( ( o ) => ! o ) }
+                            aria-expanded={ open }
+                            aria-label="Toggle details"
+                            className="flex items-center pl-3 border-l border-border text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                            <ChevronDown
+                                className={ cn( 'size-5 transition-transform duration-200', open && 'rotate-180' ) }
+                            />
+                        </button>
+                    ) }
+                </div>
+            </FieldWrapper>
+            { bodyVisible && element.children?.map( ( child ) => (
+                <FieldRenderer
+                    key={ child.id }
+                    element={ child }
+                />
+            ) ) }
+        </div>
+    );
 }

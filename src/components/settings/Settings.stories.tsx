@@ -152,7 +152,6 @@ const sampleSchema: SettingsElement[] = [
                                 type: 'field',
                                 variant: 'number',
                                 label: 'Map Zoom Level',
-                                dependency_key: 'location.map_zoom_level',
                                 default: 10,
                                 min: 1,
                                 max: 18,
@@ -204,7 +203,6 @@ const sampleSchema: SettingsElement[] = [
                                         label: 'Store Name',
                                         description: 'This is the display name of your store.',
                                         tooltip: 'Visible to customers and on invoices.',
-                                        dependency_key: 'store_name',
                                         default: 'My Awesome Store',
                                         section_id: 'address_section',
                                         priority: 10,
@@ -221,7 +219,6 @@ const sampleSchema: SettingsElement[] = [
                                         type: 'field',
                                         variant: 'text',
                                         label: 'City',
-                                        dependency_key: 'store_city',
                                         placeholder: 'Enter city',
                                         section_id: 'address_section',
                                         priority: 20,
@@ -232,7 +229,6 @@ const sampleSchema: SettingsElement[] = [
                                         variant: 'color_picker',
                                         label: 'Store Brand Color',
                                         description: 'Choose your primary brand color.',
-                                        dependency_key: 'store_color',
                                         default: '#3b82f6',
                                         section_id: 'address_section',
                                         priority: 25,
@@ -243,7 +239,6 @@ const sampleSchema: SettingsElement[] = [
                                         variant: 'select',
                                         label: 'Country',
                                         description: 'Select the country where your store is located.',
-                                        dependency_key: 'store_country',
                                         default: 'us',
                                         options: [
                                             { value: 'us', label: 'United States' },
@@ -271,7 +266,6 @@ const sampleSchema: SettingsElement[] = [
                                         variant: 'switch',
                                         label: 'Enable Store Listing',
                                         description: 'Show the store on your public marketplace.',
-                                        dependency_key: 'enable_store_listing',
                                         default: true,
                                         section_id: 'display_section',
                                         priority: 10,
@@ -282,7 +276,6 @@ const sampleSchema: SettingsElement[] = [
                                         variant: 'number',
                                         label: 'Products Per Page',
                                         description: 'How many products to show per page.',
-                                        dependency_key: 'products_per_page',
                                         default: 12,
                                         min: 1,
                                         max: 100,
@@ -302,7 +295,6 @@ const sampleSchema: SettingsElement[] = [
                                         variant: 'radio_capsule',
                                         label: 'Layout Mode',
                                         description: 'Choose a layout for the product grid.',
-                                        dependency_key: 'layout_mode',
                                         default: 'grid',
                                         options: [
                                             { value: 'grid', label: 'Grid' },
@@ -325,7 +317,6 @@ const sampleSchema: SettingsElement[] = [
                                         variant: 'combine_input',
                                         label: 'Withdraw Charge',
                                         description: 'Set the commission and fixed fee.',
-                                        dependency_key: 'withdraw_charge_test',
                                         default: { admin_percentage: 10, additional_fee: 5 },
                                         section_id: 'display_section',
                                         priority: 35,
@@ -336,7 +327,6 @@ const sampleSchema: SettingsElement[] = [
                                         variant: 'combine_input',
                                         label: 'Withdraw Charge (Swapped)',
                                         description: 'Fixed fee comes first here.',
-                                        dependency_key: 'withdraw_charge_swapped',
                                         default: { admin_percentage: 10, additional_fee: 5 },
                                         swapped: true,
                                         money_sign: '€',
@@ -369,7 +359,6 @@ const sampleSchema: SettingsElement[] = [
                                         variant: 'textarea',
                                         label: 'Custom CSS',
                                         description: 'Add custom CSS styles for your store.',
-                                        dependency_key: 'custom_css',
                                         placeholder: '/* Enter your custom CSS here */',
                                         section_id: 'advanced_section',
                                         priority: 10,
@@ -413,7 +402,6 @@ const sampleSchema: SettingsElement[] = [
                                 variant: 'select',
                                 label: 'Commission Type',
                                 description: 'How commission is calculated for vendors.',
-                                dependency_key: 'commission_type',
                                 default: 'percentage',
                                 options: [
                                     { value: 'percentage', label: 'Percentage' },
@@ -429,7 +417,6 @@ const sampleSchema: SettingsElement[] = [
                                 variant: 'number',
                                 label: 'Commission Rate',
                                 description: 'The commission percentage for vendors.',
-                                dependency_key: 'commission_rate',
                                 default: 10,
                                 postfix: '%',
                                 min: 0,
@@ -443,7 +430,6 @@ const sampleSchema: SettingsElement[] = [
                                 variant: 'multicheck',
                                 label: 'Allowed Product Categories',
                                 description: 'Select which categories vendors can sell in.',
-                                dependency_key: 'allowed_categories',
                                 default: ['electronics', 'clothing'],
                                 options: [
                                     { value: 'electronics', label: 'Electronics' },
@@ -461,7 +447,6 @@ const sampleSchema: SettingsElement[] = [
                                 variant: 'customize_radio',
                                 label: 'Store Template',
                                 description: 'Choose a template for vendor store pages.',
-                                dependency_key: 'store_template',
                                 default: 'default',
                                 options: [
                                     { value: 'default', label: 'Default', description: 'Standard layout with sidebar' },
@@ -506,7 +491,6 @@ const sampleSchema: SettingsElement[] = [
                                 variant: 'switch',
                                 label: 'Enable PayPal',
                                 description: 'Allow payments via PayPal.',
-                                dependency_key: 'enable_paypal',
                                 default: true,
                                 section_id: 'payments_section',
                                 priority: 10,
@@ -517,7 +501,6 @@ const sampleSchema: SettingsElement[] = [
                                 variant: 'text',
                                 label: 'PayPal Email',
                                 placeholder: 'you@example.com',
-                                dependency_key: 'paypal_email',
                                 section_id: 'payments_section',
                                 priority: 20,
                                 dependencies: [
@@ -541,7 +524,6 @@ const sampleSchema: SettingsElement[] = [
                                 variant: 'switch',
                                 label: 'Enable Stripe',
                                 description: 'Accept credit card payments through Stripe.',
-                                dependency_key: 'enable_stripe',
                                 default: false,
                                 section_id: 'payments_section',
                                 priority: 30,
@@ -1334,7 +1316,6 @@ const singlePageSchema: SettingsElement[] = [
                         label: 'Admin Email',
                         description: 'Primary email for admin notifications.',
                         default: 'admin@example.com',
-                        dependency_key: 'admin_email',
                     },
                     {
                         id: 'enable_notifications',
@@ -1343,7 +1324,6 @@ const singlePageSchema: SettingsElement[] = [
                         label: 'Enable Notifications',
                         description: 'Send email notifications for new orders.',
                         default: true,
-                        dependency_key: 'enable_notifications',
                     },
                     {
                         id: 'notification_frequency',
@@ -1356,7 +1336,6 @@ const singlePageSchema: SettingsElement[] = [
                             { value: 'hourly', label: 'Hourly Digest' },
                             { value: 'daily', label: 'Daily Digest' },
                         ],
-                        dependency_key: 'notification_frequency',
                         dependencies: [{ key: 'enable_notifications', value: true, comparison: '==' }],
                     },
                 ],
@@ -1406,7 +1385,6 @@ const mixedSchema: SettingsElement[] = [
                                 variant: 'text',
                                 label: 'Store Name',
                                 default: 'My Store',
-                                dependency_key: 'store_name',
                             },
                         ],
                     },
@@ -1434,7 +1412,6 @@ const mixedSchema: SettingsElement[] = [
                                     { value: 'dark', label: 'Dark' },
                                     { value: 'auto', label: 'Auto' },
                                 ],
-                                dependency_key: 'color_scheme',
                             },
                         ],
                     },
@@ -1518,7 +1495,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_marketplace_marketplace_settings_vendor_store_url",
                                 "children": [],
                                 "description": "Define the vendor store URL (https://core-dokan.test/[this-text]/[vendor-name])",
-                                "dependency_key": "marketplace.marketplace_settings.vendor_store_url",
                                 "dependencies": [],
                                 "validations": [
                                     {
@@ -1574,7 +1550,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_marketplace_marketplace_settings_enable_single_seller_mode",
                                 "children": [],
                                 "description": "Restrict customers from purchasing products from multiple vendors in a single order.",
-                                "dependency_key": "marketplace.marketplace_settings.enable_single_seller_mode",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -1611,7 +1586,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_marketplace_marketplace_settings_store_category_mode",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "marketplace.marketplace_settings.store_category_mode",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "radio_capsule",
@@ -1653,7 +1627,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_marketplace_marketplace_settings_show_customer_details_to_vendors",
                                 "children": [],
                                 "description": "Allow vendors to view customer shipping and contact information for orders.",
-                                "dependency_key": "marketplace.marketplace_settings.show_customer_details_to_vendors",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -1690,7 +1663,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_marketplace_marketplace_settings_guest_product_enquiry",
                                 "children": [],
                                 "description": "Guest customers can submit product enquiries without logging in.",
-                                "dependency_key": "marketplace.marketplace_settings.guest_product_enquiry",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -1727,7 +1699,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_marketplace_marketplace_settings_add_to_cart_button_visibility",
                                 "children": [],
                                 "description": "Control &#039;Add to Cart&#039; button visibility based on your marketplace model.",
-                                "dependency_key": "marketplace.marketplace_settings.add_to_cart_button_visibility",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -1756,7 +1727,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "marketplace.marketplace_settings",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -1780,7 +1750,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_marketplace_live_search_live_search_base",
                                 "children": [],
                                 "description": "Choose how search results should be displayed to users",
-                                "dependency_key": "marketplace.live_search.live_search_base",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "base_field_label",
@@ -1808,7 +1777,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_marketplace_live_search_search_box_radio",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "marketplace.live_search.search_box_radio",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "customize_radio",
@@ -1843,14 +1811,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "marketplace.live_search",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Configure core marketplace functionalities and customer shopping experience.",
-                "dependency_key": "marketplace",
                 "dependencies": [],
                 "validations": [],
                 "priority": 100,
@@ -1885,7 +1851,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_dokan_pages_dashboard_section_dashboard",
                                 "children": [],
                                 "description": "Select a page to show vendor dashboard.",
-                                "dependency_key": "dokan_pages.dashboard_section.dashboard",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "select",
@@ -1980,7 +1945,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "dokan_pages.dashboard_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -2004,7 +1968,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_dokan_pages_my_orders_section_my_orders",
                                 "children": [],
                                 "description": "Select a page to show my orders",
-                                "dependency_key": "dokan_pages.my_orders_section.my_orders",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "select",
@@ -2099,7 +2062,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "dokan_pages.my_orders_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -2123,7 +2085,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_dokan_pages_store_listing_section_store_listing",
                                 "children": [],
                                 "description": "Select a page to show all stores",
-                                "dependency_key": "dokan_pages.store_listing_section.store_listing",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "select",
@@ -2218,7 +2179,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "dokan_pages.store_listing_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -2242,7 +2202,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_dokan_pages_reg_tc_page_section_reg_tc_page",
                                 "children": [],
                                 "description": "Select where you want to add Dokan pages.",
-                                "dependency_key": "dokan_pages.reg_tc_page_section.reg_tc_page",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "select",
@@ -2337,14 +2296,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "dokan_pages.reg_tc_page_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Link your WordPress pages to essential Dokan marketplace functions and features.",
-                "dependency_key": "dokan_pages",
                 "dependencies": [],
                 "validations": [],
                 "priority": 200,
@@ -2379,7 +2336,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_location_map_api_configuration_map_api_source",
                                 "children": [],
                                 "description": "Which map API source you want to use in your site?",
-                                "dependency_key": "location.map_api_configuration.map_api_source",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "radio_capsule",
@@ -2417,7 +2373,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_location_map_api_configuration_google_map_api_key",
                                 "children": [],
                                 "description": "<a href=\"https://developers.google.com/maps/documentation/javascript/\" class=\"text-primary underline\" target=\"_blank\" rel=\"noopener noreferrer\">API Key</a> is needed to display map on store page.",
-                                "dependency_key": "location.map_api_configuration.google_map_api_key",
                                 "dependencies": [
                                     {
                                         "key": "location.map_api_configuration.map_api_source",
@@ -2462,7 +2417,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_location_map_api_configuration_mapbox_api_key",
                                 "children": [],
                                 "description": "Enter your Mapbox API key to enable map functionality.",
-                                "dependency_key": "location.map_api_configuration.mapbox_api_key",
                                 "dependencies": [
                                     {
                                         "key": "location.map_api_configuration.map_api_source",
@@ -2498,7 +2452,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "location.map_api_configuration",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -2522,7 +2475,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_location_map_display_settings_location_map_position",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "location.map_display_settings.location_map_position",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "radio_capsule",
@@ -2564,7 +2516,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_location_map_display_settings_show_filters_before_map",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "location.map_display_settings.show_filters_before_map",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -2601,7 +2552,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_location_map_display_settings_radius_search_unit",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "location.map_display_settings.radius_search_unit",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "radio_capsule",
@@ -2638,7 +2588,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_location_map_display_settings_radius_search_min_distance",
                                 "children": [],
                                 "description": "Set minimum distance for radius search.",
-                                "dependency_key": "location.map_display_settings.radius_search_min_distance",
                                 "dependencies": [],
                                 "validations": [
                                     {
@@ -2674,7 +2623,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_location_map_display_settings_radius_search_max_distance",
                                 "children": [],
                                 "description": "Set maximum distance for radius search.",
-                                "dependency_key": "location.map_display_settings.radius_search_max_distance",
                                 "dependencies": [],
                                 "validations": [
                                     {
@@ -2712,7 +2660,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_location_map_display_settings_map_zoom_level",
                                 "children": [],
                                 "description": "To zoom in, increase the number. To zoom out, decrease the number.",
-                                "dependency_key": "location.map_display_settings.map_zoom_level",
                                 "dependencies": [],
                                 "validations": [
                                     {
@@ -2743,7 +2690,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "Control the visibility of location maps site-wide.",
-                        "dependency_key": "location.map_display_settings",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -2767,7 +2713,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_general_location_map_placement_map_placement_locations",
                                 "children": [],
                                 "description": "Choose where the store location map appears",
-                                "dependency_key": "location.map_placement.map_placement_locations",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "multicheck",
@@ -2791,14 +2736,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "location.map_placement",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Configure how map locations are displayed throughout your marketplace.",
-                "dependency_key": "location",
                 "dependencies": [],
                 "validations": [],
                 "priority": 300,
@@ -2807,7 +2750,6 @@ const dokanSettingsSchema: SettingsElement[] = [
             }
         ],
         "description": "Configure the general settings for your marketplace.",
-        "dependency_key": "",
         "dependencies": [],
         "validations": []
     },
@@ -2848,7 +2790,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_product_advertisement_advertisement_available_slots",
                                 "children": [],
                                 "description": "Enter how many products can be advertised, enter -1 for no limit.",
-                                "dependency_key": "product_advertisement.advertisement_available_slots",
                                 "dependencies": [],
                                 "validations": [
                                     {
@@ -2886,7 +2827,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_product_advertisement_advertisement_expire_days",
                                 "children": [],
                                 "description": "Enter how many days product will be advertised, enter -1 if you don&#039;t want to set any expiration period.",
-                                "dependency_key": "product_advertisement.advertisement_expire_days",
                                 "dependencies": [],
                                 "validations": [
                                     {
@@ -2924,7 +2864,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_product_advertisement_advertisement_cost_usd",
                                 "children": [],
                                 "description": "Cost of per advertisement. Set 0 (zero) to purchase.",
-                                "dependency_key": "product_advertisement.advertisement_cost_usd",
                                 "dependencies": [
                                     {
                                         "key": "product_advertisement.vendor_can_purchase_advertisement",
@@ -2981,7 +2920,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_product_advertisement_vendor_can_purchase_advertisement",
                                 "children": [],
                                 "description": "If you check this checkbox, vendors will be able to purchase advertisement from product listing and product edit page.",
-                                "dependency_key": "product_advertisement.vendor_can_purchase_advertisement",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -3018,7 +2956,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_product_advertisement_advertisement_in_subscription",
                                 "children": [],
                                 "description": "If you check this checkbox, vendor will be able to advertise their products without any additional cost based on the plan they are subscribed to.",
-                                "dependency_key": "product_advertisement.advertisement_in_subscription",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -3055,7 +2992,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_product_advertisement_mark_advertised_as_featured",
                                 "children": [],
                                 "description": "If you check this checkbox, advertised product will be marked as featured. Products will be automatically removed from featured list after advertisement is expired.",
-                                "dependency_key": "product_advertisement.mark_advertised_as_featured",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -3092,7 +3028,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_product_advertisement_display_advertised_on_top",
                                 "children": [],
                                 "description": "If you check this checkbox, advertised products will be displayed on top of the catalog listing eg: shop page, single store page etc.",
-                                "dependency_key": "product_advertisement.display_advertised_on_top",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -3129,7 +3064,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_product_advertisement_out_of_stock_visibility",
                                 "children": [],
                                 "description": "Hide out of stock items from the advertisement list. Note that, if WooCommerce setting for out of stock visibility is checked, product will be hidden despite this setting.",
-                                "dependency_key": "product_advertisement.out_of_stock_visibility",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -3158,14 +3092,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "product.product_advertisement_settings",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     },
                 ],
                 "description": "Configure settings for your vendor to feature their products on store pages.",
-                "dependency_key": "product_advertisement",
                 "dependencies": [],
                 "validations": [],
                 "priority": 100,
@@ -3198,7 +3130,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_request_for_quote_enable_quote_out_of_stock",
                                 "children": [],
                                 "description": "Enable/Disable quote button for out of stock products. (Note: It is compatible with simple and variable products only)",
-                                "dependency_key": "request_for_quote.enable_quote_out_of_stock",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -3235,7 +3166,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_request_for_quote_enable_ajax_add_to_quote",
                                 "children": [],
                                 "description": "Enable seamless quote request functionality with instant product additions.",
-                                "dependency_key": "request_for_quote.enable_ajax_add_to_quote",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -3272,7 +3202,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_request_for_quote_redirect_to_quote_page",
                                 "children": [],
                                 "description": "Redirect to the quote page after a product is successfully added to quote.",
-                                "dependency_key": "request_for_quote.redirect_to_quote_page",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -3309,7 +3238,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_request_for_quote_decrease_offered_price",
                                 "children": [],
                                 "description": "Enter number in percent to decrease the offered price from standard price of product. Set zero (0) for standard price. Note: offered price will be display according to settings of cart. (eg: including/excluding tax)",
-                                "dependency_key": "request_for_quote.decrease_offered_price",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "number",
@@ -3338,7 +3266,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_request_for_quote_convert_to_order",
                                 "children": [],
                                 "description": "Customers can Convert to Order. Adding customers is important here.",
-                                "dependency_key": "request_for_quote.convert_to_order",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -3375,7 +3302,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_request_for_quote_quote_converter_display",
                                 "children": [],
                                 "description": "Enable display of &quot;Quote converted by&quot; in customer&#039;s my-account quote details page.",
-                                "dependency_key": "request_for_quote.quote_converter_display",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -3406,7 +3332,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                     }
                 ],
                 "description": "You can configure your site to allow customers to send customized quotes on the selected products.",
-                "dependency_key": "request_for_quote",
                 "dependencies": [],
                 "validations": [],
                 "priority": 300,
@@ -3441,7 +3366,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_wholesale_display_wholesale_pricing_to",
                                 "children": [],
                                 "description": "Define which user types can see discounted wholesale prices.",
-                                "dependency_key": "wholesale.display_wholesale_pricing_to",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "radio_capsule",
@@ -3478,7 +3402,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_wholesale_wholesale_price_on_shop_archive",
                                 "children": [],
                                 "description": "Show in price column",
-                                "dependency_key": "wholesale.wholesale_price_on_shop_archive",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -3515,7 +3438,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_wholesale_need_approval_for_customer",
                                 "children": [],
                                 "description": "Customer need admin approval for becoming a wholesale customer.",
-                                "dependency_key": "wholesale.need_approval_for_customer",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -3546,7 +3468,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                     }
                 ],
                 "description": "You can configure wholesale settings for your store and allow vendors to operate on wholesale price and quantity.",
-                "dependency_key": "wholesale",
                 "dependencies": [],
                 "validations": [],
                 "priority": 400,
@@ -3572,11 +3493,10 @@ const dokanSettingsSchema: SettingsElement[] = [
                         "hook_key": "dokan_settings_product_printful_integration_shipping_recipient_notice",
                         "children": [],
                         "description": "To enable Printful correctly, assign Shipping Fee Recipient, and Shipping Tax Fee Recipient to individual vendors. Each vendor manages and fulfills orders using their Printful account.",
-                        "dependency_key": "printful_integration.shipping_recipient_notice",
                         "dependencies": [],
                         "validations": [],
                         "variant": "notice",
-                        "value": null,
+                        "value": '',
                         "notice_type": "warning",
                         "notice_icon": "Info",
                         "notice_title": "",
@@ -3596,11 +3516,10 @@ const dokanSettingsSchema: SettingsElement[] = [
                         "hook_key": "dokan_settings_product_printful_integration_size_guide_popup_title_notice",
                         "children": [],
                         "description": "To ensure accurate pricing and successful integration, please select one of the Printful supported currencies from WooCommerce \u2192 Settings \u2192 General \u2192 Currency, under Currency Options. Please select one of these currencies to match Printful: USD, EUR, GBP, CAD, JPY, AUD, BRL, CHF, DKK, HKD, MXN, NZD, SEK.",
-                        "dependency_key": "printful_integration.size_guide_popup_title_notice",
                         "dependencies": [],
                         "validations": [],
                         "variant": "notice",
-                        "value": null,
+                        "value": '',
                         "notice_type": "warning",
                         "notice_icon": "Info",
                         "notice_title": "Size Guide Title",
@@ -3638,7 +3557,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_product_printful_integration_printful_api_settings_printful_api_settings_group_printful_enable",
                                         "children": [],
                                         "description": "Connect to your Printful account with your website. <a href=\"https://www.printful.com/docs\" class=\"text-primary underline\" target=\"_blank\" rel=\"noopener noreferrer\">Get Help</a>",
-                                        "dependency_key": "printful_integration.printful_api_settings.printful_api_settings_group.printful_enable",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -3675,7 +3593,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_product_printful_integration_printful_api_settings_printful_api_settings_group_printful_create_app",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "printful_integration.printful_api_settings.printful_api_settings_group.printful_create_app",
                                         "dependencies": [
                                             {
                                                 "key": "printful_integration.printful_api_settings.printful_api_settings_group.printful_enable",
@@ -3722,7 +3639,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_product_printful_integration_printful_api_settings_printful_api_settings_group_printful_app_url",
                                         "children": [],
                                         "description": "Your website URL for Printful app configuration.",
-                                        "dependency_key": "printful_integration.printful_api_settings.printful_api_settings_group.printful_app_url",
                                         "dependencies": [
                                             {
                                                 "key": "printful_integration.printful_api_settings.printful_api_settings_group.printful_enable",
@@ -3766,7 +3682,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_product_printful_integration_printful_api_settings_printful_api_settings_group_printful_redirection_domains",
                                         "children": [],
                                         "description": "Domains allowed for redirection after Printful authentication. Enter one domain per line.",
-                                        "dependency_key": "printful_integration.printful_api_settings.printful_api_settings_group.printful_redirection_domains",
                                         "dependencies": [
                                             {
                                                 "key": "printful_integration.printful_api_settings.printful_api_settings_group.printful_enable",
@@ -3810,7 +3725,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_product_printful_integration_printful_api_settings_printful_api_settings_group_printful_client_id",
                                         "children": [],
                                         "description": "Your Printful app Client ID.",
-                                        "dependency_key": "printful_integration.printful_api_settings.printful_api_settings_group.printful_client_id",
                                         "dependencies": [
                                             {
                                                 "key": "printful_integration.printful_api_settings.printful_api_settings_group.printful_enable",
@@ -3854,7 +3768,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_product_printful_integration_printful_api_settings_printful_api_settings_group_printful_secret_key",
                                         "children": [],
                                         "description": "Your Printful app Secret Key.",
-                                        "dependency_key": "printful_integration.printful_api_settings.printful_api_settings_group.printful_secret_key",
                                         "dependencies": [
                                             {
                                                 "key": "printful_integration.printful_api_settings.printful_api_settings_group.printful_enable",
@@ -3890,14 +3803,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "printful_integration.printful_api_settings.printful_api_settings_group",
                                 "dependencies": [],
                                 "validations": [],
                                 "content_class": ""
                             }
                         ],
                         "description": "",
-                        "dependency_key": "printful_integration.printful_api_settings",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -3921,7 +3832,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_printful_integration_size_guide_settings_size_guide_popup_title",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "printful_integration.size_guide_settings.size_guide_popup_title",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "text",
@@ -3946,7 +3856,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_printful_integration_size_guide_settings_size_guide_popup_text_color",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "printful_integration.size_guide_settings.size_guide_popup_text_color",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "select_color_picker",
@@ -3972,7 +3881,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_printful_integration_size_guide_settings_size_guide_popup_background_color",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "printful_integration.size_guide_settings.size_guide_popup_background_color",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "select_color_picker",
@@ -3998,7 +3906,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_printful_integration_size_guide_settings_size_guide_tab_background_color",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "printful_integration.size_guide_settings.size_guide_tab_background_color",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "select_color_picker",
@@ -4024,7 +3931,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_printful_integration_size_guide_settings_size_guide_active_tab_background_color",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "printful_integration.size_guide_settings.size_guide_active_tab_background_color",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "select_color_picker",
@@ -4050,7 +3956,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_printful_integration_size_guide_settings_size_guide_button_text",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "printful_integration.size_guide_settings.size_guide_button_text",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "text",
@@ -4075,7 +3980,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_printful_integration_size_guide_settings_size_guide_button_text_color",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "printful_integration.size_guide_settings.size_guide_button_text_color",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "select_color_picker",
@@ -4101,7 +4005,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_product_printful_integration_size_guide_settings_size_guide_measurement_unit",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "printful_integration.size_guide_settings.size_guide_measurement_unit",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "radio_capsule",
@@ -4130,7 +4033,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "These settings control how the size guide will look on your Single Product Page.",
-                        "dependency_key": "printful_integration.size_guide_settings",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": "https://wedevs.com/docs/dokan-lite/printful-integration/",
@@ -4138,7 +4040,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                     }
                 ],
                 "description": "Configure Dokan to give vendors the ability to connect with Printful.",
-                "dependency_key": "printful_integration",
                 "dependencies": [],
                 "validations": [],
                 "priority": 200,
@@ -4147,7 +4048,6 @@ const dokanSettingsSchema: SettingsElement[] = [
             }
         ],
         "description": "Configure product-related settings for your marketplace.",
-        "dependency_key": "",
         "dependencies": [],
         "validations": []
     },
@@ -4189,7 +4089,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_product_info_generate",
                                 "children": [],
                                 "description": "Let vendors generate product info by AI.",
-                                "dependency_key": "product_generation.product_image_section.product_info_generate",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -4226,7 +4125,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_product_info_engine",
                                 "children": [],
                                 "description": "Select which AI provider to use for generating content.",
-                                "dependency_key": "product_generation.product_image_section.product_info_engine",
                                 "dependencies": [
                                     {
                                         "key": "product_generation.product_image_section.product_info_generate",
@@ -4289,7 +4187,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_openai_api_info_group_openai_api_info",
                                         "children": [],
                                         "description": "Connect to your OpenAI account with your website. <a href=\"https://platform.openai.com/api-keys\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-primary hover:underline flex-inline items-center gap-0.5\">Get Help <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-up-right inline-block\"><path d=\"M7 7h10v10\"/><path d=\"M7 17 17 7\"/></svg></a>",
-                                        "dependency_key": "product_generation.product_image_section.openai_api_info_group.openai_api_info",
                                         "dependencies": [
                                             {
                                                 "key": "product_generation.product_image_section.product_info_generate",
@@ -4335,7 +4232,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_openai_api_info_group_openai_api_notice",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "product_generation.product_image_section.openai_api_info_group.openai_api_notice",
                                         "dependencies": [
                                             {
                                                 "key": "product_generation.product_image_section.product_info_generate",
@@ -4382,7 +4278,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_openai_api_info_group_openai_api_key",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "product_generation.product_image_section.openai_api_info_group.openai_api_key",
                                         "dependencies": [
                                             {
                                                 "key": "product_generation.product_image_section.product_info_generate",
@@ -4418,7 +4313,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     },
                                 ],
                                 "description": "",
-                                "dependency_key": "product_generation.product_image_section.openai_api_info_group",
                                 "dependencies": [
                                     {
                                         "key": "product_generation.product_image_section.product_info_engine",
@@ -4452,7 +4346,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_openai_api_info_group_openai_model",
                                 "children": [],
                                 "description": "More advanced models provide higher quality output but may cost more per generation.",
-                                "dependency_key": "product_generation.product_image_section.openai_api_info_group.openai_model",
                                 "dependencies": [
                                     {
                                         "key": "product_generation.product_image_section.product_info_generate",
@@ -4541,7 +4434,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_gemini_api_info_group_gemini_api_info",
                                         "children": [],
                                         "description": "Connect to your Gemini account with your website. <a href=\"https://aistudio.google.com/app/apikey\" target=\"_blank\" rel=\"noopener noreferrer\">Get Help</a>",
-                                        "dependency_key": "product_generation.product_image_section.gemini_api_info_group.gemini_api_info",
                                         "dependencies": [
                                             {
                                                 "key": "product_generation.product_image_section.product_info_generate",
@@ -4587,7 +4479,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_gemini_api_info_group_gemini_api_notice",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "product_generation.product_image_section.gemini_api_info_group.gemini_api_notice",
                                         "dependencies": [
                                             {
                                                 "key": "product_generation.product_image_section.product_info_generate",
@@ -4634,7 +4525,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_gemini_api_info_group_gemini_api_key",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "product_generation.product_image_section.gemini_api_info_group.gemini_api_key",
                                         "dependencies": [
                                             {
                                                 "key": "product_generation.product_image_section.product_info_generate",
@@ -4670,7 +4560,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "product_generation.product_image_section.gemini_api_info_group",
                                 "dependencies": [
                                     {
                                         "key": "product_generation.product_image_section.product_info_engine",
@@ -4704,7 +4593,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_ai_assist_product_generation_product_image_section_gemini_api_info_group_gemini_model",
                                 "children": [],
                                 "description": "More advanced models provide higher quality output but may cost more per generation.",
-                                "dependency_key": "product_generation.product_image_section.gemini_api_info_group.gemini_model",
                                 "dependencies": [
                                     {
                                         "key": "product_generation.product_image_section.product_info_engine",
@@ -4772,7 +4660,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "product_generation.product_image_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -4796,7 +4683,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_ai_assist_product_generation_product_description_section_product_image_enhancement",
                                 "children": [],
                                 "description": "Allow vendors to enhance and generate professional product images using AI.",
-                                "dependency_key": "product_generation.product_description_section.product_image_enhancement",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -4833,7 +4719,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_ai_assist_product_generation_product_description_section_product_image_engine",
                                 "children": [],
                                 "description": "Select your AI provider for image processing and generation.",
-                                "dependency_key": "product_generation.product_description_section.product_image_engine",
                                 "dependencies": [
                                     {
                                         "key": "product_generation.product_description_section.product_image_enhancement",
@@ -4892,7 +4777,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_ai_assist_product_generation_product_description_section_leonardo_api_info_group_leonardo_api_info",
                                         "children": [],
                                         "description": "Connect to your Leonardo AI account with your website. <a href=\"https://leonardo.ai/docs\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-primary hover:underline flex-inline items-center gap-0.5\">Get Help <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-up-right inline-block\"><path d=\"M7 7h10v10\"/><path d=\"M7 17 17 7\"/></svg></a>",
-                                        "dependency_key": "product_generation.product_description_section.leonardo_api_info_group.leonardo_api_info",
                                         "dependencies": [
                                             {
                                                 "key": "product_generation.product_description_section.product_image_enhancement",
@@ -4938,7 +4822,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_ai_assist_product_generation_product_description_section_leonardo_api_info_group_leonardo_api_notice",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "product_generation.product_description_section.leonardo_api_info_group.leonardo_api_notice",
                                         "dependencies": [
                                             {
                                                 "key": "product_generation.product_description_section.product_image_enhancement",
@@ -4985,7 +4868,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_ai_assist_product_generation_product_description_section_leonardo_api_info_group_leonardo_api_key",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "product_generation.product_description_section.leonardo_api_info_group.leonardo_api_key",
                                         "dependencies": [
                                             {
                                                 "key": "product_generation.product_description_section.product_image_enhancement",
@@ -5021,7 +4903,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "product_generation.product_description_section.leonardo_api_info_group",
                                 "dependencies": [
                                     {
                                         "key": "product_generation.product_description_section.product_image_engine",
@@ -5055,7 +4936,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_ai_assist_product_generation_product_description_section_leonardo_api_info_group_leonardo_model",
                                 "children": [],
                                 "description": "Choose the AI model for image enhancement and generation. Different models excel at various image types and styles.",
-                                "dependency_key": "product_generation.product_description_section.leonardo_api_info_group.leonardo_model",
                                 "dependencies": [
                                     {
                                         "key": "product_generation.product_description_section.product_image_engine",
@@ -5115,14 +4995,11 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "product_generation.product_description_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
-                "description": "Set up AI to elevate your platform with enhanced capabilities.",
-                "dependency_key": "product_generation",
                 "dependencies": [],
                 "validations": [],
                 "priority": 100,
@@ -5131,7 +5008,6 @@ const dokanSettingsSchema: SettingsElement[] = [
             }
         ],
         "description": "Configure AI-powered features to enhance your marketplace experience.",
-        "dependency_key": "",
         "dependencies": [],
         "validations": []
     },
@@ -5172,7 +5048,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_onboarding_enable_selling",
                                 "children": [],
                                 "description": "Immediately enable selling for newly registered vendors.",
-                                "dependency_key": "vendor_onboarding.enable_selling",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "radio_capsule",
@@ -5214,7 +5089,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_onboarding_address_fields",
                                 "children": [],
                                 "description": "Add Address Fields on the Vendor Registration form.",
-                                "dependency_key": "vendor_onboarding.address_fields",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -5251,7 +5125,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_onboarding_terms_conditions",
                                 "children": [],
                                 "description": "Enable the terms &amp; conditions checkbox on vendor registration form.",
-                                "dependency_key": "vendor_onboarding.terms_conditions",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -5288,7 +5161,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_onboarding_welcome_wizard",
                                 "children": [],
                                 "description": "Welcome wizard for newly registered vendors.",
-                                "dependency_key": "vendor_onboarding.welcome_wizard",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -5325,7 +5197,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_onboarding_vendor_setup_wizard_logo",
                                 "children": [],
                                 "description": "Recommended logo size (270px X 90px). If no logo is uploaded, site title is shown by default.",
-                                "dependency_key": "vendor_onboarding.vendor_setup_wizard_logo",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "wp_media_upload",
@@ -5359,7 +5230,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_onboarding_vendor_setup_wizard_message",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "vendor_onboarding.vendor_setup_wizard_message",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "rich_text",
@@ -5376,14 +5246,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "vendor.vendor_vendor_onboarding_settings",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     },
                 ],
                 "description": "Control the onboarding experience for vendors joining your marketplace.",
-                "dependency_key": "vendor_onboarding",
                 "dependencies": [],
                 "validations": [],
                 "priority": 100,
@@ -5417,7 +5285,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_capabilities_vendor_capabilities_global_digital_mode",
                                 "children": [],
                                 "description": "Select a type for vendors what type of product they can sell only.",
-                                "dependency_key": "vendor_capabilities.vendor_capabilities.global_digital_mode",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "radio_capsule",
@@ -5459,7 +5326,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_capabilities_vendor_capabilities_product_status",
                                 "children": [],
                                 "description": "The status of a product when a vendor creates or updates it.",
-                                "dependency_key": "vendor_capabilities.vendor_capabilities.product_status",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "radio_capsule",
@@ -5496,7 +5362,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_capabilities_vendor_capabilities_duplicate_product",
                                 "children": [],
                                 "description": "Allow vendor to duplicate their product.",
-                                "dependency_key": "vendor_capabilities.vendor_capabilities.duplicate_product",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -5533,7 +5398,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_capabilities_vendor_capabilities_allow_vendor_create_manual_order",
                                 "children": [],
                                 "description": "Enable vendors to create orders manually from their dashboard.",
-                                "dependency_key": "vendor_capabilities.vendor_capabilities.allow_vendor_create_manual_order",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -5570,7 +5434,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_capabilities_vendor_capabilities_one_page_creation",
                                 "children": [],
                                 "description": "Add new product in single page view.",
-                                "dependency_key": "vendor_capabilities.vendor_capabilities.one_page_creation",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -5607,7 +5470,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_capabilities_vendor_capabilities_product_popup",
                                 "children": [],
                                 "description": "Add new product in popup view.",
-                                "dependency_key": "vendor_capabilities.vendor_capabilities.product_popup",
                                 "dependencies": [
                                     {
                                         "key": "vendor_capabilities.vendor_capabilities.one_page_creation",
@@ -5663,7 +5525,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_capabilities_vendor_capabilities_order_status_change",
                                 "children": [],
                                 "description": "Allow vendor to update order status.",
-                                "dependency_key": "vendor_capabilities.vendor_capabilities.order_status_change",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -5700,7 +5561,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_capabilities_vendor_capabilities_select_any_category",
                                 "children": [],
                                 "description": "Allow vendors to select any category while creating/editing products.",
-                                "dependency_key": "vendor_capabilities.vendor_capabilities.select_any_category",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -5737,7 +5597,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_capabilities_vendor_capabilities_category_selection",
                                 "children": [],
                                 "description": "Control how vendors assign categories to their products.",
-                                "dependency_key": "vendor_capabilities.vendor_capabilities.category_selection",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "radio_capsule",
@@ -5774,7 +5633,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_capabilities_vendor_capabilities_vendors_create_tags",
                                 "children": [],
                                 "description": "Allow vendors to create new product tags from vendor dashboard.",
-                                "dependency_key": "vendor_capabilities.vendor_capabilities.vendors_create_tags",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -5811,7 +5669,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_capabilities_vendor_capabilities_add_new_attribute_values",
                                 "children": [],
                                 "description": "Allow vendors to add new values to predefined attribute.",
-                                "dependency_key": "vendor_capabilities.vendor_capabilities.add_new_attribute_values",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -5848,7 +5705,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_capabilities_vendor_capabilities_product_review_management",
                                 "children": [],
                                 "description": "Allow vendors to manage product review status changes from their dashboard.",
-                                "dependency_key": "vendor_capabilities.vendor_capabilities.product_review_management",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -5885,7 +5741,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_capabilities_vendor_capabilities_discount_order_settings",
                                 "children": [],
                                 "description": "Vendor can add order and product quantity discount.",
-                                "dependency_key": "vendor_capabilities.vendor_capabilities.discount_order_settings",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -5922,7 +5777,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_capabilities_vendor_capabilities_discount_settings",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "vendor_capabilities.vendor_capabilities.discount_settings",
                                 "dependencies": [
                                     {
                                         "key": "vendor_capabilities.vendor_capabilities.discount_order_settings",
@@ -5967,14 +5821,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "vendor_capabilities.vendor_capabilities",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Configure what vendors can do and control within your marketplace.",
-                "dependency_key": "vendor_capabilities",
                 "dependencies": [],
                 "validations": [],
                 "priority": 300,
@@ -6009,7 +5861,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_single_product_multi_vendor_single_product_multi_vendor_single_product_multiple_vendor",
                                 "children": [],
                                 "description": "Enable Single Product Multiple Vendor functionality.",
-                                "dependency_key": "single_product_multi_vendor.single_product_multi_vendor.single_product_multiple_vendor",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -6046,7 +5897,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_single_product_multi_vendor_single_product_multi_vendor_sell_item_button_text",
                                 "children": [],
                                 "description": "Change your sell this item button text.",
-                                "dependency_key": "single_product_multi_vendor.single_product_multi_vendor.sell_item_button_text",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "text",
@@ -6071,7 +5921,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_single_product_multi_vendor_single_product_multi_vendor_available_vendor_display_area_title",
                                 "children": [],
                                 "description": "Set your heading for available vendor section in single product page.",
-                                "dependency_key": "single_product_multi_vendor.single_product_multi_vendor.available_vendor_display_area_title",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "text",
@@ -6096,7 +5945,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_single_product_multi_vendor_single_product_multi_vendor_available_vendor_section_display_position",
                                 "children": [],
                                 "description": "Control where customers see the list of available vendors when viewing products sold by multiple vendors.",
-                                "dependency_key": "single_product_multi_vendor.single_product_multi_vendor.available_vendor_section_display_position",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "customize_radio",
@@ -6144,7 +5992,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_single_product_multi_vendor_single_product_multi_vendor_spmv_products_display",
                                 "children": [],
                                 "description": "Select option for shown products under SPMV concept. &quot;Show all products&quot; will show all duplicate products.",
-                                "dependency_key": "single_product_multi_vendor.single_product_multi_vendor.spmv_products_display",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "select",
@@ -6179,14 +6026,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "single_product_multi_vendor.single_product_multi_vendor",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "You can configure your site to allow vendors to sell other vendor&#039;s products with desired customizations.",
-                "dependency_key": "single_product_multi_vendor",
                 "dependencies": [],
                 "validations": [],
                 "priority": 600,
@@ -6221,7 +6066,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_store_state_store_stats_section_analytics_authenticate_user",
                                 "children": [],
                                 "description": "Connect your Google Analytics account to track vendor store performance.",
-                                "dependency_key": "store_state.store_stats_section.analytics_authenticate_user",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "google_analytics",
@@ -6247,7 +6091,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_store_state_store_stats_section_add_tracking_code",
                                 "children": [],
                                 "description": "This is an optional settings that will add Analytics Global Site Tag in you site header. If you use any SEO plugin or add your tracking code by other means, then choose `no` in the settings.",
-                                "dependency_key": "store_state.store_stats_section.add_tracking_code",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -6264,14 +6107,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "store_state.store_stats_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Set up Google Analytics tracking for vendor stores in your marketplace.",
-                "dependency_key": "store_state",
                 "dependencies": [],
                 "validations": [],
                 "priority": 500,
@@ -6306,7 +6147,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_social_login",
                                 "children": [],
                                 "description": "Enabling this will add Social Icons under registration form to allow users to login or register using Social Profiles.",
-                                "dependency_key": "social_onboarding.social_onboarding.social_login",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -6352,7 +6192,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_facebook_api_group_facebook_enabled",
                                         "children": [],
                                         "description": "Configure your Facebook API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-facebook/\" class=\"text-primary underline\" target=\"_blank\">Get Help </a>",
-                                        "dependency_key": "social_onboarding.social_onboarding.facebook_api_group.facebook_enabled",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -6389,7 +6228,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_facebook_api_group_facebook_info",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "social_onboarding.social_onboarding.facebook_api_group.facebook_info",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.facebook_api_group.facebook_enabled",
@@ -6436,7 +6274,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_facebook_api_group_facebook_redirect_url",
                                         "children": [],
                                         "description": "Your store URL, which will be required in creating the App.",
-                                        "dependency_key": "social_onboarding.social_onboarding.facebook_api_group.facebook_redirect_url",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.facebook_api_group.facebook_enabled",
@@ -6480,7 +6317,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_facebook_api_group_facebook_app_id",
                                         "children": [],
                                         "description": "Enter your Facebook App ID from Facebook Developer Console.",
-                                        "dependency_key": "social_onboarding.social_onboarding.facebook_api_group.facebook_app_id",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.facebook_api_group.facebook_enabled",
@@ -6524,7 +6360,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_facebook_api_group_facebook_app_secret",
                                         "children": [],
                                         "description": "Enter your Facebook App Secret from Facebook Developer Console.",
-                                        "dependency_key": "social_onboarding.social_onboarding.facebook_api_group.facebook_app_secret",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.facebook_api_group.facebook_enabled",
@@ -6560,7 +6395,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "social_onboarding.social_onboarding.facebook_api_group",
                                 "dependencies": [
                                     {
                                         "key": "social_onboarding.social_onboarding.social_login",
@@ -6612,7 +6446,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_x_api_group_x_enabled",
                                         "children": [],
                                         "description": "Configure your X API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-twitter/\" class=\"text-primary underline\" target=\"_blank\">Get Help</a>",
-                                        "dependency_key": "social_onboarding.social_onboarding.x_api_group.x_enabled",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -6649,7 +6482,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_x_api_group_twitter_info",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "social_onboarding.social_onboarding.x_api_group.twitter_info",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.x_api_group.x_enabled",
@@ -6696,7 +6528,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_x_api_group_x_redirect_url",
                                         "children": [],
                                         "description": "The redirect URL for X Login. Copy this URL and add it to your X App settings.",
-                                        "dependency_key": "social_onboarding.social_onboarding.x_api_group.x_redirect_url",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.x_api_group.x_enabled",
@@ -6740,7 +6571,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_x_api_group_x_api_key",
                                         "children": [],
                                         "description": "Enter your X API Key from X Developer Console.",
-                                        "dependency_key": "social_onboarding.social_onboarding.x_api_group.x_api_key",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.x_api_group.x_enabled",
@@ -6784,7 +6614,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_x_api_group_x_api_secret",
                                         "children": [],
                                         "description": "Enter your X API Secret from X Developer Console.",
-                                        "dependency_key": "social_onboarding.social_onboarding.x_api_group.x_api_secret",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.x_api_group.x_enabled",
@@ -6820,7 +6649,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "social_onboarding.social_onboarding.x_api_group",
                                 "dependencies": [
                                     {
                                         "key": "social_onboarding.social_onboarding.social_login",
@@ -6863,7 +6691,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_google_api_group_google_enabled",
                                         "children": [],
                                         "description": "Configure your Google API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-google/\" class=\"text-primary underline\" target=\"_blank\">Get Help</a>",
-                                        "dependency_key": "social_onboarding.social_onboarding.google_api_group.google_enabled",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -6900,7 +6727,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_google_api_group_google_info",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "social_onboarding.social_onboarding.google_api_group.google_info",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.google_api_group.google_enabled",
@@ -6947,7 +6773,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_google_api_group_google_redirect_url",
                                         "children": [],
                                         "description": "The redirect URL for Google Login. Copy this URL and add it to your Google OAuth settings.",
-                                        "dependency_key": "social_onboarding.social_onboarding.google_api_group.google_redirect_url",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.google_api_group.google_enabled",
@@ -6991,7 +6816,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_google_api_group_google_client_id",
                                         "children": [],
                                         "description": "Enter your Google Client ID from Google Cloud Console.",
-                                        "dependency_key": "social_onboarding.social_onboarding.google_api_group.google_client_id",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.google_api_group.google_enabled",
@@ -7035,7 +6859,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_google_api_group_google_client_secret",
                                         "children": [],
                                         "description": "Enter your Google Client Secret from Google Cloud Console.",
-                                        "dependency_key": "social_onboarding.social_onboarding.google_api_group.google_client_secret",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.google_api_group.google_enabled",
@@ -7071,7 +6894,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "social_onboarding.social_onboarding.google_api_group",
                                 "dependencies": [
                                     {
                                         "key": "social_onboarding.social_onboarding.social_login",
@@ -7114,7 +6936,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_linkedin_api_group_linkedin_enabled",
                                         "children": [],
                                         "description": "Configure your LinkedIn API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-linkedin/\" class=\"text-primary underline\" target=\"_blank\">Get Help</a>",
-                                        "dependency_key": "social_onboarding.social_onboarding.linkedin_api_group.linkedin_enabled",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -7151,7 +6972,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_linkedin_api_group_linkedin_info",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "social_onboarding.social_onboarding.linkedin_api_group.linkedin_info",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.linkedin_api_group.linkedin_enabled",
@@ -7198,7 +7018,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_linkedin_api_group_linkedin_redirect_url",
                                         "children": [],
                                         "description": "The redirect URL for LinkedIn Login. Copy this URL and add it to your LinkedIn App settings.",
-                                        "dependency_key": "social_onboarding.social_onboarding.linkedin_api_group.linkedin_redirect_url",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.linkedin_api_group.linkedin_enabled",
@@ -7242,7 +7061,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_linkedin_api_group_linkedin_client_id",
                                         "children": [],
                                         "description": "Enter your LinkedIn Client ID from LinkedIn Developer Console.",
-                                        "dependency_key": "social_onboarding.social_onboarding.linkedin_api_group.linkedin_client_id",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.linkedin_api_group.linkedin_enabled",
@@ -7286,7 +7104,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_linkedin_api_group_linkedin_client_secret",
                                         "children": [],
                                         "description": "Enter your LinkedIn Client Secret from LinkedIn Developer Console.",
-                                        "dependency_key": "social_onboarding.social_onboarding.linkedin_api_group.linkedin_client_secret",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.linkedin_api_group.linkedin_enabled",
@@ -7322,7 +7139,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "social_onboarding.social_onboarding.linkedin_api_group",
                                 "dependencies": [
                                     {
                                         "key": "social_onboarding.social_onboarding.social_login",
@@ -7365,7 +7181,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_apple_api_group_apple_enabled",
                                         "children": [],
                                         "description": "Configure your Apple API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-apple/\" class=\"text-primary underline\" target=\"_blank\">Get Help</a>",
-                                        "dependency_key": "social_onboarding.social_onboarding.apple_api_group.apple_enabled",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -7402,7 +7217,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_apple_api_group_apple_info",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "social_onboarding.social_onboarding.apple_api_group.apple_info",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.apple_api_group.apple_enabled",
@@ -7449,7 +7263,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_apple_api_group_apple_redirect_url",
                                         "children": [],
                                         "description": "The redirect URL for Apple Sign In. Copy this URL and add it to your Apple Developer account.",
-                                        "dependency_key": "social_onboarding.social_onboarding.apple_api_group.apple_redirect_url",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.apple_api_group.apple_enabled",
@@ -7493,7 +7306,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_apple_api_group_apple_service_id",
                                         "children": [],
                                         "description": "Enter your Apple Service ID from Apple Developer Console.",
-                                        "dependency_key": "social_onboarding.social_onboarding.apple_api_group.apple_service_id",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.apple_api_group.apple_enabled",
@@ -7537,7 +7349,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_apple_api_group_apple_team_id",
                                         "children": [],
                                         "description": "Enter your Apple Team ID from Apple Developer Console.",
-                                        "dependency_key": "social_onboarding.social_onboarding.apple_api_group.apple_team_id",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.apple_api_group.apple_enabled",
@@ -7581,7 +7392,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_apple_api_group_apple_key_id",
                                         "children": [],
                                         "description": "Enter your Apple Key ID from Apple Developer Console.",
-                                        "dependency_key": "social_onboarding.social_onboarding.apple_api_group.apple_key_id",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.apple_api_group.apple_enabled",
@@ -7625,7 +7435,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_vendor_social_onboarding_social_onboarding_apple_api_group_apple_key_content",
                                         "children": [],
                                         "description": "Paste your Apple private key content including BEGIN and END lines.",
-                                        "dependency_key": "social_onboarding.social_onboarding.apple_api_group.apple_key_content",
                                         "dependencies": [
                                             {
                                                 "key": "social_onboarding.social_onboarding.apple_api_group.apple_enabled",
@@ -7661,7 +7470,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "social_onboarding.social_onboarding.apple_api_group",
                                 "dependencies": [
                                     {
                                         "key": "social_onboarding.social_onboarding.social_login",
@@ -7687,14 +7495,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "social_onboarding.social_onboarding",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Define settings to allow vendors to use their social profiles to register or log in to the marketplace.",
-                "dependency_key": "social_onboarding",
                 "dependencies": [],
                 "validations": [],
                 "priority": 200,
@@ -7729,7 +7535,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_subscription_vendor_subscription_vendor_subscription",
                                 "children": [],
                                 "description": "Allow vendors to purchase subscription packages to sell products in your marketplace",
-                                "dependency_key": "vendor_subscription.vendor_subscription.vendor_subscription",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -7766,7 +7571,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_subscription_vendor_subscription_subscription_view_page",
                                 "children": [],
                                 "description": "Select the page where vendors can view and purchase available subscription plans.",
-                                "dependency_key": "vendor_subscription.vendor_subscription.subscription_view_page",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "select",
@@ -7869,7 +7673,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_subscription_vendor_subscription_subscription_in_registration",
                                 "children": [],
                                 "description": "Enable subscription pack in registration form for new vendor.",
-                                "dependency_key": "vendor_subscription.vendor_subscription.subscription_in_registration",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -7906,7 +7709,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_subscription_vendor_subscription_email_alert_before_expiry",
                                 "children": [],
                                 "description": "Send automatic email reminders to vendors before their subscription expires.",
-                                "dependency_key": "vendor_subscription.vendor_subscription.subscription_in_registration",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -7943,7 +7745,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_subscription_vendor_subscription_alert_days_before_expiry",
                                 "children": [],
                                 "description": "Number of days before subscription expires to send the reminder email.",
-                                "dependency_key": "vendor_subscription.vendor_subscription.alert_days_before_expiry",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "number",
@@ -7972,7 +7773,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_subscription_vendor_subscription_products_status_on_expiry",
                                 "children": [],
                                 "description": "What happens to vendor&#039;s products when their subscription expires",
-                                "dependency_key": "vendor_subscription.vendor_subscription.products_status_on_expiry",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "radio_capsule",
@@ -8014,7 +7814,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_subscription_vendor_subscription_cancelling_email_subject",
                                 "children": [],
                                 "description": "Enter subject text for canceled subscriptions email notification.",
-                                "dependency_key": "vendor_subscription.vendor_subscription.cancelling_email_subject",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "textarea",
@@ -8039,7 +7838,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_subscription_vendor_subscription_cancelling_email_body",
                                 "children": [],
                                 "description": "Enter body text for canceled subscriptions email notification.",
-                                "dependency_key": "vendor_subscription.vendor_subscription.cancelling_email_body",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "textarea",
@@ -8064,7 +7862,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_subscription_vendor_subscription_alert_email_subject",
                                 "children": [],
                                 "description": "Enter subject text for package end notification alert email",
-                                "dependency_key": "vendor_subscription.vendor_subscription.alert_email_subject",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "textarea",
@@ -8089,7 +7886,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_vendor_vendor_subscription_vendor_subscription_alert_email_body",
                                 "children": [],
                                 "description": "Enter body text for package end notification alert email.",
-                                "dependency_key": "vendor_subscription.vendor_subscription.alert_email_body",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "textarea",
@@ -8106,14 +7902,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "vendor_subscription.vendor_subscription",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Configure marketplace settings to authorize vendors to create subscription products for their stores.",
-                "dependency_key": "vendor_subscription",
                 "dependencies": [],
                 "validations": [],
                 "priority": 400,
@@ -8122,7 +7916,6 @@ const dokanSettingsSchema: SettingsElement[] = [
             }
         ],
         "description": "Configure vendor-related settings and capabilities.",
-        "dependency_key": "",
         "dependencies": [],
         "validations": []
     },
@@ -8163,7 +7956,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_verification_email-verification-page_email-verification-content_enabled",
                                 "children": [],
                                 "description": "Enabling this will send a verification email to allow users to verify their email address after the registration form is submitted.",
-                                "dependency_key": "email-verification-page.email-verification-content.enabled",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -8200,7 +7992,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_verification_email-verification-page_email-verification-content_registration_notice",
                                 "children": [],
                                 "description": "This notice will be shown after a user has registered with pending email verification.",
-                                "dependency_key": "email-verification-page.email-verification-content.registration_notice",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "textarea",
@@ -8225,7 +8016,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_verification_email-verification-page_email-verification-content_login_notice",
                                 "children": [],
                                 "description": "This notice will be shown after a user has registered with pending email verification.",
-                                "dependency_key": "email-verification-page.email-verification-content.login_notice",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "textarea",
@@ -8242,14 +8032,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "email-verification-page.email-verification-content",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Manage email verification requirements for user accounts.",
-                "dependency_key": "email-verification-page",
                 "dependencies": [],
                 "validations": [],
                 "priority": 200,
@@ -8283,7 +8071,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_verification_vendor-verification-page_verified-icons_verified_icon",
                                 "children": [],
                                 "description": "Choose your preferred icon for verified stores in the marketplace.",
-                                "dependency_key": "vendor-verification-page.verified-icons.verified_icon",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "select",
@@ -8342,7 +8129,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "vendor-verification-page.verified-icons",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -8366,7 +8152,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_verification_vendor-verification-page_verification-methods_verification_methods_list",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "vendor-verification-page.verification-methods.verification_methods_list",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "verification_methods",
@@ -8375,14 +8160,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "Manage the verification methods vendors can use.",
-                        "dependency_key": "vendor-verification-page.verification-methods",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "You can authenticate your vendors by authorizing vendors to connect their social profiles to their storefront.",
-                "dependency_key": "vendor-verification-page",
                 "dependencies": [],
                 "validations": [],
                 "priority": 100,
@@ -8416,7 +8199,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_verification_sms-gateways-page_sms-provider_sms_provider",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "sms-gateways-page.sms-provider.sms_provider",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "radio_capsule",
@@ -8462,7 +8244,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_verification_sms-gateways-page_sms-provider_twilio_api_group_connect_to_twilio",
                                         "children": [],
                                         "description": "Connect to your Twilio account with your website.",
-                                        "dependency_key": "sms-gateways-page.sms-provider.twilio_api_group.connect_to_twilio",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -8499,7 +8280,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_verification_sms-gateways-page_sms-provider_twilio_api_group_twilio_info",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "sms-gateways-page.sms-provider.twilio_api_group.twilio_info",
                                         "dependencies": [
                                             {
                                                 "key": "sms-gateways-page.sms-provider.twilio_api_group.connect_to_twilio",
@@ -8546,7 +8326,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_verification_sms-gateways-page_sms-provider_twilio_api_group_from_number",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "sms-gateways-page.sms-provider.twilio_api_group.from_number",
                                         "dependencies": [
                                             {
                                                 "key": "sms-gateways-page.sms-provider.twilio_api_group.connect_to_twilio",
@@ -8590,7 +8369,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_verification_sms-gateways-page_sms-provider_twilio_api_group_account_sid",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "sms-gateways-page.sms-provider.twilio_api_group.account_sid",
                                         "dependencies": [
                                             {
                                                 "key": "sms-gateways-page.sms-provider.twilio_api_group.connect_to_twilio",
@@ -8634,7 +8412,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_verification_sms-gateways-page_sms-provider_twilio_api_group_auth_token",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "sms-gateways-page.sms-provider.twilio_api_group.auth_token",
                                         "dependencies": [
                                             {
                                                 "key": "sms-gateways-page.sms-provider.twilio_api_group.connect_to_twilio",
@@ -8678,7 +8455,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_verification_sms-gateways-page_sms-provider_twilio_api_group_sms_code_type",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "sms-gateways-page.sms-provider.twilio_api_group.sms_code_type",
                                         "dependencies": [
                                             {
                                                 "key": "sms-gateways-page.sms-provider.twilio_api_group.connect_to_twilio",
@@ -8726,7 +8502,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "sms-gateways-page.sms-provider.twilio_api_group",
                                 "dependencies": [
                                     {
                                         "key": "sms-gateways-page.sms-provider.sms_provider",
@@ -8769,7 +8544,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_verification_sms-gateways-page_sms-provider_vonage_api_group_connect_to_vonage",
                                         "children": [],
                                         "description": "Connect to your Vonage account with your website.",
-                                        "dependency_key": "sms-gateways-page.sms-provider.vonage_api_group.connect_to_vonage",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -8806,7 +8580,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_verification_sms-gateways-page_sms-provider_vonage_api_group_vonage_info",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "sms-gateways-page.sms-provider.vonage_api_group.vonage_info",
                                         "dependencies": [
                                             {
                                                 "key": "sms-gateways-page.sms-provider.vonage_api_group.connect_to_vonage",
@@ -8853,7 +8626,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_verification_sms-gateways-page_sms-provider_vonage_api_group_nexmo_username",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "sms-gateways-page.sms-provider.vonage_api_group.nexmo_username",
                                         "dependencies": [
                                             {
                                                 "key": "sms-gateways-page.sms-provider.vonage_api_group.connect_to_vonage",
@@ -8897,7 +8669,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_verification_sms-gateways-page_sms-provider_vonage_api_group_nexmo_pass",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "sms-gateways-page.sms-provider.vonage_api_group.nexmo_pass",
                                         "dependencies": [
                                             {
                                                 "key": "sms-gateways-page.sms-provider.vonage_api_group.connect_to_vonage",
@@ -8933,7 +8704,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "sms-gateways-page.sms-provider.vonage_api_group",
                                 "dependencies": [
                                     {
                                         "key": "sms-gateways-page.sms-provider.sms_provider",
@@ -8959,7 +8729,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "sms-gateways-page.sms-provider",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -8983,7 +8752,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_verification_sms-gateways-page_sender_sender_name",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "sms-gateways-page.sender.sender_name",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "text",
@@ -9008,7 +8776,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_verification_sms-gateways-page_sender_sms_text",
                                 "children": [],
                                 "description": "This will be displayed in SMS. %CODE% will be replaced by verification code.",
-                                "dependency_key": "sms-gateways-page.sender.sms_text",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "textarea",
@@ -9033,7 +8800,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_verification_sms-gateways-page_sender_sms_sent_success",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "sms-gateways-page.sender.sms_sent_success",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "textarea",
@@ -9058,7 +8824,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_verification_sms-gateways-page_sender_sms_sent_error",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "sms-gateways-page.sender.sms_sent_error",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "textarea",
@@ -9075,14 +8840,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "sms-gateways-page.sender",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Configure SMS gateway settings for vendor verification.",
-                "dependency_key": "sms-gateways-page",
                 "dependencies": [],
                 "validations": [],
                 "priority": 300,
@@ -9090,7 +8853,6 @@ const dokanSettingsSchema: SettingsElement[] = [
             }
         ],
         "description": "",
-        "dependency_key": "",
         "dependencies": [],
         "validations": []
     },
@@ -9131,7 +8893,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_transaction_commission_commission_commission_type",
                                 "children": [],
                                 "description": "Select a commission type for your marketplace",
-                                "dependency_key": "commission.commission.commission_type",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "radio_capsule",
@@ -9168,7 +8929,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_transaction_commission_commission_admin_commission",
                                 "children": [],
                                 "description": "Amount you will get from sales in both percentage and fixed fee",
-                                "dependency_key": "commission.commission.admin_commission",
                                 "dependencies": [
                                     {
                                         "key": "commission.commission.commission_type",
@@ -9216,7 +8976,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_transaction_commission_commission_reset_sub_category_when_edit_all_category",
                                 "children": [],
                                 "description": "Important: &#039;All Categories&#039; commission serves as your marketplace&#039;s default rate and cannot be empty. If 0 is given in value, then the marketplace will deduct no commission from vendors",
-                                "dependency_key": "commission.commission.reset_sub_category_when_edit_all_category",
                                 "dependencies": [
                                     {
                                         "key": "commission.commission.commission_type",
@@ -9272,7 +9031,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_transaction_commission_commission_commission_category_based_values",
                                 "children": [],
                                 "description": "Amount you will get from each sale",
-                                "dependency_key": "commission.commission.commission_category_based_values",
                                 "dependencies": [
                                     {
                                         "key": "commission.commission.commission_type",
@@ -9354,14 +9112,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "commission.commission",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Set up marketplace commission structure and earnings from vendor sales.",
-                "dependency_key": "commission",
                 "dependencies": [],
                 "validations": [],
                 "priority": 200,
@@ -9395,7 +9151,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_transaction_fees_fees_shipping_fee",
                                 "children": [],
                                 "description": "Who will be receiving the shipping fees? Note that, tax fees for corresponding shipping method will not be included with shipping fees.",
-                                "dependency_key": "fees.fees.shipping_fee",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "radio_capsule",
@@ -9432,7 +9187,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_transaction_fees_fees_product_tax_fee",
                                 "children": [],
                                 "description": "Who will be receiving the tax fees for products? Note that, shipping tax fees will not be included with product tax.",
-                                "dependency_key": "fees.fees.product_tax_fee",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "radio_capsule",
@@ -9469,7 +9223,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_transaction_fees_fees_shipping_tax_fee",
                                 "children": [],
                                 "description": "Who will be receiving the tax fees for shipping?",
-                                "dependency_key": "fees.fees.shipping_tax_fee",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "radio_capsule",
@@ -9498,14 +9251,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "fees.fees",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Configure how different types of fees are distributed between vendors and admin",
-                "dependency_key": "fees",
                 "dependencies": [],
                 "validations": [],
                 "priority": 100,
@@ -9548,7 +9299,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_paypal_paypal_withdraw",
                                         "children": [],
                                         "description": "Enable PayPal as a withdrawal method for vendors.",
-                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -9585,7 +9335,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_paypal_paypal_withdraw_charges",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw_charges",
                                         "dependencies": [
                                             {
                                                 "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw",
@@ -9625,7 +9374,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal",
                                 "dependencies": [],
                                 "validations": [],
                                 "content_class": ""
@@ -9649,7 +9397,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_bank_bank_transfer_withdraw",
                                         "children": [],
                                         "description": "Enable Bank Transfer as a withdrawal method for vendors.",
-                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -9686,7 +9433,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_bank_bank_transfer_withdraw_charges",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw_charges",
                                         "dependencies": [
                                             {
                                                 "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw",
@@ -9726,7 +9472,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank",
                                 "dependencies": [],
                                 "validations": [],
                                 "content_class": ""
@@ -9750,7 +9495,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_paypal_marketplace_paypal_marketplace_withdraw",
                                         "children": [],
                                         "description": "Enable PayPal Marketplace as a withdrawal method for vendors.",
-                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal_marketplace.paypal_marketplace_withdraw",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -9787,7 +9531,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_paypal_marketplace_paypal_marketplace_withdraw_charges",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal_marketplace.paypal_marketplace_withdraw_charges",
                                         "dependencies": [
                                             {
                                                 "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal_marketplace.paypal_marketplace_withdraw",
@@ -9820,7 +9563,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal_marketplace",
                                 "dependencies": [],
                                 "validations": [],
                                 "content_class": ""
@@ -9844,7 +9586,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_razorpay_razorpay_withdraw",
                                         "children": [],
                                         "description": "Enable Razorpay as a withdrawal method for vendors.",
-                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -9881,7 +9622,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_razorpay_razorpay_withdraw_charges",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw_charges",
                                         "dependencies": [
                                             {
                                                 "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw",
@@ -9914,7 +9654,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay",
                                 "dependencies": [],
                                 "validations": [],
                                 "content_class": ""
@@ -9938,7 +9677,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_stripe_stripe_withdraw",
                                         "children": [],
                                         "description": "Enable Stripe as a withdrawal method for vendors.",
-                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_stripe.stripe_withdraw",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -9975,7 +9713,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_stripe_stripe_withdraw_charges",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_stripe.stripe_withdraw_charges",
                                         "dependencies": [
                                             {
                                                 "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_stripe.stripe_withdraw",
@@ -10008,7 +9745,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_stripe",
                                 "dependencies": [],
                                 "validations": [],
                                 "content_class": "",
@@ -10033,7 +9769,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_paystack_paystack_withdraw",
                                         "children": [],
                                         "description": "Enable Paystack as a withdrawal method for vendors.",
-                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paystack.paystack_withdraw",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -10070,7 +9805,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_paystack_paystack_withdraw_charges",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paystack.paystack_withdraw_charges",
                                         "dependencies": [
                                             {
                                                 "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paystack.paystack_withdraw",
@@ -10103,7 +9837,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_paystack",
                                 "dependencies": [],
                                 "validations": [],
                                 "content_class": ""
@@ -10127,7 +9860,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_skrill_skrill_withdraw",
                                         "children": [],
                                         "description": "Enable Skrill as a withdrawal method for vendors.",
-                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill.skrill_withdraw",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -10164,7 +9896,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_skrill_skrill_withdraw_charges",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill.skrill_withdraw_charges",
                                         "dependencies": [
                                             {
                                                 "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill.skrill_withdraw",
@@ -10197,7 +9928,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill",
                                 "dependencies": [],
                                 "validations": [],
                                 "content_class": ""
@@ -10221,7 +9951,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_custom_custom_withdraw",
                                         "children": [],
                                         "description": "Enable Custom withdrawal method for vendors.",
-                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_withdraw",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -10258,7 +9987,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_custom_custom_method_name",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_method_name",
                                         "dependencies": [
                                             {
                                                 "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_withdraw",
@@ -10302,7 +10030,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_custom_custom_method_type",
                                         "children": [],
                                         "description": "Custom Withdraw method type.",
-                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_method_type",
                                         "dependencies": [
                                             {
                                                 "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_withdraw",
@@ -10346,7 +10073,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_transaction_withdraw_charge_section_withdraw_charge_withdraw_methods_group_custom_bank_transfer_withdraw_charges",
                                         "children": [],
                                         "description": "Set withdrawal charges for Bank Transfer method.",
-                                        "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.bank_transfer_withdraw_charges",
                                         "dependencies": [
                                             {
                                                 "key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_withdraw",
@@ -10379,14 +10105,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom",
                                 "dependencies": [],
                                 "validations": [],
                                 "content_class": ""
                             }
                         ],
                         "description": "Select suitable withdraw methods and charges for vendors.",
-                        "dependency_key": "withdraw_charge.section_withdraw_charge",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -10410,7 +10134,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_transaction_withdraw_charge_minimum_withdraw_limit_section_minimum_withdraw_limit",
                                 "children": [],
                                 "description": "Minimum balance required to make a withdraw request. Leave blank to set no minimum limits.",
-                                "dependency_key": "withdraw_charge.minimum_withdraw_limit_section.minimum_withdraw_limit",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "number",
@@ -10431,7 +10154,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "withdraw_charge.minimum_withdraw_limit_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -10455,7 +10177,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_transaction_withdraw_charge_cod_payments_section_cod_payments",
                                 "children": [],
                                 "description": "If an order is paid with Cash on Delivery (COD), then exclude that payment from vendor balance.",
-                                "dependency_key": "withdraw_charge.cod_payments_section.cod_payments",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "radio_capsule",
@@ -10484,7 +10205,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "withdraw_charge.cod_payments_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -10508,7 +10228,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_threshold_section_withdraw_threshold",
                                 "children": [],
                                 "description": "Days to wait before users can withdraw from completed orders. Set to &quot;0&quot; to disable the waiting period.",
-                                "dependency_key": "withdraw_charge.withdraw_threshold_section.withdraw_threshold",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "number",
@@ -10529,7 +10248,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "withdraw_charge.withdraw_threshold_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -10552,7 +10270,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "display": true,
                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_withdraw_option_visibility",
                                 "description": "withdraw option (when vendor is getting commission automatically)",
-                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch_group",
@@ -10589,7 +10306,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_manual_withdraw",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
                                         "dependencies": [
                                             {
                                                 "key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
@@ -10657,7 +10373,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw",
                                                 "children": [],
                                                 "description": "Enable Quarterly Withdraw as a withdrawal method for vendors.",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
@@ -10713,7 +10428,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_month",
                                                 "children": [],
                                                 "description": "",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
@@ -10771,7 +10485,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_month_1_schedule_1",
                                                 "children": [],
                                                 "description": "",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_1_schedule_1",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
@@ -10830,7 +10543,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_month_1_schedule_2",
                                                 "children": [],
                                                 "description": "",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_1_schedule_2",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
@@ -10889,7 +10601,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_month_1_schedule_3",
                                                 "children": [],
                                                 "description": "",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_1_schedule_3",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
@@ -10948,7 +10659,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_month_2_schedule_1",
                                                 "children": [],
                                                 "description": "",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_2_schedule_1",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
@@ -11007,7 +10717,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_month_2_schedule_2",
                                                 "children": [],
                                                 "description": "",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_2_schedule_2",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
@@ -11066,7 +10775,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_month_2_schedule_3",
                                                 "children": [],
                                                 "description": "",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_2_schedule_3",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
@@ -11125,7 +10833,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_month_3_schedule_1",
                                                 "children": [],
                                                 "description": "",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_3_schedule_1",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
@@ -11184,7 +10891,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_month_3_schedule_2",
                                                 "children": [],
                                                 "description": "",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_3_schedule_2",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
@@ -11243,7 +10949,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_month_3_schedule_3",
                                                 "children": [],
                                                 "description": "",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month_3_schedule_3",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
@@ -11302,7 +11007,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_week",
                                                 "children": [],
                                                 "description": "",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_week",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
@@ -11364,7 +11068,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_quarterly_withdraw_sub_section_quarterly_withdraw_group_quarterly_withdraw_day",
                                                 "children": [],
                                                 "description": "",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_day",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw",
@@ -11430,7 +11133,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                             }
                                         ],
                                         "description": "Select suitable months, weeks and day of week. 4 times in a year.",
-                                        "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group",
                                         "dependencies": [
                                             {
                                                 "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
@@ -11456,7 +11158,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section",
                                 "dependencies": [
                                     {
                                         "key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
@@ -11507,7 +11208,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_monthly_withdraw_sub_section_monthly_withdraw_group_monthly_withdraw",
                                                 "children": [],
                                                 "description": "Enable Monthly Withdraw as a withdrawal method for vendors.",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
@@ -11563,7 +11263,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_monthly_withdraw_sub_section_monthly_withdraw_group_monthly_withdraw_week",
                                                 "children": [],
                                                 "description": "",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_week",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw",
@@ -11625,7 +11324,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_monthly_withdraw_sub_section_monthly_withdraw_group_monthly_withdraw_day",
                                                 "children": [],
                                                 "description": "",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_day",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw",
@@ -11691,7 +11389,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                             }
                                         ],
                                         "description": "Select suitable weeks and day of week. 12 times in a year.",
-                                        "dependency_key": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group",
                                         "dependencies": [
                                             {
                                                 "key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
@@ -11717,7 +11414,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section",
                                 "dependencies": [
                                     {
                                         "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
@@ -11768,7 +11464,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_biweekly_withdraw_sub_section_biweekly_withdraw_group_biweekly_withdraw",
                                                 "children": [],
                                                 "description": "Enable Biweekly Withdraw as a withdrawal method for vendors.",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
@@ -11824,7 +11519,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_biweekly_withdraw_sub_section_biweekly_withdraw_group_biweekly_withdraw_week",
                                                 "children": [],
                                                 "description": "",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_week",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw",
@@ -11878,7 +11572,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_biweekly_withdraw_sub_section_biweekly_withdraw_group_biweekly_withdraw_1_week_1",
                                                 "children": [],
                                                 "description": "",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_1_week_1",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw",
@@ -11937,7 +11630,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_biweekly_withdraw_sub_section_biweekly_withdraw_group_biweekly_withdraw_1_week_2",
                                                 "children": [],
                                                 "description": "",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_1_week_2",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw",
@@ -11996,7 +11688,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_biweekly_withdraw_sub_section_biweekly_withdraw_group_biweekly_withdraw_day",
                                                 "children": [],
                                                 "description": "",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_day",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw",
@@ -12062,7 +11753,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                             }
                                         ],
                                         "description": "Select suitable weeks and day of week. 24 times in a year.",
-                                        "dependency_key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group",
                                         "dependencies": [
                                             {
                                                 "key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
@@ -12088,7 +11778,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section",
                                 "dependencies": [
                                     {
                                         "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
@@ -12139,7 +11828,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_weekly_withdraw_sub_section_weekly_withdraw_group_weekly_withdraw",
                                                 "children": [],
                                                 "description": "Enable Weekly Withdraw as a withdrawal method for vendors.",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
@@ -12195,7 +11883,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                                 "hook_key": "dokan_settings_transaction_withdraw_charge_withdraw_option_visibility_section_weekly_withdraw_sub_section_weekly_withdraw_group_weekly_withdraw_day",
                                                 "children": [],
                                                 "description": "",
-                                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw_day",
                                                 "dependencies": [
                                                     {
                                                         "key": "withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw",
@@ -12261,7 +11948,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                             }
                                         ],
                                         "description": "Select suitable day of week. 52 times in a year.",
-                                        "dependency_key": "withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group",
                                         "dependencies": [
                                             {
                                                 "key": "withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility",
@@ -12287,7 +11973,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section",
                                 "dependencies": [
                                     {
                                         "key": "withdraw_charge.withdraw_option_visibility_section.manual_withdraw",
@@ -12312,14 +11997,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "withdraw_charge.withdraw_option_visibility_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Set up available withdrawal methods and transaction conditions for vendors.",
-                "dependency_key": "withdraw_charge",
                 "dependencies": [],
                 "validations": [],
                 "priority": 300,
@@ -12353,7 +12036,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_enabled",
                                 "children": [],
                                 "description": "Enable this option to activate automatic balance deducting from vendors.",
-                                "dependency_key": "reverse_withdrawal.reverse_withdrawal_section.enabled",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -12390,7 +12072,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_billing_type",
                                 "children": [],
                                 "description": "Select how vendors will be billed for their reverse balance amounts.",
-                                "dependency_key": "reverse_withdrawal.reverse_withdrawal_section.billing_type",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "radio_capsule",
@@ -12427,7 +12108,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_reverse_balance_threshold",
                                 "children": [],
                                 "description": "Set the amount that triggers automatic withdrawal actions.",
-                                "dependency_key": "reverse_withdrawal.reverse_withdrawal_section.reverse_balance_threshold",
                                 "dependencies": [
                                     {
                                         "key": "reverse_withdrawal.reverse_withdrawal_section.billing_type",
@@ -12475,7 +12155,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_monthly_billing_day",
                                 "children": [],
                                 "description": "Enter the day of month when you want to send reverse withdrawal balance invoices to vendors.",
-                                "dependency_key": "reverse_withdrawal.reverse_withdrawal_section.monthly_billing_day",
                                 "dependencies": [
                                     {
                                         "key": "reverse_withdrawal.reverse_withdrawal_section.billing_type",
@@ -12523,7 +12202,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_due_period",
                                 "children": [],
                                 "description": "Number of days to wait before enforcing collection actions. Set to 0 for immediate action.",
-                                "dependency_key": "reverse_withdrawal.reverse_withdrawal_section.due_period",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "number",
@@ -12552,7 +12230,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_failed_actions",
                                 "children": [],
                                 "description": "Choose actions to take when the grace period expires and payment remains outstanding.",
-                                "dependency_key": "reverse_withdrawal.reverse_withdrawal_section.failed_actions",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "multicheck",
@@ -12584,7 +12261,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_display_notice",
                                 "children": [],
                                 "description": "Show a payment reminder notification on the vendor dashboard during the grace period.",
-                                "dependency_key": "reverse_withdrawal.reverse_withdrawal_section.display_notice",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -12621,7 +12297,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_send_announcement",
                                 "children": [],
                                 "description": "Send platform announcements to vendors during the grace period. Limited to one announcement per billing period.",
-                                "dependency_key": "reverse_withdrawal.reverse_withdrawal_section.send_announcement",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -12650,14 +12325,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "reverse_withdrawal.reverse_withdrawal_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Set up commission collection from vendors on Cash on Delivery orders. Control when and how to charge money from vendor accounts when they owe you.",
-                "dependency_key": "reverse_withdrawal",
                 "dependencies": [],
                 "validations": [],
                 "priority": 400,
@@ -12665,7 +12338,6 @@ const dokanSettingsSchema: SettingsElement[] = [
             }
         ],
         "description": "Configure transaction-related settings including commissions and fees.",
-        "dependency_key": "",
         "dependencies": [],
         "validations": []
     },
@@ -12706,7 +12378,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_appearance_store_products_page_store_product_per_page",
                                 "children": [],
                                 "description": "Set how many products to display per page on the\nvendor store page.",
-                                "dependency_key": "store.products_page.store_product_per_page",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "number",
@@ -12727,7 +12398,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "store.products_page",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -12760,7 +12430,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_store_google_recaptcha_google_recaptcha_settings_recaptcha",
                                         "children": [],
                                         "description": "Connect to enable spam protection that works automatically in the background <a href=\"https://www.google.com/recaptcha/about/\" target=\"_blank\" rel=\"noopener noreferrer\">Get Help</a>",
-                                        "dependency_key": "store.google_recaptcha.google_recaptcha_settings.recaptcha",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -12797,7 +12466,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_store_google_recaptcha_google_recaptcha_settings_recaptcha_info",
                                         "children": [],
                                         "description": "If you don&#039;t have a Google reCaptcha account, <a href=\"https://www.google.com/recaptcha/admin/create\" class=\"text-primary underline\" target=\"_blank\" rel=\"noopener noreferrer\">+ Create Google reCaptcha</a>",
-                                        "dependency_key": "store.google_recaptcha.google_recaptcha_settings.recaptcha_info",
                                         "dependencies": [
                                             {
                                                 "key": "store.google_recaptcha.google_recaptcha_settings.recaptcha",
@@ -12844,7 +12512,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_store_google_recaptcha_google_recaptcha_settings_recaptcha_site_key",
                                         "children": [],
                                         "description": "Enter your Google reCaptcha site key here.",
-                                        "dependency_key": "store.google_recaptcha.google_recaptcha_settings.recaptcha_site_key",
                                         "dependencies": [
                                             {
                                                 "key": "store.google_recaptcha.google_recaptcha_settings.recaptcha",
@@ -12888,7 +12555,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_store_google_recaptcha_google_recaptcha_settings_recaptcha_secret_key",
                                         "children": [],
                                         "description": "Enter your Google reCaptcha secret key here.",
-                                        "dependency_key": "store.google_recaptcha.google_recaptcha_settings.recaptcha_secret_key",
                                         "dependencies": [
                                             {
                                                 "key": "store.google_recaptcha.google_recaptcha_settings.recaptcha",
@@ -12924,14 +12590,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "store.google_recaptcha.google_recaptcha_settings",
                                 "dependencies": [],
                                 "validations": [],
                                 "content_class": ""
                             }
                         ],
                         "description": "",
-                        "dependency_key": "store.google_recaptcha",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -12955,7 +12619,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_appearance_store_store_contact_form_section_store_clossing_time_widget",
                                 "children": [],
                                 "description": "Display a vendor contact form in the store sidebar",
-                                "dependency_key": "store.store_contact_form_section.store_clossing_time_widget",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -12984,7 +12647,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "store.store_contact_form_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -13008,7 +12670,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_appearance_store_store_banner_dimension_section_store_banner_dimension",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "store.store_banner_dimension_section.store_banner_dimension",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "double_input",
@@ -13031,7 +12692,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "store.store_banner_dimension_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -13055,7 +12715,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_appearance_store_store_template_store_template",
                                 "children": [],
                                 "description": "Select a store header for your store.",
-                                "dependency_key": "store.store_template.store_template",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "customize_radio",
@@ -13097,7 +12756,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "store.store_template",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -13121,7 +12779,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_appearance_store_store_time_widget_section_store_time_widget",
                                 "children": [],
                                 "description": "Enable store opening &amp; closing time widget in the store sidebar",
-                                "dependency_key": "store.store_time_widget_section.store_time_widget",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -13150,7 +12807,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "store.store_time_widget_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -13174,7 +12830,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_appearance_store_store_sidebar_section_store_opening_time",
                                 "children": [],
                                 "description": "Apply main theme&#039;s sidebar styling to vendor stores for a consistent look",
-                                "dependency_key": "store.store_sidebar_section.store_opening_time",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -13203,7 +12858,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "store.store_sidebar_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -13227,7 +12881,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_appearance_store_vendor_info_visibility_section_vendor_info_visibility",
                                 "children": [],
                                 "description": "Choose what vendor details to show customers in single store page.",
-                                "dependency_key": "store.vendor_info_visibility_section.vendor_info_visibility",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "checkbox_group_preview",
@@ -13260,7 +12913,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "store.vendor_info_visibility_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -13284,7 +12936,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_appearance_store_dokan_font_section_dokan_font",
                                 "children": [],
                                 "description": "If disabled then Dokan font-awesome library won&#039;t be loaded in frontend.",
-                                "dependency_key": "store.dokan_font_section.dokan_font",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -13313,7 +12964,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "store.dokan_font_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -13337,7 +12987,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_appearance_store_single_product_preview_section_single_product_preview",
                                 "children": [],
                                 "description": "Choose which sections to show when customers view individual products.",
-                                "dependency_key": "store.single_product_preview_section.single_product_preview",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "checkbox_group_preview",
@@ -13370,14 +13019,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "store.single_product_preview_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                "dependency_key": "store",
                 "dependencies": [],
                 "validations": [],
                 "priority": 100,
@@ -13411,7 +13058,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_appearance_dashboard-color-customizer-page_dokan-store-colors_dashboard_color_customizer",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "dashboard-color-customizer-page.dokan-store-colors.dashboard_color_customizer",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "color_customizer",
@@ -13636,14 +13282,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "Select a color palette for your store.",
-                        "dependency_key": "dashboard-color-customizer-page.dokan-store-colors",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Customize the colors and appearance of vendor dashboards to match your brand.",
-                "dependency_key": "dashboard-color-customizer-page",
                 "dependencies": [],
                 "validations": [],
                 "priority": 300,
@@ -13686,7 +13330,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_facebook_api_group_facebook_enabled",
                                         "children": [],
                                         "description": "Configure your Facebook API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-facebook/\" target=\"_blank\">Get Help</a>",
-                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_enabled",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -13723,7 +13366,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_facebook_api_group_facebook_info",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_info",
                                         "dependencies": [
                                             {
                                                 "key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_enabled",
@@ -13770,7 +13412,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_facebook_api_group_facebook_app_id",
                                         "children": [],
                                         "description": "Enter your Facebook App ID from Facebook Developer Console.",
-                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_app_id",
                                         "dependencies": [
                                             {
                                                 "key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_enabled",
@@ -13814,7 +13455,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_facebook_api_group_facebook_app_secret",
                                         "children": [],
                                         "description": "Enter your Facebook App Secret from Facebook Developer Console.",
-                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_app_secret",
                                         "dependencies": [
                                             {
                                                 "key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_enabled",
@@ -13858,7 +13498,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_facebook_api_group_facebook_redirect_url",
                                         "children": [],
                                         "description": "The redirect URL for Facebook Login. Copy this URL and add it to your Facebook App settings.",
-                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_redirect_url",
                                         "dependencies": [
                                             {
                                                 "key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_enabled",
@@ -13894,7 +13533,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group",
                                 "dependencies": [],
                                 "validations": [],
                                 "content_class": ""
@@ -13918,7 +13556,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_x_api_group_x_enabled",
                                         "children": [],
                                         "description": "Configure your X API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-twitter/\" target=\"_blank\">Get Help</a>",
-                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_enabled",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -13955,7 +13592,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_x_api_group_x_info",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_info",
                                         "dependencies": [
                                             {
                                                 "key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_enabled",
@@ -14002,7 +13638,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_x_api_group_x_api_key",
                                         "children": [],
                                         "description": "Enter your X API Key from X Developer Console.",
-                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_api_key",
                                         "dependencies": [
                                             {
                                                 "key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_enabled",
@@ -14046,7 +13681,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_x_api_group_x_api_secret",
                                         "children": [],
                                         "description": "Enter your X API Secret from X Developer Console.",
-                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_api_secret",
                                         "dependencies": [
                                             {
                                                 "key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_enabled",
@@ -14090,7 +13724,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_x_api_group_x_redirect_url",
                                         "children": [],
                                         "description": "The redirect URL for X Login. Copy this URL and add it to your X App settings.",
-                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_redirect_url",
                                         "dependencies": [
                                             {
                                                 "key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_enabled",
@@ -14126,7 +13759,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.x_api_group",
                                 "dependencies": [],
                                 "validations": [],
                                 "content_class": ""
@@ -14150,7 +13782,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_google_api_group_google_enabled",
                                         "children": [],
                                         "description": "Configure your Google API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-google/\" target=\"_blank\">Get Help</a>",
-                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_enabled",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -14187,7 +13818,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_google_api_group_google_info",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_info",
                                         "dependencies": [
                                             {
                                                 "key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_enabled",
@@ -14234,7 +13864,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_google_api_group_google_client_id",
                                         "children": [],
                                         "description": "Enter your Google Client ID from Google Cloud Console.",
-                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_client_id",
                                         "dependencies": [
                                             {
                                                 "key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_enabled",
@@ -14278,7 +13907,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_google_api_group_google_client_secret",
                                         "children": [],
                                         "description": "Enter your Google Client Secret from Google Cloud Console.",
-                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_client_secret",
                                         "dependencies": [
                                             {
                                                 "key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_enabled",
@@ -14322,7 +13950,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_google_api_group_google_redirect_url",
                                         "children": [],
                                         "description": "The redirect URL for Google Login. Copy this URL and add it to your Google OAuth settings.",
-                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_redirect_url",
                                         "dependencies": [
                                             {
                                                 "key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_enabled",
@@ -14358,7 +13985,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.google_api_group",
                                 "dependencies": [],
                                 "validations": [],
                                 "content_class": ""
@@ -14382,7 +14008,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_linkedin_api_group_linkedin_enabled",
                                         "children": [],
                                         "description": "Configure your LinkedIn API settings. <a href=\"https://dokan.co/docs/wordpress/settings/dokan-social-login/configuring-linkedin/\" target=\"_blank\">Get Help</a>",
-                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_enabled",
                                         "dependencies": [],
                                         "validations": [],
                                         "variant": "switch",
@@ -14419,7 +14044,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_linkedin_api_group_linkedin_info",
                                         "children": [],
                                         "description": "",
-                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_info",
                                         "dependencies": [
                                             {
                                                 "key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_enabled",
@@ -14466,7 +14090,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_linkedin_api_group_linkedin_client_id",
                                         "children": [],
                                         "description": "Enter your LinkedIn Client ID from LinkedIn Developer Console.",
-                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_client_id",
                                         "dependencies": [
                                             {
                                                 "key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_enabled",
@@ -14510,7 +14133,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_linkedin_api_group_linkedin_client_secret",
                                         "children": [],
                                         "description": "Enter your LinkedIn Client Secret from LinkedIn Developer Console.",
-                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_client_secret",
                                         "dependencies": [
                                             {
                                                 "key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_enabled",
@@ -14554,7 +14176,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                         "hook_key": "dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_linkedin_api_group_linkedin_redirect_url",
                                         "children": [],
                                         "description": "The redirect URL for LinkedIn Login. Copy this URL and add it to your LinkedIn App settings.",
-                                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_redirect_url",
                                         "dependencies": [
                                             {
                                                 "key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_enabled",
@@ -14590,21 +14211,18 @@ const dokanSettingsSchema: SettingsElement[] = [
                                     }
                                 ],
                                 "description": "",
-                                "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group",
                                 "dependencies": [],
                                 "validations": [],
                                 "content_class": ""
                             }
                         ],
                         "description": "",
-                        "dependency_key": "storefont_social_onboarding.storefont_social_onboarding_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Allow vendors to link their social accounts to build trust and connect with customers.",
-                "dependency_key": "storefont_social_onboarding",
                 "dependencies": [],
                 "validations": [],
                 "priority": 400,
@@ -14638,7 +14256,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_appearance_dashboard-menu-manager-page_dokan-menu-manager_dashboard_menu_manager",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "dashboard-menu-manager-page.dokan-menu-manager.dashboard_menu_manager",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "menu_manager",
@@ -15231,13 +14848,11 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "dashboard-menu-manager-page.dokan-menu-manager",
                         "dependencies": [],
                         "validations": []
                     }
                 ],
                 "description": "Reorder, Rename, Activate, and Deactivate menus for your vendor dashboard.",
-                "dependency_key": "dashboard-menu-manager-page",
                 "dependencies": [],
                 "validations": [],
                 "priority": 200,
@@ -15245,7 +14860,6 @@ const dokanSettingsSchema: SettingsElement[] = [
             }
         ],
         "description": "Configure dashboard menu settings, visibility, and customization options.",
-        "dependency_key": "",
         "dependencies": [],
         "validations": []
     },
@@ -15286,7 +14900,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-settings_allows_shipment_tracking",
                                 "children": [],
                                 "description": "Allow vendors to provide tracking information for customer orders.",
-                                "dependency_key": "shipment-setting-page.shipment-settings.allows_shipment_tracking",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -15323,7 +14936,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-settings_enable_shipstation_logging",
                                 "children": [],
                                 "description": "Record all API requests and responses from ShipStation integration.",
-                                "dependency_key": "shipment-setting-page.shipment-settings.enable_shipstation_logging",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -15360,7 +14972,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-settings_allow_mark_received",
                                 "children": [],
                                 "description": "Permit customers to confirm delivery completion.",
-                                "dependency_key": "shipment-setting-page.shipment-settings.allow_mark_received",
                                 "dependencies": [
                                     {
                                         "key": "shipment-setting-page.shipment-settings.allows_shipment_tracking",
@@ -15408,7 +15019,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "shipment-setting-page.shipment-settings",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -15432,7 +15042,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-australia-post",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "shipment-setting-page.shipment-provider.sp-australia-post",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -15469,7 +15078,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-canada-post",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "shipment-setting-page.shipment-provider.sp-canada-post",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -15506,7 +15114,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-city-link",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "shipment-setting-page.shipment-provider.sp-city-link",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -15543,7 +15150,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-dhl",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "shipment-setting-page.shipment-provider.sp-dhl",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -15580,7 +15186,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-dpd",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "shipment-setting-page.shipment-provider.sp-dpd",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -15617,7 +15222,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-fastway-south-africa",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "shipment-setting-page.shipment-provider.sp-fastway-south-africa",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -15654,7 +15258,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-fedex",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "shipment-setting-page.shipment-provider.sp-fedex",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -15691,7 +15294,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-ontrac",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "shipment-setting-page.shipment-provider.sp-ontrac",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -15728,7 +15330,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-parcelforce",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "shipment-setting-page.shipment-provider.sp-parcelforce",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -15765,7 +15366,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-polish-shipping-providers",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "shipment-setting-page.shipment-provider.sp-polish-shipping-providers",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -15802,7 +15402,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-royal-mail",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "shipment-setting-page.shipment-provider.sp-royal-mail",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -15839,7 +15438,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-tnt-express-consignment",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "shipment-setting-page.shipment-provider.sp-tnt-express-consignment",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -15876,7 +15474,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-tnt-express-reference",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "shipment-setting-page.shipment-provider.sp-tnt-express-reference",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -15913,7 +15510,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-fedex-sameday",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "shipment-setting-page.shipment-provider.sp-fedex-sameday",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -15950,7 +15546,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-ups",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "shipment-setting-page.shipment-provider.sp-ups",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -15987,7 +15582,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-usps",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "shipment-setting-page.shipment-provider.sp-usps",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -16024,7 +15618,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-dhl-us",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "shipment-setting-page.shipment-provider.sp-dhl-us",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -16061,7 +15654,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-other",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "shipment-setting-page.shipment-provider.sp-other",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -16090,7 +15682,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "Select shipping providers that vendors can offer to customers.",
-                        "dependency_key": "shipment-setting-page.shipment-provider",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -16114,7 +15705,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_shipment-setting-page_shipment-status_shipping_status_list",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "shipment-setting-page.shipment-status.shipping_status_list",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "repeater",
@@ -16195,14 +15785,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "Define shipping statuses that vendors can use to update customers.",
-                        "dependency_key": "shipment-setting-page.shipment-status",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Configure shipment tracking, integrations, and delivery options for your marketplace.",
-                "dependency_key": "shipment-setting-page",
                 "dependencies": [],
                 "validations": [],
                 "priority": 100,
@@ -16237,7 +15825,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_allow_vendor_override_settings",
                                 "children": [],
                                 "description": "Allow vendors to customize their own delivery time settings.",
-                                "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time.allow_vendor_override_settings",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -16274,7 +15861,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_selection_required",
                                 "children": [],
                                 "description": "Make delivery date and time selection required for all orders.",
-                                "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time.selection_required",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -16311,7 +15897,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_delivery_support",
                                 "children": [],
                                 "description": "Select the types of delivery services offered.",
-                                "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time.delivery_support",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "multicheck",
@@ -16339,7 +15924,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_delivery_date_label",
                                 "children": [],
                                 "description": "This label will show on checkout page",
-                                "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time.delivery_date_label",
                                 "dependencies": [],
                                 "validations": [
                                     {
@@ -16371,7 +15955,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_delivery_buffer_unit",
                                 "children": [],
                                 "description": "Select the time unit for the delivery buffer. Choose &quot;Days&quot; for full calendar days or &quot;Hours&quot; for more precise same-day delivery control.",
-                                "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time.delivery_buffer_unit",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "select",
@@ -16406,7 +15989,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_preorder_date",
                                 "children": [],
                                 "description": "Minimum number of days between order and delivery. Set to 0 for same-day delivery, 1 for next-day delivery, etc.",
-                                "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time.preorder_date",
                                 "dependencies": [
                                     {
                                         "key": "dashboard-delivery-days-page.dokan_delivery_time.delivery_buffer_unit",
@@ -16463,7 +16045,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_delivery_buffer_value",
                                 "children": [],
                                 "description": "Minimum number of hours between order and delivery. If the time exceeds today&#039;s store hours, delivery starts from the next business day.",
-                                "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time.delivery_buffer_value",
                                 "dependencies": [
                                     {
                                         "key": "dashboard-delivery-days-page.dokan_delivery_time.delivery_buffer_unit",
@@ -16520,7 +16101,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_time_slot_minutes",
                                 "children": [],
                                 "description": "Time slot in minutes. Please keep opening and closing time divisible by slot minutes. E.g ( 30, 60, 120 ). Also this cannot be empty, less then 10 or greater then 1440 minutes.",
-                                "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time.time_slot_minutes",
                                 "dependencies": [],
                                 "validations": [
                                     {
@@ -16559,7 +16139,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_order_per_slot",
                                 "children": [],
                                 "description": "Maximum number of orders that can be scheduled for each time slot. Set to 0 for unlimited capacity.",
-                                "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time.order_per_slot",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "number",
@@ -16588,7 +16167,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_delivery_box_info",
                                 "children": [],
                                 "description": "Message shown on checkout page about delivery timing. %DAY% will show the blocked buffer days.",
-                                "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time.delivery_box_info",
                                 "dependencies": [],
                                 "validations": [
                                     {
@@ -16612,7 +16190,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "dashboard-delivery-days-page.dokan_delivery_time",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -16636,7 +16213,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_shipment_dashboard-delivery-days-page_dashboard-delivery-days-page_delivery_days_schedule",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "delivery_days",
@@ -16734,14 +16310,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "Configure delivery schedule and operating hours for each day of the week. At least one delivery date should be selected.",
-                        "dependency_key": "dashboard-delivery-days-page.dashboard-delivery-days-page",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Set up delivery scheduling options and time slots for customer orders.",
-                "dependency_key": "dashboard-delivery-days-page",
                 "dependencies": [],
                 "validations": [],
                 "priority": 200,
@@ -16750,7 +16324,6 @@ const dokanSettingsSchema: SettingsElement[] = [
             }
         ],
         "description": "",
-        "dependency_key": "",
         "dependencies": [],
         "validations": []
     },
@@ -16791,7 +16364,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_moderation_rma_rma_settings_rma_order_status",
                                 "children": [],
                                 "description": "Choose which order status allows customers to start the return process.",
-                                "dependency_key": "rma.rma_settings.rma_order_status",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "select",
@@ -16850,7 +16422,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_moderation_rma_rma_settings_rma_refund_requests",
                                 "children": [],
                                 "description": "Let customers submit refund requests directly through vendor stores.",
-                                "dependency_key": "rma.rma_settings.rma_refund_requests",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -16887,7 +16458,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_moderation_rma_rma_settings_rma_coupon_requests",
                                 "children": [],
                                 "description": "Allow customers to request for coupons as store credit.",
-                                "dependency_key": "rma.rma_settings.rma_coupon_requests",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -16916,7 +16486,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "rma.rma_settings",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -16940,7 +16509,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_moderation_rma_reasons_of_rma_settings_rma_reasons",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "rma.reasons_of_rma_settings.rma_reasons",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "repeater",
@@ -16989,7 +16557,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "Set up return reasons for customers to choose from.",
-                        "dependency_key": "rma.reasons_of_rma_settings",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -17013,7 +16580,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_moderation_rma_refund_policy_settings_rma_refund_policy",
                                 "children": [],
                                 "description": "Create a standard refund policy for all vendors. Vendors can customize this policy for their specific needs.",
-                                "dependency_key": "rma.refund_policy_settings.rma_refund_policy",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "rich_text",
@@ -17030,14 +16596,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "rma.refund_policy_settings",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Allow vendors to offer customize return and warranty facility on their sold products and Configure customer return options.",
-                "dependency_key": "rma",
                 "dependencies": [],
                 "validations": [],
                 "priority": 100,
@@ -17072,7 +16636,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_moderation_livechat_livechat_settings_livechat_enabled",
                                 "children": [],
                                 "description": "Enable live chat between vendor and customer",
-                                "dependency_key": "livechat.livechat_settings.livechat_enabled",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -17109,7 +16672,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_moderation_livechat_livechat_settings_livechat_provider",
                                 "children": [],
                                 "description": "Select which chat platform to use.",
-                                "dependency_key": "livechat.livechat_settings.livechat_provider",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "customize_radio",
@@ -17163,7 +16725,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_moderation_livechat_livechat_settings_livechat_app_id",
                                 "children": [],
                                 "description": "Insert App ID <a target=\"_blank\" class=\"block w-full leading-7 text-primary underline\" href=\"https://talkjs.com/dashboard/signup/standard/\">Get your App ID \u2197</a>",
-                                "dependency_key": "livechat.livechat_settings.livechat_app_id",
                                 "dependencies": [
                                     {
                                         "key": "livechat.livechat_settings.livechat_provider",
@@ -17207,7 +16768,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_moderation_livechat_livechat_settings_livechat_app_secret",
                                 "children": [],
                                 "description": "Insert App Secret <a target=\"_blank\" class=\"block w-full leading-7 text-primary underline\" href=\"https://talkjs.com/dashboard/signup/standard/\">Get your App Secret \u2197</a>",
-                                "dependency_key": "livechat.livechat_settings.livechat_app_secret",
                                 "dependencies": [
                                     {
                                         "key": "livechat.livechat_settings.livechat_provider",
@@ -17251,7 +16811,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_moderation_livechat_livechat_settings_wa_opening_method",
                                 "children": [],
                                 "description": "",
-                                "dependency_key": "livechat.livechat_settings.wa_opening_method",
                                 "dependencies": [
                                     {
                                         "key": "livechat.livechat_settings.livechat_provider",
@@ -17305,7 +16864,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_moderation_livechat_livechat_settings_wa_pre_filled_message",
                                 "children": [],
                                 "description": "Text that appears in the WhatsApp Chat window. Add variables {store_name}, {store_url} to replace with store name, store url",
-                                "dependency_key": "livechat.livechat_settings.wa_pre_filled_message",
                                 "dependencies": [
                                     {
                                         "key": "livechat.livechat_settings.livechat_provider",
@@ -17349,7 +16907,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_moderation_livechat_livechat_settings_livechat_vendor_page_button",
                                 "children": [],
                                 "description": "Display a chat button on vendor store pages",
-                                "dependency_key": "livechat.livechat_settings.livechat_vendor_page_button",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -17386,7 +16943,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_moderation_livechat_livechat_settings_livechat_product_page_button",
                                 "children": [],
                                 "description": "Choose where to show the chat button on product pages.",
-                                "dependency_key": "livechat.livechat_settings.livechat_product_page_button",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "customize_radio",
@@ -17426,14 +16982,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "livechat.livechat_settings",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Configure live chat settings for vendor-customer communication.",
-                "dependency_key": "livechat",
                 "dependencies": [],
                 "validations": [],
                 "priority": 300,
@@ -17468,7 +17022,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_moderation_report_abuse_report_abuse_settings_report_abuse_reported_by",
                                 "children": [],
                                 "description": "Choose who has permission to report products.",
-                                "dependency_key": "report_abuse.report_abuse_settings.report_abuse_reported_by",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "radio_capsule",
@@ -17505,7 +17058,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_moderation_report_abuse_report_abuse_settings_report_abuse_reasons",
                                 "children": [],
                                 "description": "Create a list of reasons users can select when reporting products.",
-                                "dependency_key": "report_abuse.report_abuse_settings.report_abuse_reasons",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "repeater",
@@ -17568,14 +17120,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "report_abuse.report_abuse_settings",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Configure your marketplace to ensure safety and honesty by allowing customers to report fraudulent products.",
-                "dependency_key": "report_abuse",
                 "dependencies": [],
                 "validations": [],
                 "priority": 400,
@@ -17609,7 +17159,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_moderation_store_support_store_support_settings_store_support_order_details",
                                 "children": [],
                                 "description": "Add a support button to order details pages for customers to easily contact vendors about their orders.",
-                                "dependency_key": "store_support.store_support_settings.store_support_order_details",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -17646,7 +17195,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_moderation_store_support_store_support_settings_store_support_button_label",
                                 "children": [],
                                 "description": "Customize the text that appears on the support button.",
-                                "dependency_key": "store_support.store_support_settings.store_support_button_label",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "text",
@@ -17671,7 +17219,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_moderation_store_support_store_support_settings_store_support_product_page",
                                 "children": [],
                                 "description": "Choose where to show the support button on individual product pages for customer support.",
-                                "dependency_key": "store_support.store_support_settings.store_support_product_page",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "customize_radio",
@@ -17711,14 +17258,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "Configure store support button display and customization.",
-                        "dependency_key": "store_support.store_support_settings",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Configure store support settings for vendor-customer communication.",
-                "dependency_key": "store_support",
                 "dependencies": [],
                 "validations": [],
                 "priority": 200,
@@ -17727,7 +17272,6 @@ const dokanSettingsSchema: SettingsElement[] = [
             }
         ],
         "description": "Configure moderation settings, return policies, and customer request management.",
-        "dependency_key": "",
         "dependencies": [],
         "validations": []
     },
@@ -17768,7 +17312,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_compliance_privacy_privacy_settings_privacy_policy_display",
                                 "children": [],
                                 "description": "Show privacy policy link on vendor store contact forms.",
-                                "dependency_key": "privacy.privacy_settings.privacy_policy_display",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -17805,7 +17348,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_compliance_privacy_privacy_settings_privacy_policy_page",
                                 "children": [],
                                 "description": "Choose which page displays your privacy policy",
-                                "dependency_key": "privacy.privacy_settings.privacy_policy_page",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "select",
@@ -17908,7 +17450,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_compliance_privacy_privacy_policy_content_privacy_policy_content",
                                 "children": [],
                                 "description": "Create or edit your privacy policy text that will be displayed to users",
-                                "dependency_key": "privacy.privacy_policy_content.privacy_policy_content",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "rich_text",
@@ -17925,7 +17466,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "Configure privacy policy display and content settings.",
-                        "dependency_key": "privacy.privacy_settings",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -17949,7 +17489,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_compliance_privacy_admin_access_section_admin_access",
                                 "children": [],
                                 "description": "Prevent vendors from accessing the wp-admin dashboard area. If HPOS feature is enabled, admin access will be blocked regardless of this setting.",
-                                "dependency_key": "privacy.admin_access_section.admin_access",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -17978,7 +17517,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "privacy.admin_access_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
@@ -18003,7 +17541,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_compliance_privacy_data_clear_section_data_clear_on_uninstall",
                                 "children": [],
                                 "description": "Permanently delete all data and database tables related to Dokan and Dokan Pro plugins. This action cannot be undone.",
-                                "dependency_key": "privacy.data_clear_section.data_clear_on_uninstall",
                                 "dependencies": [],
                                 "validations": [],
                                 "is_danger": true,
@@ -18040,14 +17577,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "privacy.data_clear_section",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Configure privacy policy settings and content for vendor stores.",
-                "dependency_key": "privacy",
                 "dependencies": [],
                 "validations": [],
                 "priority": 100,
@@ -18082,7 +17617,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_compliance_eu_compliance_eu_compliance_settings_eu_vendor_registration_display",
                                 "children": [],
                                 "description": "Show required EU business fields during vendor account creation.",
-                                "dependency_key": "eu_compliance.eu_compliance_settings.eu_vendor_registration_display",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -18119,7 +17653,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_compliance_eu_compliance_eu_compliance_settings_vendor_extra_fields",
                                 "children": [],
                                 "description": "Checked fields will be used as extra fields for vendors.",
-                                "dependency_key": "eu_compliance.eu_compliance_settings.vendor_extra_fields",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "multicheck",
@@ -18159,7 +17692,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_compliance_eu_compliance_eu_compliance_settings_customer_extra_fields",
                                 "children": [],
                                 "description": "Checked fields will be used as extra fields for customers.",
-                                "dependency_key": "eu_compliance.eu_compliance_settings.customer_extra_fields",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "multicheck",
@@ -18195,7 +17727,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_compliance_eu_compliance_eu_compliance_settings_germanized_support_vendors",
                                 "children": [],
                                 "description": "This will add a new section in vendor product edit page with fields provided by Germanized for WooCommerce plugin.",
-                                "dependency_key": "eu_compliance.eu_compliance_settings.germanized_support_vendors",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -18232,7 +17763,6 @@ const dokanSettingsSchema: SettingsElement[] = [
                                 "hook_key": "dokan_settings_compliance_eu_compliance_eu_compliance_settings_vendor_invoice_number_override",
                                 "children": [],
                                 "description": "If you enable this setting, each vendor will be able to customize invoice number for their orders.",
-                                "dependency_key": "eu_compliance.eu_compliance_settings.vendor_invoice_number_override",
                                 "dependencies": [],
                                 "validations": [],
                                 "variant": "switch",
@@ -18261,14 +17791,12 @@ const dokanSettingsSchema: SettingsElement[] = [
                             }
                         ],
                         "description": "",
-                        "dependency_key": "eu_compliance.eu_compliance_settings",
                         "dependencies": [],
                         "validations": [],
                         "doc_link": ""
                     }
                 ],
                 "description": "Collect mandatory business information required by European Union law for marketplace operations.",
-                "dependency_key": "eu_compliance",
                 "dependencies": [],
                 "validations": [],
                 "priority": 200,
@@ -18277,7 +17805,6 @@ const dokanSettingsSchema: SettingsElement[] = [
             }
         ],
         "description": "Configure compliance settings, privacy policies, and legal requirements.",
-        "dependency_key": "",
         "dependencies": [],
         "validations": []
     }
@@ -18290,6 +17817,92 @@ export const DokanSettings: Story = {
     args: {
         schema: dokanSettingsSchema,
         title: 'Dokan Settings',
+    },
+    render: (args) => <SettingsStoryWrapper {...args} />,
+};
+
+// ============================================
+// Collapsible Switch — toggle + chevron header revealing nested config
+// ============================================
+
+const collapsibleSwitchSchema: SettingsElement[] = [
+    { id: 'integrations', type: 'page', label: 'Integrations', icon: 'Plug', priority: 10 },
+    {
+        id: 'social_connect',
+        type: 'section',
+        label: 'Social Connect',
+        description: 'Let users verify their identity through social providers.',
+        page_id: 'integrations',
+        priority: 10,
+    },
+
+    // ── Facebook (collapsible_switch) ──
+    {
+        id: 'facebook_enabled',
+        type: 'field',
+        variant: 'collapsible_switch',
+        section_id: 'social_connect',
+        title: 'Facebook',
+        description: 'Configure your Facebook API settings.',
+        image_url: image,
+        collapsed: true,
+        default: 'off',
+        enable_state: { label: 'Enabled', value: 'on' },
+        disable_state: { label: 'Disabled', value: 'off' },
+    },
+    {
+        id: 'facebook_notice',
+        type: 'field',
+        variant: 'info',
+        field_group_id: 'facebook_enabled',
+        title: "Create an App if you don't have one, then fill in the App ID and Secret below.",
+        link_title: 'Create an App',
+        link_url: 'https://developers.facebook.com/apps/',
+        show_icon: true,
+    },
+    { id: 'facebook_app_id', type: 'field', variant: 'show_hide', field_group_id: 'facebook_enabled', title: 'App ID' },
+    { id: 'facebook_app_secret', type: 'field', variant: 'show_hide', field_group_id: 'facebook_enabled', title: 'App Secret' },
+    {
+        id: 'facebook_redirect_url',
+        type: 'field',
+        variant: 'copy_field',
+        field_group_id: 'facebook_enabled',
+        title: 'Site URL',
+        description: 'Your store URL, which will be required in creating the App.',
+        readonly: true,
+        default: 'https://example.com/wc-api/social-verification/',
+    },
+
+    // ── Google (collapsible_switch) ──
+    {
+        id: 'google_enabled',
+        type: 'field',
+        variant: 'collapsible_switch',
+        section_id: 'social_connect',
+        title: 'Google',
+        description: 'Configure your Google API settings.',
+        image_url: image2,
+        collapsed: true,
+        default: 'off',
+        enable_state: { label: 'Enabled', value: 'on' },
+        disable_state: { label: 'Disabled', value: 'off' },
+    },
+    { id: 'google_client_id', type: 'field', variant: 'show_hide', field_group_id: 'google_enabled', title: 'Client ID' },
+    { id: 'google_client_secret', type: 'field', variant: 'show_hide', field_group_id: 'google_enabled', title: 'Client Secret' },
+];
+
+/**
+ * `collapsible_switch` — a settings field whose header row carries an icon,
+ * title, description, an enable **toggle**, AND a **chevron**. The toggle
+ * persists the field value; the chevron expands/collapses the nested children
+ * (attached in the flat schema via `field_group_id` pointing at the switch's
+ * id). Initial collapsed state comes from `collapsed`.
+ */
+export const CollapsibleSwitch: Story = {
+    args: {
+        schema: collapsibleSwitchSchema,
+        title: 'Integrations',
+        hookPrefix: 'my_plugin',
     },
     render: (args) => <SettingsStoryWrapper {...args} />,
 };
