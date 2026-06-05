@@ -168,7 +168,7 @@ function RadioImageCard({
               {typeof label === 'string' ? <RawHTML>{label}</RawHTML> : label}
             </FieldTitle>
           </div>
-          <FieldContent className={cn('p-0 w-full')} >
+          <FieldContent className={cn('px-5 py-4 w-full')} >
             <div className="flex flex-col gap-3 w-full">
               {description && (
                 <FieldDescription className="text-center">
