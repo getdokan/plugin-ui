@@ -163,7 +163,7 @@ export function SettingsSidebar({
             {searchable && (
                 <div className="shrink-0 p-2 px-4 mt-2">
                     <div className="relative">
-                        <Search className="text-muted-foreground pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2" />
+                        <Search className="text-muted-foreground pointer-events-none absolute left-2.5 inset-y-0 my-auto size-4" />
                         <Input
                             type="search"
                             value={search}

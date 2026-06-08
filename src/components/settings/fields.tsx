@@ -217,7 +217,7 @@ export function ShowHideField({ element, onChange }: FieldComponentProps) {
         <button
           type="button"
           onClick={() => setShow(!show)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+          className="absolute right-3 inset-y-0 flex items-center text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
           aria-label={show ? "Hide" : "Show"}
         >
           {show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
@@ -236,7 +236,7 @@ export function NumberField({ element, onChange, ...rest }: FieldComponentProps)
     <FieldWrapper element={element} {...rest}>
       <div className="flex items-center gap-1 relative max-w-56 md:max-w-full w-full">
         {element.prefix && (
-          <span className="text-sm text-muted-foreground shrink-0 absolute left-3 top-1/2 -translate-y-1/2 hover:text-foreground transition-colors">
+          <span className="text-sm text-muted-foreground shrink-0 absolute left-3 inset-y-0 flex items-center hover:text-foreground transition-colors">
             <RawHTML>{element.prefix}</RawHTML>
           </span>
         )}
@@ -259,7 +259,7 @@ export function NumberField({ element, onChange, ...rest }: FieldComponentProps)
           className={ cn(  element?.postfix && 'pr-10', element?.prefix && 'pl-10' ) }
         />
         {element.postfix && (
-          <span className="text-sm text-muted-foreground shrink-0 absolute right-3 top-1/2 -translate-y-1/2 hover:text-foreground transition-colors">
+          <span className="text-sm text-muted-foreground shrink-0 absolute right-3 inset-y-0 flex items-center hover:text-foreground transition-colors">
             <RawHTML>{element.postfix}</RawHTML>
           </span>
         )}
