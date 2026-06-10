@@ -12,7 +12,15 @@ export interface OnboardingStep {
     label?: string;
     description?: string;
     icon?: string;
-    schema: SettingsElement[];  // page subtree: [{id, type:'page'}, sections…, fields…]
+    /**
+     * The step's settings elements as a page subtree:
+     * `[{ id, type: 'page' }, ...sections, ...fields]`.
+     *
+     * NOTE: all steps are merged into ONE flat provider schema, so field ids
+     * must be globally unique across the ENTIRE wizard (not just within a step).
+     * Duplicate field ids across steps collide silently in the shared values map.
+     */
+    schema: SettingsElement[];
     skippable?: boolean;
     completed?: boolean;
 }
