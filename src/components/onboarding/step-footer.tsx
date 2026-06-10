@@ -2,7 +2,7 @@ import { Button } from '../ui/button';
 import type { StepFooterRenderProps } from './onboarding-types';
 
 export function StepFooter({
-    isFirst, isLast, skippable, dirty, hasErrors, onBack, onSkip, onNext, onFinish,
+    isFirst, isLast, skippable, hasErrors, onBack, onSkip, onNext, onFinish,
 }: StepFooterRenderProps) {
     return (
         <div
