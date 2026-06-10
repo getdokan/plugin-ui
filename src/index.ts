@@ -386,6 +386,15 @@ export {
 } from './components/settings';
 export { SettingsSkeleton } from './components/settings/settings-skeleton';
 
+// Onboarding (schema-driven setup wizard)
+export { Onboarding } from './components/onboarding';
+export type {
+    OnboardingProps,
+    OnboardingStep,
+    StepIndicatorRenderProps,
+    StepFooterRenderProps,
+} from './components/onboarding/onboarding-types';
+
 // ============================================
 // Theme Presets
 // ============================================
