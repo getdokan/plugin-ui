@@ -32,8 +32,8 @@ export interface StepFooterRenderProps {
     hasErrors: boolean;
     onBack: () => void;
     onSkip: () => void;
-    onNext: () => void;   // saves current step, then advances
-    onFinish: () => void; // saves last step, then completes
+    onNext: () => void | Promise<void>;   // saves current step, then advances
+    onFinish: () => void | Promise<void>; // saves last step, then completes
 }
 
 export interface OnboardingProps {

@@ -30,6 +30,8 @@ export function Onboarding({
 
     // Merge every step's page subtree into one schema; force hide_save on each
     // page so SettingsContent suppresses its own save button (footer owns it).
+    // NOTE: callers should pass a stable `steps` reference (useMemo or a
+    // module-level constant) to avoid rebuilding the merged schema each render.
     const schema = useMemo<SettingsElement[]>(() => {
         const out: SettingsElement[] = [];
         for (const step of steps) {
@@ -53,7 +55,7 @@ export function Onboarding({
         <SettingsProvider
             schema={schema}
             values={values}
-            onChange={onChange ? (scopeId, key, value) => onChange(scopeId, key, value) : undefined}
+            onChange={onChange}
             onSave={onStepSave}
             loading={loading}
             hookPrefix={hookPrefix}
