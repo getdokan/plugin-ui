@@ -41,6 +41,14 @@ export const Vertical: Story = {
     args: { steps, orientation: 'vertical' },
 };
 
+export const NoIndicator: Story = {
+    args: {
+        steps,
+        orientation: 'horizontal',
+        renderStepIndicator: () => null,
+    },
+};
+
 export const CustomIndicator: Story = {
     args: {
         steps,
