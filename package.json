@@ -54,6 +54,7 @@
     "build-storybook": "storybook build",
     "lint": "eslint src --ext .ts,.tsx",
     "typecheck": "tsc --noEmit",
+    "test": "wp-scripts test-unit-js",
     "prepare": "npm run build"
   },
   "peerDependencies": {
