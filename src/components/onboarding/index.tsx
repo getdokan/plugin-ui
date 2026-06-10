@@ -100,9 +100,9 @@ function OnboardingInner({
         goTo(id);
     };
 
-    const persist = () => {
+    const persist = async () => {
         if (hasScopeErrors(active) || !save) return;
-        save(active, getPageValues(active)); // routes to onStepSave(stepId, tree, flat)
+        await save(active, getPageValues(active)); // routes to onStepSave(stepId, tree, flat)
     };
 
     const indicatorProps = {
@@ -122,8 +122,8 @@ function OnboardingInner({
         hasErrors: hasScopeErrors(active),
         onBack: () => navigate(prevStepId(steps, active)),
         onSkip: () => { onSkip?.(active); navigate(nextStepId(steps, active)); },
-        onNext: () => { persist(); navigate(nextStepId(steps, active)); },
-        onFinish: () => { persist(); onComplete?.(); },
+        onNext: async () => { await persist(); navigate(nextStepId(steps, active)); },
+        onFinish: async () => { await persist(); onComplete?.(); },
     };
 
     const horizontal = orientation === 'horizontal';
