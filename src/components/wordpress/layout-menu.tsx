@@ -230,6 +230,53 @@ export const LayoutMenu = forwardRef<HTMLDivElement, LayoutMenuProps>(
       [groups, search]
     );
 
+    // Accordion state for top-level (depth-0) parent items: only one group is
+    // expanded at a time. A single id keeps siblings mutually exclusive —
+    // opening one collapses the rest.
+    const [openItemId, setOpenItemId] = useState<string | null>(null);
+    const toggleOpen = useCallback(
+      (id: string) => setOpenItemId((prev) => (prev === id ? null : id)),
+      []
+    );
+
+    // Auto-open the group that owns the active item (and re-open it whenever the
+    // active selection moves to a different group), so a deep link or navigation
+    // expands the right group without leaving stale ones open.
+    const topLevelItems = useMemo(
+      () =>
+        filteredGroups.length > 0
+          ? filteredGroups.flatMap((g) => g.items)
+          : filteredItems,
+      [filteredGroups, filteredItems]
+    );
+
+    const activeParentId = useMemo(() => {
+      for (const it of topLevelItems) {
+        if (
+          it.children?.length &&
+          (it.id === activeItemId || hasActiveDescendant(it, activeItemId))
+        ) {
+          return it.id;
+        }
+      }
+      return null;
+    }, [topLevelItems, activeItemId]);
+
+    // First expandable group — the default-open item when nothing else is
+    // active (e.g. the plain settings landing with no deep link).
+    const firstGroupId = useMemo(
+      () => topLevelItems.find((it) => it.children?.length)?.id ?? null,
+      [topLevelItems]
+    );
+
+    // Open the group owning the active item; fall back to the first group so a
+    // menu is always expanded by default. Only fires when the derived target
+    // changes, so it never fights a manual toggle.
+    useEffect(() => {
+      const target = activeParentId ?? firstGroupId;
+      if (target) setOpenItemId(target);
+    }, [activeParentId, firstGroupId]);
+
     return (
       <EnsureSidebarProvider>
       <SidebarContent
@@ -282,6 +329,8 @@ export const LayoutMenu = forwardRef<HTMLDivElement, LayoutMenuProps>(
                         activeItemClassName={activeItemClassName}
                         onItemClick={onItemClick}
                         renderItem={renderItem}
+                        open={openItemId === item.id}
+                        onToggle={() => toggleOpen(item.id)}
                       />
                     ))}
                   </SidebarMenu>
@@ -302,6 +351,8 @@ export const LayoutMenu = forwardRef<HTMLDivElement, LayoutMenuProps>(
                         activeItemClassName={activeItemClassName}
                         onItemClick={onItemClick}
                         renderItem={renderItem}
+                        open={openItemId === item.id}
+                        onToggle={() => toggleOpen(item.id)}
                       />
                     ))}
                   </SidebarMenu>
@@ -351,6 +402,13 @@ interface MenuItemRendererProps {
   activeItemClassName?: string;
   onItemClick?: (item: LayoutMenuItemData) => void;
   renderItem?: (item: LayoutMenuItemData, depth: number) => ReactNode;
+  /**
+   * Controlled expand state. When `onToggle` is provided the item is an
+   * accordion member — its open state is owned by the parent (single-open
+   * across siblings) instead of local state. Omit both for standalone use.
+   */
+  open?: boolean;
+  onToggle?: () => void;
 }
 
 function MenuItemRenderer({
@@ -361,6 +419,8 @@ function MenuItemRenderer({
   activeItemClassName,
   onItemClick,
   renderItem,
+  open: openProp,
+  onToggle,
 }: MenuItemRendererProps) {
   const hasChildren = item.children && item.children.length > 0;
   const isActive = activeItemId != null && item.id === activeItemId;
@@ -368,21 +428,29 @@ function MenuItemRenderer({
     () => hasActiveDescendant(item, activeItemId),
     [item, activeItemId]
   );
-  const [open, setOpen] = useState(containsActive);
+  // Accordion mode (onToggle provided): open state is controlled by the parent
+  // so opening one sibling collapses the others. Otherwise fall back to local
+  // state with a one-way auto-expand when a descendant is active.
+  const controlled = onToggle !== undefined;
+  const [localOpen, setLocalOpen] = useState(containsActive);
+  const open = controlled ? openProp ?? false : localOpen;
   const submenuId = useId();
 
-  // Auto-expand when a descendant becomes active
   useEffect(() => {
-    if (containsActive) setOpen(true);
-  }, [containsActive]);
+    if (!controlled && containsActive) setLocalOpen(true);
+  }, [controlled, containsActive]);
 
   const handleClick = useCallback(() => {
     if (hasChildren) {
-      setOpen((o) => !o);
+      if (controlled) {
+        onToggle?.();
+      } else {
+        setLocalOpen((o) => !o);
+      }
     }
     item.onClick?.();
     onItemClick?.(item);
-  }, [hasChildren, item, onItemClick]);
+  }, [hasChildren, item, onItemClick, controlled, onToggle]);
 
   // Custom render
   if (renderItem) {
@@ -480,22 +548,29 @@ function MenuItemRenderer({
             )}
           />
         </SidebarMenuButton>
-        {open && (
-          <SidebarMenuSub id={submenuId}>
-            {item.children!.map((child) => (
-              <SubMenuItemRenderer
-                key={child.id}
-                item={child}
-                depth={depth + 1}
-                activeItemId={activeItemId}
-                menuItemClassName={menuItemClassName}
-                activeItemClassName={activeItemClassName}
-                onItemClick={onItemClick}
-                renderItem={renderItem}
-              />
-            ))}
-          </SidebarMenuSub>
-        )}
+        <div
+          className={cn(
+            "grid transition-[grid-template-rows] duration-200 ease-in-out motion-reduce:transition-none",
+            open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          )}
+        >
+          <div className="overflow-hidden">
+            <SidebarMenuSub id={submenuId} aria-hidden={!open}>
+              {item.children!.map((child) => (
+                <SubMenuItemRenderer
+                  key={child.id}
+                  item={child}
+                  depth={depth + 1}
+                  activeItemId={activeItemId}
+                  menuItemClassName={menuItemClassName}
+                  activeItemClassName={activeItemClassName}
+                  onItemClick={onItemClick}
+                  renderItem={renderItem}
+                />
+              ))}
+            </SidebarMenuSub>
+          </div>
+        </div>
       </SidebarMenuItem>
     );
   }
@@ -607,22 +682,29 @@ function SubMenuItemRenderer({
           )}
         />
       </SidebarMenuSubButton>
-      {open && (
-        <SidebarMenuSub id={submenuId}>
-          {item.children!.map((child) => (
-            <SubMenuItemRenderer
-              key={child.id}
-              item={child}
-              depth={depth + 1}
-              activeItemId={activeItemId}
-              menuItemClassName={menuItemClassName}
-              activeItemClassName={activeItemClassName}
-              onItemClick={onItemClick}
-              renderItem={renderItem}
-            />
-          ))}
-        </SidebarMenuSub>
-      )}
+      <div
+        className={cn(
+          "grid transition-[grid-template-rows] duration-200 ease-in-out motion-reduce:transition-none",
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        )}
+      >
+        <div className="overflow-hidden">
+          <SidebarMenuSub id={submenuId} aria-hidden={!open}>
+            {item.children!.map((child) => (
+              <SubMenuItemRenderer
+                key={child.id}
+                item={child}
+                depth={depth + 1}
+                activeItemId={activeItemId}
+                menuItemClassName={menuItemClassName}
+                activeItemClassName={activeItemClassName}
+                onItemClick={onItemClick}
+                renderItem={renderItem}
+              />
+            ))}
+          </SidebarMenuSub>
+        </div>
+      </div>
     </SidebarMenuSubItem>
   );
 }
