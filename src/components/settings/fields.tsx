@@ -446,6 +446,9 @@ export function SelectField({ element, onChange, ...rest }: FieldComponentProps)
     return Icon ? <Icon className="size-4 shrink-0" /> : null;
   };
   const selectedIcon = (selectedOption as { icon?: string } | undefined)?.icon;
+  const placeholder = element.placeholder
+    ? String(element.placeholder)
+    : "Select...";
 
   return (
     <FieldWrapper element={element} {...rest}>
@@ -455,14 +458,17 @@ export function SelectField({ element, onChange, ...rest }: FieldComponentProps)
         disabled={element.disabled}
       >
         <SelectTrigger className="sm:max-w-56">
-          <SelectValue
-            placeholder={
-              element.placeholder ? String(element.placeholder) : "Select..."
-            }
-          >
-            {renderOptionIcon(selectedIcon)}
-            {selectedLabel}
-          </SelectValue>
+          {/* Children win over `placeholder`, and with nothing selected they are
+              both undefined — which renders an empty trigger instead of the
+              prompt. Only pass children once an option actually matches. */}
+          {selectedOption ? (
+            <SelectValue placeholder={placeholder}>
+              {renderOptionIcon(selectedIcon)}
+              {selectedLabel}
+            </SelectValue>
+          ) : (
+            <SelectValue placeholder={placeholder} />
+          )}
         </SelectTrigger>
         <SelectContent>
           {element.options?.map((option) => (
