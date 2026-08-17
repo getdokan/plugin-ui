@@ -53,6 +53,28 @@ function collectSearchableText(element: SettingsElement): string {
     return texts.join(' ').toLowerCase();
 }
 
+/**
+ * Whether anything would actually render under this page/subpage: a field,
+ * section or fieldgroup of its own, or a subpage that itself has content.
+ *
+ * Schemas commonly declare shell pages that a premium add-on fills in later.
+ * Listing those in the sidebar leads to a blank settings screen, so they are
+ * left out until they have something to show.
+ */
+function hasRenderableContent(element: SettingsElement): boolean {
+    return (element.children || []).some((child) => {
+        if (child.display === false) {
+            return false;
+        }
+        return child.type === 'subpage' ? hasRenderableContent(child) : true;
+    });
+}
+
+/** A subpage that is both displayable and non-empty. */
+function isVisibleSubpage(child: SettingsElement): boolean {
+    return child.type === 'subpage' && child.display !== false && hasRenderableContent(child);
+}
+
 export function SettingsSidebar({
     className,
     searchPlaceholder,
@@ -78,7 +100,7 @@ export function SettingsSidebar({
 
         const mapSubpageToItem = (element: SettingsElement): LayoutMenuItemData => {
             const nestedSubpages = (element.children || [])
-                .filter((child) => child.type === 'subpage' && child.display !== false)
+                .filter(isVisibleSubpage)
                 .map(mapSubpageToItem);
 
             searchIdx.set(element.id, collectSearchableText(element));
@@ -93,10 +115,10 @@ export function SettingsSidebar({
         };
 
         const menuItems: LayoutMenuItemData[] = schema
-            .filter((page) => page.display !== false)
+            .filter((page) => page.display !== false && hasRenderableContent(page))
             .map((page) => {
                 const subpageItems = (page.children || [])
-                    .filter((child) => child.type === 'subpage' && child.display !== false)
+                    .filter(isVisibleSubpage)
                     .map(mapSubpageToItem);
 
                 searchIdx.set(page.id, collectSearchableText(page));
@@ -184,9 +206,7 @@ export function SettingsSidebar({
                     const isPage = schema.some((p) => p.id === item.id);
                     if (isPage) {
                         const page = schema.find((p) => p.id === item.id);
-                        const hasSubpages = page?.children?.some(
-                            (c) => c.type === 'subpage' && c.display !== false
-                        );
+                        const hasSubpages = page?.children?.some(isVisibleSubpage);
                         if (!hasSubpages) {
                             // Page without subpages — navigate directly
                             setActivePage(item.id);
