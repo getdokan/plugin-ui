@@ -9,7 +9,7 @@ export function SettingsSkeleton({ className }: { className?: string }) {
     return (
         <div
             className={cn(
-                'relative flex min-h-125 rounded-sm border border-border bg-background overflow-hidden',
+                'relative flex min-h-125 rounded-sm border border-border bg-background text-sm overflow-hidden',
                 className
             )}
             aria-busy="true"

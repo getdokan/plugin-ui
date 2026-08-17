@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { ChevronRight, Search } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import {
   forwardRef,
   useCallback,
@@ -300,7 +300,7 @@ export const LayoutMenu = forwardRef<HTMLDivElement, LayoutMenuProps>(
 
         {filteredGroups.length > 0
           ? filteredGroups.map((group) => (
-              <SidebarGroup key={group.id} className={group.className}>
+              <SidebarGroup key={group.id} className={cn("px-7", group.className)}>
                 {showGroupLabels && (
                   <SidebarGroupLabel>
                     {renderGroupLabel ? (
@@ -338,7 +338,7 @@ export const LayoutMenu = forwardRef<HTMLDivElement, LayoutMenuProps>(
               </SidebarGroup>
             ))
           : filteredItems.length > 0 && (
-              <SidebarGroup>
+              <SidebarGroup className="px-7">
                 <SidebarGroupContent>
                   <SidebarMenu>
                     {filteredItems.map((item) => (
@@ -411,6 +411,25 @@ interface MenuItemRendererProps {
   onToggle?: () => void;
 }
 
+// Rows carry no horizontal padding: the pill spans the group's full padded
+// width, putting the icon flush with its edge. Hover answers with color only —
+// the fill belongs to whatever is selected — so the `bg` rules that
+// sidebarMenuButtonVariants sets for hover/active/open are cancelled here.
+const MENU_ROW_CLASS =
+  "min-h-10 gap-2 rounded-sm px-0 text-sm hover:bg-transparent hover:text-primary active:bg-transparent active:text-primary data-open:hover:bg-transparent data-open:hover:text-primary";
+
+// Sub-rows have no icon, so `ps-7` reproduces the parent's label inset and lines
+// a subpage up under its page's title. `translate-x-0` undoes the sub-button's
+// own `-translate-x-px`, which would sit the pill a pixel left of the parents,
+// and the span rules let long subpage names wrap instead of truncating. These
+// rows render as <button>, whose UA default centers its text — `text-start`
+// undoes that, which only shows once a label wraps to a second line.
+const SUB_ROW_CLASS =
+  "h-auto min-h-8 gap-2 rounded-sm ps-7 pe-0 py-1.5 text-sm text-start translate-x-0 rtl:translate-x-0 [&>span:last-child]:overflow-visible [&>span:last-child]:whitespace-normal";
+
+// Indent and connector rule removed so sub pills align with the parent rows.
+const SUB_LIST_CLASS = "mx-0 gap-0.5 border-s-0 px-0 translate-x-0 rtl:translate-x-0";
+
 function MenuItemRenderer({
   item,
   depth,
@@ -477,6 +496,7 @@ function MenuItemRenderer({
           isActive={isActive}
           onClick={handleClick}
           className={cn(
+            MENU_ROW_CLASS,
             menuItemClassName,
             isActive && activeItemClassName,
             item.className,
@@ -485,7 +505,7 @@ function MenuItemRenderer({
           disabled={item.disabled}
         >
             {item.icon && (
-              <span className="flex shrink-0 [&_svg]:size-4">{item.icon}</span>
+              <span className="flex shrink-0 [&_svg]:size-5">{item.icon}</span>
             )}
             <span className="min-w-0 flex-1">
               <span className="block truncate">{item.label}</span>
@@ -516,6 +536,8 @@ function MenuItemRenderer({
           isActive={isActive}
           onClick={handleClick}
           className={cn(
+            MENU_ROW_CLASS,
+            containsActive && "text-primary",
             menuItemClassName,
             isActive && activeItemClassName,
             item.className,
@@ -526,7 +548,7 @@ function MenuItemRenderer({
           aria-controls={submenuId}
         >
           {item.icon && (
-            <span className="flex shrink-0 [&_svg]:size-4">{item.icon}</span>
+            <span className="flex shrink-0 [&_svg]:size-5">{item.icon}</span>
           )}
           <span className="min-w-0 flex-1">
             <span className="block truncate">{item.label}</span>
@@ -541,10 +563,10 @@ function MenuItemRenderer({
               </span>
             )}
           </span>
-          <ChevronRight
+          <ChevronDown
             className={cn(
               "ml-auto size-4 shrink-0 transition-transform duration-200",
-              open && "rotate-90"
+              open && "text-primary rotate-180"
             )}
           />
         </SidebarMenuButton>
@@ -561,7 +583,7 @@ function MenuItemRenderer({
             <SidebarMenuSub
               id={submenuId}
               aria-hidden={!open}
-              className="border-s-0 translate-x-0 rtl:translate-x-0"
+              className={SUB_LIST_CLASS}
             >
               {item.children!.map((child) => (
                 <SubMenuItemRenderer
@@ -642,6 +664,7 @@ function SubMenuItemRenderer({
           isActive={isActive}
           onClick={handleClick}
           className={cn(
+            SUB_ROW_CLASS,
             menuItemClassName,
             isActive && activeItemClassName,
             item.className,
@@ -651,7 +674,7 @@ function SubMenuItemRenderer({
           {item.icon && (
             <span className="flex shrink-0 [&_svg]:size-4">{item.icon}</span>
           )}
-          <span className="truncate">{item.label}</span>
+          <span>{item.label}</span>
         </SidebarMenuSubButton>
       </SidebarMenuSubItem>
     );
@@ -669,6 +692,8 @@ function SubMenuItemRenderer({
         isActive={isActive}
         onClick={handleClick}
         className={cn(
+          SUB_ROW_CLASS,
+          containsActive && "text-primary",
           menuItemClassName,
           isActive && activeItemClassName,
           item.className,
@@ -681,11 +706,11 @@ function SubMenuItemRenderer({
         {item.icon && (
           <span className="flex shrink-0 [&_svg]:size-4">{item.icon}</span>
         )}
-        <span className="min-w-0 flex-1 truncate">{item.label}</span>
-        <ChevronRight
+        <span className="min-w-0 flex-1">{item.label}</span>
+        <ChevronDown
           className={cn(
             "ml-auto size-4 shrink-0 transition-transform duration-200",
-            open && "rotate-90"
+            open && "text-primary rotate-180"
           )}
         />
       </SidebarMenuSubButton>
@@ -696,7 +721,7 @@ function SubMenuItemRenderer({
         )}
       >
         <div className="overflow-hidden">
-          <SidebarMenuSub id={submenuId} aria-hidden={!open}>
+          <SidebarMenuSub id={submenuId} aria-hidden={!open} className={SUB_LIST_CLASS}>
             {item.children!.map((child) => (
               <SubMenuItemRenderer
                 key={child.id}

@@ -106,7 +106,7 @@ function SettingsInner({
     return (
         <div
             className={cn(
-                'relative flex min-h-125 rounded-sm border border-border bg-background overflow-hidden',
+                'relative flex min-h-125 rounded-sm border border-border bg-background text-sm overflow-hidden',
                 className
             )}
             data-testid="settings-root"
@@ -130,7 +130,7 @@ function SettingsInner({
                 <aside
                     className={cn(
                         // Desktop: static, always visible
-                        'hidden lg:flex lg:w-64 shrink-0 flex-col border-r border-border bg-muted/30 overflow-hidden',
+                        'hidden lg:flex lg:w-64 shrink-0 flex-col border-r border-border bg-background overflow-hidden',
                         // Mobile: fixed slide-in drawer
                         'max-lg:fixed max-lg:inset-y-0 max-lg:left-0 max-lg:z-50 max-lg:w-72 max-lg:flex max-lg:flex-col max-lg:bg-background max-lg:shadow-xl',
                         'max-lg:transition-transform max-lg:duration-200 max-lg:ease-out',

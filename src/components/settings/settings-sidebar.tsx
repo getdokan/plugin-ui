@@ -181,16 +181,17 @@ export function SettingsSidebar({
 
     return (
         <div className={cn('flex flex-col h-full', className)} data-testid="settings-sidebar">
-            {/* Deep-search input */}
+            {/* Deep-search input. Same 28px gutter the menu rows use, so the
+                field's edges line up with the hover/active pills below it. */}
             {searchable && (
-                <div className="shrink-0 p-2 px-4 mt-2">
+                <div className="shrink-0 px-7 pt-7 pb-2">
                     <div className="relative">
-                        <Search className="text-muted-foreground pointer-events-none absolute left-2.5 inset-y-0 my-auto size-4" />
+                        <Search className="text-muted-foreground pointer-events-none absolute left-3 inset-y-0 my-auto size-4" />
                         <Input
                             type="search"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="h-8 pl-8"
+                            className="h-9 ps-9"
                             placeholder={searchPlaceholder || 'Search...'}
                             aria-label="Search settings"
                             data-testid="settings-search"
