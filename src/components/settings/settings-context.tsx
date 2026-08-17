@@ -5,6 +5,7 @@ import {
     useContext,
     useEffect,
     useMemo,
+    useRef,
     useState,
     type ReactNode,
 } from 'react';
@@ -23,6 +24,9 @@ import {
 
 /** Filter function signature compatible with @wordpress/hooks applyFilters */
 export type ApplyFiltersFunction = (hookName: string, value: any, ...args: any[]) => any;
+
+/** A sidebar navigation held back by the unsaved-changes guard. */
+export type PendingNavigation = { type: 'page' | 'subpage'; id: string };
 
 export interface SettingsContextValue {
     /** Parsed hierarchical settings tree */
@@ -67,6 +71,21 @@ export interface SettingsContextValue {
     isSidebarVisible: boolean;
     /** Check if any field on a specific page has been modified */
     isPageDirty: (pageId: string) => boolean;
+    /** True when any tracked field anywhere in the schema differs from its last-saved value */
+    isDirty: boolean;
+    /**
+     * Sidebar navigation the unsaved-changes guard is holding back, or null when
+     * nothing is pending. The Settings root renders its confirm dialog off this.
+     */
+    pendingNavigation: PendingNavigation | null;
+    /**
+     * Discard unsaved changes and perform the held navigation. Pass the target
+     * explicitly when the caller has it — a closing dialog clears the pending
+     * state before its action handler runs.
+     */
+    confirmNavigation: (target?: PendingNavigation) => void;
+    /** Drop the held navigation and stay on the current page */
+    cancelNavigation: () => void;
     /** Check if any field on a specific page has a validation error */
     hasScopeErrors: (scopeId: string) => boolean;
     /** Get only the values that belong to a specific page */
@@ -101,6 +120,22 @@ export interface SettingsProviderProps {
     initialPage?: string;
     /** Called whenever the active page changes. Use to sync a URL query param. */
     onNavigate?: (pageId: string) => void;
+    /**
+     * Called whenever the dirty state flips. Consumers use this to guard their own
+     * router (e.g. React Router's `useBlocker`), which this component can't see.
+     */
+    onDirtyChange?: (dirty: boolean) => void;
+    /**
+     * Called when unsaved changes are discarded (the user chose to leave anyway).
+     * Controlled consumers — those passing `values` — must reset their own state
+     * here, since their values take precedence over this provider's.
+     */
+    onDiscardChanges?: () => void;
+    /**
+     * Hold back sidebar navigation and warn on browser unload while there are
+     * unsaved changes. Default: true.
+     */
+    confirmOnLeave?: boolean;
 }
 
 export function SettingsProvider({
@@ -115,6 +150,9 @@ export function SettingsProvider({
     applyFilters: applyFiltersProp,
     initialPage,
     onNavigate,
+    onDirtyChange,
+    onDiscardChanges,
+    confirmOnLeave = true,
 }: SettingsProviderProps) {
     // Format schema (handles both flat and hierarchical)
     const schema = useMemo(() => formatSettingsData(rawSchema), [rawSchema]);
@@ -240,6 +278,37 @@ export function SettingsProvider({
         },
         [scopeFieldKeysMap, values, initialValues]
     );
+
+    // Dirty across every scope, not just the visible one — the sidebar can leave a
+    // modified page behind, and a consumer's router guard needs the whole picture.
+    const isDirty = useMemo(
+        () =>
+            Array.from(scopeFieldKeysMap.values()).some((keys) =>
+                keys.some((key) => values[key] !== initialValues[key])
+            ),
+        [scopeFieldKeysMap, values, initialValues]
+    );
+
+    // Report dirtiness outward so consumers can block their own navigation.
+    useEffect(() => {
+        onDirtyChange?.(isDirty);
+    }, [isDirty, onDirtyChange]);
+
+    // Browser-level exits (tab close, reload, WordPress admin menu links) can only
+    // be intercepted through beforeunload, and the browser owns the wording.
+    useEffect(() => {
+        if (!confirmOnLeave || !isDirty) return;
+
+        const handler = (event: BeforeUnloadEvent) => {
+            event.preventDefault();
+            // Legacy browsers need returnValue set to show their prompt.
+            event.returnValue = '';
+            return '';
+        };
+
+        window.addEventListener('beforeunload', handler);
+        return () => window.removeEventListener('beforeunload', handler);
+    }, [confirmOnLeave, isDirty]);
 
     // Per-scope error check
     const hasScopeErrors = useCallback(
@@ -405,8 +474,9 @@ export function SettingsProvider({
         [values, idIndex]
     );
 
-    // Navigation helpers
-    const handleSetActivePage = useCallback(
+    // Navigation helpers — these move immediately. The guarded wrappers further
+    // down are what the sidebar actually calls.
+    const navigateToPage = useCallback(
         (pageId: string) => {
             setActivePage(pageId);
             onNavigate?.(pageId);
@@ -428,7 +498,7 @@ export function SettingsProvider({
         [schema, onNavigate]
     );
 
-    const handleSetActiveSubpage = useCallback(
+    const navigateToSubpage = useCallback(
         (subpageId: string) => {
             setActiveSubpage(subpageId);
 
@@ -460,6 +530,80 @@ export function SettingsProvider({
         },
         [schema, activePage]
     );
+
+    // ── Unsaved-changes guard ──
+    //
+    // The sidebar calls the handlers below. While the form is dirty they park the
+    // request in `pendingNavigation` instead of moving, and the Settings root
+    // renders a confirm dialog off that state. Confirming discards the edits and
+    // completes the navigation; cancelling drops the request.
+    const [pendingNavigation, setPendingNavigation] = useState<PendingNavigation | null>(null);
+    const pendingNavigationRef = useRef<PendingNavigation | null>(null);
+
+    const runNavigation = useCallback(
+        (target: PendingNavigation) => {
+            if (target.type === 'page') {
+                navigateToPage(target.id);
+            } else {
+                navigateToSubpage(target.id);
+            }
+        },
+        [navigateToPage, navigateToSubpage]
+    );
+
+    const guardNavigation = useCallback(
+        (target: PendingNavigation) => {
+            if (confirmOnLeave && isDirty) {
+                pendingNavigationRef.current = target;
+                setPendingNavigation(target);
+                return;
+            }
+            runNavigation(target);
+        },
+        [confirmOnLeave, isDirty, runNavigation]
+    );
+
+    const handleSetActivePage = useCallback(
+        (pageId: string) => guardNavigation({ type: 'page', id: pageId }),
+        [guardNavigation]
+    );
+
+    const handleSetActiveSubpage = useCallback(
+        (subpageId: string) => guardNavigation({ type: 'subpage', id: subpageId }),
+        [guardNavigation]
+    );
+
+    // Roll every tracked field back to its last-saved value and drop the errors
+    // those edits produced. Only the values this provider owns can be reset; a
+    // consumer passing `values` keeps precedence, which is what `onDiscardChanges`
+    // is for — mirror the reset in your own state.
+    const discardChanges = useCallback(() => {
+        setInternalValues(initialValues);
+        setErrors({});
+        onDiscardChanges?.();
+    }, [initialValues, onDiscardChanges]);
+
+    // Takes the target explicitly because the dialog's own dismissal fires
+    // `onOpenChange` — and therefore `cancelNavigation` — before the action
+    // button's `onClick`, so by then the state is already cleared. The dialog
+    // passes the target it captured when it rendered; the ref is the fallback
+    // for any caller that has none.
+    const confirmNavigation = useCallback(
+        (target?: PendingNavigation) => {
+            const destination = target ?? pendingNavigationRef.current;
+            if (!destination) return;
+            pendingNavigationRef.current = null;
+            setPendingNavigation(null);
+            discardChanges();
+            runNavigation(destination);
+        },
+        [discardChanges, runNavigation]
+    );
+
+    const cancelNavigation = useCallback(() => {
+        pendingNavigationRef.current = null;
+        setPendingNavigation(null);
+    }, []);
 
     const getActivePage = useCallback(
         () => schema.find((p) => p.id === activePage),
@@ -571,6 +715,10 @@ export function SettingsProvider({
             getActiveTabs,
             isSidebarVisible,
             isPageDirty,
+            isDirty,
+            pendingNavigation,
+            confirmNavigation,
+            cancelNavigation,
             hasScopeErrors,
             getPageValues,
             save: handleOnSave,
@@ -597,6 +745,10 @@ export function SettingsProvider({
             getActiveTabs,
             isSidebarVisible,
             isPageDirty,
+            isDirty,
+            pendingNavigation,
+            confirmNavigation,
+            cancelNavigation,
             hasScopeErrors,
             getPageValues,
             handleOnSave,

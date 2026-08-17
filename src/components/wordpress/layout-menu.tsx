@@ -555,7 +555,14 @@ function MenuItemRenderer({
           )}
         >
           <div className="overflow-hidden">
-            <SidebarMenuSub id={submenuId} aria-hidden={!open}>
+            {/* No connector rule down the left: the indent plus the active pill
+                already read as nesting. `translate-x` reset too — it only existed
+                to sit the items off that rule. */}
+            <SidebarMenuSub
+              id={submenuId}
+              aria-hidden={!open}
+              className="border-s-0 translate-x-0 rtl:translate-x-0"
+            >
               {item.children!.map((child) => (
                 <SubMenuItemRenderer
                   key={child.id}

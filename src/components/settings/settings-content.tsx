@@ -7,6 +7,7 @@ import { ChevronDown, FileText, Info } from "lucide-react";
 import { ScrollArea, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui";
 import { Button } from "@/components/ui/button";
 import { RawHTML } from "@wordpress/element";
+import { DANGER_BORDER, DANGER_SURFACE, DANGER_TEXT } from "./fields";
 
 // ============================================
 // Settings Content — renders heading, tabs, sections
@@ -178,7 +179,7 @@ function ContentBlock({ element }: { element: SettingsElementType }) {
 
         case 'subsection':
             return (
-                <div className="rounded-lg border border-border bg-card overflow-hidden" data-testid={`settings-subsection-${element.id}`}>
+                <div className="rounded-sm border border-border bg-card overflow-hidden" data-testid={`settings-subsection-${element.id}`}>
                     <SettingsSubSection element={element} />
                 </div>
             );
@@ -191,14 +192,14 @@ function ContentBlock({ element }: { element: SettingsElementType }) {
                 return <FieldRenderer element={element} />;
             }
             return (
-                <div className="rounded-lg border border-border bg-card overflow-hidden" data-testid={`settings-field-block-${element.id}`}>
+                <div className="rounded-sm border border-border bg-card overflow-hidden" data-testid={`settings-field-block-${element.id}`}>
                     <FieldRenderer element={element} />
                 </div>
             );
 
         case 'fieldgroup':
             return (
-                <div className="rounded-lg border border-border bg-card overflow-hidden" data-testid={`settings-fieldgroup-${element.id}`}>
+                <div className="rounded-sm border border-border bg-card overflow-hidden" data-testid={`settings-fieldgroup-${element.id}`}>
                     <SettingsFieldGroup element={element} />
                 </div>
             );
@@ -243,7 +244,7 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
     const HeadingTag: keyof JSX.IntrinsicElements = 'div';
 
     return (
-        <div className={ cn( 'rounded-lg border overflow-hidden', section.is_danger ? 'bg-destructive/10 border-destructive/20' : 'border-border bg-card' ) } data-testid={`settings-section-${section.id}`}>
+        <div className={ cn( 'rounded-sm border overflow-hidden', section.is_danger ? `${DANGER_SURFACE} ${DANGER_BORDER}` : 'border-border bg-card' ) } data-testid={`settings-section-${section.id}`}>
             {hasHeading && (
                 <HeadingTag
                     {...(collapsible
@@ -265,7 +266,7 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
                     <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2">
                             {sectionLabel && (
-                              <h3 className={ cn( 'text-lg font-semibold', section.is_danger ? 'text-destructive' : 'text-foreground' ) }>
+                              <h3 className={ cn( 'text-lg font-semibold', section.is_danger ? DANGER_TEXT : 'text-foreground' ) }>
                                   {sectionLabel}
                               </h3>
                             )}
@@ -290,7 +291,7 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
                         </div>
 
                         {section.description && (
-                            <p className={ cn( 'text-sm', section.is_danger ? 'text-destructive' : 'text-muted-foreground' ) }>
+                            <p className={ cn( 'text-sm', section.is_danger ? DANGER_TEXT : 'text-muted-foreground' ) }>
                                 {section.description}
                             </p>
                         )}
