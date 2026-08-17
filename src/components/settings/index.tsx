@@ -86,7 +86,7 @@ function SettingsInner({
     return (
         <div
             className={cn(
-                'relative flex min-h-125 rounded-lg border border-border bg-background overflow-hidden',
+                'relative flex min-h-125 rounded-sm border border-border bg-background overflow-hidden',
                 className
             )}
             data-testid="settings-root"

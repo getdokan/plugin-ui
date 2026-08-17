@@ -47,6 +47,24 @@ import { useSettings } from "./settings-context";
 import { RawHTML } from '@wordpress/element';
 
 // ============================================
+// Danger Surface Palette
+// ============================================
+//
+// Shared by every destructive settings surface — sections flagged `is_danger`
+// (see settings-content) and the fields that sit inside them. Fixed brand values
+// rather than the theme's `--destructive`, which is tuned for solid fills
+// (buttons, switch tracks) and reads too hot as body copy on a pale tint.
+
+/** Card background for a danger block: #E64E61 at 7% alpha. */
+export const DANGER_SURFACE = 'bg-[#E64E6112]';
+
+/** Hairline around a danger block: the same #E64E61 at 20% alpha. */
+export const DANGER_BORDER = 'border-[#E64E6133]';
+
+/** Title, icon and description color inside a danger block. */
+export const DANGER_TEXT = 'text-[#9F2225]';
+
+// ============================================
 // Shared Field Wrapper (label + description + tooltip + error)
 // ============================================
 
@@ -141,12 +159,12 @@ function FieldLabel({ element }: { element: SettingsElement }) {
       )}
       <div className="flex flex-col gap-1 w-full">
         <div className="flex items-center gap-2">
-          <span className={ cn( 'text-sm font-semibold', element?.is_danger ? 'text-destructive' : 'text-foreground' ) }>
+          <span className={ cn( 'text-sm font-semibold', element?.is_danger ? DANGER_TEXT : 'text-foreground' ) }>
             {displayLabel}
           </span>
 
           {IconComponent && (
-            <IconComponent className={ cn( 'size-4', element?.is_danger ? 'text-destructive' : 'text-primary' ) } />
+            <IconComponent className={ cn( 'size-4', element?.is_danger ? DANGER_TEXT : 'text-primary' ) } />
           )}
 
           {element.tooltip && (
@@ -154,7 +172,7 @@ function FieldLabel({ element }: { element: SettingsElement }) {
               <Tooltip>
                 <TooltipTrigger>
                   <button type="button" className="inline-flex">
-                    <Info className={ cn( 'size-3.5 cursor-help', element?.is_danger ? 'text-destructive' : 'text-muted-foreground' ) } />
+                    <Info className={ cn( 'size-3.5 cursor-help', element?.is_danger ? DANGER_TEXT : 'text-muted-foreground' ) } />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -165,7 +183,7 @@ function FieldLabel({ element }: { element: SettingsElement }) {
           )}
         </div>
         {element.description && (
-          <div className={ cn( 'text-xs leading-relaxed', element?.is_danger ? 'text-destructive' : 'text-muted-foreground' ) }>
+          <div className={ cn( 'text-xs leading-relaxed', element?.is_danger ? DANGER_TEXT : 'text-muted-foreground' ) }>
             <RawHTML>{element.description}</RawHTML>
           </div>
         )}
@@ -325,7 +343,7 @@ export function GoogleAnalyticsField({ element, onChange, ...rest }: FieldCompon
       <FieldWrapper element={element} {...rest}>
         <a
           href={value?.auth_url || "#"}
-          className="flex border border-border rounded-md overflow-hidden hover:border-primary transition-colors group h-10"
+          className="flex border border-border rounded-sm overflow-hidden hover:border-primary transition-colors group h-10"
         >
           <div className="bg-muted/30 px-3 flex items-center justify-center border-r border-border group-hover:border-primary">
             <img
@@ -618,9 +636,12 @@ export function InfoPreviewField({ element, onChange }: FieldComponentProps) {
 // ============================================
 //
 // A dedicated variant for destructive toggles (e.g. "Clear all data on
-// uninstall"). Always renders in a destructive-tinted card, always confirms
-// the off → on transition via an AlertDialog. Reads `confirm_modal` from the
-// schema for modal copy and an optional acknowledgement checkbox.
+// uninstall"). Renders destructive-toned copy and always confirms the off → on
+// transition via an AlertDialog. Reads `confirm_modal` from the schema for modal
+// copy and an optional acknowledgement checkbox. The tinted card around it comes
+// from the parent element's `is_danger` flag, not from this field.
+
+// Color comes from DANGER_TEXT above, shared with the danger section wrapper.
 
 export function DangerSwitchField({ element, onChange }: FieldComponentProps) {
   const isEnabled = element.enable_state
@@ -669,21 +690,29 @@ export function DangerSwitchField({ element, onChange }: FieldComponentProps) {
   const ackId = `${element.id}-confirm-ack`;
 
   return (
-    <div className="rounded-lg border border-destructive/20 bg-destructive/10 p-5 flex items-start justify-between gap-4">
-      <div className="flex flex-col gap-1 flex-1 min-w-0">
+    // No border/radius/background of its own: like every other field, this one
+    // paints inside the surface its parent (section / fieldgroup / field-block)
+    // already draws. Flag that parent `is_danger` in the schema to get the
+    // destructive tint and border — drawing them here too stacks a second frame
+    // one pixel inside the first.
+    <div className="p-5 grid grid-cols-12 gap-4 items-center">
+      {/* Text column is capped to 8/12 (mirroring FieldWrapper's label grid) so
+          the copy wraps into a readable measure instead of stretching across a
+          full-width settings panel on wide screens. */}
+      <div className="sm:col-span-8 col-span-12 flex flex-col gap-1 min-w-0">
         <div className="flex items-center gap-2">
           {displayLabel && (
-            <span className="text-sm font-semibold text-destructive">{displayLabel}</span>
+            <span className={cn('text-sm font-semibold', DANGER_TEXT)}>{displayLabel}</span>
           )}
-          {IconComponent && <IconComponent className="size-4 text-destructive" />}
+          {IconComponent && <IconComponent className={cn('size-4', DANGER_TEXT)} />}
         </div>
         {element.description && (
-          <div className="text-xs leading-relaxed text-destructive">
+          <div className={cn('text-sm leading-relaxed', DANGER_TEXT)}>
             <RawHTML>{element.description}</RawHTML>
           </div>
         )}
       </div>
-      <div className="shrink-0 self-center">
+      <div className="sm:col-span-4 col-span-12 flex sm:justify-end">
         <Switch
           checked={isEnabled}
           onCheckedChange={handleChange}
@@ -803,7 +832,7 @@ export function MulticheckField({ element, onChange, ...rest }: FieldComponentPr
             }
             label={option.label ?? option.title}
             image={option.image}
-            className="rounded-[4px]"
+            className="rounded-sm"
             description={
               option.description ? (
                 <div className="flex items-start gap-1.5 mt-1">
@@ -877,7 +906,7 @@ export function PreviewMulticheckField({ element, onChange, ...rest }: FieldComp
                 }
                 label={option.label ?? option.title}
                 image={option.image}
-                className="rounded-[4px]"
+                className="rounded-sm"
                 description={
                   option.description ? (
                     <div className="flex items-start gap-1.5 mt-1">
@@ -893,7 +922,7 @@ export function PreviewMulticheckField({ element, onChange, ...rest }: FieldComp
 
         {element.image_url && (
           <div className="shrink-0 w-full md:w-64 lg:w-80 mt-2 md:mt-0">
-            <div className="aspect-[4/3] rounded-2xl border border-primary/10 bg-primary/5 flex items-center justify-center p-6 shadow-sm">
+            <div className="aspect-4/3 rounded-sm border border-primary/10 bg-primary/5 flex items-center justify-center p-6 shadow-sm">
               <img src={element.image_url} alt="" className="max-w-full max-h-full object-contain" />
             </div>
           </div>
@@ -910,7 +939,7 @@ export function PreviewMulticheckField({ element, onChange, ...rest }: FieldComp
 export function LabelField({ element, ...rest }: FieldComponentProps) {
   return (
     <div
-      className={cn("p-4 flex justify-between gap-4 items-center", rest.isNested && "!pt-0 !border-t-0 !border-none", rest.isGroupParent && "!pb-0")}
+      className={cn("p-4 flex justify-between gap-4 items-center", rest.isNested && "pt-0! border-t-0! border-none!", rest.isGroupParent && "pb-0!")}
       id={element.id}
       data-testid={`settings-field-${element.id}`}
     >
@@ -936,7 +965,7 @@ export function LabelField({ element, ...rest }: FieldComponentProps) {
 
 export function HtmlField({ element, ...rest }: FieldComponentProps) {
   return (
-    <div className={cn("w-full p-4", element.css_class, rest.isNested && "!pt-0 !border-t-0 !border-none", rest.isGroupParent && "!pb-0")} id={element.id} data-testid={`settings-field-${element.id}`}>
+    <div className={cn("w-full p-4", element.css_class, rest.isNested && "pt-0! border-t-0! border-none!", rest.isGroupParent && "!pb-0")} id={element.id} data-testid={`settings-field-${element.id}`}>
       {(element.label || element.title || element.description) && (
         <div className="mb-3">
           {(element.label || element.title) && (
@@ -1042,10 +1071,10 @@ export function NoticeField({ element, ...rest }: FieldComponentProps) {
     <Alert
       variant={alertVariant}
       className={cn(
-        "border rounded-lg p-5",
+        "border rounded-sm p-5",
         element.css_class,
-        rest.isNested && "!pt-0 !border-t-0 !border-none",
-        rest.isGroupParent && "!pb-0"
+        rest.isNested && "pt-0! border-t-0! border-none!",
+        rest.isGroupParent && "pb-0!"
       )}
       id={element.id} data-testid={`settings-field-${element.id}`}
     >

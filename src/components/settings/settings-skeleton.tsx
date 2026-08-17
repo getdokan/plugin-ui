@@ -9,7 +9,7 @@ export function SettingsSkeleton({ className }: { className?: string }) {
     return (
         <div
             className={cn(
-                'relative flex min-h-[500px] rounded-lg border border-border bg-background overflow-hidden',
+                'relative flex min-h-125 rounded-sm border border-border bg-background overflow-hidden',
                 className
             )}
             aria-busy="true"
@@ -22,7 +22,7 @@ export function SettingsSkeleton({ className }: { className?: string }) {
                     <Skeleton className="h-4 w-32" />
                 </div>
                 {/* Search bar */}
-                <Skeleton className="h-8 w-full rounded-md" />
+                <Skeleton className="h-8 w-full rounded-sm" />
                 {/* Nav items */}
                 <SidebarNavSkeleton />
             </aside>
@@ -81,7 +81,7 @@ function ContentSkeleton() {
 
 function SectionSkeleton({ fieldCount }: { fieldCount: number }) {
     return (
-        <div className="rounded-lg border border-border bg-card overflow-hidden">
+        <div className="rounded-sm border border-border bg-card overflow-hidden">
             {/* Section header */}
             <div className="px-5 pt-5 pb-3 border-b border-border">
                 <Skeleton className="h-5 w-40 mb-1.5" />

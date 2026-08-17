@@ -14,9 +14,36 @@ import {
   Redo,
   Sparkles,
   MoreVertical,
+  ChevronDown,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+
+// A native <select> picks up the host application's select styling — WordPress
+// admin, for one, paints its own arrow at the right edge — which lands on top of
+// the label when the control only reserves 8px of end padding. Suppress the host
+// arrow (`appearance-none bg-none`), reserve space, and draw our own chevron so
+// the toolbar looks identical wherever the editor is embedded.
+function ToolbarSelect({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"select">) {
+  return (
+    <span className="relative inline-flex items-center">
+      <select
+        className={cn(
+          "appearance-none bg-none text-sm ps-2 pe-6 py-1 rounded border-0 bg-transparent hover:bg-muted cursor-pointer",
+          className,
+        )}
+        {...props}
+      >
+        {children}
+      </select>
+      <ChevronDown className="pointer-events-none absolute end-1.5 size-3.5 opacity-60" />
+    </span>
+  );
+}
 
 interface RichTextEditorContentAction {
   show?: boolean;
@@ -140,38 +167,26 @@ function RichTextEditor({
           </>
         )}
 
-        <select
-          className="text-sm px-2 py-1 rounded border-0 bg-transparent hover:bg-muted cursor-pointer"
-          value={textStyle}
-          onChange={handleTextStyleChange}
-        >
+        <ToolbarSelect value={textStyle} onChange={handleTextStyleChange}>
           <option>Paragraph</option>
           <option>Heading 1</option>
           <option>Heading 2</option>
           {variant === "full" && <option>Heading 3</option>}
-        </select>
+        </ToolbarSelect>
 
-        <select
-          className="text-sm px-2 py-1 rounded border-0 bg-transparent hover:bg-muted cursor-pointer"
-          value={fontFamily}
-          onChange={handleFontFamilyChange}
-        >
+        <ToolbarSelect value={fontFamily} onChange={handleFontFamilyChange}>
           <option>Sans Serif</option>
           <option>Serif</option>
           {variant === "full" && <option>Monospace</option>}
-        </select>
+        </ToolbarSelect>
 
         {variant === "full" && (
-          <select
-            className="text-sm px-2 py-1 rounded border-0 bg-transparent hover:bg-muted cursor-pointer"
-            value={fontSize}
-            onChange={handleFontSizeChange}
-          >
+          <ToolbarSelect value={fontSize} onChange={handleFontSizeChange}>
             <option>12 px</option>
             <option>14 px</option>
             <option>16 px</option>
             <option>18 px</option>
-          </select>
+          </ToolbarSelect>
         )}
 
         <div className="w-px h-6 bg-border mx-1" />
