@@ -6,7 +6,17 @@ import { SettingsSidebar } from './settings-sidebar';
 import { SettingsContent } from './settings-content';
 import { SettingsSkeleton } from './settings-skeleton';
 import { useSettings } from './settings-context';
-import type { SettingsProps } from './settings-types';
+import type { SettingsProps, UnsavedChangesDialogCopy } from './settings-types';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '../ui';
 import { Menu, X } from 'lucide-react';
 import { RawHTML } from "@wordpress/element";
 
@@ -27,6 +37,10 @@ export function Settings({
     applyFilters,
     initialPage,
     onNavigate,
+    onDirtyChange,
+    onDiscardChanges,
+    confirmOnLeave = true,
+    unsavedChangesDialog,
     searchPlaceholder,
     searchable = true,
 }: SettingsProps) {
@@ -42,12 +56,16 @@ export function Settings({
             applyFilters={applyFilters}
             initialPage={initialPage}
             onNavigate={onNavigate}
+            onDirtyChange={onDirtyChange}
+            onDiscardChanges={onDiscardChanges}
+            confirmOnLeave={confirmOnLeave}
         >
             <SettingsInner
                 title={title}
                 className={className}
                 searchPlaceholder={searchPlaceholder}
                 searchable={searchable}
+                unsavedChangesDialog={unsavedChangesDialog}
             />
         </SettingsProvider>
     );
@@ -62,11 +80,13 @@ function SettingsInner({
     className,
     searchPlaceholder,
     searchable,
+    unsavedChangesDialog,
 }: {
     title?: string;
     className?: string;
     searchPlaceholder?: string;
     searchable?: boolean;
+    unsavedChangesDialog?: UnsavedChangesDialogCopy;
 }) {
     const { loading, activeSubpage, isSidebarVisible } = useSettings();
     const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -172,7 +192,57 @@ function SettingsInner({
 
                 <SettingsContent className="flex-1" />
             </div>
+
+            <UnsavedChangesDialog copy={unsavedChangesDialog} />
         </div>
+    );
+}
+
+// ============================================
+// Unsaved changes confirm dialog
+// ============================================
+//
+// Driven by the guard in settings-context: while the form is dirty, a sidebar
+// click parks the target in `pendingNavigation` rather than navigating, and this
+// dialog decides whether it goes through. Browser-level exits (tab close, reload,
+// WordPress menu links) can't reach this — those get the native beforeunload
+// prompt the provider registers.
+
+function UnsavedChangesDialog({ copy }: { copy?: UnsavedChangesDialogCopy }) {
+    const { pendingNavigation, confirmNavigation, cancelNavigation } = useSettings();
+
+    return (
+        <AlertDialog
+            open={pendingNavigation !== null}
+            onOpenChange={(open) => {
+                if (!open) cancelNavigation();
+            }}
+        >
+            <AlertDialogContent data-testid="settings-unsaved-changes-dialog">
+                <AlertDialogHeader>
+                    <AlertDialogTitle>
+                        {copy?.title ?? 'Unsaved changes'}
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                        {copy?.description ??
+                            'You have unsaved changes on this page. Leaving now discards them.'}
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel onClick={cancelNavigation}>
+                        {copy?.cancelText ?? 'Stay on this page'}
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                        variant="destructive"
+                        /* Pass the target captured in this render: the dialog's own
+                           close runs cancelNavigation first, clearing the state. */
+                        onClick={() => confirmNavigation(pendingNavigation ?? undefined)}
+                    >
+                        {copy?.confirmText ?? 'Discard and leave'}
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     );
 }
 
