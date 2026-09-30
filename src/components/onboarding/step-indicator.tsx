@@ -9,7 +9,7 @@ export function StepIndicator({ steps, orientation, onStepClick }: StepIndicator
             data-testid="onboarding-step-indicator"
             className={cn(
                 'flex gap-2',
-                horizontal ? 'flex-row items-center justify-center flex-wrap p-4' : 'flex-col p-4 w-56 shrink-0'
+                horizontal ? 'flex-row items-center justify-center flex-wrap p-4' : 'flex-col p-4 w-56 shrink-0 border-r border-border'
             )}
         >
             {steps.map((step) => (

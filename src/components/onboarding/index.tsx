@@ -26,7 +26,8 @@ export function Onboarding({
     renderFooter,
 }: OnboardingProps) {
     const [internalActive, setInternalActive] = useState<string>(activeStepId ?? steps[0]?.id ?? '');
-    const active = activeStepId ?? internalActive;
+    // Steps may load after mount, so fall back to the first one until a step is chosen.
+    const active = activeStepId ?? (internalActive || steps[0]?.id || '');
 
     // Merge every step's page subtree into one schema; force hide_save on each
     // page so SettingsContent suppresses its own save button (footer owns it).
@@ -61,6 +62,8 @@ export function Onboarding({
             hookPrefix={hookPrefix}
             applyFilters={applyFilters}
             initialPage={active}
+            // The footer saves a step before leaving it, so the unsaved-changes dialog would only block navigation.
+            confirmOnLeave={false}
         >
             <OnboardingInner
                 steps={steps}
@@ -103,7 +106,7 @@ function OnboardingInner({
     };
 
     const persist = async () => {
-        if (hasScopeErrors(active) || !save) return;
+        if (!active || hasScopeErrors(active) || !save) return;
         await save(active, getPageValues(active)); // routes to onStepSave(stepId, tree, flat)
     };
 
