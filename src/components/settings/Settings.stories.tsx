@@ -42,7 +42,7 @@ function EventLog({ entries }: { entries: LogEntry[] }) {
 
     if (entries.length === 0) return null;
     return (
-        <div className="mt-4 rounded-lg border border-border bg-muted/40 max-h-64 overflow-y-auto">
+        <div className="mt-4 rounded-sm border border-border bg-muted/40 max-h-64 overflow-y-auto">
             <div className="px-3 py-2 border-b border-border bg-muted/60 flex justify-between items-center">
                 <span className="text-xs font-semibold text-foreground">Event Log</span>
                 <div className="flex items-center gap-2">

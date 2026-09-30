@@ -37,7 +37,7 @@ export function CopyInput({
       <button
         type="button"
         onClick={handleCopy}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+        className="absolute right-3 inset-y-0 flex items-center text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
         aria-label={copied ? "Copied" : "Copy"}
       >
         {copied ? (

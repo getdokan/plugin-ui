@@ -119,6 +119,13 @@ export type SettingsElement = {
     /** Section-only: initial collapsed state when `collapsible` is true. */
     collapsed?: boolean;
 
+    /**
+     * Decorative badge rendered beside the field control (e.g. an "Automated"
+     * tag on a read-only method). A plain string is the label; the object form
+     * allows a custom Badge variant / classes.
+     */
+    badge?: string | { label: string; variant?: string; className?: string };
+
     // Validation error (runtime)
     validationError?: string;
 
@@ -189,10 +196,39 @@ export interface SettingsProps {
     initialPage?: string;
     /** Called whenever the active page changes. Use to sync a URL query param. */
     onNavigate?: (pageId: string) => void;
+    /**
+     * Called whenever the dirty state flips. Use it to guard navigation this
+     * component can't see — e.g. React Router's `useBlocker` for routes outside
+     * the settings screen.
+     */
+    onDirtyChange?: (dirty: boolean) => void;
+    /**
+     * Called when unsaved changes are discarded. Controlled consumers (those
+     * passing `values`) must reset their own state here — their values take
+     * precedence over the internal ones.
+     */
+    onDiscardChanges?: () => void;
+    /**
+     * Hold back sidebar navigation behind a confirm dialog and warn on browser
+     * unload while there are unsaved changes. Default: true.
+     */
+    confirmOnLeave?: boolean;
+    /** Copy overrides for the unsaved-changes confirm dialog (for translation). */
+    unsavedChangesDialog?: UnsavedChangesDialogCopy;
     /** Placeholder text for the sidebar search input. */
     searchPlaceholder?: string;
     /** Show the sidebar search input. Default: true. */
     searchable?: boolean;
+}
+
+/** Copy for the unsaved-changes confirm dialog. Every field falls back to English. */
+export interface UnsavedChangesDialogCopy {
+    title?: string;
+    description?: string;
+    /** Label on the "leave anyway" action. */
+    confirmText?: string;
+    /** Label on the "stay here" action. */
+    cancelText?: string;
 }
 
 export interface FieldComponentProps {
