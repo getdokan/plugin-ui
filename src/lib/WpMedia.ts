@@ -1,3 +1,4 @@
+import { __ } from '@wordpress/i18n';
 export type TSize = {
     height: number;
     width: number;
@@ -52,9 +53,9 @@ export default function wpMedia(
     media?: null
 ) {
     const mediaOptions = {
-        title: 'Select',
+        title: __( 'Select', 'dokan-lite' ),
         button: {
-            text: 'Select',
+            text: __( 'Select', 'dokan-lite' ),
         },
         multiple: false,
     };

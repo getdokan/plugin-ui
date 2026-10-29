@@ -1,4 +1,5 @@
 import React from 'react';
+import { __ } from '@wordpress/i18n';
 import { Upload, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -17,7 +18,7 @@ export interface WpMediaUploadProps {
 export function WpMediaUpload( {
     value,
     onChange,
-    btnText = 'Upload Image',
+    btnText = __( 'Upload Image', 'dokan-lite' ),
     className,
     disabled,
 }: WpMediaUploadProps ) {
@@ -40,7 +41,7 @@ export function WpMediaUpload( {
                     <button
                         type="button"
                         disabled={ disabled }
-                        title="Remove"
+                        title={ __( 'Remove', 'dokan-lite' ) }
                         onClick={ () => onChange( '' ) }
                         className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
                     >
@@ -57,7 +58,7 @@ export function WpMediaUpload( {
                 className="gap-1.5"
             >
                 <Upload size={ 14 } />
-                { value ? 'Change' : btnText }
+                { value ? __( 'Change', 'dokan-lite' ) : btnText }
             </Button>
         </div>
     );
@@ -76,15 +77,15 @@ export interface WpMediaUploadMultipleProps {
 export function WpMediaUploadMultiple( {
     value = [],
     onChange,
-    btnText = 'Add Images',
+    btnText = __( 'Add Images', 'dokan-lite' ),
     className,
     disabled,
 }: WpMediaUploadMultipleProps ) {
     const handleUpload = () => {
         // @ts-expect-error wp.media is not defined in the global scope
         const frame = wp.media( {
-            title: 'Select Images',
-            button: { text: 'Add' },
+            title: __( 'Select Images', 'dokan-lite' ),
+            button: { text: __( 'Add', 'dokan-lite' ) },
             multiple: true,
         } );
 
@@ -118,7 +119,7 @@ export function WpMediaUploadMultiple( {
                             <button
                                 type="button"
                                 disabled={ disabled }
-                                title="Remove"
+                                title={ __( 'Remove', 'dokan-lite' ) }
                                 onClick={ () => remove( i ) }
                                 className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
                             >

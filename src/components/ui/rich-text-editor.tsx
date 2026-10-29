@@ -17,6 +17,8 @@ import {
   ChevronDown,
 } from "lucide-react";
 
+import { __ } from "@wordpress/i18n";
+
 import { cn } from "@/lib/utils";
 
 // A native <select> picks up the host application's select styling — WordPress
@@ -159,7 +161,7 @@ function RichTextEditor({
             <button
               type="button"
               className="p-1.5 hover:bg-muted rounded"
-              title="AI Assist"
+              title={__("AI Assist", "dokan-lite")}
             >
               <Sparkles className="size-4" />
             </button>
@@ -194,7 +196,7 @@ function RichTextEditor({
         <button
           type="button"
           className="p-1.5 hover:bg-muted rounded"
-          title="Bold"
+          title={__("Bold", "dokan-lite")}
           onClick={() => executeCommand("bold")}
         >
           <Bold className="size-4" />
@@ -202,7 +204,7 @@ function RichTextEditor({
         <button
           type="button"
           className="p-1.5 hover:bg-muted rounded"
-          title="Italic"
+          title={__("Italic", "dokan-lite")}
           onClick={() => executeCommand("italic")}
         >
           <Italic className="size-4" />
@@ -210,7 +212,7 @@ function RichTextEditor({
         <button
           type="button"
           className="p-1.5 hover:bg-muted rounded"
-          title="Underline"
+          title={__("Underline", "dokan-lite")}
           onClick={() => executeCommand("underline")}
         >
           <Underline className="size-4" />
@@ -218,7 +220,7 @@ function RichTextEditor({
         <button
           type="button"
           className="p-1.5 hover:bg-muted rounded"
-          title="Strikethrough"
+          title={__("Strikethrough", "dokan-lite")}
           onClick={() => executeCommand("strikeThrough")}
         >
           <Strikethrough className="size-4" />
@@ -227,9 +229,9 @@ function RichTextEditor({
         <button
           type="button"
           className="p-1.5 hover:bg-muted rounded"
-          title="Link"
+          title={__("Link", "dokan-lite")}
           onClick={() => {
-            const url = prompt("Enter URL:");
+            const url = prompt(__("Enter URL:", "dokan-lite"));
             if (url) executeCommand("createLink", url);
           }}
         >
@@ -239,7 +241,7 @@ function RichTextEditor({
         <button
           type="button"
           className="p-1.5 hover:bg-muted rounded"
-          title="Quote"
+          title={__("Quote", "dokan-lite")}
           onClick={() => executeCommand("formatBlock", "blockquote")}
         >
           <Quote className="size-4" />
@@ -250,7 +252,7 @@ function RichTextEditor({
         <button
           type="button"
           className="p-1.5 hover:bg-muted rounded"
-          title="Bullet List"
+          title={__("Bullet List", "dokan-lite")}
           onClick={() => executeCommand("insertUnorderedList")}
         >
           <List className="size-4" />
@@ -258,7 +260,7 @@ function RichTextEditor({
         <button
           type="button"
           className="p-1.5 hover:bg-muted rounded"
-          title="Numbered List"
+          title={__("Numbered List", "dokan-lite")}
           onClick={() => executeCommand("insertOrderedList")}
         >
           <ListOrdered className="size-4" />
@@ -267,7 +269,7 @@ function RichTextEditor({
         <button
           type="button"
           className="p-1.5 hover:bg-muted rounded"
-          title="Align Left"
+          title={__("Align Left", "dokan-lite")}
           onClick={() => executeCommand("justifyLeft")}
         >
           <AlignLeft className="size-4" />
@@ -278,9 +280,9 @@ function RichTextEditor({
         <button
           type="button"
           className="p-1.5 hover:bg-muted rounded"
-          title="Link"
+          title={__("Link", "dokan-lite")}
           onClick={() => {
-            const url = prompt("Enter URL:");
+            const url = prompt(__("Enter URL:", "dokan-lite"));
             if (url) executeCommand("createLink", url);
           }}
         >
@@ -292,9 +294,9 @@ function RichTextEditor({
             <button
               type="button"
               className="p-1.5 hover:bg-muted rounded"
-              title="Image"
+              title={__("Image", "dokan-lite")}
               onClick={() => {
-                const url = prompt("Enter image URL:");
+                const url = prompt(__("Enter image URL:", "dokan-lite"));
                 if (url) executeCommand("insertImage", url);
               }}
             >
@@ -306,7 +308,7 @@ function RichTextEditor({
             <button
               type="button"
               className="p-1.5 hover:bg-muted rounded"
-              title="Redo"
+              title={__("Redo", "dokan-lite")}
               onClick={() => executeCommand("redo")}
             >
               <Redo className="size-4" />
@@ -314,7 +316,7 @@ function RichTextEditor({
             <button
               type="button"
               className="p-1.5 hover:bg-muted rounded"
-              title="Undo"
+              title={__("Undo", "dokan-lite")}
               onClick={() => executeCommand("undo")}
             >
               <Undo className="size-4" />
@@ -323,7 +325,7 @@ function RichTextEditor({
             <button
               type="button"
               className="p-1.5 hover:bg-muted rounded ml-auto"
-              title="More"
+              title={__("More", "dokan-lite")}
             >
               <MoreVertical className="size-4" />
             </button>

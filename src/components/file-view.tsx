@@ -1,4 +1,5 @@
 import React from "react";
+import { __ } from "@wordpress/i18n";
 import { File, X } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { cn, renderIcon } from "@/lib/utils";
@@ -46,7 +47,7 @@ function FileView({ fileType = 'file', fileName, fileSize, imageUrl = '', onRemo
               onRemove();
             } }
             className={cn( 'flex items-center justify-center w-8 h-8 rounded-full hover:bg-destructive/10 transition-colors cursor-pointer border-0 bg-transparent text-muted-foreground hover:text-destructive', closeBtnClassName ) }
-            aria-label='Remove'
+            aria-label={ __( 'Remove', 'dokan-lite' ) }
           >
             {renderIcon(removeIcon || X, { size: 20 })}
           </button>
