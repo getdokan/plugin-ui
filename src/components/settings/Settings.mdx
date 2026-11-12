@@ -762,6 +762,20 @@ This field only appears when `enable_tax` is `true`.
 
 ---
 
+## Search
+
+The sidebar search box narrows the whole settings screen, not only the menu.
+
+- **Matching**: the query is split into words. A field matches when every word appears somewhere in its label, title, description, placeholder, tooltip, options (only lists of 8 or fewer), or the labels of the page, subpage, tab and section above it. Matching ignores case and HTML tags.
+- **Menu**: only pages with matches stay listed, each with an "N matches" count, and all groups are expanded.
+- **Content**: only matching fields are shown, with their sections and any field on the same page they depend on. Matching rows get a bar on the left edge, and tabs get a match count badge.
+- **Counts**: counts are settings, not fields. A field group or notice that depends on the field just before it (for example API keys under "Connect to Facebook") counts as part of that field.
+- **Hidden matches**: a matching field that a dependency hides is replaced by a row saying what reveals it, for example "Turn on “Connect to X” above to show this setting." A controlling field on another page is named with its page.
+- **Navigation**: 300 ms after typing stops, if the current page has no match, the first page that does opens. This calls `onNavigate` like a menu click. It never moves while the page has unsaved changes and `confirmOnLeave` is on; the results bar asks to save first. Enter goes to the first match (with the usual unsaved-changes prompt) and Escape clears the search.
+- **Results bar**: "Show all settings" shows the full page with matches still marked; "Clear search" resets.
+
+---
+
 ## Validation
 
 Fields can declare validation rules via the `validations` array:
@@ -919,6 +933,34 @@ Every interactive element has a `data-testid` attribute, auto-generated from the
       <td>Search input</td>
     </tr>
     <tr>
+      <td><code>settings-search-empty</code></td>
+      <td>Sidebar message when nothing matches</td>
+    </tr>
+    <tr>
+      <td><code>settings-search-results-bar</code></td>
+      <td>Search results bar above the content</td>
+    </tr>
+    <tr>
+      <td><code>settings-search-show-all</code></td>
+      <td>"Show all settings" / "Show matches only" button</td>
+    </tr>
+    <tr>
+      <td><code>settings-search-clear</code></td>
+      <td>"Clear search" button</td>
+    </tr>
+    <tr>
+      <td><code>{'settings-search-hidden-{id}'}</code></td>
+      <td>Row standing in for a matching field hidden by a dependency</td>
+    </tr>
+    <tr>
+      <td><code>{'settings-search-hidden-group-{id}'}</code></td>
+      <td>Row standing in for several matches in a hidden group</td>
+    </tr>
+    <tr>
+      <td><code>[data-settings-search-match]</code></td>
+      <td>Attribute on each row marked as a search match</td>
+    </tr>
+    <tr>
       <td><code>{'settings-menu-{id}'}</code></td>
       <td>Menu item</td>
     </tr>
@@ -945,6 +987,10 @@ Every interactive element has a `data-testid` attribute, auto-generated from the
     <tr>
       <td><code>{'settings-tab-{id}'}</code></td>
       <td>Tab button</td>
+    </tr>
+    <tr>
+      <td><code>{'settings-tab-count-{id}'}</code></td>
+      <td>Match count badge on a tab while searching</td>
     </tr>
     <tr>
       <td><code>{'settings-section-{id}'}</code></td>

@@ -197,6 +197,8 @@ export interface LayoutMenuProps extends HTMLAttributes<HTMLDivElement> {
   renderGroupLabel?: (group: LayoutMenuGroupData) => ReactNode;
   /** Whether to show group labels. Defaults to true. */
   showGroupLabels?: boolean;
+  /** Open every parent item at once (e.g. while showing search results). */
+  expandAll?: boolean;
   className?: string;
 }
 
@@ -214,6 +216,7 @@ export const LayoutMenu = forwardRef<HTMLDivElement, LayoutMenuProps>(
       renderItem,
       renderGroupLabel,
       showGroupLabels = true,
+      expandAll = false,
       className,
       ...props
     },
@@ -329,7 +332,7 @@ export const LayoutMenu = forwardRef<HTMLDivElement, LayoutMenuProps>(
                         activeItemClassName={activeItemClassName}
                         onItemClick={onItemClick}
                         renderItem={renderItem}
-                        open={openItemId === item.id}
+                        open={expandAll || openItemId === item.id}
                         onToggle={() => toggleOpen(item.id)}
                       />
                     ))}
@@ -351,7 +354,7 @@ export const LayoutMenu = forwardRef<HTMLDivElement, LayoutMenuProps>(
                         activeItemClassName={activeItemClassName}
                         onItemClick={onItemClick}
                         renderItem={renderItem}
-                        open={openItemId === item.id}
+                        open={expandAll || openItemId === item.id}
                         onToggle={() => toggleOpen(item.id)}
                       />
                     ))}
@@ -674,7 +677,19 @@ function SubMenuItemRenderer({
           {item.icon && (
             <span className="flex shrink-0 [&_svg]:size-4">{item.icon}</span>
           )}
-          <span>{item.label}</span>
+          <span className="min-w-0 flex-1">
+            <span className="block">{item.label}</span>
+            {item.secondaryLabel && (
+              <span
+                className={cn(
+                  "block text-xs",
+                  isActive ? "opacity-90" : "text-muted-foreground"
+                )}
+              >
+                {item.secondaryLabel}
+              </span>
+            )}
+          </span>
         </SidebarMenuSubButton>
       </SidebarMenuSubItem>
     );
