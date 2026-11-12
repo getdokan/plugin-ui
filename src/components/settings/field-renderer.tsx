@@ -4,6 +4,8 @@ import { cn } from '@/lib/utils';
 import { Switch } from '../ui';
 import type { SettingsElement, FieldComponentProps } from './settings-types';
 import { useSettings } from './settings-context';
+import { SearchDependencyHint, SearchHiddenGroup } from './search-dependency-hint';
+import { SEARCH_MATCH_ATTR } from './search-match-style';
 import {
     FieldWrapper,
     TextField,
@@ -39,20 +41,62 @@ import {
 //  e.g. @wordpress/hooks applyFilters or a custom function)
 // ============================================
 
-export function FieldRenderer({
-    element,
-    isNested,
-    isGroupParent,
-}: {
+type FieldRendererProps = {
     element: SettingsElement;
     isNested?: boolean;
     isGroupParent?: boolean;
-}) {
-    const { values, updateValue, shouldDisplay, hookPrefix, errors, applyFilters } = useSettings();
+};
+
+/** Renders a field, and marks its row when it is a search match. */
+export function FieldRenderer(props: FieldRendererProps) {
+    const { searchIndex, isSearchVisible, shouldDisplay, isSearchHiddenHit } = useSettings();
+    const { element } = props;
+    const field = <FieldRendererInner {...props} />;
+
+    const rendered =
+        isSearchVisible(element) && (shouldDisplay(element) || isSearchHiddenHit(element));
+    if (!rendered || !searchIndex?.markRoots.has(element.id)) {
+        return field;
+    }
+    return (
+        <div {...{ [SEARCH_MATCH_ATTR]: '' }}>
+            <span className="sr-only">Search match:</span>
+            {field}
+        </div>
+    );
+}
+
+function FieldRendererInner({
+    element,
+    isNested,
+    isGroupParent,
+}: FieldRendererProps) {
+    const {
+        values,
+        updateValue,
+        shouldDisplay,
+        hookPrefix,
+        errors,
+        applyFilters,
+        searchIndex,
+        isSearchVisible,
+        isSearchHiddenHit,
+        isSearchHiddenGroup,
+    } = useSettings();
+
+    // A search narrowing the page hides fields with no match under them.
+    if (!isSearchVisible(element)) {
+        return null;
+    }
 
     // Check display status (dependency evaluation)
     if (!shouldDisplay(element)) {
-        return null;
+        // A matching field that is switched off still shows up, with how to reveal it.
+        if (isSearchHiddenHit(element)) {
+            return <SearchDependencyHint element={element} />;
+        }
+        // Same for matches inside a hidden switch group.
+        return isSearchHiddenGroup(element) ? <SearchHiddenGroup element={element} /> : null;
     }
 
     // Merge current value from context (keyed by element id)
@@ -100,6 +144,16 @@ export function FieldRenderer({
                             isGroupParent={index < (element.children?.length ?? 0) - 1}
                         />
                     ))}
+                    {!isEnabled && searchIndex && element.children
+                        ?.filter((child) => searchIndex.hits.has(child.id))
+                        .map((child) => (
+                            <SearchDependencyHint
+                                key={child.id}
+                                element={child}
+                                parentLabel={element.label || element.title}
+                                marked
+                            />
+                        ))}
                 </div>,
                 mergedElement
             );
@@ -297,7 +351,7 @@ function CollapsibleSwitchField({
     isNested?: boolean;
     isGroupParent?: boolean;
 }) {
-    const { updateValue } = useSettings();
+    const { updateValue, searchIndex } = useSettings();
     const [open, setOpen] = useState( element.collapsed === false );
 
     const isEnabled = element.enable_state
@@ -306,7 +360,11 @@ function CollapsibleSwitchField({
 
     const childCount = element.children?.length ?? 0;
     const hasChildren = childCount > 0;
-    const bodyVisible = open && hasChildren;
+    // Open while a search has matches inside, so they are not hidden behind the chevron.
+    const searchOpensBody = Boolean( searchIndex ) && Boolean(
+        element.children?.some( ( child ) => searchIndex?.visible.has( child.id ) )
+    );
+    const bodyVisible = ( open || searchOpensBody ) && hasChildren;
 
     const handleChange = ( checked: boolean ) => {
         if ( element.enable_state && element.disable_state ) {
@@ -329,12 +387,12 @@ function CollapsibleSwitchField({
                         <button
                             type="button"
                             onClick={ () => setOpen( ( o ) => ! o ) }
-                            aria-expanded={ open }
+                            aria-expanded={ bodyVisible }
                             aria-label="Toggle details"
                             className="flex items-center pl-3 border-l border-border text-muted-foreground hover:text-foreground transition-colors"
                         >
                             <ChevronDown
-                                className={ cn( 'size-5 transition-transform duration-200', open && 'rotate-180' ) }
+                                className={ cn( 'size-5 transition-transform duration-200', bodyVisible && 'rotate-180' ) }
                             />
                         </button>
                     ) }

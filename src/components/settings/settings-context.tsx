@@ -17,6 +17,7 @@ import {
     formatSettingsData,
     validateField,
 } from './settings-formatter';
+import { buildSettingsSearchIndex, type SettingsSearchIndex } from './settings-search';
 
 // ============================================
 // Context Value
@@ -94,6 +95,23 @@ export interface SettingsContextValue {
     save?: (scopeId: string, pageValues: Record<string, any>) => void | Promise<void>;
     /** Consumer-provided render function for the save button */
     renderSaveButton?: (props: SaveButtonRenderProps) => React.ReactNode;
+    /** Text typed in the sidebar search box */
+    searchQuery: string;
+    /** Update the search text */
+    setSearchQuery: (query: string) => void;
+    /** Field-level search index for the current query, or null when not searching */
+    searchIndex: SettingsSearchIndex | null;
+    /** While searching, show every field on the page instead of only the matches */
+    showAllSearchFields: boolean;
+    setShowAllSearchFields: (showAll: boolean) => void;
+    /** False when a search is narrowing the page and this element has no match under it */
+    isSearchVisible: (element: SettingsElement) => boolean;
+    /** True for a matching field that its dependencies currently hide */
+    isSearchHiddenHit: (element: SettingsElement) => boolean;
+    /** True for a section/group that its dependencies hide but that holds matches */
+    isSearchHiddenGroup: (element: SettingsElement) => boolean;
+    /** Jump to the first page with a match (goes through the unsaved-changes guard) */
+    goToFirstSearchMatch: () => void;
 }
 
 const SettingsContext = createContext<SettingsContextValue | null>(null);
@@ -173,6 +191,11 @@ export function SettingsProvider({
     const [activePage, setActivePage] = useState<string>('');
     const [activeSubpage, setActiveSubpage] = useState<string>('');
     const [activeTab, setActiveTab] = useState<string>('');
+
+    // Search state lives here so the sidebar and the content pane share it.
+    const [searchQuery, setSearchQuery] = useState<string>('');
+    const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>('');
+    const [showAllSearchFields, setShowAllSearchFields] = useState<boolean>(false);
 
     // Build a memoized map of scopeId → [element ids...] for per-subpage dirty tracking.
     // The scope ID is the subpage ID when a subpage exists, otherwise the page ID itself.
@@ -661,6 +684,96 @@ export function SettingsProvider({
         return source.children.filter((c) => c.type !== 'tab' && c.type !== 'subpage');
     }, [getActiveContentSource, activeTab]);
 
+    // ── Search ──
+    const searchIndex = useMemo(
+        () => buildSettingsSearchIndex(schema, searchQuery),
+        [schema, searchQuery]
+    );
+
+    // A new query starts narrowed again.
+    useEffect(() => {
+        setShowAllSearchFields(false);
+    }, [searchQuery]);
+
+    // Wait for a pause in typing before moving anywhere.
+    useEffect(() => {
+        const timer = window.setTimeout(() => setDebouncedSearchQuery(searchQuery), 300);
+        return () => window.clearTimeout(timer);
+    }, [searchQuery]);
+
+    const isSearchVisible = useCallback(
+        (element: SettingsElement): boolean =>
+            !searchIndex || showAllSearchFields || searchIndex.visible.has(element.id),
+        [searchIndex, showAllSearchFields]
+    );
+
+    const isSearchHiddenHit = useCallback(
+        (element: SettingsElement): boolean =>
+            Boolean(searchIndex?.hits.has(element.id)) && !shouldDisplay(element),
+        [searchIndex, shouldDisplay]
+    );
+
+    const isSearchHiddenGroup = useCallback(
+        (element: SettingsElement): boolean => {
+            if (!searchIndex || !searchIndex.visible.has(element.id) || shouldDisplay(element)) return false;
+            // Switch groups are fields with children; they count unless they match themselves.
+            return element.type !== 'field' || (Boolean(element.children?.length) && !searchIndex.hits.has(element.id));
+        },
+        [searchIndex, shouldDisplay]
+    );
+
+    const navigateToSource = useCallback(
+        (sourceId: string, guarded: boolean) => {
+            const isPage = schema.some((p) => p.id === sourceId);
+            const target: PendingNavigation = { type: isPage ? 'page' : 'subpage', id: sourceId };
+            if (guarded) {
+                guardNavigation(target);
+            } else {
+                runNavigation(target);
+            }
+        },
+        [schema, guardNavigation, runNavigation]
+    );
+
+    const goToFirstSearchMatch = useCallback(() => {
+        const first = searchIndex?.sourceOrder[0];
+        if (!first) return;
+        const current = getActiveContentSource()?.id;
+        if (current && (searchIndex?.counts.get(current) || 0) > 0) return;
+        navigateToSource(first, true);
+    }, [searchIndex, getActiveContentSource, navigateToSource]);
+
+    // Latest-render closures for the effects below, which must not re-run on every change.
+    const searchJumpRef = useRef<() => void>(() => {});
+    searchJumpRef.current = () => {
+        if (!searchIndex || searchIndex.sourceOrder.length === 0) return;
+        const current = getActiveContentSource()?.id;
+        if (current && (searchIndex.counts.get(current) || 0) > 0) return;
+        // Never pop the unsaved-changes dialog while someone is typing.
+        if (confirmOnLeave && isDirty) return;
+        navigateToSource(searchIndex.sourceOrder[0], false);
+    };
+
+    const searchTabRef = useRef<() => void>(() => {});
+    searchTabRef.current = () => {
+        if (!searchIndex) return;
+        const tabs = getActiveTabs().filter((tab) => tab.display !== false);
+        if (tabs.length === 0) return;
+        if ((searchIndex.counts.get(activeTab) || 0) > 0) return;
+        const tabWithHits = tabs.find((tab) => (searchIndex.counts.get(tab.id) || 0) > 0);
+        if (tabWithHits) setActiveTab(tabWithHits.id);
+    };
+
+    // Open the first page with a match when the current one has none.
+    useEffect(() => {
+        searchJumpRef.current();
+    }, [debouncedSearchQuery]);
+
+    // On arriving at a page (or a new query), land on a tab that has matches.
+    useEffect(() => {
+        searchTabRef.current();
+    }, [debouncedSearchQuery, activePage, activeSubpage]);
+
     // Sidebar visibility: count navigable leaf items. Hidden when <= 1.
     const isSidebarVisible = useMemo(() => {
         let count = 0;
@@ -723,6 +836,15 @@ export function SettingsProvider({
             getPageValues,
             save: handleOnSave,
             renderSaveButton,
+            searchQuery,
+            setSearchQuery,
+            searchIndex,
+            showAllSearchFields,
+            setShowAllSearchFields,
+            isSearchVisible,
+            isSearchHiddenHit,
+            isSearchHiddenGroup,
+            goToFirstSearchMatch,
         }),
         [
             schema,
@@ -753,6 +875,13 @@ export function SettingsProvider({
             getPageValues,
             handleOnSave,
             renderSaveButton,
+            searchQuery,
+            searchIndex,
+            showAllSearchFields,
+            isSearchVisible,
+            isSearchHiddenHit,
+            isSearchHiddenGroup,
+            goToFirstSearchMatch,
         ]
     );
 
