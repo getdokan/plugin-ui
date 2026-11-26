@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useSettings } from './settings-context';
 import {
     LayoutMenu,
@@ -27,30 +27,6 @@ function getIcon(iconName?: string): React.ReactNode {
     }
 
     return null;
-}
-
-/**
- * Collect all searchable text from a schema subtree.
- * Includes labels, titles, descriptions, option labels, placeholder text.
- */
-function collectSearchableText(element: SettingsElement): string {
-    const texts: string[] = [];
-    const walk = (el: SettingsElement) => {
-        if (el.label) texts.push(el.label);
-        if (el.title) texts.push(el.title);
-        if (el.description) texts.push(el.description);
-        if (el.placeholder) texts.push(String(el.placeholder));
-        if (el.options) {
-            for (const opt of el.options) {
-                if (opt.label) texts.push(opt.label);
-                if (opt.title) texts.push(opt.title);
-                if (opt.description) texts.push(opt.description);
-            }
-        }
-        if (el.children) el.children.forEach(walk);
-    };
-    walk(element);
-    return texts.join(' ').toLowerCase();
 }
 
 /**
@@ -90,20 +66,17 @@ export function SettingsSidebar({
         activeSubpage,
         setActivePage,
         setActiveSubpage,
+        searchQuery,
+        setSearchQuery,
+        searchIndex,
+        goToFirstSearchMatch,
     } = useSettings();
 
-    const [search, setSearch] = useState('');
-
-    // Build menu items + a search index (id → all searchable text in subtree)
-    const { items, searchIndex } = useMemo(() => {
-        const searchIdx = new Map<string, string>();
-
+    const items = useMemo(() => {
         const mapSubpageToItem = (element: SettingsElement): LayoutMenuItemData => {
             const nestedSubpages = (element.children || [])
                 .filter(isVisibleSubpage)
                 .map(mapSubpageToItem);
-
-            searchIdx.set(element.id, collectSearchableText(element));
 
             return {
                 id: element.id,
@@ -120,8 +93,6 @@ export function SettingsSidebar({
                 const subpageItems = (page.children || [])
                     .filter(isVisibleSubpage)
                     .map(mapSubpageToItem);
-
-                searchIdx.set(page.id, collectSearchableText(page));
 
                 if (subpageItems.length > 0) {
                     // Page WITH subpages → parent item with expandable children
@@ -142,39 +113,28 @@ export function SettingsSidebar({
                 };
             });
 
-        return { items: menuItems, searchIndex: searchIdx };
+        return menuItems;
     }, [schema]);
 
-    // Deep-search filter: matches against full subtree content, not just labels
+    // Keep only menu entries that contain a matching field, each with its match count.
     const filteredItems = useMemo(() => {
-        const q = search.trim().toLowerCase();
-        if (!q) return items;
+        if (!searchIndex) return items;
 
-        const matchesDeep = (item: LayoutMenuItemData): boolean => {
-            const text = searchIndex.get(item.id) || '';
-            if (text.includes(q)) return true;
-            return item.children?.some(matchesDeep) || false;
-        };
-
-        const filterTree = (menuItems: LayoutMenuItemData[]): LayoutMenuItemData[] => {
-            return menuItems
+        const filterTree = (menuItems: LayoutMenuItemData[]): LayoutMenuItemData[] =>
+            menuItems
                 .map((item) => {
-                    if (!item.children) {
-                        return matchesDeep(item) ? item : null;
-                    }
-                    // Parent: filter children first
-                    const filteredChildren = filterTree(item.children);
-                    if (filteredChildren.length > 0) {
-                        return { ...item, children: filteredChildren };
-                    }
-                    // Keep parent if its own subtree text matches
-                    return matchesDeep(item) ? item : null;
+                    const count = searchIndex.counts.get(item.id) || 0;
+                    if (count === 0) return null;
+                    return {
+                        ...item,
+                        secondaryLabel: count === 1 ? '1 match' : `${count} matches`,
+                        children: item.children ? filterTree(item.children) : undefined,
+                    };
                 })
                 .filter(Boolean) as LayoutMenuItemData[];
-        };
 
         return filterTree(items);
-    }, [items, search, searchIndex]);
+    }, [items, searchIndex]);
 
     // Active item: subpage if exists, otherwise page (for pages without subpages)
     const activeItemId = activeSubpage || activePage;
@@ -189,8 +149,16 @@ export function SettingsSidebar({
                         <Search className="text-muted-foreground pointer-events-none absolute left-3 inset-y-0 my-auto size-4" />
                         <Input
                             type="search"
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    goToFirstSearchMatch();
+                                } else if (e.key === 'Escape') {
+                                    setSearchQuery('');
+                                }
+                            }}
                             className="h-9 ps-9"
                             placeholder={searchPlaceholder || 'Search...'}
                             aria-label="Search settings"
@@ -200,9 +168,16 @@ export function SettingsSidebar({
                 </div>
             )}
 
+            {searchIndex && filteredItems.length === 0 && (
+                <p className="px-7 py-6 text-sm text-muted-foreground" data-testid="settings-search-empty">
+                    No settings match &ldquo;{searchQuery.trim()}&rdquo;.
+                </p>
+            )}
+
             <LayoutMenu
                 items={filteredItems}
                 activeItemId={activeItemId}
+                expandAll={Boolean(searchIndex)}
                 onItemClick={(item) => {
                     const isPage = schema.some((p) => p.id === item.id);
                     if (isPage) {

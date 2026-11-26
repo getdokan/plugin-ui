@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { SettingsElement as SettingsElementType } from './settings-types';
 import { useSettings } from './settings-context';
 import { FieldRenderer } from './field-renderer';
@@ -8,6 +8,8 @@ import { ScrollArea, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } 
 import { Button } from "@/components/ui/button";
 import { RawHTML } from "@wordpress/element";
 import { DANGER_BORDER, DANGER_SURFACE, DANGER_TEXT } from "./fields";
+import { SearchHiddenGroup } from './search-dependency-hint';
+import { SEARCH_HIGHLIGHT_CSS, SEARCH_MATCH_ATTR } from './search-match-style';
 
 // ============================================
 // Settings Content — renders heading, tabs, sections
@@ -27,7 +29,26 @@ export function SettingsContent({ className }: { className?: string }) {
         getPageValues,
         save,
         renderSaveButton,
+        searchQuery,
+        setSearchQuery,
+        searchIndex,
+        showAllSearchFields,
+        setShowAllSearchFields,
+        isDirty,
     } = useSettings();
+
+    const contentRef = useRef<HTMLDivElement>(null);
+
+    // After "Show all", bring the first match back into view.
+    useEffect(() => {
+        if (!showAllSearchFields) return;
+        const timer = window.setTimeout(() => {
+            contentRef.current
+                ?.querySelector(`[${SEARCH_MATCH_ATTR}]`)
+                ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 80);
+        return () => window.clearTimeout(timer);
+    }, [showAllSearchFields]);
 
     const contentSource = getActiveContentSource();
     const tabs = getActiveTabs();
@@ -60,7 +81,8 @@ export function SettingsContent({ className }: { className?: string }) {
 
     return (
         <ScrollArea className={cn('flex flex-col overflow-y-auto', className)} data-testid="settings-content">
-            <div className="flex-1">
+            {searchIndex && <style>{SEARCH_HIGHLIGHT_CSS}</style>}
+            <div className="flex-1" ref={contentRef}>
                 {/* Heading */}
                 {!contentSource.hide_heading && (
                 <div className="px-6 pt-6 pb-4" data-testid={`settings-heading-${contentSource.id}`}>
@@ -119,6 +141,27 @@ export function SettingsContent({ className }: { className?: string }) {
                                             )}
                                         >
                                             {tab.label || tab.title}
+                                            {searchIndex && (
+                                                <span
+                                                    className={cn(
+                                                        'ml-1.5 inline-flex min-w-5 justify-center rounded-full px-1.5 text-xs',
+                                                        (searchIndex.counts.get(tab.id) || 0) > 0
+                                                            ? 'bg-primary/10 text-primary'
+                                                            : 'bg-muted text-muted-foreground'
+                                                    )}
+                                                    data-testid={`settings-tab-count-${tab.id}`}
+                                                    aria-hidden="true"
+                                                >
+                                                    {searchIndex.counts.get(tab.id) || 0}
+                                                </span>
+                                            )}
+                                            {searchIndex && (
+                                                <span className="sr-only">
+                                                    {(searchIndex.counts.get(tab.id) || 0) === 1
+                                                        ? ', 1 match'
+                                                        : `, ${searchIndex.counts.get(tab.id) || 0} matches`}
+                                                </span>
+                                            )}
                                         </button>
                                     );
                                 })}
@@ -133,6 +176,18 @@ export function SettingsContent({ className }: { className?: string }) {
                     aria-labelledby={tabs.length > 0 ? `settings-tab-${scopeId}-${activeTab}` : undefined}
                     className="p-6 space-y-6"
                 >
+                    {searchIndex && (
+                        <SearchResultsBar
+                            query={searchQuery.trim()}
+                            matches={searchIndex.counts.get(contentSource.id) || 0}
+                            total={searchIndex.totals.get(contentSource.id) || 0}
+                            elsewhere={searchIndex.totalHits - (searchIndex.counts.get(contentSource.id) || 0)}
+                            showAll={showAllSearchFields}
+                            dirty={isDirty}
+                            onToggleShowAll={() => setShowAllSearchFields(!showAllSearchFields)}
+                            onClear={() => setSearchQuery('')}
+                        />
+                    )}
                     {content.map((item) => (
                         <ContentBlock key={item.id} element={item} />
                     ))}
@@ -167,9 +222,19 @@ export function SettingsContent({ className }: { className?: string }) {
 // ============================================
 
 function ContentBlock({ element }: { element: SettingsElementType }) {
-    const { shouldDisplay } = useSettings();
+    const { shouldDisplay, isSearchVisible, isSearchHiddenHit, isSearchHiddenGroup } = useSettings();
 
-    if (!shouldDisplay(element)) {
+    if (!isSearchVisible(element)) {
+        return null;
+    }
+    if (isSearchHiddenGroup(element)) {
+        return (
+            <div className="rounded-sm border border-border bg-card overflow-hidden">
+                <SearchHiddenGroup element={element} />
+            </div>
+        );
+    }
+    if (!shouldDisplay(element) && !isSearchHiddenHit(element)) {
         return null;
     }
 
@@ -214,10 +279,20 @@ function ContentBlock({ element }: { element: SettingsElementType }) {
 // ============================================
 
 function SettingsSection({ section }: { section: SettingsElementType }) {
-    const { shouldDisplay } = useSettings();
+    const { shouldDisplay, isSearchVisible, isSearchHiddenGroup, searchIndex } = useSettings();
     const collapsible = section.collapsible === true;
     const [open, setOpen] = useState(!section.collapsed);
 
+    if (!isSearchVisible(section)) {
+        return null;
+    }
+    if (isSearchHiddenGroup(section)) {
+        return (
+            <div className="rounded-sm border border-border bg-card overflow-hidden">
+                <SearchHiddenGroup element={section} />
+            </div>
+        );
+    }
     if (!shouldDisplay(section)) {
         return null;
     }
@@ -227,7 +302,8 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
     const tooltip = section?.tooltip || '';
     const hasChildren = (section.children?.length ?? 0) > 0;
     const contentId = `settings-section-content-${section.id}`;
-    const bodyVisible = !collapsible || open;
+    // Search results are never tucked inside a collapsed section.
+    const bodyVisible = !collapsible || open || Boolean(searchIndex?.visible.has(section.id));
 
     const toggle = () => setOpen((o) => !o);
     const onHeadingKeyDown = (e: React.KeyboardEvent) => {
@@ -253,7 +329,7 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
                               tabIndex: 0,
                               onClick: toggle,
                               onKeyDown: onHeadingKeyDown,
-                              'aria-expanded': open,
+                              'aria-expanded': bodyVisible,
                               'aria-controls': contentId,
                           }
                         : {})}
@@ -313,7 +389,7 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
                             <ChevronDown
                                 className={ cn(
                                     'size-5 text-muted-foreground transition-transform duration-200',
-                                    open && 'rotate-180'
+                                    bodyVisible && 'rotate-180'
                                 ) }
                             />
                         )}
@@ -337,9 +413,15 @@ function SettingsSection({ section }: { section: SettingsElementType }) {
 // ============================================
 
 function ElementRenderer({ element, isNested, isGroupParent }: { element: SettingsElementType, isNested?: boolean, isGroupParent?: boolean }) {
-    const { shouldDisplay } = useSettings();
+    const { shouldDisplay, isSearchVisible, isSearchHiddenHit, isSearchHiddenGroup } = useSettings();
 
-    if (!shouldDisplay(element)) {
+    if (!isSearchVisible(element)) {
+        return null;
+    }
+    if (isSearchHiddenGroup(element)) {
+        return <SearchHiddenGroup element={element} />;
+    }
+    if (!shouldDisplay(element) && !isSearchHiddenHit(element)) {
         return null;
     }
 
@@ -411,5 +493,67 @@ function SettingsFieldGroup({ element, isNested, isGroupParent }: { element: Set
             <FieldRenderer key={child.id} element={child} isNested={isNested} isGroupParent={isGroupParent} />
           ))}
       </div>
+    );
+}
+
+// ============================================
+// Search Results Bar
+// ============================================
+
+function SearchResultsBar({
+    query,
+    matches,
+    total,
+    elsewhere,
+    showAll,
+    dirty,
+    onToggleShowAll,
+    onClear,
+}: {
+    query: string;
+    matches: number;
+    total: number;
+    elsewhere: number;
+    showAll: boolean;
+    dirty: boolean;
+    onToggleShowAll: () => void;
+    onClear: () => void;
+}) {
+    let message: string;
+    if (matches === 0) {
+        message = elsewhere > 0
+            ? `No settings on this page match “${query}”. ${dirty ? 'Save your changes, then pick' : 'Pick'} a page from the menu to see the ${elsewhere === 1 ? 'match' : `${elsewhere} matches`}.`
+            : `No settings match “${query}”. Try a different word.`;
+    } else if (showAll) {
+        message = `Showing all ${total} settings. Matches for “${query}” are highlighted.`;
+    } else {
+        message = `Showing ${matches} of ${total} ${total === 1 ? 'setting' : 'settings'} matching “${query}”.`;
+    }
+
+    const linkClass = 'font-medium text-primary hover:underline cursor-pointer bg-transparent border-0 p-0';
+
+    return (
+        <div
+            className="flex flex-wrap items-center justify-between gap-2 rounded-sm border border-border bg-muted/40 px-4 py-2.5 text-sm text-muted-foreground"
+            role="status"
+            data-testid="settings-search-results-bar"
+        >
+            <span>{message}</span>
+            <span className="flex items-center gap-3">
+                {(matches > 0 || showAll) && (
+                    <button type="button" className={linkClass} onClick={onToggleShowAll} data-testid="settings-search-show-all">
+                        {showAll ? 'Show matches only' : 'Show all settings'}
+                    </button>
+                )}
+                {matches === 0 && !showAll && total > 0 && (
+                    <button type="button" className={linkClass} onClick={onToggleShowAll} data-testid="settings-search-show-all">
+                        Show this page
+                    </button>
+                )}
+                <button type="button" className={linkClass} onClick={onClear} data-testid="settings-search-clear">
+                    Clear search
+                </button>
+            </span>
+        </div>
     );
 }
